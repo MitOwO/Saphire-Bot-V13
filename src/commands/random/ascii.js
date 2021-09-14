@@ -1,0 +1,23 @@
+const ascii = require('figlet')
+const { e } = require('../../../Routes/emojis.json')
+
+module.exports = {
+    name: 'ascii',
+    aliases: ['asci'],
+    category: 'random',
+    UserPermissions: '',
+    ClientPermissions: '',
+    emoji: '/\\/--',
+    usage: '<ascii> <texto>',
+    description: 'Transforme textos em ASCII',
+
+    run: async (client, message, args, prefix, db, MessageEmbed, request) => {
+
+        if (!args[0]) { return message.reply(`${e.Deny} | Diga algo para que eu posso transformar em ASCII, algo entre **1~12 Caracteres**.`) }
+        if (args.join(' ') > 12) { return message.reply(`${e.Deny} | O mensagem não pode ultrapassar **12 caracteres**.`) }
+
+        ascii(args.join(" "), function (err, data) {
+            message.channel.send(`\`\`\`${data}\`\`\``).catch(err => { return messge.channel.send(`${e.Deny} | Aconteceu um erro...\n\`${err}\``) })
+        })
+    }
+}
