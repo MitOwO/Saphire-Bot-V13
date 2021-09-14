@@ -1,0 +1,27 @@
+const { e } = require('../../../Routes/emojis.json')
+
+module.exports = {
+    name: 'dono',
+    aliases: ['owner', 'lider'],
+    category: 'util',
+    UserPermissions: '',
+    ClientPermissions: '',
+    emoji: `${e.Info}`,
+    usage: '<dono>',
+    description: 'Veja o dono do servidor',
+
+    run: async (client, message, args, prefix, db, MessageEmbed, request) => {
+
+        let owner = message.guild.ownerId
+        let avatar = message.guild.iconURL({ dynamic: true })
+
+        const embed = new MessageEmbed()
+            .setColor('BLUE')
+            .setAuthor(`${message.guild.name}`)
+            .setDescription(`${e.OwnerCrow} Dono/a: <@${owner}>\n:id: \`${owner}\``)
+
+        if (avatar) { embed.setThumbnail(avatar) }
+
+        return message.reply({ embeds: [embed] })
+    }
+}
