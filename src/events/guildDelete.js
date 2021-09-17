@@ -1,7 +1,7 @@
 const client = require('../../index')
+const db = require('quick.db')
 const { MessageEmbed } = require('discord.js')
 const { e } = require('../../Routes/emojis.json')
-const db = require('quick.db')
 const { config } = require('../../Routes/config.json')
 
 client.on("guildDelete", async (guild) => {
@@ -20,6 +20,5 @@ client.on("guildDelete", async (guild) => {
     if (!ChannelId) return
 
     const channel = client.channels.cache.get(ChannelId)
-    if (!channel) return
-    channel.send({ embeds: [Embed] })
+    channel ? channel.send({ embeds: [Embed] }).catch(err => { return }) : ''
 })

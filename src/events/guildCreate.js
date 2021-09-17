@@ -10,22 +10,22 @@ client.on("guildCreate", async (guild) => {
     db.set(`Servers.${guild.id}`, guild.name)
 
     let owner = await guild.fetchOwner()
-    let CanalDeConvite = await guild.channels.cache.find(channel => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has(Permissions.FLAGS.SEND_MESSAGES))
-    let ChannelId = config.guildCreateChannelId
+    let CanalDeConvite = await guild.channels.cache.find(channel => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has(Permissions.FLAGS.CREATE_INSTANT_INVITE))
+    const channel = await client.channels.cache.get(config.guildCreateChannelId)
+    if (!channel) return
 
+    const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription('Registro no banco de dados com concluido!').addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
+   
     function WithChannel() {
         CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {
-            const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription('Registro no banco de dados com concluido!').addField('Servidor', `[${guild.name}](${ChannelInvite.url}) *\`(${guild.id})\`*`).addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
-            if (!ChannelId) { return } else { const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else { channel.send({ embeds: [Embed] }) } }
-        }).catch(() => {
-            const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription('Registro no banco de dados com concluido!').addField('Servidor', `${guild.name} *\`(${guild.id})\`*`).addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
-            if (!ChannelId) { return } else { const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else { channel.send({ embeds: [Embed] }) } }
-        })
+            Embed.addField('Servidor', `[${guild.name}](${ChannelInvite.url}) *\`(${guild.id})\`*`)
+            channel.send({ embeds: [Embed] }).catch(err => { return })
+        }).catch(() => { WithoutChannel() })
     }
 
     function WithoutChannel() {
-        const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription('Registro no banco de dados com concluido!').addField('Servidor', `${guild.name} *\`(${guild.id})\`*`).addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
-        if (!ChannelId) { return } else { const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else { channel.send({ embeds: [Embed] }) } }
+        Embed.addField('Servidor', `${guild.name} *\`(${guild.id})\`*`)
+        channel.send({ embeds: [Embed] }).catch(err => { return })
     }
 
     CanalDeConvite ? WithChannel() : WithoutChannel()

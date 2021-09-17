@@ -5,103 +5,44 @@ const { N } = require('../../Routes/nomes.json')
 const { config } = require('../../Routes/config.json')
 const { e } = require('../../Routes/emojis.json')
 const cooldown = new Set()
+const React = require('../../Routes/functions/reacts')
+const xp = require('../../Routes/functions/experience')
+const AfkSystem = require('../../Routes/functions/AfkSystem')
+const RequestAutoDelete = require('../../Routes/functions/Request')
+const BakaBlocked = require('../../Routes/functions/BakaBlocked')
+const Blacklisted = require('../../Routes/functions/blacklist')
 
 client.on('messageCreate', async message => {
 
     if (!message.guild || message.guild.avaliable || message.author.bot || !message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES || Permissions.FLAGS.VIEW_CHANNEL)) return
 
-    if (message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
-        if (message.content.toLowerCase().includes('@everyone')) { message.react(e.PingEveryone).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('@here')) { message.react(e.PingEveryone).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('pikachu') && !message.author.bot) { message.react(e.Pikachu).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('nezuko') && !message.author.bot) { message.react(e.NezukoDance).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('itachi') && !message.author.bot) { message.react(e.Itachi).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('asuna') && !message.author.bot) { message.react(e.Asuna).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('deidara') && !message.author.bot) { message.react(e.Deidara).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('boom') && !message.author.bot) { message.react(e.Deidara).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('kirito') && !message.author.bot) { message.react(e.Kirito).catch(err => { return }) }
-        if (message.content.toLowerCase().includes('loli') && !message.author.bot) { message.react("🚓").catch(err => { return }) }
-    }
-
-    xp(message)
-    function xp(message) {
-        if (message.author.bot) return
-        const XpAdd = Math.floor(Math.random() * 3) + 1
-        db.add(`Xp_${message.author.id}`, XpAdd)
-        let level = db.get(`level_${message.author.id}`) || 1
-        let xp = db.get(`Xp_${message.author.id}`) + 1
-        let xpNeeded = level * 550;
-        if (xpNeeded < xp) {
-            let newLevel = db.add(`level_${message.author.id}`, 1)
-            let XpChannel = db.get(`Servers.${message.guild.id}.XPChannel`)
-            let canal = client.channels.cache.get(XpChannel)
-            if (canal) {
-                canal.send(`${e.Tada} | ${message.author} alcançou o level ${newLevel} ${e.RedStar}`)
-            }
-        }
-    }
-
     let prefix = db.get(`Servers.${message.guild.id}.Prefix`) || config.prefix
-    if (message.content.startsWith(['-.', '-\'', '- '])) return
-
     let request = db.get(`User.Request.${message.author.id}`)
-    if (request) {
-        setTimeout(() => {
-            db.delete(`User.Request.${message.author.id}`)
-        }, 120000)
-    }
+    let baka = db.get(`User.${message.author.id}.Baka`)
+    let blacklist = db.get(`Blacklist_${message.author.id}`)
+
+    React(message) // Interação de reações
+    xp(message) // XP System
+    request ? RequestAutoDelete(message) : '' // Auto delete requests
 
     if (message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY) && message.guild.me.permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS)) {
 
-        if (db.get(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`)) {
-            db.delete(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`)
-            if (message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
-                message.react(`${e.Planet}`).catch(err => { return })
-            } else {
-                message.reply(`${e.Check} O modo AFK foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(err => { return }) }, 3000))
-            }
-        }
+        AfkSystem(message)
 
-        if (db.get(`Client.AfkSystem.${message.author.id}`)) {
-            db.delete(`Client.AfkSystem.${message.author.id}`)
-            if (message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
-                message.react(`${e.Planet}`).catch(err => { return })
-            } else {
-                message.reply(`${e.Check} O modo AFK Global foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(err => { return }) }, 3000))
-            }
-        }
-
-        let UserAfk = message.mentions.members.first() || message.mentions.members.repliedUser
-        if (UserAfk) {
-            let RecadoGlobal = db.get(`Client.AfkSystem.${UserAfk.id}`)
-            let RecadoServidor = db.get(`Servers.${message.guild.id}.AfkSystem.${UserAfk.id}`)
-            if (db.get(`Client.AfkSystem.${UserAfk.id}`)) { message.channel.sendTyping(), setTimeout(() => { message.reply(`${e.Planet} | ${UserAfk.user.username} está offline. --> ✍️ | ${RecadoGlobal}`) }, 1500) }
-            if (db.get(`Servers.${message.guild.id}.AfkSystem.${UserAfk.id}`)) { message.channel.sendTyping(), setTimeout(() => { message.reply(`${e.Afk} | ${UserAfk.user.username} está offline. --> ✍️ | ${RecadoServidor}`) }, 1500) }
-        }
-
-        if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id)) { message.channel.sendTyping(), message.channel.send(`${e.Pikachu} | \`${prefix}help\``) }
+            if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id)) message.channel.send(`${e.Pikachu} | \`${prefix}help\``)
 
         const args = message.content.slice(prefix.length).trim().split(/ +/g)
         const cmd = args.shift().toLowerCase()
 
         if (!message.content.startsWith(prefix) || cmd.length == 0) return
-
-        let baka = db.get(`User.${message.author.id}.Baka`)
-        if (baka) {
-            setTimeout(() => {
-                db.delete(`User.${message.author.id}.Baka`)
-            }, 20000)
-            return message.reply(`Saaai, você me chamou de BAAAKA ${e.MaikaAngry}`)
-        }
+        if (blacklist) return Blacklisted(message)
+        if (baka) return BakaBlocked(message)
 
         if (cooldown.has(message.author.id)) {
             return message.react('⏱️').catch(err => { return })
         } else {
 
             message.channel.sendTyping().then(() => {
-
-                let blacklist = db.get(`Blacklist_${message.author.id}`)
-                if (message.author.id !== config.ownerId) { if (blacklist) { return message.channel.send(`${deny} | ${message.author}, você está na blacklist.`).then(msg => { setTimeout(() => { msg.delete().catch(err => { return }) }, 4000) }) } }
 
                 if (db.get('Rebooting') === "ON") return message.reply(`${e.Loading} Estou relogando no momento...`)
 
@@ -123,21 +64,22 @@ client.on('messageCreate', async message => {
                 if (blocked !== "OPEN") { return message.reply(`🔒 | **Comando bloqueado > Razão: "BUG"** > *(Sob Análise)*\n~~ Faça seu reporte: \`${prefix}bug\` --`) }
 
                 try {
-                    command.run(client, message, args, prefix, db, MessageEmbed, request).catch(err => {
-                        db.set(`ComandoBloqueado.${cmd}`, 'BUG')
-                        message.channel.createInvite({ maxAge: 0 }).then(ChannelInvite => {
-                            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: [${message.guild.name}](${ChannelInvite.url})\nErro: \`${err}\``)
-                            client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { return })
-                        }).catch(() => {
-                            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\nErro: \`${err}\``)
-                            client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { return })
-                        })
-                        const EmbedError = new MessageEmbed().setColor('RED').setTitle('📌 Ocorreu um erro neste comando.').setDescription('De boa! Já avisei meu criador e ele vai arrumar isso o mais rápido possivel!').setFooter('Por motivos de segura, este comando está bloqueado.')
-                        message.reply({ embeds: [EmbedError] })
+                    command.run(client, message, args, prefix, db, MessageEmbed, request).then(() => { db.add('ComandosUsados', 1) }).catch(err => { ReportErros(err) })
+                } catch (err) { return message.reply(`${e.Deny} | Eu não tenho esse comando não... Que tal usar o \`${prefix}help\` ?`) }
+
+                function ReportErros(err) {
+                    db.set(`ComandoBloqueado.${cmd}`, 'BUG')
+                    message.channel.createInvite({ maxAge: 0 }).then(ChannelInvite => {
+                        const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: [${message.guild.name}](${ChannelInvite.url})\nErro: \`${err}\``)
+                        client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { return })
+                    }).catch(err => {
+                        const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\nErro: \`${err}\``)
+                        client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { return })
                     })
-                } catch (err) {
-                    message.reply(`${e.Deny} | Comando não reconhecido. Verifique a ortografia ou confira o \`${prefix}help\``).then(msg => { setTimeout(function () { msg.delete().catch(err => { return }) }, 5000) })
+                    const EmbedError = new MessageEmbed().setColor('RED').setTitle('📌 Ocorreu um erro neste comando.').setDescription('De boa! Já avisei meu criador e ele vai arrumar isso o mais rápido possivel!').setFooter('Por motivos de segura, este comando está bloqueado.')
+                    message.reply({ embeds: [EmbedError] })
                 }
+
                 cooldown.add(message.author.id)
                 setTimeout(() => { cooldown.delete(message.author.id) }, 1500)
             }).catch(err => { return message.channel.send(`${e.Attention} | Houve um erro crítico em um sistema prioritário do meu sistema. Por favor, fale com meu criador >-- **${N.Rody}** <-- e reporte este erro.\n\`${err}\``) })
