@@ -9,12 +9,12 @@ module.exports = {
     UserPermissions: '',
     ClientPermissions: 'ADD_REACTIONS',
     emoji: `${e.Coin}`,
-    usage: '<pay> <@user> <quantia>',
+    usage: '<pay> <@user> <quantia/all>',
     description: 'Pague outras pessoas',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
         let timeout1 = 9140000
-        let author1 = await db.get(`Profile.${message.author.id}.Timeouts.PresoMax`)
+        let author1 = await db.get(`User.${message.author.id}.Timeouts.PresoMax`)
 
         if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
             let time = ms(timeout1 - (Date.now() - author1))
@@ -45,15 +45,14 @@ module.exports = {
             if (!args[1]) { return message.reply(`${e.Deny} | Tenta usar assim: \`${prefix}pay @user quantia/all\``) }
             if (args[2]) { return message.reply(`${e.Deny} | Nada além do comando, está bem? \`${prefix}pay @user quantia/all\``) }
             if (['all', 'tudo'].includes(args[1])) args[1] = money
-            if (args[1] < 0) { return message.reply(`${e.Deny} | Dinheiro insuficiente.`) }
-            if (money < args[1]) { return message.reply(`${e.Deny} | Você precisa ter ${args[1]} ${e.Coin} Moedas na carteira para poder pagar ${user.user.username}.`) }
-            if (isNaN(args[1])) { return message.reply(`${e.Deny} | **${args[1]}** | O valor digitado não é um número.`) }
+            if (parseInt(args[1]) < 0) { return message.reply(`${e.Deny} | Dinheiro insuficiente.`) }
+            if (money < parseInt(args[1])) { return message.reply(`${e.Deny} | Você precisa ter ${args[1]} ${e.Coin} Moedas na carteira para poder pagar ${user.user.username}.`) }
+            if (isNaN(parseInt(args[1]))) { return message.reply(`${e.Deny} | **${args[1]}** | O valor digitado não é um número.`) }
 
-            db.add(`User.${message.author.id}.Caches.Pay`, args[1])
-            db.subtract(`Balance_${message.author.id}`, args[1])
+            db.add(`User.${message.author.id}.Caches.Pay`, parseInt(args[1]))
+            db.subtract(`Balance_${message.author.id}`, parseInt(args[1]))
             let cache = db.get(`User.${message.author.id}.Caches.Pay`)
 
-            // 
             await message.reply(`${e.QuestionMark} | ${message.author}, você confirma transferir a quantia de **${args[1]} ${e.Coin}Moedas** para ${user}?`).then(msg => {
                 msg.react('✅').catch(err => { return }) // Check
                 msg.react('❌').catch(err => { return }) // X
@@ -67,7 +66,7 @@ module.exports = {
                         db.delete(`User.Request.${message.author.id}`)
                         db.add(`Balance_${user.id}`, cache)
                         db.delete(`User.${message.author.id}.Caches.Pay`)
-                        msg.edit(`${e.Check} | Transação efetuada com sucesso!\n${message.author.tag}: -${args[1]} ${e.Coin} Moedas\n${user.user.tag}: +${args[1]} ${e.Coin} Moedas`)
+                        msg.edit(`${e.Check} | Transação efetuada com sucesso!\n${message.author.tag}: -${parseInt(args[1])} ${e.Coin} Moedas\n${user.user.tag}: +${args[1]} ${e.Coin} Moedas`)
                         msg.reactions.removeAll().catch(err => { return })
                     } else {
                         db.delete(`User.Request.${message.author.id}`)
@@ -80,7 +79,6 @@ module.exports = {
                     db.add(`Balance_${message.author.id}`, cache)
                     db.delete(`User.${message.author.id}.Caches.Pay`)
                     msg.edit(`${e.Deny} | Transação cancelado por tempo excedido.`)
-                    message.channel.send(`PRINTA O ERRO AQUI MANO: \n\`${err}\``)
                 })
 
             })

@@ -34,11 +34,12 @@ module.exports = {
                 let user = await client.users.fetch(id)
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`level_${id}`)
+                let level = db.get(`level_${id}`); if (!level) level + 1
                 let xp = db.get(`Xp_${id}`)
                 let xpreq = Math.floor(level * 550)
                 lb.push({ user: { id, tag: user }, rank, level, xp, xpreq })
             }
+
 
             const embedxp = new MessageEmbed()
                 .setColor('YELLOW')
@@ -60,7 +61,7 @@ module.exports = {
                 let user = await client.users.fetch(id)
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`level_${id}`) + 1
+                let level = db.get(`level_${id}`); if (!level) level + 1
                 let xp = db.get(`Xp_${id}`)
                 let xpreq = Math.floor(level * 550)
                 lb.push({ user: { id, tag: user }, rank, level, xp, xpreq })

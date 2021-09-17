@@ -33,26 +33,26 @@ module.exports = {
       let filter2 = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }
       let Collector2 = msg.createReactionCollector({ filter: filter2, max: 1, errors: ['max'] })
 
+      i = 0
       Collector.on('collect', (reaction, user) => {
-        db.add(`User.${message.author.id}.Sao`, 1)
+        i++
         SAOEmbed.setImage(g.SwordArtOnline[Math.floor(Math.random() * g.SwordArtOnline.length)])
         msg.edit({ embeds: [SAOEmbed] }).catch(err => { return })
       })
 
       Collector.on('end', (reaction, user) => {
         db.delete(`User.Request.${message.author.id}`)
-        SAOEmbed.setColor('RED').setTitle(`${e.Deny} Anime: SAO - Sword Art Online`).setFooter(`Sessão Expirada | ${db.get(`User.${message.author.id}.Sao`) || 0} Requests solicitadas.`)
-        db.delete(`User.${message.author.id}.Sao`)
+        SAOEmbed.setColor('RED').setTitle(`${e.Deny} Anime: SAO - Sword Art Online`).setFooter(`Sessão Expirada | ${i} Requests solicitadas.`)
+        msg.edit({ embeds: [SAOEmbed] }).then(() => { i = 0 }).catch(err => { return })
       })
 
       Collector2.on('end', (reaction, user) => {
         db.delete(`User.Request.${message.author.id}`)
-        db.delete(`User.${message.author.id}.Sao`)
-        msg.delete().catch(err => { return })
+        msg.delete().then(() => { i = 0 }).catch(err => { return })
       })
     }).catch(err => {
       db.delete(`User.Request.${message.author.id}`)
       return message.reply(`${Attention} | Houve um erro ao executar este comando\n\`${err}\``)
-  })
+    })
   }
 }

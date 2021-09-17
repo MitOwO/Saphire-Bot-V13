@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        const invite = client.generateInvite({ scopes: ['bot', 'applications.commands'], permissions: [Permissions.FLAGS.ADMINISTRATOR] })
+        const invite = client.generateInvite({ scopes: ['bot', 'applications.commands'], permissions: [Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.USE_EXTERNAL_EMOJIS, Permissions.FLAGS.ADD_REACTIONS, Permissions.FLAGS.ADMINISTRATOR, Permissions.FLAGS.USE_APPLICATION_COMMANDS] })
         const embed = new MessageEmbed().setColor('GREEN').setDescription(`${e.Pikachu} [Clique aqui pra me convidar pro seu servidor](${invite})`)
 
         return message.reply({ embeds: [embed] })

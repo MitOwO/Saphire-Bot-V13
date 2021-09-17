@@ -1,4 +1,7 @@
 const { e } = require('../../../Routes/emojis.json')
+const { f } = require('../../../Routes/frases.json')
+const { MessageSelectMenu, MessageActionRow } = require("discord.js")
+const BuyingAway = require('../../../Routes/functions/BuyingAway')
 
 module.exports = {
     name: 'comprar',
@@ -7,616 +10,336 @@ module.exports = {
     UserPermissions: '',
     ClientPermissions: '',
     emoji: `${e.Coin}`,
-    usage: '<buy>',
+    usage: '<buy> [item/quantidade]',
     description: 'Compre itens da Loja Saphire',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        return message.reply(`Em Produção...`)
-
-        // let vip = db.get(`Vip_${message.author.id}`)
-
-        // let timeout1 = 9140000
-        // let author1 = await db.get(`Profile.${message.author.id}.Timeouts.PresoMax`)
-
-        // if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
-        //     let time = ms(timeout1 - (Date.now() - author1))
-
-        //     const presomax = new Discord.MessageEmbed()
-        //         .setColor('#8B0000')
-        //         .setTitle('🚨 Você está em prisão máxima!')
-        //         .setDescription(`Liberdade em: ${time.hours}h ${time.minutes}m e ${time.seconds}s`)
-
-        //     return message.reply(presomax)
-        // } else {
-
-        //     let money = db.get(`Balance_${message.author.id}`)
-        //     if (money === null) { money = 0 }
-
-        //     if (!args[0]) {
-        //         const noargs = new Discord.MessageEmbed()
-        //             .setColor('BLUE')
-        //             .setTitle('🪙 Sistema de Compras Cat Cloud')
-        //             .setDescription('Aqui você pode comprar os itens da lojinha. É muito simples, basta usar o comando, assim você compra itens e pode usa-lo.\n \nDigite o nome do item com meu prefixo que eu te falo mais informações sobre ele.')
-        //             .addField('Comando', '`' + prefix + 'buy Nome do item`')
-        //             .addField('Todos os itens', '`' + prefix + 'loja`')
-        //         return message.reply(noargs)
-        //     }
-
-        //     if (['vara de pesca', 'vara', 'pesca', 'Vara de Pesca'].includes(args.join(" "))) {
-
-        //         if (db.get(`Profile.${message.author.id}.Slot.Vara`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money < 140) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-
-        //         if (money = 140 || money > 140) {
-        //             db.subtract(`Balance_${message.author.id}`, 140)
-        //             db.add(`Profile.${client.user.id}.Bank`, 140)
-        //             db.set(`Profile.${message.author.id}.Slot.Vara`, "Vara de pesca")
-
-        //             const buypesca = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou uma 🎣` + ' `Vara de Pesca`')
-        //             return message.reply(buypesca)
-        //         }
-        //     }
-
-        //     if (['machado', 'Machado'].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Slot.Machado`,)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 35) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         if (money = 35 || money > 35) {
-        //             db.subtract(`Balance_${message.author.id}`, 35)
-        //             db.add(`Profile.${client.user.id}.Bank`, 35)
-        //             db.set(`Profile.${message.author.id}.Slot.Machado`, "Machado")
-
-        //             const buypesca = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou um 🪓` + ' `Machado`')
-        //             return message.reply(buypesca)
-        //         }
-        //     }
-
-        //     if (['arma', 'gun', 'Arma'].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Slot.Arma`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 4000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         if (money = 4000 || money > 4000) {
-        //             db.subtract(`Balance_${message.author.id}`, 4000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 4000)
-        //             db.set(`Profile.${message.author.id}.Slot.Arma`, "Arma")
-        //             const buyarma = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou uma 🔫` + ' `Arma`')
-        //             return message.reply(buyarma)
-        //         }
-        //     }
-
-        //     if (['ticketloteria', 'ticket', 'Ticket', 'tickets', 'Tickets'].includes(args[0].toLowerCase())) {
-
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (!args[1]) { return message.reply('Quantos tickets você quer comprar? `' + prefix + 'buy tickets quantidade`') }
-        //         if (isNaN(args[1])) { return message.reply(`${args[1]} não é um número.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < args[1] * 10) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         let LoteryOpen = db.get('LoteryRegistry')
-        //         if (LoteryOpen === null || !LoteryOpen || LoteryOpen === undefined) {
-        //             return message.reply('A loteria não está aberta no momento.')
-        //         }
-
-        //         db.subtract(`Balance_${message.author.id}`, args[1] * 10)
-        //         db.add(`LoteryRegistry.Tickets_${message.author.id}`, args[1])
-        //         db.add('LoteryRegistry.Prize', args[1] * 10)
-        //         db.push('LoteryRegistry.LoteriaUsers', `${message.author.id}`)
-        //         db.add('LoteryRegistry.TicketsCompradosAoTodo', args[1])
-
-        //         const buyarma = new Discord.MessageEmbed()
-        //             .setColor('GREEN')
-        //             .setTitle('✅ Compra aprovada')
-        //             .setDescription(`${message.author}, você comprou ${args[1]}` + ' 🎫 `Tickets da Loteria`')
-        //             .setFooter(`Você possui: ${db.get(`LoteryRegistry.Tickets_${message.author.id}`)} Tickets`)
-
-        //         return message.reply(buyarma)
-        //     }
-
-        //     if (['ficha', 'fichas'].includes(args[0].toLowerCase())) {
-
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (!args[1]) { return message.reply('Quantas fichas você quer comprar? `' + prefix + 'buy fichas quantidade`') }
-        //         if (isNaN(args[1])) { return message.reply(`${args[1]} não é um número.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < args[1] * 2) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         db.add(`Profile.${message.author.id}.Slot.Fichas`, args[1])
-        //         let acima = db.get(`Profile.${message.author.id}.Slot.Fichas`)
-        //         if (acima > 50) {
-        //             db.subtract(`Profile.${message.author.id}.Slot.Fichas`, args[1])
-
-        //             const nota = new Discord.MessageEmbed()
-        //                 .setColor('#8B0000')
-        //                 .setTitle('LIMITE DE FICHAS ATINGIDO!')
-        //                 .setDescription(`${message.author}, você não pode passar de **50 fichas**.`)
-        //             return message.reply(nota)
-        //         }
-
-        //         db.subtract(`Balance_${message.author.id}`, args[1] * 2)
-        //         db.add(`Profile.${client.user.id}.Bank`, args[1] * 2)
-        //         const buyarma = new Discord.MessageEmbed()
-        //             .setColor('GREEN')
-        //             .setTitle('✅ Compra aprovada')
-        //             .setDescription(`${message.author}, você comprou ${args[1]} ` + '🎟️ `Fichas`')
-        //         return message.reply(buyarma)
-        //     }
-
-        //     if (['agua', 'Água', 'água', 'water', 'águas', 'aguas', 'copo', 'd\água'].includes(args[0].toLowerCase())) {
-
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (!args[1]) { return message.reply('Quantas águas você quer comprar? `' + prefix + 'buy águas quantidade`') }
-        //         if (isNaN(args[1])) { return message.reply('`' + prefix + 'buy águas quantidade`') }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < args[1]) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         db.add(`Profile.${message.author.id}.Slot.Aguas`, args[1])
-        //         let acima = db.get(`Profile.${message.author.id}.Slot.Aguas`)
-        //         if (acima > 70) {
-        //             db.subtract(`Profile.${message.author.id}.Slot.Aguas`, args[1])
-        //             const nota = new Discord.MessageEmbed()
-        //                 .setColor('#8B0000')
-        //                 .setTitle('LIMITE DE ÁGUAS ATINGIDO!')
-        //                 .setDescription(`${message.author}, você não pode passar de **70 copos d'água**.`)
-        //             return message.reply(nota)
-        //         }
-
-        //         if (money = 1 || money > 1) {
-        //             db.subtract(`Balance_${message.author.id}`, args[1])
-        //             db.add(`Profile.${client.user.id}.Bank`, args[1])
-        //             const buyarma = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou ${args[1]} ` + '🥤 `Copos de água`')
-        //             return message.reply(buyarma)
-        //         }
-        //     }
-
-        //     if (['picareta', "Picareta"].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Slot.Picareta`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 85) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         if (money = 85 || money > 85) {
-        //             db.subtract(`Balance_${message.author.id}`, 85)
-        //             db.add(`Profile.${client.user.id}.Bank`, 85)
-        //             db.set(`Profile.${message.author.id}.Slot.Picareta`, "Picareta")
-        //             db.set(`Profile.${message.author.id}.Slot.PicaretaUso`, 50)
-        //             const buyarma = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou uma ⛏️` + ' `Picareta`')
-        //             return message.reply(buyarma)
-        //         }
-        //     }
-
-        //     if (['ciano', 'ciane'].includes(args[0].toLowerCase())) {
-
-        //         if (!vip) { return message.reply('❌ Esta é uma cor exclusiva para vips.\nSaiba mais em `' + prefix + 'vip`') }
-        //         if (db.get(`Profile.${message.author.id}.Color.Ciane`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 1000000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 1000000 || money > 1000000) {
-        //             db.subtract(`Balance_${message.author.id}`, 1000000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 1000000)
-        //             db.set(`Profile.${message.author.id}.Color.Ciane`, "#00FFFF")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Ciana.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['vermelho', 'red'].includes(args[0].toLowerCase())) {
-
-        //         if (!vip) { return message.reply('❌ Esta é uma cor exclusiva para vips.\nSaiba mais em `' + prefix + 'vip`') }
-        //         if (db.get(`Profile.${message.author.id}.Color.Red`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 10000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 10000 || money > 10000) {
-        //             db.subtract(`Balance_${message.author.id}`, 10000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 10000)
-        //             db.set(`Profile.${message.author.id}.Color.Red`, "#B62A2A")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Vermelha.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['branco', 'white'].includes(args[0].toLowerCase())) {
-
-        //         if (!vip) { return message.reply('❌ Esta é uma cor exclusiva para vips.\nSaiba mais em `' + prefix + 'vip`') }
-        //         if (db.get(`Profile.${message.author.id}.Color.White`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 10000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 10000 || money > 10000) {
-        //             db.subtract(`Balance_${message.author.id}`, 10000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 10000)
-        //             db.set(`Profile.${message.author.id}.Color.White`, "#FFFFFF")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Branca.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['rosa', 'pink'].includes(args[0].toLowerCase())) {
-
-        //         if (!vip) { return message.reply('❌ Esta é uma cor exclusiva para vips.\nSaiba mais em `' + prefix + 'vip`') }
-        //         if (db.get(`Profile.${message.author.id}.Color.Pink`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 10000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 10000 || money > 10000) {
-        //             db.subtract(`Balance_${message.author.id}`, 10000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 10000)
-        //             db.set(`Profile.${message.author.id}.Color.Pink`, "#D000FC")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Rosa.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['laranja', 'orange'].includes(args[0].toLowerCase())) {
-
-        //         if (!vip) { return message.reply('❌ Esta é uma cor exclusiva para vips.\nSaiba mais em `' + prefix + 'vip`') }
-        //         if (db.get(`Profile.${message.author.id}.Color.Orange`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 10000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 10000 || money > 10000) {
-        //             db.subtract(`Balance_${message.author.id}`, 10000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 10000)
-        //             db.set(`Profile.${message.author.id}.Color.Orange`, "#FFFFFF")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Laranja.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['verde', 'green'].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Color.Green`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 15000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 15000 || money > 15000) {
-        //             db.subtract(`Balance_${message.author.id}`, 15000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 15000)
-        //             db.set(`Profile.${message.author.id}.Color.Green`, "#00FC07")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Verde.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['amarelo', 'yellow'].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Color.Yellow`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 15000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 15000 || money > 15000) {
-        //             db.subtract(`Balance_${message.author.id}`, 15000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 15000)
-        //             db.set(`Profile.${message.author.id}.Color.Yellow`, "#E5FC00")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Amarelo.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['azul', 'blue'].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Color.Blue`)) { return message.reply(`❗ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar esta cor.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 15000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta cor.`) }
-
-        //         if (money = 15000 || money > 15000) {
-        //             db.subtract(`Balance_${message.author.id}`, 15000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 15000)
-        //             db.set(`Profile.${message.author.id}.Color.Blue`, "#0005FC")
-        //             const BuyColorEmbed = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a cor Azul.\n` + '`' + prefix + 'setcolor`')
-        //             return message.reply(BuyColorEmbed)
-        //         }
-        //     }
-
-        //     if (['título', 'title', 'titulo', 'Título', 'TITULO', 'TÍTULO'].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Perfil.TitlePerm`)) { return message.reply(`Você já possui a permissão de alterar seu título.`) }
-        //         if (money === null) { return message.reply(`${message.author}, você não tem dinheiro para comprar esta permissão.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 10000) { return message.reply(`${message.author}, você não tem dinheiro suficiente para comprar esta permissão.`) }
-
-        //         if (money = 10000 || money > 10000) {
-        //             db.subtract(`Balance_${message.author.id}`, 10000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 10000)
-        //             db.set(`Profile.${message.author.id}.Perfil.TitlePerm`, "ON")
-
-        //             const buyTitle = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou a permissão 🔰` + '`Título`')
-        //             message.reply(buyTitle)
-
-        //             const premium = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Você liberou uma nova função')
-        //                 .setDescription(`${message.author}, você agora consegue escolher um Título que será mostrado no seu perfil.`)
-        //                 .addFields(
-        //                     {
-        //                         name: 'Comando',
-        //                         value: '`' + prefix + 'settitulo Seu Novo Título`'
-        //                     }
-        //                 )
-        //                 .setFooter('O título suporta até 3 palavras.')
-        //             return message.reply(premium)
-        //         }
-        //     }
-
-        //     if (['isca', 'minhoca', 'iscas', 'minhocas', 'Isca', 'Iscas'].includes(args[0].toLowerCase())) {
-
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (!args[1]) { return message.reply('Quantas iscas você quer comprar? `' + prefix + 'buy iscas quantidade`') }
-        //         if (isNaN(args[1])) { return message.reply(args[1] + ', não é um número, ok?`' + prefix + 'buy iscas quantidade`') }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < args[1]) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         db.add(`Profile.${message.author.id}.Slot.Iscas`, args[1])
-        //         let acima = db.get(`Profile.${message.author.id}.Slot.Iscas`)
-        //         if (acima > 50) {
-        //             db.subtract(`Profile.${message.author.id}.Slot.Iscas`, args[1])
-        //             const nota = new Discord.MessageEmbed()
-        //                 .setColor('#8B0000')
-        //                 .setTitle('LIMITE DE ISCAS ATINGIDO!')
-        //                 .setDescription(`${message.author}, você não pode passar de **50 iscas**.`)
-        //             return message.reply(nota)
-        //         }
-
-        //         if (money > args[1]) {
-        //             db.subtract(`Balance_${message.author.id}`, args[1])
-        //             db.add(`Profile.${client.user.id}.Bank`, args[1])
-        //             const buyarma = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}` + ', ' + 'você comprou ' + `${args[1]}` + ' 🪱 `Iscas`')
-        //             return message.reply(buyarma)
-        //         }
-        //     }
-
-        //     if (['comida', 'food', 'comidas'].includes(args[0].toLowerCase())) {
-
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (!args[1]) { return message.reply('Quantas comidas você quer comprar? `' + prefix + 'buy comida quantidade`') }
-        //         if (isNaN(args[1])) { return message.reply(args[1] + ', não é um número, ok?`' + prefix + 'buy comida quantidade`') }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < args[1] * 2) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         db.add(`Profile.${message.author.id}.Slot.Comida`, args[1])
-        //         let acima = db.get(`Profile.${message.author.id}.Slot.Comida`)
-        //         if (acima > 80) {
-        //             db.subtract(`Profile.${message.author.id}.Slot.Comida`, args[1])
-        //             const nota = new Discord.MessageEmbed()
-        //                 .setColor('#8B0000')
-        //                 .setTitle('LIMITE DE COMIDA ATINGIDO!')
-        //                 .setDescription(`${message.author}, você não pode passar de **80 comidas**.`)
-        //             return message.reply(nota)
-        //         }
-
-        //         db.subtract(`Balance_${message.author.id}`, args[1] * 2)
-        //         db.add(`Profile.${client.user.id}.Bank`, args[1] * 2)
-        //         const buycomida = new Discord.MessageEmbed()
-        //             .setColor('GREEN')
-        //             .setTitle('✅ Compra aprovada')
-        //             .setDescription(`${message.author} você comprou ${args[1]} 🥘 ` + '`Comidas`')
-        //         return message.reply(buycomida)
-        //     }
-
-        //     if (['Carta', 'carta', 'cartas', 'Cartas', 'letter', 'Letter'].includes(args[0].toLowerCase())) {
-
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (!args[1]) { return message.reply('Quantas cartas você quer comprar? `' + prefix + 'buy cartas quantidade`') }
-        //         if (isNaN(args[1])) { return message.reply('A quantidade precisa ser um número. `' + prefix + 'buy cartas quantidade`') }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < args[1]) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
-
-        //         db.add(`Profile.${message.author.id}.Slot.Cartas`, args[1])
-        //         let acima = db.get(`Profile.${message.author.id}.Slot.Cartas`)
-        //         if (acima > 20) {
-        //             db.subtract(`Profile.${message.author.id}.Slot.Cartas`, args[1])
-        //             const limit = new Discord.MessageEmbed()
-        //                 .setColor('#8B0000')
-        //                 .setTitle('LIMITE DE CARTAS ATINGIDO!')
-        //                 .setDescription(`${message.author}, você não pode passar de **20 cartas**.`)
-        //             return message.reply(limit)
-        //         }
-
-        //         db.subtract(`Balance_${message.author.id}`, args[1])
-        //         db.add(`Profile.${client.user.id}.Bank`, args[1])
-        //         const buycarta = new Discord.MessageEmbed()
-        //             .setColor('GREEN')
-        //             .setTitle('✅ Compra aprovada')
-        //             .setDescription(`${message.author}, você comprou ${args[1]}` + ' 💌 `Cartas de Amor`')
-        //         return message.reply(buycarta)
-        //     }
-
-        //     if (['estrela1', 'Estrela1'].includes(args[0].toLowerCase())) {
-
-        //         if (db.get(`Profile.${message.author.id}.Slot.Estrela.1`)) { return message.reply(`❌ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 500000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta permissão.`) }
-
-        //         if (money = 500000 || money > 500000) {
-        //             db.subtract(`Balance_${message.author.id}`, 500000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 500000)
-        //             db.set(`Profile.${message.author.id}.Slot.Estrela.1`, "ON")
-
-        //             const buyStar1 = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou ⭐` + '`Estrela 1`')
-        //             return message.reply(buyStar1)
-        //         }
-        //     }
-
-        //     if (['estrela2', 'Estrela2'].includes(args[0].toLowerCase())) {
-
-        //         if (!db.get(`Profile.${message.author.id}.Slot.Estrela.1`)) { return message.reply(`❌ Você precisa da Estrela 1 para comprar a Estrela 2.`) }
-        //         if (db.get(`Profile.${message.author.id}.Slot.Estrela.2`)) { return message.reply(`❌ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 1000000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta permissão.`) }
-
-        //         if (money = 1000000 || money > 1000000) {
-        //             db.subtract(`Balance_${message.author.id}`, 1000000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 1000000)
-        //             db.set(`Profile.${message.author.id}.Slot.Estrela.2`, "ON")
-
-        //             const buyStar1 = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou ⭐⭐` + '`Estrela 2`')
-        //             return message.reply(buyStar1)
-        //         }
-        //     }
-
-        //     if (['estrela3', 'Estrela3'].includes(args[0].toLowerCase())) {
-
-        //         if (!db.get(`Profile.${message.author.id}.Slot.Estrela.2`)) { return message.reply(`❌ Você precisa da Estrela 2 para comprar a Estrela 3.`) }
-        //         if (db.get(`Profile.${message.author.id}.Slot.Estrela.3`)) { return message.reply(`❌ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 2000000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta permissão.`) }
-
-        //         if (money = 2000000 || money > 2000000) {
-        //             db.subtract(`Balance_${message.author.id}`, 2000000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 2000000)
-        //             db.set(`Profile.${message.author.id}.Slot.Estrela.3`, "ON")
-
-        //             const buyStar1 = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou ⭐⭐⭐` + '`Estrela 3`')
-        //             return message.reply(buyStar1)
-        //         }
-        //     }
-
-        //     if (['estrela4', 'Estrela4'].includes(args[0].toLowerCase())) {
-
-        //         if (!db.get(`Profile.${message.author.id}.Slot.Estrela.3`)) { return message.reply(`❌ Você precisa da Estrela 3 para comprar a Estrela 4.`) }
-        //         if (db.get(`Profile.${message.author.id}.Slot.Estrela.4`)) { return message.reply(`❌ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 4000000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta permissão.`) }
-
-        //         if (money = 4000000 || money > 4000000) {
-        //             db.subtract(`Balance_${message.author.id}`, 4000000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 4000000)
-        //             db.set(`Profile.${message.author.id}.Slot.Estrela.4`, "ON")
-
-        //             const buyStar1 = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou ⭐⭐⭐⭐` + '`Estrela 4`')
-        //             return message.reply(buyStar1)
-        //         }
-        //     }
-
-        //     if (['estrela5', 'Estrela5'].includes(args[0].toLowerCase())) {
-
-        //         let vip = db.get(`Vip_${message.author.id}`)
-        //         if (!vip) { return message.reply('❌ Este é um comando exclusivo para vips.\nSaiba mais em `' + prefix + 'vip`') }
-
-        //         if (!db.get(`Profile.${message.author.id}.Slot.Estrela.4`)) { return message.reply(`❌ Você precisa da Estrela 4 para comprar a Estrela 5.`) }
-        //         if (db.get(`Profile.${message.author.id}.Slot.Estrela.5`)) { return message.reply(`❌ Você já possui este item.`) }
-        //         if (money === null) { return message.reply(`❌ ${message.author}, você não tem dinheiro para comprar este item.`) }
-        //         if (money === 0) { return message.reply(`❌ ${message.author}, você não tem dinheiro.`) }
-        //         if (money < 0) { return message.reply(`❌ ${message.author}, você está com divida.`) }
-        //         if (money < 10000000) { return message.reply(`❌ ${message.author}, você não tem dinheiro suficiente para comprar esta permissão.`) }
-
-        //         if (money = 10000000 || money > 10000000) {
-        //             db.subtract(`Balance_${message.author.id}`, 10000000)
-        //             db.add(`Profile.${client.user.id}.Bank`, 10000000)
-        //             db.set(`Profile.${message.author.id}.Slot.Estrela.5`, "ON")
-
-        //             const buyStar1 = new Discord.MessageEmbed()
-        //                 .setColor('GREEN')
-        //                 .setTitle('✅ Compra aprovada')
-        //                 .setDescription(`${message.author}, você comprou ⭐⭐⭐⭐⭐` + '`Estrela 5`')
-        //             return message.reply(buyStar1)
-        //         }
-        //     } else {
-        //         return message.reply(`Eu não achei nenhum item com o nome **${args.join(" ")}** na minha loja, tente digitar um único nome, tipo "vara" ou "água".`)
-        //     }
-        // }
+        let vip = db.get(`Vip_${message.author.id}`)
+        let bank = db.get(`Bank_${message.author.id}`) || '0'
+
+        let timeout1 = 9140000
+        let author1 = await db.get(`User.${message.author.id}.Timeouts.PresoMax`)
+        if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
+            let time = ms(timeout1 - (Date.now() - author1))
+            return message.reply(`${e.Sirene} | Você está sob detenção máxima por mais \`${time.hours}h ${time.minutes}m e ${time.seconds}s\` `)
+        } else {
+
+            if (args[0]) return message.reply(`${e.Loading} | Logo logo, as compras personalizadas estarão disponíveis. Só espera um pouquinho, ok?`) // return BuyingAway(message, args, db.get(`Balance_${message.author.id}`), bank, prefix)
+
+            const LojaEmbed = new MessageEmbed()
+                .setColor('YELLOW')
+                .setTitle(`🏪 Lojinha ${client.user.username} 24h`)
+                .setDescription(`Aqui na Lojinha ${client.user.username}, você pode comprar várias coisas para ter acesso a comandos e funções incriveis.\n\`${prefix}buy <item> [quantidade]\``)
+                .addFields(
+                    {
+                        name: 'Disponiveis',
+                        value: '🎣 `Vara de Pesca` 180 🪙Moedas\n🔫 `Arma` 4.700 🪙Moedas\n⛏️ `Picareta` 120 🪙Moedas\n🪓 `Machado` 120 🪙Moedas\n🎟️ `Fichas` 5 🪙Moedas\n💌 `Carta de Amor` 2 🪙Moedas\n🥘 `Comida` 2 🪙Moedas\n🪱 `Isca` 1 🪙Moedas\n🥤 `Água` 1 🪙Moedas'
+                    },
+                    {
+                        name: 'Loteria',
+                        value: '🎫 `Ticket Loteria` 10 🪙Moedas' + `\nPrêmio Atual: ${parseInt(db.get(`Loteria.Prize`)) || '0'} 🪙Moedas`
+                    },
+                    {
+                        name: 'Perfil',
+                        value: '⭐ `Estrela1` 500.000 🪙Moedas\n⭐⭐ `Estrela2` 1.000.000 🪙Moedas\n⭐⭐⭐ `Estrela3` 2.000.000 🪙Moedas\n⭐⭐⭐⭐ `Estrela4` 4.000.000 🪙Moedas\n🔰 `Título` 10.000🪙Moedas'
+                    },
+                    {
+                        name: 'Cores',
+                        value: '`Verde` 15000🪙Moedas\n`Amarelo` 15000 🪙Moedas\n`Azul` 15000 🪙Moedas'
+                    }
+                )
+                .setFooter(`${prefix}buy | ${prefix}itens | ${prefix}vender | ${prefix}slot | ${prefix}loja vip`)
+
+            const PainelLoja = new MessageActionRow()
+                .addComponents(new MessageSelectMenu()
+                    .setCustomId('menu')
+                    .setPlaceholder('Compra rápida') // Mensagem estampada
+                    .addOptions([
+                        {
+                            label: 'Vara de Pesca',
+                            description: `Use para pescar > ${prefix}pesca`,
+                            emoji: '🎣',
+                            value: 'VaraDePesca',
+                        },
+                        {
+                            label: 'Arma',
+                            description: `Use para assaltar os outros > ${prefix}assaltar`,
+                            emoji: '🔫',
+                            value: 'Arma',
+                        },
+                        {
+                            label: 'Machado',
+                            description: `Use na floresta > ${prefix}floresta`,
+                            emoji: '🪓',
+                            value: 'Machado',
+                        },
+                        {
+                            label: 'Picareta',
+                            description: `Use para minerar > ${prefix}minerar`,
+                            emoji: '⛏️',
+                            value: 'Picareta',
+                        },
+                        {
+                            label: 'Restaurar Picareta',
+                            description: 'Restaura a picareta para 50 usos por 30 Moedas',
+                            emoji: '⛏️',
+                            value: 'RestaurarPicareta',
+                        },
+                        {
+                            label: 'Tickets da Loteria',
+                            description: `Comprar 50 tickets > ${prefix}loteria`,
+                            emoji: '🎫',
+                            value: 'Ticket',
+                        },
+                        {
+                            label: 'Fichas da Roleta Saphire',
+                            description: `Completar limite de 50 Fichas > ${prefix}roleta`,
+                            emoji: '🎟️',
+                            value: 'Roleta',
+                        },
+                        {
+                            label: 'Carta de Amor',
+                            description: `Completar limite de 50 cartas > ${prefix}carta`,
+                            emoji: '💌',
+                            value: 'Carta',
+                        },
+                        {
+                            label: 'Comida',
+                            description: `Completar limite de 50 comidas > ${prefix}floresta`,
+                            emoji: '🥘',
+                            value: 'Comida',
+                        },
+                        {
+                            label: 'Iscas/Minhocas',
+                            description: `Completar limite de 50 iscas > ${prefix}pesca`,
+                            emoji: '🪱',
+                            value: 'Iscas',
+                        },
+                        {
+                            label: 'Copo d\'agua',
+                            description: `Completar limite de 50 copos > ${prefix}minerar`,
+                            emoji: '🥤',
+                            value: 'Copo',
+                        },
+                        {
+                            label: 'Estrelas',
+                            description: `Estrelas para o perfil > ${prefix}perfil`,
+                            emoji: '⭐',
+                            value: 'Estrela',
+                        },
+                        {
+                            label: 'Título',
+                            description: `Personalize seu título > ${prefix}perfil > ${prefix}titulo`,
+                            emoji: '🔰',
+                            value: 'Titulo',
+                        },
+                        {
+                            label: 'Cores',
+                            description: `Personalize sua cor > ${prefix}setcolor`,
+                            emoji: '🎨',
+                            value: 'Cores',
+                        },
+                        {
+                            label: 'Já terminei',
+                            description: `Delete a mensagem e a request`,
+                            emoji: `${e.Deny}`,
+                            value: 'Close',
+                        }
+                    ])
+                )
+
+            if (!args[0]) {
+                if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+                return message.reply({ content: '50% das moedas gastas na loja vão para a loteira, exceto os tickets (100%).', embeds: [LojaEmbed], components: [PainelLoja] }).then(msg => {
+                    db.set(`User.Request.${message.author.id}`, 'ON')
+
+                    const filtro = (interaction) => interaction.customId === 'menu' && interaction.user.id === message.author.id
+
+                    const coletor = msg.createMessageComponentCollector({ filtro, time: 120000 });
+
+                    coletor.on('end', async (collected) => {
+                        LojaEmbed.setColor('RED').setFooter(`Sessão encerrada | ${message.author.id}`)
+                        db.delete(`User.Request.${message.author.id}`)
+                        msg.edit({ embeds: [LojaEmbed] }).catch(err => { return })
+                    })
+
+                    coletor.on('collect', async (collected) => {
+                        if (collected.user.id !== message.author.id) return
+
+                        let item = collected.values[0]
+                        collected.deferUpdate()
+
+                        msg.edit({ components: [PainelLoja] }).catch(err => { return })
+                        switch (item) {
+                            case 'VaraDePesca': VaraDePesca(); break;
+                            case 'Arma': Arma(); break;
+                            case 'Machado': Machado(); break;
+                            case 'Picareta': Picareta(); break;
+                            case 'Ticket': Ticket(); break;
+                            case 'Roleta': Roleta(); break;
+                            case 'Carta': Cartas(); break;
+                            case 'Comida': Comidas(); break;
+                            case 'Iscas': Iscas(); break;
+                            case 'Copo': Copos(); break;
+                            case 'Estrela': Estrelas(); break;
+                            case 'Titulo': Titulo(); break;
+                            case 'RestaurarPicareta': RestaurarPicareta(); break;
+                            case 'Cores': Cores(); break;
+                            case 'Close': db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { return message.channel.send(`${e.Deny} | Não foi possível apagar a mensagem:\n\`${err}\``) }); break;
+                            default: msg.edit({ components: [PainelLoja] }).catch(err => { return }); break;
+                        }
+                    })
+                })
+
+            }
+        }
+
+        function NoMoney() { message.channel.send(`${e.Deny} | ${message.author}, você não tem dinheiro suficiente para comprar este item.`) }
+        function Estrelas() { return message.channel.send(`${e.Loading} | ${message.author}, o "Stars Package" será lançado junto com o comando \`${prefix}perfil\`.\nO motivo desta categoria estar disponível? Boa pergunta, eu também não sei.`) }
+        function Cores() { return message.channel.send(`${e.Loading} | ${message.author}, o "Colors Package" será lançado junto com o comando \`${prefix}perfil\`.\nO motivo desta categoria estar disponível? Boa pergunta, eu também não sei.`) }
+
+        function VaraDePesca() {
+            db.get(`User.${message.author.id}.Slot.Vara`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) > 180 ? BuyVara() : NoMoney())
+
+            function BuyVara() {
+                db.subtract(`Balance_${message.author.id}`, 180); db.add(`Loteria.Prize`, 60)
+                db.set(`User.${message.author.id}.Slot.Vara`, "Vara de pesca")
+                return message.channel.send(`${e.Check} | ${message.author} comprou uma 🎣 \`Vara de Pesca\`.`)
+            }
+        }
+
+        function RestaurarPicareta() {
+            if (!db.get(`User.${message.author.id}.Slot.Picareta`)) return message.channel.send(`${e.Deny} | ${message.author}, você precisa ter uma picareta para restaurar a sua picareta.`)
+            db.get(`User.${message.author.id}.Slot.PicaretaUso`) >= 50 ? message.channel.send(`${e.Deny} | A sua picareta não precisa ser restaurada.`) : Restaurar()
+            if (db.get(`Balance_${message.author.id}`) < 30) return message.channel.send(`${e.Deny} | ${message.author}, você precisa ter pelo menos 30 ${e.Coin} Moedas na carteira para renovar a sua picareta.`)
+            function Restaurar() {
+                db.subtract(`Balance_${message.author.id}`, 30)
+                db.set(`User.${message.author.id}.Slot.PicaretaUso`, 50)
+                message.channel.send(`${e.Check} | ${message.author} renovou sua picareta para 50 usos.`)
+            }
+        }
+
+        function Arma() {
+            db.get(`User.${message.author.id}.Slot.Arma`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 4800 ? BuyArma() : NoMoney())
+
+            function BuyArma() {
+                db.subtract(`Balance_${message.author.id}`, 4800); db.add(`Loteria.Prize`, 2400)
+                db.set(`User.${message.author.id}.Slot.Arma`, "Arma")
+                return message.channel.send(`${e.Check} | ${message.author} comprou uma 🔫 \`Arma\` e liberou o comando \`${prefix}assaltar\`.`)
+            }
+        }
+
+        function Machado() {
+            db.get(`User.${message.author.id}.Slot.Machado`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 120 ? BuyMachado() : NoMoney())
+
+            function BuyMachado() {
+                db.subtract(`Balance_${message.author.id}`, 120); db.add(`Loteria.Prize`, 60)
+                db.set(`User.${message.author.id}.Slot.Machado`, "Machado")
+                return message.channel.send(`${e.Check} | ${message.author} comprou um 🪓 \`Machado\`.`)
+            }
+        }
+
+        function Picareta() {
+            db.get(`User.${message.author.id}.Slot.Picareta`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 120 ? BuyPicareta() : NoMoney())
+
+            function BuyPicareta() {
+                db.subtract(`Balance_${message.author.id}`, 120); db.add(`Loteria.Prize`, 60)
+                db.set(`User.${message.author.id}.Slot.Picareta`, "Picareta")
+                db.set(`User.${message.author.id}.Slot.PicaretaUso`, 50)
+                return message.channel.send(`${e.Check} | ${message.author} comprou uma ⛏️ \`Picareta\`.`)
+            }
+        }
+
+        function Titulo() {
+            db.get(`User.${message.author.id}.Slot.Titulo`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 10000 ? BuyTitulo() : NoMoney())
+
+            function BuyTitulo() {
+                db.subtract(`Balance_${message.author.id}`, 10000); db.add(`Loteria.Prize`, 60)
+                db.set(`User.${message.author.id}.Slot.Titulo`, 'ON')
+                return message.channel.send(`${e.Check} | ${message.author} comprou a permissão 🔰 \`Título\`.`)
+            }
+        }
+
+        function Ticket() {
+            if (db.get('Lotery.Close')) return message.reply(`${e.Deny} | A loteria não está aberta.`)
+            db.get(`Balance_${message.author.id}`) >= 500 ? BuyTicket() : NoMoney()
+            function BuyTicket() {
+                db.subtract(`Balance_${message.author.id}`, 500); db.add(`Loteria.Tickets_${message.author.id}`, 50); db.add('Loteria.Prize', 500); db.add('Loteria.TicketsCompradosAoTodo', 500);
+                return message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
+                    for (let i = 0; i === 50; i++) { db.push('Loteria.Users', `${message.author.id}`) }
+                    msg.edit(`${e.Check} | ${message.author} comprou 50 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${e.Coin}Moedas.`).catch(err => { return })
+                }).catch(err => {
+                    message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
+                })
+            }
+        }
+
+        function Roleta() {
+            let x = db.get(`User.${message.author.id}.Slot.Fichas`) || 0
+            x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de fichas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 5 ? BuyFichas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 5} ${e.Coin}Moedas para comprar mais ${50 - x} fichas.`)
+            function BuyFichas() {
+                db.subtract(`Balance_${message.author.id}`, (50 - x) * 5)
+                db.add('Loteria.Prize', ((50 - x) * 5) / 2)
+                db.add(`User.${message.author.id}.Slot.Fichas`, 50 - x)
+                message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Fichas da Roleta\` comprando +${50 - x} fichas.`)
+            }
+        }
+
+        function Cartas() {
+            let x = db.get(`User.${message.author.id}.Slot.Cartas`) || 0
+            x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de cartas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 2 ? BuyCartas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 2} ${e.Coin}Moedas para comprar mais ${50 - x} cartas.`)
+            function BuyCartas() {
+                db.subtract(`Balance_${message.author.id}`, (50 - x) * 2)
+                db.add('Loteria.Prize', ((50 - x) * 2) / 2)
+                db.add(`User.${message.author.id}.Slot.Cartas`, 50 - x)
+                message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Cartas de Amor\` comprando +${50 - x} cartas.`)
+            }
+        }
+
+        function Comidas() {
+            let x = db.get(`User.${message.author.id}.Slot.Comidas`) || 0
+            x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de comidas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 2 ? BuyComidas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 2} ${e.Coin}Moedas para comprar mais ${50 - x} comidas.`)
+            function BuyComidas() {
+                db.subtract(`Balance_${message.author.id}`, (50 - x) * 2)
+                db.add('Loteria.Prize', ((50 - x) * 2) / 2)
+                db.add(`User.${message.author.id}.Slot.Comidas`, 50 - x)
+                message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Comidas\` comprando +${50 - x} comidas.`)
+            }
+        }
+
+        function Iscas() {
+            let x = db.get(`User.${message.author.id}.Slot.Iscas`) || 0
+            x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de iscas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 1 ? BuyIscas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 1} ${e.Coin}Moedas para comprar mais ${50 - x} iscas.`)
+            function BuyIscas() {
+                db.subtract(`Balance_${message.author.id}`, (50 - x) * 1)
+                db.add('Loteria.Prize', ((50 - x) * 1) / 2)
+                db.add(`User.${message.author.id}.Slot.Iscas`, 50 - x)
+                message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Iscas da Roleta\` comprando +${50 - x} iscas.`)
+            }
+        }
+
+        function Copos() {
+            let x = db.get(`User.${message.author.id}.Slot.Copos`) || 0
+            x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de copos.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 1 ? BuyCopos() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 1} ${e.Coin}Moedas para comprar mais ${50 - x} copos.`)
+            function BuyCopos() {
+                db.subtract(`Balance_${message.author.id}`, (50 - x) * 1)
+                db.add('Loteria.Prize', ((50 - x) * 1) / 2)
+                db.add(`User.${message.author.id}.Slot.Copos`, 50 - x)
+                message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Copos d'água'\` comprando +${50 - x} copos.`)
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

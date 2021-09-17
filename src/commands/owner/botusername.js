@@ -20,8 +20,8 @@ module.exports = {
         return message.reply({ embeds: [LoadingEmbed] }).then(msg => {
             message.channel.sendTyping().then(() => {
                 setTimeout(() => {
-                    client.user.setUsername(NewName).then(() => {
-                        msg.edit({ embeds: [SucessEmbed] }).catch(err => { return })
+                    client.user.setUsername(NewName).then(data => {
+                        msg.edit({ content: data, embeds: [SucessEmbed] }).catch(err => { return message.reply(`${e.Deny} | ${err}`) })
                         return message.channel.send(`${e.NezukoJump} Meu novo nome agora é **${NewName}**`)
                     }).catch(err => {
                         return message.reply(`${e.Attention} Discord Warn:\n\`${err}\``)

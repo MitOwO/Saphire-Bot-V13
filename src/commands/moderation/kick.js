@@ -26,7 +26,7 @@ module.exports = {
             member = message.mentions.members.first()
         }
 
-        let reason = args.slice(1).join(" ") || 'Sem razão definida'
+        let reason = args.slice(1).join(" ") || 'Sem motivo informado'
         let logchannel = db.get(`Servers.${message.guild.id}.LogChannel`)
 
         if (!args[0]) { return message.reply(`${e.Info} | Comando Kick/Expulsar\n \n\`${prefix}kick @user [Razão(opicional)]\` - Expulse alguém do servidor.\n\`${prefix}kick ID [Razão(opicional)]\` - Expulse alguém pelo ID`) }

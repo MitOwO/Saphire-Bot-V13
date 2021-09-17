@@ -18,7 +18,7 @@ module.exports = {
         let block = db.get(`Client.BlockUsers.${message.author.id}`)
         if (block) return message.reply(`${e.Deny} | Você está bloqueado e perdeu acesso aos seguintes comandos: \`${prefix}bug\` \`${prefix}sendcantada\` \`${prefix}ideiasaphire\` \`${prefix}gif\``)
 
-        const channel = config.BugsChannelId
+        const ChannelId = config.BugsChannelId
 
         const noargs = new MessageEmbed()
             .setColor('BLUE')
@@ -40,23 +40,47 @@ module.exports = {
 
             let mensagem = args.join(" ")
             if (mensagem === 'Quando eu uso "comando x" tal bug acontece') return message.reply(`${e.Nagatoro} | Está mensagem claramente não é permitida, né?`)
-            if (mensagem.length < 10 || mensagem.length > 400) { return message.reply(`${e.Deny} | Por favor, relate o bug dentro de **10~400 caracteres.**`) }
+            if (mensagem.length < 10 || mensagem.length > 1000) { return message.reply(`${e.Deny} | Por favor, relate o bug dentro de **10~1000 caracteres.**`) }
 
-            const ReportBugEmbed = new MessageEmbed()
-                .setColor('BLUE')
-                .setTitle('📢 Report de Bugs/Erros Recebido')
-                .addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true)
-                .addField('Relatório', mensagem)
+            let CanalDeConvite = await message.channel
 
-            const canal = await client.channels.cache.get(channel)
-            if (!canal) return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`)
-            canal.send({ embeds: [ReportBugEmbed] }).then(() => {
+            function WithChannel() {
                 db.set(`User.${message.author.id}.Timeouts.Bug`, Date.now())
-                message.channel.sendTyping()
-                setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
+                CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {
+                    const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `[${message.guild.name}](${ChannelInvite.url}) (*${message.guild.id}*)`).addField('Relatório', mensagem)
+                    if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                        const channel = client.channels.cache.get(ChannelId); if (!channel) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                            channel.send({ embeds: [ReportBugEmbed] }).then(() => {
+                                message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                            }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                        }
+                    }
+                }).catch(() => {
+                    db.set(`User.${message.author.id}.Timeouts.Bug`, Date.now())
+                    const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `${message.guild.name} (*${message.guild.id}*)`).addField('Relatório', mensagem)
+                    if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                        const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
+                            channel.send({ embeds: [ReportBugEmbed] }).then(() => {
+                                message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                            }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                        }
+                    }
+                })
+            }
 
-            }).catch(err => { return message.channel.send(`${e.Deny} | Ocorreu um erro no envio.\n\`${err}\``) })
+            function WithoutChannel() {
+                db.set(`User.${message.author.id}.Timeouts.Bug`, Date.now())
+                const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `${message.guild.name} (*${message.guild.id}*)`).addField('Relatório', mensagem)
+                if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                    const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
+                        channel.send({ embeds: [ReportBugEmbed] }).then(() => {
+                            message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                        }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                    }
+                }
+            }
 
+            CanalDeConvite ? WithChannel() : WithoutChannel()
         }
     }
 }

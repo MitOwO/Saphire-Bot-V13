@@ -33,23 +33,22 @@ module.exports = {
             const DenyFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }
             let Collector2 = msg.createReactionCollector({ filter: DenyFilter, max: 1, errors: ['max'] })
 
+            i = 0
             Collector.on('collect', () => {
-                db.add(`User.${message.author.id}.Kim`, 1)
+                i++
                 KimetsuEmbed.setImage(g.KimetsuNoYaiba[Math.floor(Math.random() * g.KimetsuNoYaiba.length)])
                 msg.edit({ embeds: [KimetsuEmbed] }).catch(err => { return })
             })
 
             Collector.on('end', () => {
                 db.delete(`User.Request.${message.author.id}`)
-                db.delete(`User.${message.author.id}.Kim`)
-                KimetsuEmbed.setColor('RED').setTitle(`${e.Deny} Anime: Demon Slayer: Kimetsu no Yaiba`).setFooter(`Sessão Expirada | ${db.get(`User.${message.author.id}.Kim`) || 0} Requests solicitadas.`)
-                msg.edit({ embeds: [KimetsuEmbed] }).catch(err => { return })
+                KimetsuEmbed.setColor('RED').setTitle(`${e.Deny} Anime: Demon Slayer: Kimetsu no Yaiba`).setFooter(`Sessão Expirada | ${i} Requests solicitadas.`)
+                msg.edit({ embeds: [KimetsuEmbed] }).then(() => { i = 0 }).catch(err => { return })
             })
 
             Collector2.on('end', () => {
                 db.delete(`User.Request.${message.author.id}`)
-                db.delete(`User.${message.author.id}.Kim`)
-                msg.delete().catch(err => { return })
+                msg.delete().then(() => { i = 0 }).catch(err => { return })
             })
         }).catch(err => {
             db.delete(`User.Request.${message.author.id}`)

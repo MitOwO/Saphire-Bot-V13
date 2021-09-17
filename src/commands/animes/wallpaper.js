@@ -38,7 +38,13 @@ module.exports = {
           ${prefix}w Berserk           ${prefix}w Blend-s
           ${prefix}w EroManga          ${prefix}w FairyTail 
           ${prefix}w GoblinSlayer      ${prefix}w Haikyuu 
-          ${prefix}w Hyouka            ${prefix}w ~Em breve~
+          ${prefix}w Hyouka            ${prefix}w ImoutoSaeIreba
+          ${prefix}w InfiniteStratos   ${prefix}w Inuyasha
+          ${prefix}w Kakegurui         ${prefix}w MaidDragon
+          ${prefix}w Kuroko            ${prefix}w NoGameNoLife
+          ${prefix}w GoToubun          ${prefix}w ReCreators
+          ${prefix}w RWBY              ${prefix}w ShingekiNoKyojin
+          ${prefix}w ShokugekiNoSouma  - PÁGINA 2 EM BREVE -
        `
 
         const categorias = new MessageEmbed()
@@ -46,7 +52,7 @@ module.exports = {
             .addField(`${e.Attention} | Atenção!`, `\`\`\`txt\n1. Alguns wallpapers contém spoilers, tome cuidado!\n2. Não use espaços no nome do anime\`\`\``)
             .addField(`${e.Download} | Quer algum anime na lista?`, `\`\`\`${prefix}sugest Coloca wallpaper do anime XXX\`\`\``)
             .addField(`${e.Check} | Animes Disponíveis`, `\`\`\`txt\n${WallPapersIndents}\`\`\``)
-            .setFooter(`Package: 2075 Wallpapers | ${prefix}wallpaper credits | ${prefix}servers`)
+            .setFooter(`Package: 2875 Wallpapers | ${prefix}wallpaper credits | ${prefix}servers`)
 
         if (['créditos', 'credits', 'creditos'].includes(args[0])) {
             const CreditsEmbed = new MessageEmbed()
@@ -96,6 +102,39 @@ module.exports = {
 
         let pedido = args[0].toLowerCase()
         switch (pedido) {
+            case 'shokugekinosouma':
+                WallPapers(Wallpapers.ShokugekiNoSouma);
+                break;
+            case 'shingekinokyojin':
+                WallPapers(Wallpapers.ShingekiNoKyojin);
+                break;
+            case 'rwby':
+                WallPapers(Wallpapers.RWBY);
+                break;
+            case 'recreators':
+                WallPapers(Wallpapers.ReCreators);
+                break;
+            case 'kuroko':
+                WallPapers(Wallpapers.Kuroko);
+                break;
+            case 'gotoubun':
+                WallPapers(Wallpapers.GoToubun);
+                break;
+            case 'nogamenolife':
+                WallPapers(Wallpapers.NoGameNoLife);
+                break;
+            case 'maiddragon':
+                WallPapers(Wallpapers.MaidDragon);
+                break;
+            case 'kakegurui':
+                WallPapers(Wallpapers.Kakegurui);
+                break;
+            case 'inuyasha':
+                WallPapers(Wallpapers.Inuyasha);
+                break;
+            case 'infinitestratos':
+                WallPapers(Wallpapers.InfiniteStratos);
+                break;
             case "konosuba":
                 WallPapers(Wallpapers.Konosuba);
                 break;
@@ -241,6 +280,9 @@ module.exports = {
                 break;
             case 'hyouka':
                 WallPapers(Wallpapers.Hyouka);
+                break;
+            case 'imoutosaeireba':
+                WallPapers(Wallpapers.ImoutoSaeIreba);
                 break;
             default:
                 message.reply(`${e.Deny} | Escreva o nome de acordo a tabela do comando \`${prefix}wallpaper\``)

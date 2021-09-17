@@ -26,7 +26,6 @@ module.exports = {
 
             if (!args[0]) { return message.reply(`${e.Deny} | Tenta assim...\n\`${prefix}sacar [quantia]/[all]\``) }
             if (args[1]) { return message.reply(`${e.Deny} | Apenas a quantidade que você deseja sacar.`) }
-            if ([',', '.', '-'].includes(args[0])) { return message.reply(`${e.Deny} | Nada de tentar quebrar o sistema com pontos e virgulas, tudo bem?`) }
 
             if (['all', 'tudo'].includes(args[0])) {
 
@@ -39,14 +38,15 @@ module.exports = {
                 }
             }
 
-            if (isNaN(args[0])) { return message.reply(`${e.Deny} | O valor que você digitou não é um número.`) }
+            let quantia = parseInt(quantia)
+            if (isNaN(quantia)) { return message.reply(`${e.Deny} | O valor que você digitou não é um número.`) }
             if (money < 0) { return message.reply(`${e.Deny} | Você está negativado.`) }
-            if (money < args[0]) { return message.reply(`${e.Deny} | Você não possui todo esse dinheiro para sacar.`) }
-            if (args[0] < 0) { return message.reply(`${e.Deny} | Quer sacar um valor negativo é?`) }
+            if (money < quantia) { return message.reply(`${e.Deny} | Você não possui todo esse dinheiro para sacar.`) }
+            if (quantia < 0) { return message.reply(`${e.Deny} | Quer sacar um valor negativo é?`) }
 
-            db.add(`Balance_${message.author.id}`, args[0])
-            db.subtract(`Bank_${message.author.id}`, args[0])
-            return message.reply(`${e.Check} | ${message.author} sacou ${args[0]} ${e.Coin} Moedas`)
+            db.add(`Balance_${message.author.id}`, quantia)
+            db.subtract(`Bank_${message.author.id}`, quantia)
+            return message.reply(`${e.Check} | ${message.author} sacou ${quantia} ${e.Coin} Moedas`)
         }
     }
 }

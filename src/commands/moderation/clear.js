@@ -17,7 +17,7 @@ module.exports = {
       .setColor("BLUE")
       .setTitle("🧹 Comando Clear")
       .setDescription("Use o comando para fazer aquela limpa nas mensagens")
-      .addField('Comandos do Clear', '`clear all` Apaga todo o chat\n`clear 1~99` Apague até 99 mensagens\n`clear images` Apague imagens\n`clear bots` Apague mensagens de bots\n`clear @user` Apague mensagens de alguém')
+      .addField('Comandos do Clear', '`clear 1~99` Apague até 99 mensagens\n`clear images` Apague imagens\n`clear bots` Apague mensagens de bots\n`clear @user` Apague mensagens de alguém')
 
     if (!args[0]) { return message.reply({ embeds: [clearembed] }) }
 
@@ -69,42 +69,19 @@ module.exports = {
         }).catch(err => { return message.channel.send(`${e.Attention} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
       }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
-    } else if (['all', 'tudo'].includes(args[0])) {
-
-      return message.reply(`${e.Loading} | Sessão em reforma.`)
-
-      // if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-      //   return message.reply(`${e.Deny} | Este comando apaga completamente o chat, logo, este comando é fechado apenas para Administradores.`)
-      // }
-      // if (args[1]) { return message.reply(`${e.Deny} | Nada além do argumento "${args[0]}"`) }
-
-      // let messages = 0
-      // let i = true
-      // while (i) {
-      //   if (!message.channel) i = false
-      //   let deleteAble = message.channel.messages.fetch({ limit: 100 }).catch(err => { i = false; message.channel.send(`${e.Attention} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
-      //   if (deleteAble.size < 99) {
-      //     await message.channel.bulkDelete(deleteAble).catch(err => { i = false; message.channel.send(`${e.Attention} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
-      //     messages += deleteAble.size
-      //     i = false
-      //     message.channel.send(`${e.Check} | Deletei um total de ${messages} mensagens.\n${e.Info} | Mensagens acima de 14 dias não podem ser apagadas por bots. (Limitações do Discord)`)
-      //     messages = 0
-      //     return
-      //   }
-      //   message.channel.bulkDelete(deleteAble).catch(err => { i = false; message.channel.send(`${e.Attention} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
-      //   messages += deleteAble.size
-      // }
-
     } else if (typeof (parseInt(args[0])) == "number") {
 
-      if (isNaN(args[0])) { return message.channel.send(`${e.Deny} | Hey! Me fala números para que eu possa contar, ok?`) }
-      if (args[1]) { return message.reply(`${e.Deny} | Nada além do ${args[0]}! Use \`${prefix}clear\` para mais informações.`) }
-      if (parseInt(args[0]) > 100 || parseInt(args[0]) < 1) return message.reply(`${e.Deny} | Me fala um número de 0 a 100, ok?`)
+      message.delete().then(() => {
 
-      message.channel.messages.fetch({ limit: parseInt(args[0]) }).then(messages => {
-        message.channel.bulkDelete(messages).then(msg => {
-          message.channel.send(`${e.Check} | Deletei um total ${msg.size} mensagens sob as ordens de ${message.author}`)
-        }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+        if (isNaN(args[0])) { return message.channel.send(`${e.Deny} | Hey! Me fala números para que eu possa contar, ok?`) }
+        if (args[1]) { return message.reply(`${e.Deny} | Nada além do ${args[0]}! Use \`${prefix}clear\` para mais informações.`) }
+        if (parseInt(args[0]) > 100 || parseInt(args[0]) < 1) return message.reply(`${e.Deny} | Me fala um número de 0 a 100, ok?`)
+
+        message.channel.messages.fetch({ limit: parseInt(args[0]) }).then(messages => {
+          message.channel.bulkDelete(messages).then(msg => {
+            message.channel.send(`${e.Check} | Deletei um total ${msg.size} mensagens sob as ordens de ${message.author}`)
+          }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+        })
       })
     } else {
       message.reply(`${e.Info} | O argumento X \`${prefix}clear "X"\` precisa ser um número para deletar as mensagens fora da clase \`mídas/bots/@users\`.`)

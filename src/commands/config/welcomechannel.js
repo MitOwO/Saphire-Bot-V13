@@ -19,11 +19,6 @@ module.exports = {
         let canal = db.get(`Servers.${message.guild.id}.WelcomeChannel`)
         let LeaveChannel = db.get(`Servers.${message.guild.id}.LeaveChannel`)
 
-        const Autenticando = new MessageEmbed().setColor('BLUE').setDescription()
-        const Autenticado = new MessageEmbed().setColor('GREEN').setDescription(`${e.Check} | Request autenticada`).setFooter(`${message.author.id}`)
-        const Abortada = new MessageEmbed().setColor('RED').setDescription(`${e.Deny} | Request abortada`).setFooter(`${message.author.id}`)
-        const Expired = new MessageEmbed().setColor('RED').setDescription(`${e.Deny} | Request abortada | Tempo excedido`).setFooter(`${message.author.id}`)
-
         if (args[0] === 'off') {
             if (canal === null) {
                 return message.reply(`${e.Deny} | O Welcome System já está desativado.`)
@@ -52,11 +47,11 @@ module.exports = {
                                 })
                             } else {
                                 db.delete(`User.Request.${message.author.id}`)
-                                msg.edit({ embeds: [Abortada] })
+                                msg.edit(`${e.Deny} | Request abortada`)
                             }
                         }).catch(() => {
                             db.delete(`User.Request.${message.author.id}`)
-                            msg.edit({ embeds: [Expired] })
+                            msg.edit(`${e.Deny} | Request abortada | Tempo excedido`)
                         })
                 })
             }
@@ -101,16 +96,15 @@ module.exports = {
                                                             const reaction = collected.first()
 
                                                             if (reaction.emoji.name === '✅') {
-                                                                msg.reply(`${e.Loading} | Autenticando...`).then(x => {
+                                                                msg.edit(`${e.Loading} |  Autenticando... | ................`)
 
-                                                                    message.channel.sendTyping().then(() => {
-                                                                        setTimeout(function () {
-                                                                            db.delete(`User.Request.${message.author.id}`)
-                                                                            db.set(`Servers.${message.guild.id}.LeaveChannel`, channel.id)
-                                                                            x.edit(`${e.Check} | Autenticação aprovada | ${message.channel.id}`).catch(err => { return })
-                                                                            message.channel.send(`${e.NezukoJump} | Ok, ok! Pode deixar comigo. Vou avisar no canal ${channel} sobre todo mundo que entrar e sair. ${e.Menhera}`)
-                                                                        }, 3100)
-                                                                    })
+                                                                message.channel.sendTyping().then(() => {
+                                                                    setTimeout(function () {
+                                                                        db.delete(`User.Request.${message.author.id}`)
+                                                                        db.set(`Servers.${message.guild.id}.LeaveChannel`, channel.id)
+                                                                        msg.edit(`${e.Check} | Autenticação aprovada | ${message.channel.id}`).catch(err => { return })
+                                                                        message.channel.send(`${e.NezukoJump} | Ok, ok! Pode deixar comigo. Vou avisar no canal ${channel} sobre todo mundo que entrar e sair. ${e.Menhera}`)
+                                                                    }, 3100)
                                                                 })
                                                             } else {
                                                                 db.delete(`User.Request.${message.author.id}`)
@@ -131,11 +125,11 @@ module.exports = {
                             })
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
-                            msg.edit({ embeds: [Abortada] })
+                            msg.edit(`${e.Deny} | Request abortada`)
                         }
                     }).catch(() => {
                         db.delete(`User.Request.${message.author.id}`)
-                        msg.edit({ embeds: [Expired] })
+                        msg.edit(`${e.Deny} | Request abortada | Tempo excedido`)
                     })
             })
         }

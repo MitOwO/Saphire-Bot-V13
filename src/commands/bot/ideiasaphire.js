@@ -27,36 +27,52 @@ module.exports = {
             return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { return })
         } else {
 
-            const channel = config.SugestChannelId
-
+            const ChannelId = config.SugestChannelId
             let mensagem = args.join(" ")
 
-            const noargs = new MessageEmbed()
-                .setColor('BLUE')
-                .setTitle(`${e.CoolDoge} Teve uma ideia daora?`)
-                .setDescription('Com este comando, você manda sua ideia direto pro meu criador.')
-                .addField('Requisitos', `**NADA** pornográfico ou de cunho criminoso.\nPara mandar um gif, \`${prefix}gif\`\nFale bem a sua ideia para não ser recusada/mal compreendida.\nSua ideia contém imagem? Manda com um link.`)
-                .addField('Comando exemplo', `\`${prefix}sugerir Que tal colocar um comando em que todos podem dar suas ideias pra ${client.user.username}?\``)
-                .addField('Comando exemplo com imagem', `\`${prefix}sugerir Que tal colocar um comando em que todos podem dar suas ideias pra ${client.user.username}? https://linkdaimagem.com\``)
-                .setFooter(`Sugestão grande demais? Use o ${prefix}bin`)
-
+            const noargs = new MessageEmbed().setColor('BLUE').setTitle(`${e.CoolDoge} Teve uma ideia daora?`).setDescription('Com este comando, você manda sua ideia direto pro meu criador.').addField('Requisitos', `**NADA** pornográfico ou de cunho criminoso.\nPara mandar um gif, \`${prefix}gif\`\nFale bem a sua ideia para não ser recusada/mal compreendida.\nSua ideia contém imagem? Manda com um link.`).addField('Comando exemplo', `\`${prefix}sugerir Que tal colocar um comando em que todos podem dar suas ideias pra ${client.user.username}?\``).addField('Comando exemplo com imagem', `\`${prefix}sugerir Que tal colocar um comando em que todos podem dar suas ideias pra ${client.user.username}? https://linkdaimagem.com\``).setFooter(`Sugestão grande demais? Use o ${prefix}bin`)
             if (!args[0]) { return message.reply({ embeds: [noargs] }) }
+            if (mensagem.length < 15 || mensagem.length > 2000) { return message.reply(`${e.Deny} | Por favor, descreva sua sugestão entre **10~2000 caracteres**.`) }
 
-            const newideia = new MessageEmbed()
-                .setColor('GREEN')
-                .setTitle('📢 Nova Sugestão Recebida')
-                .addField('Enviado por', `${message.author.tag} *\`(${message.author.id})\`*`, true)
-                .addField('Sugestão', mensagem)
+            let CanalDeConvite = await message.channel
 
-            if (mensagem.length < 10 || mensagem.length > 4000) { return message.reply(`${e.Deny} | Por favor, descreva sua sugestão entre **10~400 caracteres**.`) }
-
-            const canal = await client.channels.cache.get(channel)
-            if (!canal) return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`)
-            canal.send({ embeds: [newideia] }).then(() => {
+            function WithChannel() {
                 db.set(`User.${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
-                message.channel.sendTyping()
-                setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
-            }).catch(err => { return message.channel.send(`${e.Deny} | Ocorreu um erro no envio.\n\`${err}\``) })
+                CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {
+                    const newideia = new MessageEmbed().setColor('GREEN').setTitle('📢 Nova Sugestão Recebida').addField('Enviado por', `${message.author.tag} - *\`${message.author.id}\`*`, true).addField('Servidor', `[${message.guild.name}](${ChannelInvite.url}) - *\`${message.guild.id}\`*`).addField('Sugestão', mensagem)
+                    if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                        const channel = client.channels.cache.get(ChannelId); if (!channel) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                            channel.send({ embeds: [newideia] }).then(() => {
+                                message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                            }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                        }
+                    }
+                }).catch(() => {
+                    db.set(`User.${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
+                    const newideianoinvite = new MessageEmbed().setColor('GREEN').setTitle('📢 Nova Sugestão Recebida').addField('Enviado por', `${message.author.tag} - *\`${message.author.id}\`*`, true).addField('Servidor', `${message.guild.name} - *\`${message.guild.id}\`*`).addField('Sugestão', mensagem)
+                    if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                        const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
+                            channel.send({ embeds: [newideianoinvite] }).then(() => {
+                                message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                            }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                        }
+                    }
+                })
+            }
+
+            function WithoutChannel() {
+                db.set(`User.${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
+                const newideianoinvite = new MessageEmbed().setColor('GREEN').setTitle('📢 Nova Sugestão Recebida').addField('Enviado por', `${message.author.tag} - *\`${message.author.id}\`*`, true).addField('Servidor', `${message.guild.name} - *\`${message.guild.id}\`*`).addField('Sugestão', mensagem)
+                if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
+                    const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
+                        channel.send({ embeds: [newideianoinvite] }).then(() => {
+                            message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                        }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                    }
+                }
+            }
+
+            CanalDeConvite ? WithChannel() : WithoutChannel()
         }
     }
 }

@@ -61,10 +61,7 @@ module.exports = {
 
         if (['user', 'usuário'].includes(args[0])) {
 
-            let id = args[1]
-            if (!id) { return message.reply('`' + prefix + 'del server ID`') }
-            if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
-            if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
+            if (!user) { return message.reply('`' + prefix + 'del uesrid @user`') }
 
             db.delete(`User.${user.id}`)
             db.delete(`Bank_${user.id}`)

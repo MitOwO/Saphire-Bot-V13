@@ -16,10 +16,6 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}`)
 
-        const cancel = new MessageEmbed()
-            .setColor('RED')
-            .setDescription(`${e.Check} | Comando cancelado por: ${message.author}`)
-
         const prefixembed = new MessageEmbed()
             .setColor('BLUE')
             .setTitle(`${e.Info} Informações sobre Prefixo`)
@@ -78,10 +74,7 @@ module.exports = {
 
         if (args[0]) {
 
-            const alterado = new MessageEmbed().setColor('GREEN').setDescription(`${e.Check} | O prefixo foi alterado com sucesso!`)
-            const newprefix = new MessageEmbed().setColor('BLUE').setTitle(`${e.QuestionMark} | Deseja alterar meu prefixo para: \`${args[0]}\` ?`)
-
-            return message.reply({ embeds: [newprefix] }).then(msg => {
+            return message.reply(`${e.QuestionMark} | Deseja alterar meu prefixo para: \`${args[0]}\` ?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
                 msg.react('✅').catch(err => { return }) // Check
                 msg.react('❌').catch(err => { return }) // X
@@ -95,16 +88,14 @@ module.exports = {
                         msg.reactions.removeAll().catch(err => { return })
 
                         if (args[0] === "-") {
-                            const PrefixPadrao = new MessageEmbed().setColor('BLUE').setDescription(`${e.Loading} | Este é o meu prefixo padrão... Resetando prefixo deste servidor...`)
-                            const Done = new MessageEmbed().setColor('GREEN').setDescription(`${e.Check} | ${message.author}, o prefixo foi resetado. Prefixo atual: \`-\``)
 
-                            msg.edit({ embeds: [PrefixPadrao] })
+                            msg.edit(`${e.Loading} | Este é o meu prefixo padrão... Resetando prefixo deste servidor...`)
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
                                     db.delete(`User.Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.Prefix`)
                                     msg.delete().catch(err => { return })
-                                    message.reply({ embeds: [Done] }).catch(err => { return })
+                                    message.reply(`${e.Check} | ${message.author}, o prefixo foi resetado. Prefixo atual: \`-\``).catch(err => { return })
                                 }, 3000)
                             })
                         } else {
@@ -123,11 +114,11 @@ module.exports = {
                     } else {
                         db.delete(`User.Request.${message.author.id}`)
                         msg.reactions.removeAll().catch(err => { return })
-                        msg.edit({ embeds: [cancel] }).catch(err => { return })
+                        msg.edit(`${e.Check} | Comando cancelado por: ${message.author}`).catch(err => { return })
                     }
                 }).catch(() => {
                     db.delete(`User.Request.${message.author.id}`)
-                    msg.edit({ embeds: [cancel.setDescription('⏱️ | Comando cancelado por: Tempo Expirado.')] }).catch(err => { return })
+                    msg.edit(`${e.Check} | Comando cancelado por: Tempo expirado`).catch(err => { return })
                 })
 
             })

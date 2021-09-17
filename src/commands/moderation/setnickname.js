@@ -26,7 +26,7 @@ module.exports = {
 
             let nick = args.join(" ")
             if (args[0]) { if (args[0].startsWith('<@') && args[0].endsWith('>')) nick = args.slice(1).join(" ") }
-            if (nick.length > 32) return message.reply(resposta)
+            if (nick.length > 32) return message.reply(`${e.Deny} | O nome não pode ultrapassar **32 Caracteres**`)
 
             member.setNickname(nick).then(() => {
                 return message.reply(`${e.Check} | Feito.`)
@@ -37,7 +37,7 @@ module.exports = {
         } else if (!user) {
 
             const nick = args.join(" ")
-            if (nick.length > 32) { return message.reply('❌ | O tamanho máximo do nome é de **32 caracteres**.') }
+            if (nick.length > 32) { return message.reply(`${e.Deny} | O tamanho máximo do nome é de **32 caracteres**.`) }
 
             if (message.author.id === message.guild.ownerId) return message.reply(`${e.Deny} | Não posso alterar o nome do dono do servidor.`)
             const member = message.guild.members.cache.get(message.author.id)

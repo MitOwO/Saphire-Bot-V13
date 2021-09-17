@@ -26,12 +26,8 @@ module.exports = {
         if (search.length > 100) { return message.reply(`${e.Deny} | Por favor, tente algo com menos de **100 caracteres**, pelo bem do meu sistema ${e.Itachi}`) }
         if (search.length < 4) { return message.reply(`${e.Deny} | Por favor, tente algo com mais de **4 caracteres**, pelo bem do meu sistema ${e.SadPanda}`) }
 
-        const noreulst = new MessageEmbed()
-            .setColor('RED')
-            .setDescription(`${e.Deny} | Nenhum resultado obtido para: **${search}**`)
-
         kitsu.searchAnime(search).then(async result => {
-            if (result.length === 0) { return msg.edit({ embeds: [noreulst] }).catch(err => { return }) }
+            if (result.length === 0) { return msg.edit(`${e.Deny} | Nenhum resultado obtido para: **${search}**`).catch(err => { return }) }
 
             let anime = result[0]
 
@@ -106,13 +102,8 @@ module.exports = {
                 return message.reply(`${e.Attention} | Houve um erro ao executar este comando.\n\`${err}\``)
             })
         }).catch(err => {
-
-            const SearchError = new MessageEmbed()
-                .setColor('RED')
-                .setDescription(`${e.Attention} **ERROR ANIME SEARCH**\n~CONSOLE LOG: "${err}"`)
-
-            message.reply({ embeds: [SearchError] })
-            return message.reply({ embeds: [noreulst]}).catch(err => { return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`') })
+            message.reply(`${e.Attention} **ERROR ANIME SEARCH**\n~CONSOLE LOG: "${err}"`)
+            return message.reply(`${e.Deny} | Nenhum resultado obtido para: **${search}**`).catch(err => { return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`') })
         })
     }
 }

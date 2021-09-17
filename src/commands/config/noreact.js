@@ -14,8 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}`)
-
-        db.get(`User.${message.author.id}.NoReact`) ? React() : NoReact()
+        let ReactStats = db.get(`User.${message.author.id}.NoReact`)
 
         function NoReact() {
             return message.reply(`${e.QuestionMark} | Deseja bloquear a interação dos comandos da categoria \`interação\`?`).then(msg => {
@@ -68,5 +67,7 @@ module.exports = {
                 })
             })
         }
+
+        ReactStats ? React() : NoReact()
     }
 }

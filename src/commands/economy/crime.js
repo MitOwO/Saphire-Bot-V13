@@ -84,11 +84,11 @@ module.exports = {
 
                         }).catch(() => {
                             db.delete(`User.Request.${message.author.id}`); db.delete(`User.${message.author.id}.Timeouts.Procurado`)
-                            msg.edit(`${e.Deny} | Request cancelada: Tempo esgotado.`)
+                            msg.edit(`${e.Deny} | Request cancelada: Tempo esgotado.`); db.delete(`User.${message.author.id}.Timeouts.Procurado`)
                         })
 
                         // FUNCTIONS
-                        function MsgDelete() { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { return message.channel.send(`${e.Deny} | Error Class: Interferência | Não apague minhas mensagens para não haver interferências e interrupções nos meus comandos.`) }) }
+                        function MsgDelete() { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { db.delete(`User.${message.author.id}.Timeouts.Procurado`); return message.channel.send(`${e.Deny} | Error Class: Interferência | Não apague minhas mensagens para não haver interferências e interrupções nos meus comandos.`) }) }
                         function Preso() { db.set(`User.${message.author.id}.Timeouts.Preso`, Date.now()) }
                         function Result(x) { Math.random() < x }
                         let multa = Math.floor(Math.random() * 4001)

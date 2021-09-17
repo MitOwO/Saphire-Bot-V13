@@ -41,8 +41,8 @@ module.exports = {
             }
 
             function NewBitCoin() {
-                db.set(`User.${message.author.id}.Bits`, 1); db.add(`Bitcoin_${message.author.id}`, 1); db.add(`Bank_${message.author.id}`, 1000000000)
-                return message.reply(`${e.Tada} | Você obteve 1 ${e.BitCoin} BitCoin\n+1000000000 ${e.Coin}Moedas`)
+                db.set(`User.${message.author.id}.Bits`, 1); db.add(`Bitcoin_${message.author.id}`, 1); db.add(`Bank_${message.author.id}`, 1000000)
+                return message.reply(`${e.Tada} | Você obteve 1 ${e.BitCoin} BitCoin\n+1000000 ${e.Coin}Moedas`)
             }
 
             function MineBitCoin() {

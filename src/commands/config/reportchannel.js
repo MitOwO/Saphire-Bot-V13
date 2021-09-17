@@ -27,10 +27,6 @@ module.exports = {
             .addField('Comando de Desativação', '`' + prefix + 'setreportchannel off`')
             .setFooter(`A ${client.user.username} não se responsabiliza pelo conteúdo enviado atráves deste sistema.`)
 
-        const validando = new MessageEmbed()
-            .setColor('BLUE')
-            .setDescription(`🔄 | Validando ${channel} como canal de reports no banco de dados...`)
-
         if (['help', 'ajuda'].includes(args[0])) { return message.reply(noargs) }
         if (args[1]) return message.reply(`${e.Deny} | Nada além do canal coisinha fofa ${e.Nagatoro}`)
 
@@ -41,7 +37,7 @@ module.exports = {
                 return message.channel.send(`${e.Loading} | Ok, espera um pouquinho... | ${canal}/${message.author.id}`).then(msg => {
                     message.channel.sendTyping().then(() => {
                         setTimeout(function () {
-                            db.set(`User.Request.${message.author.id}`, 'ON')
+                            db.delete(`User.Request.${message.author.id}`)
                             db.delete(`Servers.${message.guild.id}.ReportChannel`)
                             msg.edit(`${e.Check} | Request Autenticada | ${message.author.id}`).catch(err => { return })
                             message.channel.send(`${e.BrilanceBlob} | Nice, nice! Desativei o sistema de reports.`)
@@ -57,17 +53,17 @@ module.exports = {
             return message.reply(`${e.Loading} | Ooopa, entendido! Pera só um pouco. | ${channel.id}/${message.author.id}`).then(msg => {
                 message.channel.sendTyping().then(() => {
                     setTimeout(function () {
-                        db.set(`User.Request.${message.author.id}`, 'ON')
+                        db.delete(`User.Request.${message.author.id}`)
                         db.set(`Servers.${message.guild.id}.ReportChannel`, channel.id)
                         msg.edit(`${e.Check} | Request Autenticada | ${channel.id}/${message.guild.id}`).catch(err => { return })
                         return message.channel.send(`${e.NezukoJump} | Aeeee, sistema de report está ativadoooo!!\n\`${prefix}report [@user(opicional)] o seu reporte em diante\``)
                     }, 4000)
                 }).catch(err => {
-                    db.set(`User.Request.${message.author.id}`, 'ON')
+                    db.delete(`User.Request.${message.author.id}`)
                     return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
                 })
             }).catch(err => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.delete(`User.Request.${message.author.id}`)
                 return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
             })
         }

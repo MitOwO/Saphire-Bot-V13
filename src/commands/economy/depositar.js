@@ -40,14 +40,15 @@ module.exports = {
                 }
             }
 
-            if (isNaN(args[0])) { return message.reply(`${e.Deny} | O valor que você digitou não é um número.`) }
+            let Amount = parseInt(args[0])
+            if (isNaN(Amount)) { return message.reply(`${e.Deny} | O valor que você digitou não é um número.`) }
             if (money < 0) { return message.reply(`${e.Deny} | Você está negativado.`) }
-            if (money < args[0]) { return message.reply(`${e.Deny} | Você não possui todo esse dinheiro para depositar.`) }
-            if (args[0] < 0) { return message.reply(`${e.Deny} | Quer depositar um valor negativo é?`) }
+            if (money < Amount) { return message.reply(`${e.Deny} | Você não possui todo esse dinheiro para depositar.`) }
+            if (Amount < 0) { return message.reply(`${e.Deny} | Quer depositar um valor negativo é?`) }
 
-            db.add(`Bank_${message.author.id}`, args[0])
-            db.subtract(`Balance_${message.author.id}`, args[0])
-            return message.reply(`${e.Check} | ${message.author} depositou ${args[0]} ${e.Coin} Moedas`)
+            db.add(`Bank_${message.author.id}`, Amount)
+            db.subtract(`Balance_${message.author.id}`, Amount)
+            return message.reply(`${e.Check} | ${message.author} depositou ${Amount} ${e.Coin} Moedas`)
         }
     }
 }

@@ -1,5 +1,5 @@
-const { e } = require('../../../Routes/emojis.json')
-const { N } = require('../../../Routes/nomes.json')
+const { e } = require('../../../Routes/emojis.json');
+const { N } = require('../../../Routes/nomes.json');
 const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
@@ -14,13 +14,13 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) { return message.reply(`${e.Deny} | ${f.Request}`) } 
 
         var i = 'Isekai'
         var h = 'Hentai'
         var ms = 'Mahou Shoujo'
         var y = 'Yuri'
-        var f = 'Fantasia'
+        var fa = 'Fantasia'
         var r = 'RPG'
         var c = 'Comédia'
         var s = 'Sobre Natural'
@@ -46,11 +46,11 @@ module.exports = {
         var s = 'Suspense'
 
         let list = [
-            `100man no Inochi no Ue ni Ore wa Tatteiru \n**Gênero:** ${f}`,
+            `100man no Inochi no Ue ni Ore wa Tatteiru \n**Gênero:** ${fa}`,
             `Adachi to Shimamura \n**Gênero:** ${y}`,
             `Akudama Drive \n**Gênero:** ${s}`,
             `Assault Lily: Bouquet \n**Gênero:** ${ms}`,
-            `BURN THE WITCH \n**Gênero:** ${f}`,
+            `BURN THE WITCH \n**Gênero:** ${fa}`,
             `D4DJ: First Mix \n**Gênero:** ${m}`,
             `Dragon Quest: Dai no Daibouken \n**Gênero:** ${j}`,
             `Gochuumon wa Usagi Desu ka? Bloom \n**Gênero:** ${c}`,
@@ -68,7 +68,7 @@ module.exports = {
             `Kuma Kuma Kuma Bear \n**Gênero:** ${c}`,
             `Maesetsu! \n**Gênero:** ${c}`,
             `Magatsu Wahrheit \n**Gênero:** ${aç}`,
-            `Majo no Tabitabi \n**Gênero:** ${f}`,
+            `Majo no Tabitabi \n**Gênero:** ${fa}`,
             `Maoujou de Oyasumi \n**Gênero:** ${c}`,
             `Munou na Nana \n**Gênero:** ${p}`,
             `Noblesse \n**Gênero:** ${ve}`,
@@ -79,20 +79,20 @@ module.exports = {
             `Tonikaku Kawaii \n**Gênero:** ${rm}`,
             `Yuukoku no Moriarty \n**Gênero:** ${mi}`,
             `A3!Season Autumn & Winter \n**Gênero:** ${sv}`,
-            `Dungeon Ni Deai \n**Gênero:** ${f}`,
+            `Dungeon Ni Deai \n**Gênero:** ${fa}`,
             `Golden Kamuy \n**Gênero:** ${c}`,
             `Haikyuu! \n**Gênero:** ${es}`,
-            `Hanyou no Yashahime \n**Gênero:** ${f}`,
+            `Hanyou no Yashahime \n**Gênero:** ${fa}`,
             `Love Live \n**Gênero:** ${m}`,
             `Mahouka Koukou no Rettousei \n**Gênero:** ${ma}`,
             `One Room \n**Gênero:** ${vc}`,
             `Osamatsu-san \n**Gênero:** ${c}`,
             `Strike Witches \n**Gênero:** ${am}`,
-            `Fate/Grand Order \n**Gênero:** ${f}`,
+            `Fate/Grand Order \n**Gênero:** ${fa}`,
             `Kimetsu no Yaiba \n**Gênero:** ${dm}`,
             `Naruto Classico/Shippuden \n**Gênero:** ${vg}`,
             `Konosuba \n**Gênero:** ${c}`,
-            `Sword Art Online \n**Gênero:** ${aç}, ${f}, ${i}`,
+            `Sword Art Online \n**Gênero:** ${aç}, ${fa}, ${i}`,
             `.hack//Liminality \n**Gênero:** ${j}`,
             `.hack//Quantum \n**Gênero:** ${j}`,
             `.hack//ROOTS \n**Gênero:** ${j}`,
@@ -153,7 +153,7 @@ module.exports = {
             `Aku No Hana \n**Gênero:** ${p}`,
             `Akuma No Riddle \n**Gênero:** ${aç}`,
             `Aldnoah.Zero \n**Gênero:** ${aç}`,
-            `Alexander Senki \n**Gênero:** ${f}`,
+            `Alexander Senki \n**Gênero:** ${fa}`,
             `Alice Or Alice: Siscon Niisan To Futago No Imouto \n**Gênero:** ${vc}`,
             `Alice To Zouroku \n**Gênero:** ${mi}`,
             `Alien 9 \n**Gênero:** ${p}`,
@@ -166,8 +166,8 @@ module.exports = {
             `Amanchu! \n**Gênero:** ${vc}`,
             `Amatsuki \n**Gênero:** ${aç}`,
             `Ame-iro Cocoa \n**Gênero:** ${vc}`,
-            `Amnesia \n**Gênero:** ${f}`,
-            `Ange Vierge \n**Gênero:** ${f}`,
+            `Amnesia \n**Gênero:** ${fa}`,
+            `Ange Vierge \n**Gênero:** ${fa}`,
             `Angel Beats! \n**Gênero:** ${d}`,
             `Angel Links \n**Gênero:** ${d}`,
             `Angel Sanctuary \n**Gênero:** ${d}`,
@@ -190,24 +190,24 @@ module.exports = {
             `Aoharu X Kikanjuu \n**Gênero:** ${aç}`,
             `Aoi Bungaku Series \n**Gênero:** ${d}`,
             `Aoi Hana \n**Gênero:** ${y}`,
-            `Aoi Sekai No Chuushin De \n**Gênero:** ${f}`,
+            `Aoi Sekai No Chuushin De \n**Gênero:** ${fa}`,
             `Aoki Hagane No Arpeggio: Ars Nova \n**Gênero:** ${aç}`,
             `Appare-Ranman! \n**Gênero:** ${c}`,
-            `Aquarian Age \n**Gênero:** ${f}`,
-            `Aquarion Evol \n**Gênero:** ${f}`,
-            `Aquarion Logos \n**Gênero:** ${f}`,
+            `Aquarian Age \n**Gênero:** ${fa}`,
+            `Aquarion Evol \n**Gênero:** ${fa}`,
+            `Aquarion Logos \n**Gênero:** ${fa}`,
             `Arakawa Under The Bridge \n**Gênero:** ${rm}`,
-            `Arata Kangatari \n**Gênero:** ${f}`,
+            `Arata Kangatari \n**Gênero:** ${fa}`,
             `Arc The Lad \n**Gênero:** ${aç}`,
             `Arcana Famiglia \n**Gênero:** ${aç}`,
             `Area 88 (anime) \n**Gênero:** ${aç}`,
             `Area No Kishi \n**Gênero:** ${es}`,
             `Argento Soma \n**Gênero:** ${d}`,
-            `Aria The Animation \n**Gênero:** ${f}`,
+            `Aria The Animation \n**Gênero:** ${fa}`,
             `Arte \n**Gênero:** ${d}`,
             `Arslan Senki \n**Gênero:** ${aç}`,
             `Aru Zombie Shoujo No Sainan \n**Gênero:** ${aç}`,
-            `Asagiri No Miko \n**Gênero:** ${f}`,
+            `Asagiri No Miko \n**Gênero:** ${fa}`,
             `Asatte No Houkou \n**Gênero:** ${d}`,
             `Ashita No Joe \n**Gênero:** ${es}`,
             `Ashita No Nadja \n**Gênero:** ${d}`,
@@ -216,10 +216,10 @@ module.exports = {
             `Astarotte No Omocha \n**Gênero:** ${c}`,
             `Asu No Yoichi \n**Gênero:** ${c}`,
             `Asura Cryin \n**Gênero:** ${aç}`,
-            `Atelier Escha & Logy: Alchemists Of The Dusk Sky \n**Gênero:** ${f}`,
+            `Atelier Escha & Logy: Alchemists Of The Dusk Sky \n**Gênero:** ${fa}`,
             `Atom: The Beginning \n**Gênero:** ${aç}`,
-            `Avatar A Lenda De Aang \n**Gênero:** ${f}`,
-            `Avatar A Lenda De Korra \n**Gênero:** ${f}`,
+            `Avatar A Lenda De Aang \n**Gênero:** ${fa}`,
+            `Avatar A Lenda De Korra \n**Gênero:** ${fa}`,
             `Avenger \n**Gênero:** ${a}`,
             `Ayakashi \n**Gênero:** ${aç}`,
             `Ayakashi – Japanese Classic Horror \n**Gênero:** ${a}`,
@@ -236,10 +236,10 @@ module.exports = {
             `Baka To Test To Shoukanjuu \n**Gênero:** ${c}`,
             `Bakemonogatari \n**Gênero:** ${d}`,
             `Baki The Grappler \n**Gênero:** ${es}`,
-            `Bakugan \n**Gênero:** ${f}`,
+            `Bakugan \n**Gênero:** ${fa}`,
             `Bakuman \n**Gênero:** ${cr}`,
             `Bakumatsu \n**Gênero:** ${aç}`,
-            `Bakumatsu Gijinden Roman \n**Gênero:** ${f}`,
+            `Bakumatsu Gijinden Roman \n**Gênero:** ${fa}`,
             `Bakumatsu Rock \n**Gênero:** ${m}`,
             `Bakumatsu: Crisis \n**Gênero:** ${aç}`,
             `Bakuon!! \n**Gênero:** ${c}`,
@@ -261,7 +261,7 @@ module.exports = {
             `Battle Girl High School \n**Gênero:** ${cr}`,
             `Battle Programmer Shirase \n**Gênero:** ${c}`,
             `Battle Spirits: Burning Soul \n**Gênero:** ${j}`,
-            `Beast Fighter: The Apocalypse \n**Gênero:** ${f}`,
+            `Beast Fighter: The Apocalypse \n**Gênero:** ${fa}`,
             `Beast Saga \n**Gênero:** ${aç}`,
             `Beatless \n**Gênero:** ${r}`,
             `Beck \n**Gênero:** ${m}`,
@@ -274,7 +274,7 @@ module.exports = {
             `Beyblade \n**Gênero:** ${aç}`,
             `Big Order \n**Gênero:** ${aç}`,
             `Bihada Ichizoku \n**Gênero:** ${d}`,
-            `Bikini Warriors \n**Gênero:** ${f}`,
+            `Bikini Warriors \n**Gênero:** ${fa}`,
             `Binan Koukou Chikyuu Bouei Bu Love \n**Gênero:** ${c}`,
             `Binbougami Ga! \n**Gênero:** ${c}`,
             `Binbou Shimai Monogatari \n**Gênero:** ${c}`,
@@ -282,11 +282,11 @@ module.exports = {
             `Binzume Yousei \n**Gênero:** ${c}`,
             `Bishoujo Senshi Sailor Moon Crystal \n**Gênero:** ${r}`,
             `Bishoujo Yuugi Unit Crane Game Girls \n**Gênero:** ${c}`,
-            `Black And White Warriors \n**Gênero:** ${f}`,
+            `Black And White Warriors \n**Gênero:** ${fa}`,
             `Black Blood Brothers \n**Gênero:** ${c}`,
             `Black Bullet \n**Gênero:** ${m}`,
             `Black Cat \n**Gênero:** ${c}`,
-            `Black Clover \n**Gênero:** ${f}`,
+            `Black Clover \n**Gênero:** ${fa}`,
             `Black Jack \n**Gênero:** ${d}`,
             `Black Lagoon \n**Gênero:** ${aç}`,
             `Black Rock Shooter \n**Gênero:** ${aç}`,
@@ -294,15 +294,15 @@ module.exports = {
             `Blade e Soul \n**Gênero:** ${aç}`,
             `Blade Of The Immortal \n**Gênero:** ${aç}`,
             `Blassreiter \n**Gênero:** ${aç}`,
-            `BlazBlue: Alter Memory \n**Gênero:** ${f}`,
+            `BlazBlue: Alter Memory \n**Gênero:** ${fa}`,
             `Bleach \n**Gênero:** ${aç}`,
             `Blend S \n**Gênero:** ${c}`,
             `Blood Lad \n**Gênero:** ${c}`,
             `Blood-C \n**Gênero:** ${p}`,
             `Blood+ \n**Gênero:** ${aç}`,
-            `Bloodivores \n**Gênero:** ${f}`,
-            `Blue Dragon \n**Gênero:** ${f}`,
-            `Blue Dragon: Tenkai No Shichi Ryuu \n**Gênero:** ${f}`,
+            `Bloodivores \n**Gênero:** ${fa}`,
+            `Blue Dragon \n**Gênero:** ${fa}`,
+            `Blue Dragon: Tenkai No Shichi Ryuu \n**Gênero:** ${fa}`,
             `Blue Drop \n**Gênero:** ${d}`,
             `Blue Gender \n**Gênero:** ${r}`,
             `Blue Seed \n**Gênero:** ${c}`,
@@ -321,12 +321,12 @@ module.exports = {
             `Boogiepop Wa Warawanai 2019 \n**Gênero:** ${p}`,
             `Boruto: Naruto Next Generations \n**Gênero:** ${aç}`,
             `Bottle Fairy \n**Gênero:** ${c}`,
-            `Bouken Ou Beet \n**Gênero:** ${f}`,
+            `Bouken Ou Beet \n**Gênero:** ${fa}`,
             `Bounen No Xamdou \n**Gênero:** ${aç}`,
             `Boys Be \n**Gênero:** ${r}`,
             `Brave 10 \n**Gênero:** ${aç}`,
             `Brave Beats \n**Gênero:** ${m}`,
-            `Brave Story \n**Gênero:** ${f}`,
+            `Brave Story \n**Gênero:** ${fa}`,
             `Brave Witches \n**Gênero:** ${aç}`,
             `Break Blade (TV) \n**Gênero:** ${aç}`,
             `Brotherhood: Final Fantasy XV \n**Gênero:** ${aç}`,
@@ -340,7 +340,7 @@ module.exports = {
             `Buddy Complex \n**Gênero:** ${aç}`,
             `Bungaku Shoujo: Memoire \n**Gênero:** ${r}`,
             `Bungou Stray Dogs \n**Gênero:** ${mi}`,
-            `Bungou To Alchemist: Shinpan No Haguruma \n**Gênero:** ${f}`,
+            `Bungou To Alchemist: Shinpan No Haguruma \n**Gênero:** ${fa}`,
             `Burn-Up Scramble \n**Gênero:** ${c}`,
             `Burn-Up Warrior \n**Gênero:** ${c}`,
             `Burst Angel \n**Gênero:** ${c}`,
@@ -351,8 +351,6 @@ module.exports = {
             `Butlers: Chitose Momotose Monogatari \n**Gênero:** ${c}`,
             `Boku no Piko \n**Gênero:** kkk é top, confia no pai`
         ]
-
-        let rand = list[Math.floor(Math.random() * list.length)]
 
         const IndEmbed = new MessageEmbed()
             .setColor('BLUE')
@@ -374,10 +372,11 @@ module.exports = {
             let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }
             let CancelCollector = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 30000, errors: ['max', 'time'] })
 
+            let i = 0
             TradeCollector.on('collect', (reaction, user) => {
                 if (user.id === client.user.id) return
                 reaction.users.remove(user.id).catch(err => { return })
-                db.add(`User.${message.author.id}.Ind`, 1)
+                i++
                 IndEmbed.addField('---------', `**Nome:** ${list[Math.floor(Math.random() * list.length)]}`)
                 msg.edit({ embeds: [IndEmbed] }).catch(err => { return })
             })
@@ -385,8 +384,8 @@ module.exports = {
             SendCollector.on('collect', (reaction, user) => {
                 if (user.id === client.user.id) return
                 reaction.users.remove(user.id).catch(err => { return })
-                db.add(`User.${message.author.id}.Ind`, 1)
-                user.send({ embeds: [IndEmbed] }).then(() => {
+                i++
+                user.send({ embeds: [IndEmbed.setDescription(`From: ${message.guild.name}`)] }).then(() => {
                     return message.channel.send(`${e.Check} | Envio concluido, ${user}!`)
                 }).catch(() => {
                     return message.channel.send(`${e.Deny} | Seu privado está bloqueado, ${user}. Verifique suas configurações e tente novamente`)
@@ -396,17 +395,15 @@ module.exports = {
             CancelCollector.on('collect', (reaction, user) => {
                 db.delete(`User.Request.${message.author.id}`)
                 msg.reactions.removeAll().catch(() => { return })
-                IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${db.get(`User.${message.author.id}.Ind`) || 0} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).catch(err => { return })
-                db.delete(`User.${message.author.id}.Ind`)
+                IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
+                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { return })
             })
 
             CancelCollector.on('end', (reaction, user) => {
                 db.delete(`User.Request.${message.author.id}`)
                 msg.reactions.removeAll().catch(() => { return })
-                IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${db.get(`User.${message.author.id}.Ind`) || 0} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).catch(err => { return })
-                db.delete(`User.${message.author.id}.Ind`)
+                IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
+                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { return })
             })
 
         }).catch(err => {

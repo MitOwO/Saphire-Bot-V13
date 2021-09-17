@@ -3,7 +3,7 @@ const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
     name: 'levelchannel',
-    aliases: ['setlevelchannel', 'setlevel'],
+    aliases: ['setlevelchannel', 'setlevel', 'xpchannel'],
     category: 'config',
     UserPermissions: 'MANAGE_GUILD',
     ClientPermissions: ['ADD_REACTIONS', 'MANAGE_MESSAGES'],
@@ -17,7 +17,7 @@ module.exports = {
         let channel = message.mentions.channels.first() || message.channel
         let CanalAtual = db.get(`Servers.${message.guild.id}.XPChannel`)
 
-        if (channel.id === CanalAtual) return message.reply(`${e.Info} | Este já é o canal de level up.`)
+        if (channel.id === CanalAtual) return message.reply(`${e.Info} | Este já é o canal de level up.`).catch(() => { return })
 
         return message.reply(`${e.QuestionMark} | Você deseja autenticar o canal ${channel} como Canal de Notificações de Level Up? `).then(msg => {
             db.set(`User.Request.${message.author.id}`, 'ON')
@@ -28,36 +28,36 @@ module.exports = {
             let ConfirmRequest = msg.createReactionCollector({ filter: RequestFilter, max: 1, time: 15000, errors: ['time', 'max'] })
 
             ConfirmRequest.on('collect', (reaction, user) => {
-                msg.edit(`${e.Loading} | Entendido, espera um pouco enquanto eu arrumo umas coisas no meu banco de dados...`)
+                msg.edit(`${e.Loading} | Entendido, espera um pouco enquanto eu arrumo umas coisas no meu banco de dados...`).catch(() => { return })
                 message.channel.sendTyping().then(() => {
                     setTimeout(() => {
                         db.delete(`User.Request.${message.author.id}`)
                         db.set(`Servers.${message.guild.id}.XPChannel`, channel.id)
-                        msg.edit(`${e.Check} | Request autenticada | ${message.channel.id}/${message.guild.id}/${message.author.id}`)
-                        message.channel.send(`${e.CatJump} | Pode deixar comigo! Eu vou avisar no canal ${channel} sempre que alguém passar de level.`)
+                        msg.edit(`${e.Check} | Request autenticada | ${message.channel.id}/${message.guild.id}/${message.author.id}`).catch(() => { return })
+                        message.channel.send(`${e.CatJump} | Pode deixar comigo! Eu vou avisar no canal ${channel} sempre que alguém passar de level.`).catch(() => { return })
                     }, 5400)
                 }).catch(err => {
                     db.delete(`User.Request.${message.author.id}`)
-                    return message.channel.send(`${e.Attention} | Ocorreu um erro no processo deste comando.\n\`${err}\``)
+                    return message.channel.send(`${e.Attention} | Ocorreu um erro no processo deste comando.\n\`${err}\``).catch(() => { return })
                 })
             })
 
             let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }
-            let CancelSession = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 15000, errors: ['time', 'max'] })
+            let CancelSession = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 15000, errors: ['max'] })
 
             CancelSession.on('collect', (reaction, user) => {
                 db.delete(`User.Request.${message.author.id}`)
-                msg.edit(`${e.Deny} | Request cancelada. | ${message.author.id}`)
+                msg.edit(`${e.Deny} | Request cancelada. | ${message.author.id}`).catch(() => { return })
             })
             CancelSession.on('end', (reaction, user) => {
                 db.delete(`User.Request.${message.author.id}`)
-                msg.edit(`${e.Deny} | Request cancelada por tempo expirado. | ${message.author.id}`)
+                msg.edit(`${e.Deny} | Request cancelada por tempo expirado. | ${message.author.id}`).catch(() => { return })
             })
 
 
         }).catch(err => {
             db.delete(`User.Request.${message.author.id}`)
-            return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+            return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``).catch(() => { return })
         })
     }
 }

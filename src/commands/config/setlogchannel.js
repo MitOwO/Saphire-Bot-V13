@@ -4,7 +4,7 @@ const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
     name: 'setlogchannel',
-    aliases: ['logs', 'setlogs', 'logchannel'],
+    aliases: ['logs', 'setlogs', 'logchannel', 'log'],
     category: 'config',
     UserPermissions: 'MANAGE_GUILD',
     ClientPermissions: '',
@@ -22,34 +22,18 @@ module.exports = {
 
         const SetLogHelpEmbed = new MessageEmbed()
             .setColor('BLUE')
-            .setTitle(`${e.Info} Set Log Channel Info`)
+            .setTitle(`${e.Info} Log Channel Info`)
             .setDescription('Você pode escolher um canal para eu enviar tudo o que acontece no servidor.')
-            .addField('O que eu posso enviar no Sistema Log?', '`Banimentos` | `Kicks` | `Cargos Criados/Apagados/Atualizados` | `Mute/Warns/Etc`')
-            .addField('O que eu não envio no Sistema Log?', `Novos Membros: \`${prefix}setwelcomechannel\`\nMembros que sairem: \`${prefix}setleavechannel\`\nMensagens Apagadas/Editadas > (Privacidade)`)
+            .addField('O que eu posso enviar no Sistema Log?', '`Banimentos` | `Kicks` | `Mute/Warns` | `Informações sobre mudança brusca nas minhas configurações` | etc...')
+            .addField('O que eu não envio no Sistema Log?', `Novos Membros: \`${prefix}welcomechannel\`\nMembros que sairem: \`${prefix}leavechannel\`\nMensagens Apagadas/Editadas > (Privacidade)`)
             .addField('Comandos', `\`${prefix}logs on/off <#channel>\``)
             .setFooter('Permissão necessária: "Ver o registro de auditoria | Adicionar reações"')
 
         if (!args[0]) { return message.reply({ embeds: [SetLogHelpEmbed] }) }
 
-        const loading = new MessageEmbed()
-            .setColor('BLUE')
-            .setDescription(`${e.Loading} Autenticando "${channel}" como Canal do Sistema Logs...`)
-
-        const cancel = new MessageEmbed()
-            .setColor('RED')
-            .setDescription(`Comando cancelado por: ${message.author}`)
-
-        const SucessEmbed = new MessageEmbed()
-            .setColor('GREEN')
-            .setDescription(`${e.Check} Sistema de Logs Ativado!\nCanal: ${channel}`)
-
         if (['on', 'ligar', 'ativar'].includes(args[0].toLowerCase())) {
 
-            const QuestionEmbed = new MessageEmbed()
-                .setColor('BLUE')
-                .setDescription(`Você deseja ativar o Sistema Logs no canal: ${channel} ?`)
-
-            return message.reply({ embeds: [QuestionEmbed] }).then(msg => {
+            return message.reply(`${e.QuestionMark} | Você deseja ativar o Sistema Logs no canal: ${channel} ?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
                 msg.react('✅').catch(err => { return }) // e.Check
                 msg.react('❌').catch(err => { return }) // X
@@ -62,32 +46,27 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             msg.reactions.removeAll().catch(err => { return })
-                            msg.edit({ embeds: [loading] })
+                            msg.edit(`${e.Loading} | Autenticando "${channel}" como Canal do Sistema Logs...`)
                             setTimeout(function () {
                                 db.delete(`User.Request.${message.author.id}`)
                                 db.set(`Servers.${message.guild.id}.LogChannel`, channel.id)
-                                msg.edit({ embeds: [SucessEmbed] })
+                                msg.edit(`${e.Check} | Sistema de Logs Ativado!\nCanal: ${channel}`)
                             }, 4000)
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
                             msg.reactions.removeAll().catch(err => { return })
-                            msg.edit({ embeds: [cancel] })
+                            msg.edit(`Comando cancelado por: ${message.author}`)
                         }
                     }).catch(() => {
                         db.delete(`User.Request.${message.author.id}`)
                         msg.reactions.removeAll().catch(err => { return })
-                        msg.edit({ embeds: [cancel.setDescription('Comando cancelado por: Tempo Expirado.')] }).catch(err => { return })
+                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { return })
                     })
-
             })
 
         } else if (['off', 'desligar', 'desativar'].includes(args[0].toLowerCase())) {
 
-            const QuestionEmbed = new MessageEmbed()
-                .setColor('BLUE')
-                .setDescription(`Você deseja desativar o Sistema Logs?`)
-
-            return message.reply({ embeds: [QuestionEmbed] }).then(msg => {
+            return message.reply(`${e.QuestionMark} | Você deseja desativar o Sistema Logs no canal: ${channel} ?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
                 msg.react('✅').catch(err => { return }) // e.Check
                 msg.react('❌').catch(err => { return }) // X
@@ -100,28 +79,26 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             msg.reactions.removeAll().catch(err => { return })
-                            msg.edit({ embeds: [loading] })
+                            msg.edit(`${e.Loading} | Autenticando "${channel}"...`)
                             setTimeout(function () {
                                 db.delete(`User.Request.${message.author.id}`)
                                 db.delete(`Servers.${message.guild.id}.LogChannel`)
-                                SucessEmbed.setDescription(`${e.Check} Sistema de Logs Desativado!`)
-                                msg.edit({ embeds: [SucessEmbed] })
+                                msg.edit(`${e.Check} | Sistema de Logs Desativado!`)
                             }, 4000)
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
                             msg.reactions.removeAll().catch(err => { return })
-                            msg.edit({ embeds: [cancel] })
+                            msg.edit(`Comando cancelado por: ${message.author}`)
                         }
                     }).catch(() => {
                         db.delete(`User.Request.${message.author.id}`)
                         msg.reactions.removeAll().catch(err => { return })
-                        msg.edit({ embeds: [cancel.setDescription('Comando cancelado por: Tempo Expirado.')] }).catch(err => { return })
+                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { return })
                     })
-
             })
         } else {
             db.delete(`User.Request.${message.author.id}`)
-            return message.reply(`Comando não reconhecido. Use \`${prefix}help setlogchannel\` ou \`${prefix}logs\`para obter mais informações.`)
+            return message.reply(`Comando não reconhecido. Use \`${prefix}help logs\` ou \`${prefix}logs\` para obter mais informações.`)
         }
     }
 }
