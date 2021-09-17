@@ -329,17 +329,5 @@ module.exports = {
                 message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Copos d'água'\` comprando +${50 - x} copos.`)
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
