@@ -11,7 +11,7 @@ function Blacklisted(message) {
 
     function Warning() {
         message.channel.send(`${e.deny} | ${message.author}, você está na blacklist e não tem acesso a nenhum dos meus comandos.`).then(msg => {
-            setTimeout(() => { msg.delete().catch(err => { return }) }, 4000)
+            setTimeout(() => { msg.delete().catch(err => { }) }, 4000)
         })
     }
 }
