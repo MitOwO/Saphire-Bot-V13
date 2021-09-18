@@ -23,7 +23,7 @@ module.exports = {
             if (isNaN(amount)) { return message.channel.send(`${e.Deny} **${args[2]}** não é um número.`) }
 
             db.add(`Balance_${user.id}`, amount)
-            return message.react(e.Check)
+            return message.channel.send(`${e.Check} | Feito.`)
         }
 
     }

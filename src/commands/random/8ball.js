@@ -19,7 +19,7 @@ module.exports = {
         if (!pergunta.endsWith('?')) return message.reply(`${e.QuestionMark} | Certeza que isso é uma pergunta?`)
 
         return message.reply(`Humm...`).then(msg => {
-            setTimeout(function () { msg.edit(`:8ball: | ${respostas}`).catch(err => { return }) }, 2000)
+            setTimeout(function () { msg.edit(`:8ball: | ${respostas}`).catch(err => { }) }, 2000)
         })
     }
 }

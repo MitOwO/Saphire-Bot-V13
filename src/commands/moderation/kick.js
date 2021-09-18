@@ -37,8 +37,8 @@ module.exports = {
 
         return message.reply(`${e.QuestionMark} | Você deseja expulsar ${member} do servidor pelo motivo: **${reason}**`).then(msg => {
             db.set(`User.Request.${message.author.id}`, 'ON')
-            msg.react('✅').catch(err => { return }) // Check
-            msg.react('❌').catch(err => { return }) // X
+            msg.react('✅').catch(err => { }) // Check
+            msg.react('❌').catch(err => { }) // X
 
             const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -52,18 +52,18 @@ module.exports = {
 
                         let canal = client.channels.cache.get(logchannel)
                         if (canal) canal.send({ embeds: [KickEmbed] })
-                        msg.edit(`${e.Check} | O membro "${member.user.tag}" foi expulso do servidor sob as ordens de "${message.author}" com o motivo: "${reason}"\n${message.author.id}/${member.id}/${message.guild.id}`).catch(err => { return })
+                        msg.edit(`${e.Check} | O membro "${member.user.tag}" foi expulso do servidor sob as ordens de "${message.author}" com o motivo: "${reason}"\n${message.author.id}/${member.id}/${message.guild.id}`).catch(err => { })
                     }).catch(err => {
-                        msg.edit(`${e.Deny} | Houve algo incomum na execução da expulsão. Caso não saiba resolver, use o comando \`${prefix}bug\` ou procure ajuda no meu servidor \`${prefix}servers\`\n\`${err}\``).catch(err => { return })
+                        msg.edit(`${e.Deny} | Houve algo incomum na execução da expulsão. Caso não saiba resolver, use o comando \`${prefix}bug\` ou procure ajuda no meu servidor \`${prefix}servers\`\n\`${err}\``).catch(err => { })
                     })
 
                 } else {
                     db.delete(`User.Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}`).catch(err => { return })
+                    msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}`).catch(err => { })
                 }
             }).catch(err => {
                 db.delete(`User.Request.${message.author.id}`)
-                msg.edit(`${e.Deny} | Request cancelada: Tempo expirado | ${message.author.id}`).catch(err => { return })
+                msg.edit(`${e.Deny} | Request cancelada: Tempo expirado | ${message.author.id}`).catch(err => { })
             })
         })
     }

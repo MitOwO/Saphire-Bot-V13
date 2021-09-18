@@ -24,16 +24,16 @@ module.exports = {
 
     return message.reply({ embeds: [embed] }).then(msg => {
       db.set(`User.Request.${message.author.id}`, 'ON')
-      msg.react('🔄').catch(err => { return }) // 1º Embed
-      msg.react('❌').catch(err => { return }) // cancel
+      msg.react('🔄').catch(err => { }) // 1º Embed
+      msg.react('❌').catch(err => { }) // cancel
 
       let filter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }; let Collector = msg.createReactionCollector({ filter: filter, time: 15000, errors: ['time'] })
       let filter2 = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }; let Collector2 = msg.createReactionCollector({ filter: filter2, max: 1, time: 30000, errors: ['time', 'max'] })
-      Collector.on('collect', (reaction, user) => { embed.setImage(g.Fury[Math.floor(Math.random() * g.Fury.length)]); msg.edit({ embeds: [embed] }).catch(err => { return }) })
-      Collector.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); embed.setColor('RED').setFooter(`Sessão Expirada | ${message.author.id}`); msg.reactions.removeAll().catch(err => { return }); msg.edit({ embeds: [embed] }).catch(err => { return }) })
+      Collector.on('collect', (reaction, user) => { embed.setImage(g.Fury[Math.floor(Math.random() * g.Fury.length)]); msg.edit({ embeds: [embed] }).catch(err => { }) })
+      Collector.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); embed.setColor('RED').setFooter(`Sessão Expirada | ${message.author.id}`); msg.reactions.removeAll().catch(err => { }); msg.edit({ embeds: [embed] }).catch(err => { }) })
 
-      Collector2.on('collect', (reaction, user) => { embed.setColor('RED').setFooter(`Comando Expirado | ${message.author.id}`); msg.reactions.removeAll().catch(err => { return }); msg.edit({ embeds: [embed] }).catch(err => { return }) })
-      Collector2.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); embed.setColor('RED').setFooter(`Tempo Expirado | ${message.author.id}`); msg.reactions.removeAll().catch(err => { return }); msg.edit({ embeds: [embed] }).catch(err => { return }) })
+      Collector2.on('collect', (reaction, user) => { embed.setColor('RED').setFooter(`Comando Expirado | ${message.author.id}`); msg.reactions.removeAll().catch(err => { }); msg.edit({ embeds: [embed] }).catch(err => { }) })
+      Collector2.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); embed.setColor('RED').setFooter(`Tempo Expirado | ${message.author.id}`); msg.reactions.removeAll().catch(err => { }); msg.edit({ embeds: [embed] }).catch(err => { }) })
     }).catch(err => {
       db.delete(`User.Request.${message.author.id}`)
       return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)

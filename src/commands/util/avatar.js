@@ -31,8 +31,8 @@ module.exports = {
 
         return message.reply({ embeds: [embed] }).then(msg => {
             db.set(`User.Request.${message.author.id}`, 'ON')
-            msg.react('❌').catch(err => { return }) // X
-            msg.react('📨').catch(err => { return }) // Carta
+            msg.react('❌').catch(err => { }) // X
+            msg.react('📨').catch(err => { }) // Carta
 
             let FilterX = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id };
             let Delete = msg.createReactionCollector({ filter: FilterX, max: 1, time: 30000, errors: 'max' })
@@ -62,7 +62,7 @@ module.exports = {
             PraDm.on('end', () => {
                 db.delete(`User.Request.${message.author.id}`)
                 embed.setColor('RED').setFooter('Tempo expirado.')
-                msg.edit({ embeds: [embed] }).catch(err => { return })
+                msg.edit({ embeds: [embed] }).catch(err => { })
             })
         })
     }

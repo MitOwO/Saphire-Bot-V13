@@ -29,8 +29,8 @@ module.exports = {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Confuse} | Por qual motivo você esconderia esse canal de um Administrador?`)
             message.channel.send(`${e.QuestionMark} | ${message.author}, ao esconder o canal de ${user}, você precisará entrar nas configurações do canal para reverter o ato ou responder qualquer mensagem do usuário e digitar o comando \`${prefix}unhide\``).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -39,7 +39,7 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.edit(`${e.Loading} | Retirando ${user} do chat...`).catch(err => { return })
+                            msg.edit(`${e.Loading} | Retirando ${user} do chat...`).catch(err => { })
                                 setTimeout(function () {
                                     db.delete(`User.Request.${message.author.id}`)
                                     message.channel.permissionOverwrites.create(user, { VIEW_CHANNEL: false })
@@ -48,7 +48,7 @@ module.exports = {
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
                             msg.edit(`${e.NezukoDance} | Comando cancelado.`)
-                            msg.reactions.removeAll().catch(err => { return })
+                            msg.reactions.removeAll().catch(err => { })
                         }
                     }).catch(() => {
                         db.delete(`User.Request.${message.author.id}`)

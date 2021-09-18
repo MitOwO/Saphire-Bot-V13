@@ -50,8 +50,8 @@ module.exports = {
 
                 return message.reply(`${e.QuestionMark} | Desejar forçar o ban do ID \`${ID}\` ?`).then(msg => {
                     db.set(`User.Request.${message.author.id}`, 'ON')
-                    msg.react('✅').catch(err => { return }) // e.Check
-                    msg.react('❌').catch(err => { return }) // X
+                    msg.react('✅').catch(err => { }) // e.Check
+                    msg.react('❌').catch(err => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -89,8 +89,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | ${message.author}, você está prestes a banir ${user} do servidor pelo motivo -> "**${reason}**".\nDeseja prosseguir com o banimento?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // e.Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // e.Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -135,7 +135,7 @@ module.exports = {
             x ? embed.setTitle(`🛰️ | Global System Notification | Forceban`) : embed.setTitle(`🛰️ | Global System Notification | Banimento`)
             x ? embed.setThumbnail(ban.displayAvatarURL({ dynamic: true })) : embed.setThumbnail(ban.user.displayAvatarURL({ dynamic: true }))
 
-            return channel.send({ embeds: [embed] }).catch(err => { return })
+            return channel.send({ embeds: [embed] }).catch(err => { })
 
         }
     }

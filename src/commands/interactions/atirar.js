@@ -41,7 +41,7 @@ module.exports = {
     return message.reply({ embeds: [embed] }).then(msg => {
       db.set(`User.Request.${message.author.id}`, 'ON')
       db.set(`User.Request.${user.id}`, 'ON')
-      msg.react('🔁').catch(err => { return }) // Check
+      msg.react('🔁').catch(err => { }) // Check
 
       const filter = (reaction, u) => { return ['🔁'].includes(reaction.emoji.name) && u.id === user.id }
 
@@ -52,14 +52,14 @@ module.exports = {
           db.delete(`User.Request.${message.author.id}`)
           db.delete(`User.Request.${user.id}`)
           const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`${e.GunRight} ${message.author} e ${user} estão trocando tiros! ${e.GunLeft}`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Atirar[Math.floor(Math.random() * g.Atirar.length)])
-          msg.edit({ embeds: [TradeEmbed] }).catch(err => { return })
+          msg.edit({ embeds: [TradeEmbed] }).catch(err => { })
         }
 
       }).catch(() => {
         db.delete(`User.Request.${message.author.id}`)
         db.delete(`User.Request.${user.id}`)
         embed.setColor('RED').setDescription(`${e.Deny} | ${message.author} atirou e ${user} saiu correndo.`).setFooter(`${message.author.id}/${user.id}`)
-        msg.edit({ embeds: [embed] }).catch(err => { return })
+        msg.edit({ embeds: [embed] }).catch(err => { })
       })
     })
   }

@@ -60,7 +60,7 @@ module.exports = {
                 .setFooter('Spotify e Discord fazendo seu dia melhor', fotospot)
 
             await message.reply({ embeds: [embed] }).then(msg => {
-                msg.react('📨').catch(err => { return }) // Troca
+                msg.react('📨').catch(err => { }) // Troca
 
                 const SendDMFilter = (reaction, user) => { return reaction.emoji.name === '📨' && user.id === user.id }
                 let Collector = msg.createReactionCollector({ filter: SendDMFilter, time: 40000, erros: ['time'] })
@@ -76,7 +76,7 @@ module.exports = {
 
                 Collector.on('end', () => {
                     embed.setColor('RED').setFooter('Sessao expirada por: Tempo de interação execido')
-                    msg.edit({ embeds: [embed] }).catch(err => { return })
+                    msg.edit({ embeds: [embed] }).catch(err => { })
                 })
             }).catch(err => {
                 return message.reply(`${Attention} | Houve um erro ao executar este comando\n\`${err}\``)

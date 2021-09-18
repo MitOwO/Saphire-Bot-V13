@@ -22,8 +22,8 @@ module.exports = {
 
         return message.reply({ embeds: [confirm] }).then(msg => {
             db.set(`User.Request.${message.author.id}`, 'ON')
-            msg.react('✅').catch(err => { return }) // e.Check
-            msg.react('❌').catch(err => { return }) // X
+            msg.react('✅').catch(err => { }) // e.Check
+            msg.react('❌').catch(err => { }) // X
 
             const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 

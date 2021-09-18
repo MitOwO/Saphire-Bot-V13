@@ -25,7 +25,7 @@ module.exports = {
         let Horas = Dias * 744
 
         try {
-            return message.reply(`${e.Nagatoro} | Você tem aproximadamente ${Meses} meses, ${Dias} dias e ${Horas} horas de vida.`).catch(err => { return })
+            return message.reply(`${e.Nagatoro} | Você tem aproximadamente ${Meses} meses, ${Dias} dias e ${Horas} horas de vida.`).catch(err => { })
         } catch (err) { return message.reply(`${e.Deny} | Error: \`${err}\``) }
     }
 }

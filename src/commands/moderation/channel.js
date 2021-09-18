@@ -13,6 +13,8 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
+        if (message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`GERENCIAR CANAIS\` para executar este comando.`)
+
         const noargs = new MessageEmbed()
             .setColor('BLUE')
             .setTitle('🛠️ Gerenciamento de Canais')
@@ -126,8 +128,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Este comando vai literalmente deletar este canal, deseja prosseguir?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 

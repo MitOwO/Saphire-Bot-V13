@@ -28,8 +28,8 @@ module.exports = {
         await message.guild.bans.fetch(ID).then(() => {
             return message.channel.send(`${e.QuestionMark} | Deseja desbanir o ID \`${ID}\` ?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // e.Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // e.Check
+                msg.react('❌').catch(err => { }) // X
 
                 let reason = `${message.author.tag} diz: ${args.slice(1).join(" ")}`
                 if (!reason) { reason = `${message.author.tag} não especificou nenhuma razão.` }
@@ -43,7 +43,7 @@ module.exports = {
                         message.guild.bans.remove(ID, reason).then(ban => {
                             db.delete(`User.Request.${message.author.id}`)
                             IdChannel ? Notify(ban) : message.channel.send(`${e.NotStonks} | Servidor sem meu sistema logs? Usa \`${prefix}logs\` aí poxa...\n${e.Stonks} | But, no problem! ${ban.tag} foi desban com sucesso.`)
-                            msg.delete().catch(() => { return })
+                            msg.delete().catch(() => { })
                         }).catch(err => { return message.channel.send(`${e.Attention} | O desban falhou! Caso você não saiba resolver o problema, use \`${prefix}bug\` e reporte o problema.\n\`${err}\``) })
 
                     } else {

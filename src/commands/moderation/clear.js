@@ -82,7 +82,7 @@ module.exports = {
             message.channel.send(`${e.Check} | Deletei um total ${msg.size} mensagens sob as ordens de ${message.author}`)
           }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
         })
-      })
+      }).catch(err => { return message.reply(`${e.Deny} | Estou sem a permissão "Gerenciar Mensagens".`) })
     } else {
       message.reply(`${e.Info} | O argumento X \`${prefix}clear "X"\` precisa ser um número para deletar as mensagens fora da clase \`mídas/bots/@users\`.`)
     }
