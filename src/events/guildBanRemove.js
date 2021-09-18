@@ -33,5 +33,5 @@ client.on('guildBanRemove', async ban => {
         )
         .setFooter(`${ban.guild.name}`, ban.guild.iconURL({ dynamic: true }))
 
-    channel ? channel.send({ embeds: [embed] }).catch(err => { return }) : ''
+    channel ? channel.send({ embeds: [embed] }).catch(err => { }) : ''
 })

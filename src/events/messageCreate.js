@@ -29,7 +29,7 @@ client.on('messageCreate', async message => {
 
         AfkSystem(message)
 
-            if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id)) message.channel.send(`${e.Pikachu} | \`${prefix}help\``)
+        if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id)) message.channel.send(`${e.Pikachu} | \`${prefix}help\``)
 
         const args = message.content.slice(prefix.length).trim().split(/ +/g)
         const cmd = args.shift().toLowerCase()
@@ -39,7 +39,7 @@ client.on('messageCreate', async message => {
         if (baka) return BakaBlocked(message)
 
         if (cooldown.has(message.author.id)) {
-            return message.react('⏱️').catch(err => { return })
+            return message.react('⏱️').catch(err => { })
         } else {
 
             message.channel.sendTyping().then(() => {
@@ -48,7 +48,7 @@ client.on('messageCreate', async message => {
 
                 if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
                     if (db.get(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`))
-                        return message.reply(`${e.Deny} | Meus comandos foram bloqueados neste canal.`).then(msg => setTimeout(() => { msg.delete().catch(err => { return }) }, 4500))
+                        return message.reply(`${e.Deny} | Meus comandos foram bloqueados neste canal.`).then(msg => setTimeout(() => { msg.delete().catch(err => { }) }, 4500))
                 }
 
                 let command = client.commands.get(cmd)
@@ -71,10 +71,10 @@ client.on('messageCreate', async message => {
                     db.set(`ComandoBloqueado.${cmd}`, 'BUG')
                     message.channel.createInvite({ maxAge: 0 }).then(ChannelInvite => {
                         const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: [${message.guild.name}](${ChannelInvite.url})\nErro: \`${err}\``)
-                        client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { return })
+                        client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { })
                     }).catch(err => {
                         const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\nErro: \`${err}\``)
-                        client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { return })
+                        client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { })
                     })
                     const EmbedError = new MessageEmbed().setColor('RED').setTitle('📌 Ocorreu um erro neste comando.').setDescription('De boa! Já avisei meu criador e ele vai arrumar isso o mais rápido possivel!').setFooter('Por motivos de segura, este comando está bloqueado.')
                     message.reply({ embeds: [EmbedError] })

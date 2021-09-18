@@ -19,13 +19,13 @@ client.on("guildCreate", async (guild) => {
     function WithChannel() {
         CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {
             Embed.addField('Servidor', `[${guild.name}](${ChannelInvite.url}) *\`(${guild.id})\`*`)
-            channel.send({ embeds: [Embed] }).catch(err => { return })
+            channel.send({ embeds: [Embed] }).catch(err => { })
         }).catch(() => { WithoutChannel() })
     }
 
     function WithoutChannel() {
         Embed.addField('Servidor', `${guild.name} *\`(${guild.id})\`*`)
-        channel.send({ embeds: [Embed] }).catch(err => { return })
+        channel.send({ embeds: [Embed] }).catch(err => { })
     }
 
     CanalDeConvite ? WithChannel() : WithoutChannel()

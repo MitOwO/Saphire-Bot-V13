@@ -13,6 +13,7 @@ client.on('guildMemberRemove', async (member) => {
 
     async function Notify() {
 
+        if (member.id === client.user.id) return
         if (!member.guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG) || !member.guild) { return }
         const channel = client.channels.cache.get(db.get(`Servers.${member.guild.id}.LogChannel`))
         if (!channel) return
@@ -22,7 +23,7 @@ client.on('guildMemberRemove', async (member) => {
         const { executor, target, reason } = banLog
         if (!banLog || !executor) return
 
-        target.id === member.user.id ? ModAuthor = executor.tag : 'Indefinido'
+        if (target.id === member.user.id) { ModAuthor = executor.tag } else { return }
         if (target.id !== member.user.id) return
         if (ModAuthor === client.user.tag) return
 
@@ -37,13 +38,13 @@ client.on('guildMemberRemove', async (member) => {
             )
             .setFooter(`${member.guild.name}`, member.guild.iconURL({ dynamic: true }))
 
-        channel ? channel.send({ embeds: [embed] }).catch(err => { return }) : ''
+        channel ? channel.send({ embeds: [embed] }).catch(err => { }) : ''
     }
 
     async function LeaveMember() {
         let LeaveChannel = db.get(`Servers.${member.guild.id}.LeaveChannel`)
         const canal = await member.guild.channels.cache.get(LeaveChannel)
         if (!canal) return
-        canal.send(`${e.SadPanda} | ${member.user.username} saiu do servidor.`).catch(err => { return })
+        canal.send(`${e.SadPanda} | ${member.user.username} saiu do servidor.`).catch(err => { })
     }
 })

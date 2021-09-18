@@ -43,6 +43,6 @@ client.on('channelDelete', async (channel) => {
 
     async function Notify(Msg) {
         const canal = await client.channels.cache.get(db.get(`Servers.${channel.guild.id}.LogChannel`))
-        canal ? canal.send(Msg).catch(() => { return }) : ''
+        canal ? canal.send(Msg).catch(() => { }) : ''
     }
 })

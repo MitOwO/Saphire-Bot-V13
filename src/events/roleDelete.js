@@ -19,6 +19,6 @@ client.on('roleDelete', async (role) => {
 
     async function Notify(Msg) {
         const canal = await client.channels.cache.get(db.get(`Servers.${role.guild.id}.LogChannel`))
-        canal ? canal.send(Msg).catch(() => { return }) : ''
+        canal ? canal.send(Msg).catch(() => { }) : ''
     }
 })

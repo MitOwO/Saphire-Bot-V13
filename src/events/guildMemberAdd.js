@@ -27,7 +27,6 @@ client.on('guildMemberAdd', async (member) => {
 
     async function AutoroleSystem1() {
 
-        await role1.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking = 'ADMINISTRATOR' : ''
         await role1.permissions.has(Permissions.FLAGS.KICK_MEMBERS) ? Checking = 'KICK_MEMBERS' : ''
         await role1.permissions.has(Permissions.FLAGS.BAN_MEMBERS) ? Checking = 'BAN_MEMBERS' : ''
         await role1.permissions.has(Permissions.FLAGS.MANAGE_GUILD) ? Checking = 'MANAGE_GUILD' : ''
@@ -37,6 +36,7 @@ client.on('guildMemberAdd', async (member) => {
         await role1.permissions.has(Permissions.FLAGS.MOVE_MEMBERS) ? Checking = 'MOVE_MEMBERS' : ''
         await role1.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES) ? Checking = 'MANAGE_NICKNAMES' : ''
         await role1.permissions.has(Permissions.FLAGS.MANAGE_ROLES) ? Checking = 'MANAGE_ROLES' : ''
+        await role1.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking = 'ADMINISTRATOR' : ''
 
         switch (Checking) {
             case 'ADMINISTRATOR': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **ADMINISTRADOR** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
@@ -56,7 +56,6 @@ client.on('guildMemberAdd', async (member) => {
 
     async function AutoroleSystem2() {
 
-        await role2.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking2 = 'ADMINISTRATOR' : ''
         await role2.permissions.has(Permissions.FLAGS.KICK_MEMBERS) ? Checking2 = 'KICK_MEMBERS' : ''
         await role2.permissions.has(Permissions.FLAGS.BAN_MEMBERS) ? Checking2 = 'BAN_MEMBERS' : ''
         await role2.permissions.has(Permissions.FLAGS.MANAGE_GUILD) ? Checking2 = 'MANAGE_GUILD' : ''
@@ -66,6 +65,7 @@ client.on('guildMemberAdd', async (member) => {
         await role2.permissions.has(Permissions.FLAGS.MOVE_MEMBERS) ? Checking2 = 'MOVE_MEMBERS' : ''
         await role2.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES) ? Checking2 = 'MANAGE_NICKNAMES' : ''
         await role2.permissions.has(Permissions.FLAGS.MANAGE_ROLES) ? Checking2 = 'MANAGE_ROLES' : ''
+        await role2.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking2 = 'ADMINISTRATOR' : ''
 
         switch (Checking2) {
             case 'ADMINISTRATOR': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **ADMINISTRADOR** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
@@ -88,7 +88,7 @@ client.on('guildMemberAdd', async (member) => {
 
     async function Notify(Msg) {
         const canal = await client.channels.cache.get(db.get(`Servers.${member.guild.id}.LogChannel`))
-        canal ? canal.send(Msg).catch(() => { return }) : ''
+        canal ? canal.send(Msg).catch(() => { }) : ''
     }
 
     async function Welcome() {
