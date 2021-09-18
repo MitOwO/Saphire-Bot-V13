@@ -19,12 +19,12 @@ module.exports = {
         if (block) return message.reply(`${e.Deny} | Você está bloqueado e perdeu acesso aos seguintes comandos: \`${prefix}bug\` \`${prefix}sendcantada\` \`${prefix}ideiasaphire\` \`${prefix}gif\``)
 
         let timeout = 900000
-        let author = await db.get(`User.${message.author.id}.Timeouts.Ideiasaphire`)
+        let author = db.get(`User.${message.author.id}.Timeouts.Ideiasaphire`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
 
-            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { return })
+            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
         } else {
 
             const ChannelId = config.SugestChannelId

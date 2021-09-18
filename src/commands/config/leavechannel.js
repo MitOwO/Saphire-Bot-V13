@@ -35,8 +35,8 @@ module.exports = {
 
                 return message.reply({ embeds: [QuestionEmbed] }).then(msg => {
                     db.set(`User.Request.${message.author.id}`, 'ON')
-                    msg.react('✅').catch(err => { return }) // e.Check
-                    msg.react('❌').catch(err => { return }) // X
+                    msg.react('✅').catch(err => { }) // e.Check
+                    msg.react('❌').catch(err => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -50,7 +50,7 @@ module.exports = {
                                     setTimeout(function () {
                                         db.delete(`User.Request.${message.author.id}`)
                                         db.delete(`Servers.${message.guild.id}.LeaveChannel`)
-                                        msg.edit({ embeds: [Autenticado] }).catch(err => { return })
+                                        msg.edit({ embeds: [Autenticado] }).catch(err => { })
                                         message.reply(`${e.Nagatoro} | Prontinho, agora eu não vou dizer mais nada quando alguém sair no servidor.`)
                                     }, 4000)
                                 })
@@ -73,8 +73,8 @@ module.exports = {
 
             return message.reply({ embeds: [QuestionsEmbed] }).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // e.Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // e.Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -96,8 +96,8 @@ module.exports = {
                                             setTimeout(() => {
                                                 message.channel.send(`${e.QuestionMark} | Ei, ei ${message.author}! Posso ativar o sistema de boas-vindas no canal "${channel}" também?`).then(msg => {
                                                     db.set(`User.Request.${message.author.id}`, 'ON')
-                                                    msg.react('✅').catch(err => { return }) // e.Check
-                                                    msg.react('❌').catch(err => { return }) // X
+                                                    msg.react('✅').catch(err => { }) // e.Check
+                                                    msg.react('❌').catch(err => { }) // X
 
                                                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -112,7 +112,7 @@ module.exports = {
                                                                         setTimeout(function () {
                                                                             db.delete(`User.Request.${message.author.id}`)
                                                                             db.set(`Servers.${message.guild.id}.WelcomeChannel`, channel.id)
-                                                                            x.edit({ content: `${e.Check} | Autenticação aprovada | ${message.channel.id}`, embeds: [Autenticado] }).catch(err => { return })
+                                                                            x.edit({ content: `${e.Check} | Autenticação aprovada | ${message.channel.id}`, embeds: [Autenticado] }).catch(err => { })
                                                                             message.channel.send(`${e.NezukoJump} | Nice, nice! Daqui pra frente, eu vou avisar no canal "${channel}" sobre todo mundo que entrar e sair do servidor.`)
                                                                         }, 3100)
                                                                     })

@@ -30,11 +30,11 @@ module.exports = {
         } else {
 
             let timeout = 7200000
-            let author = await db.get(`User.${message.author.id}.Timeouts.Bitcoin`)
+            let author = db.get(`User.${message.author.id}.Timeouts.Bitcoin`)
 
             if (author !== null && timeout - (Date.now() - author) > 0) {
                 let time = ms(timeout - (Date.now() - author))
-                return message.reply(`${e.BitCoin} | Status: \`${Bits}/1000\` | Reset em \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { return })
+                return message.reply(`${e.BitCoin} | Status: \`${Bits}/1000\` | Reset em \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
 
             } else {
                 Bits === 1000 ? NewBitCoin() : MineBitCoin()

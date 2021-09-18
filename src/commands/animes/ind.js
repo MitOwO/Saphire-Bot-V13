@@ -359,9 +359,9 @@ module.exports = {
 
         return message.reply({ embeds: [IndEmbed] }).then(msg => {
             db.set(`User.Request.${message.author.id}`, 'ON')
-            msg.react('🔄').catch(err => { return }) // Trocar
-            msg.react('📨').catch(err => { return }) // Carta
-            msg.react('❌').catch(err => { return }) // Cancel
+            msg.react('🔄').catch(err => { }) // Trocar
+            msg.react('📨').catch(err => { }) // Carta
+            msg.react('❌').catch(err => { }) // Cancel
 
             let TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }
             let TradeCollector = msg.createReactionCollector({ filter: TradeFilter, max: 15, time: 30000, errors: ['time', 'max'] })
@@ -375,15 +375,15 @@ module.exports = {
             let i = 0
             TradeCollector.on('collect', (reaction, user) => {
                 if (user.id === client.user.id) return
-                reaction.users.remove(user.id).catch(err => { return })
+                reaction.users.remove(user.id).catch(err => { })
                 i++
                 IndEmbed.addField('---------', `**Nome:** ${list[Math.floor(Math.random() * list.length)]}`)
-                msg.edit({ embeds: [IndEmbed] }).catch(err => { return })
+                msg.edit({ embeds: [IndEmbed] }).catch(err => { })
             })
 
             SendCollector.on('collect', (reaction, user) => {
                 if (user.id === client.user.id) return
-                reaction.users.remove(user.id).catch(err => { return })
+                reaction.users.remove(user.id).catch(err => { })
                 i++
                 user.send({ embeds: [IndEmbed.setDescription(`From: ${message.guild.name}`)] }).then(() => {
                     return message.channel.send(`${e.Check} | Envio concluido, ${user}!`)
@@ -394,16 +394,16 @@ module.exports = {
 
             CancelCollector.on('collect', (reaction, user) => {
                 db.delete(`User.Request.${message.author.id}`)
-                msg.reactions.removeAll().catch(() => { return })
+                msg.reactions.removeAll().catch(() => { })
                 IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { return })
+                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { })
             })
 
             CancelCollector.on('end', (reaction, user) => {
                 db.delete(`User.Request.${message.author.id}`)
-                msg.reactions.removeAll().catch(() => { return })
+                msg.reactions.removeAll().catch(() => { })
                 IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { return })
+                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { })
             })
 
         }).catch(err => {

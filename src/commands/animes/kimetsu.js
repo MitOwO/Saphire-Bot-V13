@@ -24,8 +24,8 @@ module.exports = {
 
         return message.reply({ embeds: [KimetsuEmbed] }).then(msg => {
             db.set(`User.Request.${message.author.id}`, 'ON')
-            msg.react('🔄').catch(err => { return }) // Troca
-            msg.react('❌').catch(err => { return }) // Cancel
+            msg.react('🔄').catch(err => { }) // Troca
+            msg.react('❌').catch(err => { }) // Cancel
 
             const TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }
             let Collector = msg.createReactionCollector({ filter: TradeFilter, time: 40000, erros: ['time'] })
@@ -37,18 +37,18 @@ module.exports = {
             Collector.on('collect', () => {
                 i++
                 KimetsuEmbed.setImage(g.KimetsuNoYaiba[Math.floor(Math.random() * g.KimetsuNoYaiba.length)])
-                msg.edit({ embeds: [KimetsuEmbed] }).catch(err => { return })
+                msg.edit({ embeds: [KimetsuEmbed] }).catch(err => { })
             })
 
             Collector.on('end', () => {
                 db.delete(`User.Request.${message.author.id}`)
                 KimetsuEmbed.setColor('RED').setTitle(`${e.Deny} Anime: Demon Slayer: Kimetsu no Yaiba`).setFooter(`Sessão Expirada | ${i} Requests solicitadas.`)
-                msg.edit({ embeds: [KimetsuEmbed] }).then(() => { i = 0 }).catch(err => { return })
+                msg.edit({ embeds: [KimetsuEmbed] }).then(() => { i = 0 }).catch(err => { })
             })
 
             Collector2.on('end', () => {
                 db.delete(`User.Request.${message.author.id}`)
-                msg.delete().then(() => { i = 0 }).catch(err => { return })
+                msg.delete().then(() => { i = 0 }).catch(err => { })
             })
         }).catch(err => {
             db.delete(`User.Request.${message.author.id}`)

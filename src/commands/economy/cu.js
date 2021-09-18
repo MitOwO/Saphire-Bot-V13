@@ -15,7 +15,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let timeout = 600000
-        let author = await db.get(`User.${message.author.id}.Timeouts.Cu`)
+        let author = db.get(`User.${message.author.id}.Timeouts.Cu`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
@@ -27,8 +27,8 @@ module.exports = {
 
             return message.reply(`${e.Attention} | O anús é algo valioso, você realmente deseja entrega-lo por dinheiro?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // e.Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // e.Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -54,7 +54,7 @@ module.exports = {
                         }
                     } else {
                         msg.edit(`${e.Deny} | Comando cancelado`)
-                        msg.reactions.removeAll().catch(err => { return })
+                        msg.reactions.removeAll().catch(err => { })
                     }
                 }).catch(() => {
                     msg.edit(`${e.Deny} | Comando cancelado | Tempo expirado`)

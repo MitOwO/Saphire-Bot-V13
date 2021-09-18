@@ -75,8 +75,8 @@ module.exports = {
 
             return message.reply({ embeds: [WallPaperEmbed] }).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('🔄').catch(err => { return }) // 1º Embed
-                msg.react('❌').catch(err => { return })
+                msg.react('🔄').catch(err => { }) // 1º Embed
+                msg.react('❌').catch(err => { })
 
                 let TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }; let TradeWallpaper = msg.createReactionCollector({ filter: TradeFilter, time: 30000, errors: ['time'] })
 
@@ -85,14 +85,14 @@ module.exports = {
                     reaction.users.remove(message.author.id)
                     let WallTrade = Category[Math.floor(Math.random() * Category.length)]
                     WallPaperEmbed.setDescription(`${e.Download} | [Baixar](${WallTrade}) wallpaper em qualidade original`).setImage(WallTrade)
-                    msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { return })
+                    msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { })
 
                 })
-                TradeWallpaper.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { return }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { return }) })
+                TradeWallpaper.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
 
                 let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }; let CancelSession = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 30000, errors: ['time', 'max'] })
-                CancelSession.on('collect', (reaction, user) => { msg.reactions.removeAll().catch(err => { return }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { return }) })
-                CancelSession.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { return }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { return }) })
+                CancelSession.on('collect', (reaction, user) => { msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
+                CancelSession.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
 
             }).catch(err => {
                 db.delete(`User.Request.${message.author.id}`)

@@ -35,8 +35,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você deseja ativar o Sistema Logs no canal: ${channel} ?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // e.Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // e.Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -45,7 +45,7 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.reactions.removeAll().catch(err => { return })
+                            msg.reactions.removeAll().catch(err => { })
                             msg.edit(`${e.Loading} | Autenticando "${channel}" como Canal do Sistema Logs...`)
                             setTimeout(function () {
                                 db.delete(`User.Request.${message.author.id}`)
@@ -54,13 +54,13 @@ module.exports = {
                             }, 4000)
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
-                            msg.reactions.removeAll().catch(err => { return })
+                            msg.reactions.removeAll().catch(err => { })
                             msg.edit(`Comando cancelado por: ${message.author}`)
                         }
                     }).catch(() => {
                         db.delete(`User.Request.${message.author.id}`)
-                        msg.reactions.removeAll().catch(err => { return })
-                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { return })
+                        msg.reactions.removeAll().catch(err => { })
+                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { })
                     })
             })
 
@@ -68,8 +68,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você deseja desativar o Sistema Logs no canal: ${channel} ?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // e.Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // e.Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -78,7 +78,7 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.reactions.removeAll().catch(err => { return })
+                            msg.reactions.removeAll().catch(err => { })
                             msg.edit(`${e.Loading} | Autenticando "${channel}"...`)
                             setTimeout(function () {
                                 db.delete(`User.Request.${message.author.id}`)
@@ -87,13 +87,13 @@ module.exports = {
                             }, 4000)
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
-                            msg.reactions.removeAll().catch(err => { return })
+                            msg.reactions.removeAll().catch(err => { })
                             msg.edit(`Comando cancelado por: ${message.author}`)
                         }
                     }).catch(() => {
                         db.delete(`User.Request.${message.author.id}`)
-                        msg.reactions.removeAll().catch(err => { return })
-                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { return })
+                        msg.reactions.removeAll().catch(err => { })
+                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { })
                     })
             })
         } else {

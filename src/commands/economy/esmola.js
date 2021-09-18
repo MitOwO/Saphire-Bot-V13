@@ -14,14 +14,14 @@ module.exports = {
 
   run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-    let author = await db.get(`User.${message.author.id}.Timeouts.PresoMax`)
+    let author = db.get(`User.${message.author.id}.Timeouts.Preso`)
     if (author !== null && 9140000 - (Date.now() - author) > 0) {
       let time = ms(9140000 - (Date.now() - author))
       return message.reply(`${e.Sirene} Você está sob detenção máxima por mais \`${time.hours}h ${time.minutes}m e ${time.seconds}s\` `)
     } else {
 
       let timeout1 = 300000
-      let author1 = await db.get(`esmolatimeout_${message.author.id}`)
+      let author1 = db.get(`esmolatimeout_${message.author.id}`)
 
       if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
         let time = ms(timeout1 - (Date.now() - author1))
@@ -35,7 +35,7 @@ module.exports = {
         return message.reply(`${e.SadPepe} | ${message.author.username} está pedindo um pouco de dinheiro`).then(msg => {
           db.set(`esmolatimeout_${message.author.id}`, Date.now())
           db.set(`User.Request.${message.author.id}`, 'ON')
-          msg.react('🪙').catch(err => { return }) // Coin
+          msg.react('🪙').catch(err => { }) // Coin
 
           const filter = (reaction, user) => { return reaction.emoji.name === '🪙' && user.id === user.id; };
 

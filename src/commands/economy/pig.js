@@ -26,7 +26,7 @@ module.exports = {
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, digite apenas \`${prefix}pig\` ou \`${prefix}pig status\``) }
 
         let timeout1 = 30000 // 30 Segundos
-        let author1 = await db.get(`User.${message.author.id}.Timeouts.Porquinho`)
+        let author1 = db.get(`User.${message.author.id}.Timeouts.Porquinho`)
 
         if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
             let time = ms(timeout1 - (Date.now() - author1))
@@ -61,8 +61,8 @@ module.exports = {
             function Question() {
                 message.reply(`${e.QuestionMark} | Você não tem dinheiro na carteira, deseja retirar -10 ${e.Coin}Moedas do banco? `).then(msg => {
                     db.set(`User.Request.${message.author.id}`, 'ON')
-                    msg.react('✅').catch(err => { return }) // Check
-                    msg.react('❌').catch(err => { return }) // X
+                    msg.react('✅').catch(err => { }) // Check
+                    msg.react('❌').catch(err => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -74,7 +74,7 @@ module.exports = {
                             db.add(`Balance_${message.author.id}`, 10)
                             db.subtract(`Bank_${message.author.id}`, 10)
                             Pig()
-                            msg.delete().catch(() => { return })
+                            msg.delete().catch(() => { })
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
                             return msg.edit(`${e.Deny} | Comando cancelado | ${message.author.id}`)

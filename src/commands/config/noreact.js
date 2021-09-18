@@ -19,8 +19,8 @@ module.exports = {
         function NoReact() {
             return message.reply(`${e.QuestionMark} | Deseja bloquear a interação dos comandos da categoria \`interação\`?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -45,8 +45,8 @@ module.exports = {
         function React() {
             return message.reply(`${e.QuestionMark} | Deseja retirar o bloqueio de interação?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
-                msg.react('✅').catch(err => { return }) // Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 

@@ -40,12 +40,12 @@ module.exports = {
         if (!tema) { return message.reply({ embeds: [noargs] }) }
 
         let timeout = 900000
-        let author = await db.get(`User.${message.author.id}.Timeouts.Gif`)
+        let author = db.get(`User.${message.author.id}.Timeouts.Gif`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
 
-            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { return })
+            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
         } else {
 
             if (!link) { return message.reply(`${e.Deny} | Formato incorreto.\n\`${prefix}gif Naruto LINK\`, tipo assim -> https://imgur.com/F1nJKHZ`) }

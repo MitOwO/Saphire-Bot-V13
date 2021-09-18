@@ -39,7 +39,7 @@ module.exports = {
                         setTimeout(function () {
                             db.delete(`User.Request.${message.author.id}`)
                             db.delete(`Servers.${message.guild.id}.ReportChannel`)
-                            msg.edit(`${e.Check} | Request Autenticada | ${message.author.id}`).catch(err => { return })
+                            msg.edit(`${e.Check} | Request Autenticada | ${message.author.id}`).catch(err => { })
                             message.channel.send(`${e.BrilanceBlob} | Nice, nice! Desativei o sistema de reports.`)
                         }, 3500)
                     }).catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
@@ -55,7 +55,7 @@ module.exports = {
                     setTimeout(function () {
                         db.delete(`User.Request.${message.author.id}`)
                         db.set(`Servers.${message.guild.id}.ReportChannel`, channel.id)
-                        msg.edit(`${e.Check} | Request Autenticada | ${channel.id}/${message.guild.id}`).catch(err => { return })
+                        msg.edit(`${e.Check} | Request Autenticada | ${channel.id}/${message.guild.id}`).catch(err => { })
                         return message.channel.send(`${e.NezukoJump} | Aeeee, sistema de report está ativadoooo!!\n\`${prefix}report [@user(opicional)] o seu reporte em diante\``)
                     }, 4000)
                 }).catch(err => {

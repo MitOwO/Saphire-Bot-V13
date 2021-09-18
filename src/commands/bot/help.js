@@ -15,7 +15,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let author = await db.get(`User.${message.author.id}.Timeouts.PresoMax`)
+        let author = db.get(`User.${message.author.id}.Timeouts.Preso`)
         if (author !== null && 9140000 - (Date.now() - author) > 0) {
             let time = ms(9140000 - (Date.now() - author))
             return message.reply(`${e.Sirene} Você está sob detenção máxima por mais \`${time.hours}h ${time.minutes}m e ${time.seconds}s\` `)
@@ -31,7 +31,7 @@ module.exports = {
                 .addField(`${e.Commands} Categorias`, `As categorias representam as classes de cada comando. Logo, o comando que procura está em sua própria categoria. Quer algum comando referente a economia? Só ir na categoria economia, óras bolas.`)
                 .addField(`${e.Info} Comandos de Suporte`, `${e.Report} \`${prefix}bug\` Reporte bugs/erros diretamente ao meu criador.\n${e.Trig} \`${prefix}gif\` Envie gifs para serem adicionados ao package.\n${e.Stonks} \`${prefix}sugest\` Tem alguma ideia/sugestão pra mim?\n${e.NezukoDance} \`${prefix}servers\` Meu servidor e a Super ☁️[Cloud's Kingdom](${CloudKingdomInvite}).`)
                 .addField(`🛰️ Global System Notification`, `Ative o \`${prefix}logs\` e deixa que eu aviso tudo sobre tudo, pode ficar despreocupado(a)!`)
-                .setFooter(`O ${prefix}help tem duração de 5 minutos`)
+                .setFooter(`O ${prefix}help fechará por inatividade em 1 minuto.`)
 
             const painel = new MessageActionRow()
                 .addComponents(new MessageSelectMenu()
@@ -151,12 +151,12 @@ module.exports = {
 
                 const filtro = (interaction) => interaction.customId === 'menu' && interaction.user.id === message.author.id
 
-                const coletor = msg.createMessageComponentCollector({ filtro, time: 300000 });
+                const coletor = msg.createMessageComponentCollector({ filtro, idle: 60000 });
 
                 coletor.on('end', async (collected) => {
                     db.delete(`User.Request.${message.author.id}`)
                     const Embed = new MessageEmbed().setColor('RED').setTitle(`${e.Deny} Central de Ajuda ${client.user.username}`).setDescription(`Sessão encerrada por Tempo Expirado.\nCaso queira ver o help novamente, basta usar \`${prefix}help\``)
-                    msg.edit({ embeds: [Embed] }).catch(err => { return })
+                    msg.edit({ embeds: [Embed] }).catch(err => { })
                 })
 
                 coletor.on('collect', async (collected) => {

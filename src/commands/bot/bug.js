@@ -30,12 +30,12 @@ module.exports = {
         if (!args[0]) { return message.reply({ embeds: [noargs] }) }
 
         let timeout = 900000
-        let author = await db.get(`User.${message.author.id}.Timeouts.Bug`)
+        let author = db.get(`User.${message.author.id}.Timeouts.Bug`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
 
-            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { return })
+            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
         } else {
 
             let mensagem = args.join(" ")

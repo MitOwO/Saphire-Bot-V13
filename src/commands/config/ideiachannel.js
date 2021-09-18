@@ -23,8 +23,8 @@ module.exports = {
 
                 return message.channel.send(`${e.QuestionMark} | Deseja desativar o sistema de ideias? Canal atual: ${channel}`).then(msg => {
                     db.set(`User.Request.${message.author.id}`, 'ON')
-                    msg.react('✅').catch(err => { return }) // e.Check
-                    msg.react('❌').catch(err => { return }) // X
+                    msg.react('✅').catch(err => { }) // e.Check
+                    msg.react('❌').catch(err => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -38,7 +38,7 @@ module.exports = {
                                 setTimeout(function () {
                                     db.delete(`User.Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.IdeiaChannel`)
-                                    msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { return })
+                                    msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { })
                                     return message.channel.send(`${e.Nagatoro} | Prontinho, sistema de ideias desativado.`)
                                 }, 5000)
                             }).catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })
@@ -67,8 +67,8 @@ module.exports = {
 
                 return message.reply(`${e.QuestionMark} | Deseja autenticar o canal ${channel} como canal de ideias?`).then(msg => {
                     db.set(`User.Request.${message.author.id}`, 'ON')
-                    msg.react('✅').catch(err => { return }) // e.Check
-                    msg.react('❌').catch(err => { return }) // X
+                    msg.react('✅').catch(err => { }) // e.Check
+                    msg.react('❌').catch(err => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -82,7 +82,7 @@ module.exports = {
                                 setTimeout(function () {
                                     db.delete(`User.Request.${message.author.id}`)
                                     db.set(`Servers.${message.guild.id}.IdeiaChannel`, channel.id)
-                                    msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { return })
+                                    msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { })
                                     return message.channel.send(`${e.NezukoJump} | Prontinho, sistema de ideias ativado.\nO comando é simples --> \`${prefix}ideia a sua ideia em diante\``)
                                 }, 6000)
                             }).catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })

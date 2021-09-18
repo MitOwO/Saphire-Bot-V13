@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
         let timeout1 = 9140000
-        let author1 = await db.get(`User.${message.author.id}.Timeouts.PresoMax`)
+        let author1 = db.get(`User.${message.author.id}.Timeouts.Preso`)
 
         if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
             let time = ms(timeout1 - (Date.now() - author1))
@@ -54,8 +54,8 @@ module.exports = {
             let cache = db.get(`User.${message.author.id}.Caches.Pay`)
 
             await message.reply(`${e.QuestionMark} | ${message.author}, você confirma transferir a quantia de **${args[1]} ${e.Coin}Moedas** para ${user}?`).then(msg => {
-                msg.react('✅').catch(err => { return }) // Check
-                msg.react('❌').catch(err => { return }) // X
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -67,7 +67,7 @@ module.exports = {
                         db.add(`Balance_${user.id}`, cache)
                         db.delete(`User.${message.author.id}.Caches.Pay`)
                         msg.edit(`${e.Check} | Transação efetuada com sucesso!\n${message.author.tag}: -${parseInt(args[1])} ${e.Coin} Moedas\n${user.user.tag}: +${args[1]} ${e.Coin} Moedas`)
-                        msg.reactions.removeAll().catch(err => { return })
+                        msg.reactions.removeAll().catch(err => { })
                     } else {
                         db.delete(`User.Request.${message.author.id}`)
                         db.add(`Balance_${message.author.id}`, cache)

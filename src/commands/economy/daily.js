@@ -13,10 +13,9 @@ module.exports = {
     description: 'Pegue uma recompensa diária',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
-        let timeout = 86400000 // 24hrs
 
         let timeout1 = 9140000
-        let author1 = await db.get(`User.${message.author.id}.Timeouts.PresoMax`)
+        let author1 = db.get(`User.${message.author.id}.Timeouts.Preso`)
 
         if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
             let time = ms(timeout1 - (Date.now() - author1))
@@ -24,7 +23,8 @@ module.exports = {
             return message.reply(`${e.Sirene} Você está sob detenção máxima por mais \`${time.hours}h ${time.minutes}m e ${time.seconds}s\` `)
         } else {
 
-            let daily = await db.get(`User.${message.author.id}.Timeouts.Daily`)
+            let timeout = 86400000 // 24hrs
+            let daily = db.get(`User.${message.author.id}.Timeouts.Daily`)
             if (daily !== null && timeout - (Date.now() - daily) > 0) {
                 let time = ms(timeout - (Date.now() - daily))
                 return message.reply(`${e.Deny} | Espere calmamente jovem ser. \`${time.hours}h, ${time.minutes}m, e ${time.seconds}s\``)

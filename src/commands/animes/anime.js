@@ -27,7 +27,7 @@ module.exports = {
         if (search.length < 4) { return message.reply(`${e.Deny} | Por favor, tente algo com mais de **4 caracteres**, pelo bem do meu sistema ${e.SadPanda}`) }
 
         kitsu.searchAnime(search).then(async result => {
-            if (result.length === 0) { return msg.edit(`${e.Deny} | Nenhum resultado obtido para: **${search}**`).catch(err => { return }) }
+            if (result.length === 0) { return msg.edit(`${e.Deny} | Nenhum resultado obtido para: **${search}**`).catch(err => { }) }
 
             let anime = result[0]
 

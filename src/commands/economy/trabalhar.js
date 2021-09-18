@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
         let timeout1 = 9140000
-        let author1 = await db.get(`User.${message.author.id}.Timeouts.PresoMax`)
+        let author1 = db.get(`User.${message.author.id}.Timeouts.Preso`)
 
         if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
             let time = ms(timeout1 - (Date.now() - author1))
@@ -21,7 +21,7 @@ module.exports = {
         } else {
 
             let timeout = 66400000
-            let author = await db.get(`User.${message.author.id}.Timeouts.Work`)
+            let author = db.get(`User.${message.author.id}.Timeouts.Work`)
 
             if (author !== null && timeout - (Date.now() - author) > 0) {
                 let time = ms(timeout - (Date.now() - author))
