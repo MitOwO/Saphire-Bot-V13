@@ -43,6 +43,6 @@ module.exports = {
         await card.build().then(card => {
             const RankImage = new MessageAttachment(card, 'RankCard.png')
             message.reply({ files: [RankImage] })
-        }).catch(err => { return message.reply(`${e.Attention} | Um erro foi detectado na execução de CANVACORD\n\`${err}\``) })
+        }).catch(err => { return message.reply(`${e.Warn} | Um erro foi detectado na execução de CANVACORD\n\`${err}\``) })
     }
 }

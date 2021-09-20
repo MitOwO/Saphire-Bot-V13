@@ -1,8 +1,9 @@
 const { e } = require('../../../Routes/emojis.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'error',
-    aliases: ['er', 'erro'],
+    aliases: ['er', 'erro', 'err'],
     category: 'owner',
     UserPermissions: '',
     ClientPermissions: '',
@@ -12,7 +13,6 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let b = 'a'
-        return message.reply(a)
+        return message.reply(a).catch(err => { Error(message, err) })
     }
 }

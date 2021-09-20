@@ -51,7 +51,7 @@ module.exports = {
                 .setFooter('Isso aqui não é previsão do tempo')
                 .setTimestamp()
 
-            return message.reply({ embeds: [embed] }).catch(err => { return message.channel.send(`${e.Attention} | Houve um erro no meu processamento.\n\`${err}\``)})
+            return message.reply({ embeds: [embed] }).catch(err => { return message.channel.send(`${e.Warn} | Houve um erro no meu processamento.\n\`${err}\``)})
         })
     }
 }

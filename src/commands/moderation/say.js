@@ -22,7 +22,7 @@ module.exports = {
             message.delete().then(() => {
                 return message.channel.send(Message)
             }).catch(err => {
-                return message.channel.send(`${e.Attention} | Houve um erro ao executar este comando.\n\`${err}\``)
+                return message.channel.send(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
             })
         }
 
@@ -30,7 +30,7 @@ module.exports = {
             message.delete().then(() => {
                 return message.channel.send(`${Message}\n \n~Por: ${message.author.tag}`)
             }).catch(err => {
-                return message.channel.send(`${e.Attention} | Houve um erro ao executar este comando.\n\`${err}\``)
+                return message.channel.send(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
             })
         }
     }

@@ -81,7 +81,7 @@ module.exports = {
 
             let user = message.mentions.members.first()
             if (!args[0] || !user) return message.reply(`${e.Info} | Para banir alguém se faz assim \`${prefix}ban @user Motivo do banimento\`\n${e.QuestionMark} | Quer ver a lista de bans do servidor? \`${prefix}ban list\`\n${e.ModShield} | Quer banir usando a força? \`${prefix}ban ID Motivo do banimento\``)
-            if (db.get(`System.Whitelist.${user.id}`)) { return message.reply(`${e.Deny} | Este usuário está na minha WhiteList.`) }
+            if (db.get(`Client.Whitelist.${user.id}`)) { return message.reply(`${e.Deny} | Este usuário está na minha WhiteList.`) }
             if (user.id === message.author.id) { return message.reply(`${e.Confuse} | Por qual motivo neste mundo você se baniria? Vem ver isso @.everyone! Ele quer se banir`) }
             if (user.id === message.guild.ownerId) { return message.reply(`${e.Deny} | Não dá para banir o dono do servidor, sabia?`) }
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Deny} | Não posso banir um administrador... Que abuso é esse?`)
@@ -103,7 +103,7 @@ module.exports = {
                             IdChannel ? (msg.edit(`${e.Check} | Prontinho chefe! Eu mandei as informações no canal <#${IdChannel}>`), Notify(ban, false)) : message.reply(`${e.Check} | Feito! Cof Cof... \`-logs\``)
                         }).catch(err => {
                             db.delete(`User.Request.${message.author.id}`)
-                            message.reply(`${e.Attention} | Ocorreu um erro durante o banimento... Caso você não saiba resolver, use o comando \`${prefix}bug\` e relate o problema.\n\`${err}\``)
+                            message.reply(`${e.Warn} | Ocorreu um erro durante o banimento... Caso você não saiba resolver, use o comando \`${prefix}bug\` e relate o problema.\n\`${err}\``)
                         })
                     } else {
                         db.delete(`User.Request.${message.author.id}`)

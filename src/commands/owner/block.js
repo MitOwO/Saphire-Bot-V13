@@ -12,7 +12,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (['remove', 'del', 'tirar'].includes(args[0].toLowerCase())) {
+        if (['remove', 'del', 'tirar'].includes(args[0]?.toLowerCase())) {
 
             let id = args[1]
             if (!id) return message.reply(`${e.Deny} | Forneça um ID.`)

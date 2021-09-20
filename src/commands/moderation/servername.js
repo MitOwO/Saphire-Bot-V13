@@ -18,6 +18,6 @@ module.exports = {
 
         message.guild.setName(Name, [`${message.author.tag} foi o autor deste comando.`]).then(() => {
             return message.reply(`${e.Check} | Nome alterado com sucesso.`)
-        }).catch(err => { return message.channel.send(`${e.Attention} | Houve um erro na execução deste comando.\n\`${err}\``) })
+        }).catch(err => { return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``) })
     }
 }

@@ -1,4 +1,5 @@
 const { e } = require('../../../Routes/emojis.json')
+const { config } = require('../../../Routes/config.json')
 
 module.exports = {
     name: 'blacklist',
@@ -6,12 +7,79 @@ module.exports = {
     category: ['owner'],
     emoji: `${e.OwnerCrow}`,
     usage: ['(owner) <add/remove> [@user] | <deleteall>'],
-    description: 'Membros bloqueados no meu sistema',
+    description: 'Membros/Servidores bloqueados do meu sistema',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (!args[0]) {
+        let user = message.mentions.members.first()
+        let razao = args.slice(2).join(" ")
+        if (!razao) razao = 'Nenhum motivo especificado.'
 
+        if (user.id === message.author.id) return BlacklistRanking()
+        if (message.author.id !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
+        if (['adicionar', 'add', 'colocar'].includes(args[0]?.toLowerCase())) return BlacklistAdd()
+        if (['addid', 'adicionarid'].includes(args[0]?.toLowerCase())) return BlacklistAddById()
+        if (['remover', 'remove', 're', 'tirar'].includes(args[0]?.toLowerCase())) return BlacklistRemove()
+        if (['delid', 'removerid', 'removeid', 'reid', 'tirarid'].includes(args[0]?.toLowerCase())) BlacklistRemoveById()
+
+        return message.repy(`${e.Obs} | Opções: adicionar | addid | remover | removerid | addserver | addserverid | removeserver | removerserverid`)
+
+        function BlacklistRemoveById() {
+
+            let id = args[1]
+            if (!id) return message.reply(`${e.Deny} | \`${prefix}bl removeid id\``)
+            if (id.length < 17) { return message.reply(`${e.Deny} | Isso não é um ID`) }
+            if (isNaN(id)) { return message.reply(`${e.Deny} | Isso não é um número.`) }
+
+            db.delete(`Blacklist_${id}`)
+            db.delete(`Blacklist.${id}`)
+            return message.reply(`${e.Check} O usuário "<@${id}> *\`${id}\`*" foi removido da Blacklist.`)
+        }
+
+        function BlacklistAddById() {
+
+            let id = args[1]
+            if (!id) return message.reply(`${e.Deny} | \`${prefix}bl addid id Razão\``)
+            if (id.length < 17) { return message.reply(`${e.Deny} | Isso não é um ID`) }
+            if (isNaN(id)) { return message.reply(`${e.Deny} | Isso não é um número.`) }
+
+            db.set(`Blacklist_${id}`, id)
+            db.set(`Blacklist.${id}`, razao)
+            return message.reply(`${e.Check} O usuário "<@${id}> *\`${id}\`*" foi adicionado a Blacklist.`)
+        }
+
+        function BlacklistRemove() {
+
+            if (!user) return message.reply(`${e.Deny} | \`${prefix}bl remove @user\``)
+
+            db.delete(`Blacklist_${user.id}`)
+            db.delete(`Blacklist.${user.id}`)
+            return message.reply(`O usuário "${user} *\`${user.id}\`*" foi removido da Blacklist.`)
+        }
+
+        function BlacklistAdd() {
+
+            if (args[1] !== user) {
+
+                let id = args[1]
+                if (!id) id = message.guild.id
+                if (id.length < 17) { return message.reply(`${e.Deny} | Isso não é um ID`) }
+                if (isNaN(id)) { return message.reply(`${e.Deny} | Isso não é um número.`) }
+
+                db.set(`blacklistServers_${id}`, id)
+                db.set(`blacklistServers.${id}`, razao)
+                return message.reply(`${e.Check} O servidor *\`${id}\`*" foi adicionado a Blacklist.`)
+            } else {
+
+                if (!user) return message.reply(`${e.Deny} | \`${prefix}bl add @user razão\``)
+
+                db.set(`Blacklist_${user.id}`, user.id)
+                db.set(`Blacklist.${user.id}`, razao)
+                return message.reply(`O usuário "${user} *\`${user.id}\`*" foi adicionado a Blacklist.`)
+            }
+        }
+
+        async function BlacklistRanking() {
             let data = db.all().filter(i => i.ID.startsWith("Blacklist_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply("Não há ninguém na blacklist por enquanto")
 
@@ -33,59 +101,7 @@ module.exports = {
                 embed.addField(`🆔 ${d.user.tag} \`${d.user.id}\``, `📝 ${d.razao}`)
             })
             return message.reply({ embeds: [embed] })
-
-        } else if (['adicionar', 'add', 'colocar'].includes(args[0].toLowerCase())) {
-
-            let user = message.mentions.members.first()
-            if (!user) { return message.reply(`\`${prefix}blacklist add @user Razão\``) }
-
-            let razao = args.slice(2).join(" ")
-            if (!razao) razao = 'Nenhum motivo especificado.'
-
-            db.set(`Blacklist_${user.id}`, user.id)
-            db.set(`Blacklist.${user.id}`, razao)
-            return message.reply(`O usuário "${user} *\`(${user.id})\`*" foi adicionado a Blacklist.`)
-
-        } else if (['addid', 'adicionarid'].includes(args[0].toLowerCase())) {
-
-            let id = args[1]
-            if (!id) { return message.reply('`' + prefix + 'blacklist addid ID`') }
-            if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
-            if (isNaN(id)) { return message.reply("❌ Isso não é um número.") }
-
-            let razao = args.slice(2).join(" ")
-            if (!razao) razao = 'Nenhum motivo especificado.'
-
-            db.set(`Blacklist_${id}`, id)
-            db.set(`Blacklist.${id}`, razao)
-            return message.reply(`${e.Check} O usuário "<@${id}> *\`(${id})\`*" foi removido da Blacklist.`)
-        } else if (['remover', 'remove', 're', 'tirar'].includes(args[0].toLowerCase())) {
-
-            let user = message.mentions.members.first()
-            if (!user) { return message.reply(`\`${prefix}blacklist remove @user\``) }
-
-            db.delete(`Blacklist_${user.id}`)
-            db.delete(`Blacklist.${user.id}`)
-            return message.reply(`O usuário "${user} *\`(${user.id})\`*" foi removido da Blacklist.`)
-
-        } //else if (['removerall', 'removeall', 'reall', 'tirarall', 'deleteall', 'delall'].includes(args[0].toLowerCase())) {
-
-        // db.delete('Blacklist')
-        // return message.reply(`${e.Check} Blacklist deletada.`)
-
-        //} 
-        else if (['delid', 'removerid', 'removeid', 'reid', 'tirarid'].includes(args[0].toLowerCase())) {
-
-            let id = args[1]
-            if (!id) { return message.reply('`' + prefix + 'blacklist removeid ID`') }
-            if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
-            if (isNaN(id)) { return message.reply("❌ Isso não é um número.") }
-
-            db.delete(`Blacklist_${id}`)
-            db.delete(`Blacklist.${id}`)
-            return message.reply(`${e.Check} O usuário "<@${id}> *\`(${id})\`*" foi removido da Blacklist.`)
-        } else {
-            return message.reply(`${e.Info} \`${prefix}blacklist add/remove @user\``)
         }
+
     }
 }

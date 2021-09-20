@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`GERENCIAR CANAIS\` para executar este comando.`)
+        if (!message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`GERENCIAR CANAIS\` para executar este comando.`)
 
         const noargs = new MessageEmbed()
             .setColor('BLUE')
@@ -69,7 +69,7 @@ module.exports = {
             canal.lockPermissions().then(() => {
                 return message.reply(`${e.Check} | Prontinho, o canal ${canal} foi sincronizado com as permissões da categoria **${canal.parent.name.toUpperCase()}**`)
             }).catch(err => {
-                return message.reply(`${e.Attention} | Ocorreu um erro na execução da sincronização.\n\`${err}\``)
+                return message.reply(`${e.Warn} | Ocorreu um erro na execução da sincronização.\n\`${err}\``)
             })
         }
 

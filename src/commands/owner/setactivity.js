@@ -1,4 +1,5 @@
 const { e } = require('../../../Routes/emojis.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'setactivity',
@@ -10,13 +11,57 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        ['atividade', 'activity'].includes(args[0]) ? SetActivity() : message.reply(`${e.Deny} | Assim: \`${prefix}setactivity atividade Nova Atividade\``)
+        if (['atividade', 'activity', 'atv'].includes(args[0]?.toLowerCase())) return SetActivity()
+        if (['action', 'ação'].includes(args[0]?.toLowerCase())) return SetAction()
+        if (['status'].includes(args[0]?.toLowerCase())) return SetStatus()
+        return message.reply(`${e.Obs} | Aqui vai os comandos deste comando:\n\`${prefix}setactivity <atividade> No atividade (35 carac max)\`\n\`${prefix}setactivity <action> Opções: PLAYING, STREAMING, LISTENING, WATCHING, CUSTOM, COMPETING\`\n\`${prefix}setactivity <status> Opções: online, idle, invisible, dnd\``)
 
         function SetActivity() {
             if (args.slice(1).join(' ').length > 35) return message.reply(`${e.Deny} | Limite máx: 35 caracteres.`)
-            client.user.setActivity(args.slice(1).join(' '))
-            return message.reply(`${e.Check} | Minha nova atividade é: **${args.slice(1).join(' ')}**`)
+            try {
+                client.user.setActivity(args.slice(1).join(' '))
+                db.set('Client.Status.SetActivity', args.slice(1).join(' '))
+                return message.reply(`${e.Check} | Minha nova atividade é: **${args.slice(1).join(' ')}**`)
+            } catch (err) {
+                Error(message, err)
+                db.delete('Client.Status.SetActivity')
+                message.reply(`${e.Deny} | Error: \`${err}\``)
+            }
         }
 
+        function SetAction() {
+            if (['PLAYING', 'STREAMING', 'LISTENING', 'WATCHING', 'COMPETING'].includes(args[1])) {
+                try {
+                    let Action = args[1].toUpperCase()
+                    client.user.setActivity(`${db.get('Client.Status.SetActivity') || 'WATCHING'}`, { type: `${Action}` })
+                    db.set('Client.Status.SetAction', Action)
+                } catch (err) {
+                    Error(message, err)
+                    db.delete('Client.Status.SetAction');
+                    message.reply(`${e.Deny} | Error: \`${err}\``)
+                }
+            } else {
+                db.delete('Client.Status.SetAction')
+                return message.reply(`${e.Obs} | Opções: PLAYING, STREAMING, LISTENING, WATCHING, COMPETING`)
+            }
+        }
+
+        function SetStatus() {
+            if (['online', 'idle', 'invisible', 'dnd'].includes(args[1]?.toLowerCase())) {
+                try {
+                    let Status = args[1]?.toUpperCase()
+                    client.user.setStatus(`${Status}`)
+                    db.set('Client.Status.setStatus', Status)
+                    return message.reply(`${e.Check} | Feito! Meu novo status agora é: ${Status}`)
+                } catch (err) {
+                    Error(message, err)
+                    db.delete('Client.Status.setStatus');
+                    message.reply(`${e.Deny} | Error: \`${err}\``)
+                }
+            } else {
+                db.delete('Client.Status.setStatus')
+                return message.reply(`${e.Obs} | Opções: online, idle, invisible, dnd`)
+            }
+        }
     }
 }

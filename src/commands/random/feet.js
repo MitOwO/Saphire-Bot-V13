@@ -35,7 +35,7 @@ module.exports = {
       Collector2.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); embed.setColor('RED').setFooter(`Tempo Expirado | ${message.author.id}`); msg.reactions.removeAll().catch(err => { }); msg.edit({ embeds: [embed] }).catch(err => { }) })
     }).catch(err => {
       db.delete(`User.Request.${message.author.id}`)
-      return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+      return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
     })
   }
 }

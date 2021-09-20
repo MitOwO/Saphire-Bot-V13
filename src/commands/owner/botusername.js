@@ -24,7 +24,7 @@ module.exports = {
                         msg.edit({ content: data, embeds: [SucessEmbed] }).catch(err => { return message.reply(`${e.Deny} | ${err}`) })
                         return message.channel.send(`${e.NezukoJump} Meu novo nome agora é **${NewName}**`)
                     }).catch(err => {
-                        return message.reply(`${e.Attention} Discord Warn:\n\`${err}\``)
+                        return message.reply(`${e.Warn} Discord Warn:\n\`${err}\``)
                     })
                 }, 5000)
             })

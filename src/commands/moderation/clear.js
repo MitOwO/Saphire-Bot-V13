@@ -35,8 +35,8 @@ module.exports = {
         let userFilter = userMessages.filter(obj => obj.author.id === user.id)
         message.channel.bulkDelete(userFilter).then(Mensagens => {
           return message.channel.send(`${e.Check} | Nas últimas ${MsgsPraDeletar} mensagens, eu achei ${Mensagens.size} mensagens de ${user} e apaguei elas sob as ordens de ${message.author}`)
-        }).catch(err => { return message.channel.send(`${e.Attention} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
-      }).catch(err => { return message.reply(`${e.Attention} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+        }).catch(err => { return message.channel.send(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+      }).catch(err => { return message.reply(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
     } else if (['bot', "bots"].includes(args[0])) {
 
@@ -51,7 +51,7 @@ module.exports = {
 
         message.channel.bulkDelete(botFilter).then(MsgApagada => {
           return message.channel.send(`${e.Check} | Eu apaguei ${MsgApagada.size} mensagens de Bots das últimas ${MsgsPraDeletar} mensagens do chat sob as ordens de ${message.author}`)
-        }).catch(err => { return message.channel.send(`${e.Attention} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
+        }).catch(err => { return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
       }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
     } else if (['images', "imagens", "fotos", "foto", "imagem", "midia"].includes(args[0])) {
@@ -66,7 +66,7 @@ module.exports = {
         let imageFilter = awaitImageMessages.filter(obj => obj.attachments.size > 0)
         message.channel.bulkDelete(imageFilter).then(MsgApagada => {
           return message.channel.send(`${e.Check} | Encontrei ${MsgApagada.size} midias nas últimas ${MsgsPraDeletar} mensagens do chat e apaguei sob as ordens de ${message}`)
-        }).catch(err => { return message.channel.send(`${e.Attention} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
+        }).catch(err => { return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
       }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
     } else if (typeof (parseInt(args[0])) == "number") {

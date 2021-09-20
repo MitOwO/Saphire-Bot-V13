@@ -18,7 +18,7 @@ module.exports = {
             channel.setNSFW(true).then(() => {
                 return message.reply(`${e.Nagatoro} | Prontinho, agora este é um canal de conteúdo duvidoso.\n||*(Não tenho nada haver com isso)*||`)
             }).catch(err => {
-                return message.reply(`${e.Attention} | Ocorreu um erro ao executar este comando.\n\`${err}\``)
+                return message.reply(`${e.Warn} | Ocorreu um erro ao executar este comando.\n\`${err}\``)
             })
         }
 
@@ -26,7 +26,7 @@ module.exports = {
             channel.setNSFW(false).then(() => {
                 return message.reply(`${e.Check} | Prontinho, agora este é um canal livre para todas as idades.`)
             }).catch(err => {
-                return message.reply(`${e.Attention} | Ocorreu um erro ao executar este comando.\n\`${err}\``)
+                return message.reply(`${e.Warn} | Ocorreu um erro ao executar este comando.\n\`${err}\``)
             })
         }
     }

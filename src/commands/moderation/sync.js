@@ -21,7 +21,7 @@ module.exports = {
         channel.lockPermissions().then(() => {
             return message.reply(`${e.Check} | Prontinho, o canal ${channel} foi sincronizado com as permissões da categoria **${channel.parent.name.toUpperCase()}**`)
         }).catch(err => {
-            return message.reply(`${e.Attention} | Ocorreu um erro na execução da sincronização.\n\`${err}\``)
+            return message.reply(`${e.Warn} | Ocorreu um erro na execução da sincronização.\n\`${err}\``)
         })
     }
 }

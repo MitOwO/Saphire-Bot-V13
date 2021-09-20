@@ -44,7 +44,7 @@ module.exports = {
                             db.delete(`User.Request.${message.author.id}`)
                             IdChannel ? Notify(ban) : message.channel.send(`${e.NotStonks} | Servidor sem meu sistema logs? Usa \`${prefix}logs\` aí poxa...\n${e.Stonks} | But, no problem! ${ban.tag} foi desban com sucesso.`)
                             msg.delete().catch(() => { })
-                        }).catch(err => { return message.channel.send(`${e.Attention} | O desban falhou! Caso você não saiba resolver o problema, use \`${prefix}bug\` e reporte o problema.\n\`${err}\``) })
+                        }).catch(err => { return message.channel.send(`${e.Warn} | O desban falhou! Caso você não saiba resolver o problema, use \`${prefix}bug\` e reporte o problema.\n\`${err}\``) })
 
                     } else {
                         db.delete(`User.Request.${message.author.id}`)

@@ -31,7 +31,7 @@ module.exports = {
                         setTimeout(() => {
                             channel.permissionOverwrites.create(user, { VIEW_CHANNEL: true }).then(() => {
                                 message.channel.send(`🔓 | ${message.author} liberou ${user}(adm kkk) para falar neste canal.`)
-                            }).catch(err => { return message.reply(`${e.Attention} | Houve um erro nesse comando. Use \`${prefix}bug\` e reporte ao meu criador.\n\`${err}\``) })
+                            }).catch(err => { return message.reply(`${e.Warn} | Houve um erro nesse comando. Use \`${prefix}bug\` e reporte ao meu criador.\n\`${err}\``) })
                         }, 2000)
                     })
                 })

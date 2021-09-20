@@ -47,7 +47,7 @@ module.exports = {
 
                 if (reaction.emoji.name === '✅') {
                     db.delete(`User.Request.${message.author.id}`)
-                    const KickEmbed = new MessageEmbed().setColor('BLUE').setTitle(`${e.Loud} | Sistema de Kick`).setThumbnail(member.user.displayAvatarURL({ dynamic: true })).addField('Usuário Expulso', member.user.tag).addField('ID', `*\`${member.user.id}\`*`).addField('Kickado por', message.author.username).addField('Razão', reason).setFooter(`${message.guild.name}`).setTimestamp()
+                    const KickEmbed = new MessageEmbed().setColor('BLUE')            .setTitle(`🛰️ | Global System Notification | Kick`).setThumbnail(member.user.displayAvatarURL({ dynamic: true })).addField('Usuário Expulso', member.user.tag).addField('ID', `*\`${member.user.id}\`*`).addField('Kickado por', message.author.username).addField('Razão', reason).setFooter(`${message.guild.name}`).setTimestamp()
                     member.kick([`Author do Kick: ${message.author.tag} | ${reason}`]).then(() => {
 
                         let canal = client.channels.cache.get(logchannel)

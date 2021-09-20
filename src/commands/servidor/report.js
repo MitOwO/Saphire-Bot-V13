@@ -53,7 +53,7 @@ module.exports = {
                         return message.channel.send(`${e.Info} | Parece que a sua DM está fechada. | Seu relatório foi enviado com sucesso, porém não pude enviar o relatório no seu privado.`)
                     })
                 }).catch(err => {
-                    return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
+                    return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
                 })
             } else if (user) {
                 ReportEmbed.addField('Membro Reportado', `${user}`).addField('Razão do Reporte', `${args.slice(1).join(" ")}`)
@@ -63,7 +63,7 @@ module.exports = {
                         return message.channel.send(`${e.Info} | Parece que a sua DM está fechada. | Seu relatório foi enviado com sucesso, porém não pude enviar o relatório no seu privado.`)
                     })
                 }).catch(err => {
-                    return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
+                    return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
                 })
             } else {
                 return message.channel.send(`${e.Deny} | Para reportar alguém membro, marque a pessoa em primeiro lugar, depois continue com o reporte.\n\`${prefix}rpt @user A sua denúncia em diante\``)

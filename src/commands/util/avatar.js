@@ -14,7 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}`)
-        let user = message.mentions.users.first() || message.author || message.repliedUser
+        let user = message.mentions.users.first() || message.author || message.repliedUser || message.member
         let avatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 })
         let linkavatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
 
@@ -42,8 +42,8 @@ module.exports = {
 
             Delete.on('collect', (reaction, user) => {
                 db.delete(`User.Request.${message.author.id}`)
-                msg.delete().catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro ao excluir a mensagem.\n\`${err}\``) })
-                message.delete().catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro ao excluir a mensagem dde origem.\n\`${err}\``) })
+                msg.delete().catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro ao excluir a mensagem.\n\`${err}\``) })
+                message.delete().catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro ao excluir a mensagem dde origem.\n\`${err}\``) })
             })
 
             PraDm.on('collect', (reaction, User) => {

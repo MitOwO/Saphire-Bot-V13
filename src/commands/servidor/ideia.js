@@ -42,7 +42,7 @@ module.exports = {
                 let emojis = [`${e.Upvote}`, `${e.DownVote}`, `${e.QuestionMark}`]
                 for (let i in emojis) { msg.react(emojis[i]) }
             }).catch(() => {
-                message.channel.send(`${e.Attention} | Ocorreu um erro ao enviar a mensagem. Caso não saiba resolver o problema, use o comando \`${prefix}bug\` ou entre no meu servidor abrindo meu perfil e reporte o bug.`)
+                message.channel.send(`${e.Warn} | Ocorreu um erro ao enviar a mensagem. Caso não saiba resolver o problema, use o comando \`${prefix}bug\` ou entre no meu servidor abrindo meu perfil e reporte o bug.`)
             })
 
         }).catch(() => {

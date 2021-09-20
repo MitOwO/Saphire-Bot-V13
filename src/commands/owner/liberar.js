@@ -12,7 +12,7 @@ module.exports = {
 
         if (!args[0]) return message.reply(`Apenas o nome do comando que deseja desbloquear.\nExemplo: \`${prefix}liberar botinfo\``)
 
-        if (['tudo', 'all'].includes(args[0].toLowerCase())) {
+        if (['tudo', 'all'].includes(args[0]?.toLowerCase())) {
             db.delete('ComandoBloqueado')
             return message.reply('Todos os comandos foram liberados.')
         }
