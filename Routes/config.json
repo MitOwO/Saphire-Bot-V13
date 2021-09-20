@@ -1,16 +1,17 @@
 {
     "config": {
         "prefix": "-",
-        "ownerId": "ID DO DONO",
-        "guildId": "ID DO SERVER PRINCIPAL",
-        "LoginChannelId": "ID PRO BOT AVISAR QUE ESTÁ ON",
-        "guildCreateChannelId": "ID DO CANAL PRO BOT AVISAR DE NOVOS SERVIDORES",
-        "guildDeleteChannelId": "886130215749820467ID DO CANAL PRO BOT AVISAR DE SERVIDORES REMOVIDOS",
-        "SugestChannelId": "CANAL DE SUGESTÃO DO COMANDO SUGEST",
-        "GifsChannelId": "CANAL PARA RECEBER GIFS",
-        "BugsChannelId": "CANAL PARA RECEBER REPORTS DE BUGS",
-        "CantadasChannelId": "CANAL PRO COMANDO SENDCANTADA",
-        "LogChannelId": "CANAL DE LOGS GERAIS DO BOT",
+        "ownerId": "451619591320371213",
+        "clientId": "837147659898191902",
+        "guildId": "870700172294901860",
+        "LoginChannelId": "886789011887255563",
+        "guildCreateChannelId": "886130110204358678",
+        "guildDeleteChannelId": "886130215749820467",
+        "SugestChannelId": "886130480255213601",
+        "GifsChannelId": "886130550723719178",
+        "BugsChannelId": "886130661365284894",
+        "CantadasChannelId": "886263662002724924",
+        "LogChannelId": "886735972644061214",
         "PackageInvite": "https://discord.gg/UArp6eyvwu",
         "CloudInvite": "https://discord.gg/J6Rr4CepDt"
     }

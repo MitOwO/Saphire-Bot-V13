@@ -5,10 +5,10 @@ const { e } = require('../emojis.json')
  * @param { Message} message
  */
 
-function Blacklisted(message) {
-    message.channel.send(`${e.Deny} | ${message.author}, você está na blacklist e não tem acesso a nenhum dos meus comandos.`).then(msg => {
+function ServerBlocked(message) {
+    message.channel.send(`${e.Deny} | Este servidor está na blacklist.`).then(msg => {
         setTimeout(() => { msg.delete().catch(err => { }) }, 4000)
     }).catch(err => { })
 }
 
-module.exports = Blacklisted
+module.exports = ServerBlocked
