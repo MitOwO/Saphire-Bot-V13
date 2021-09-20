@@ -127,7 +127,7 @@ module.exports = {
                                                         })
                                                 })
                                             }, 1900)
-                                        }).catch(err => { return message.channel.send(`${e.Attention} | Houve um erro na execução deste comando.\n\`${err}\``) })
+                                        }).catch(err => { return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``) })
                                     })
                                 }, 4000)
                             })

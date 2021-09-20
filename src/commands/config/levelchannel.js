@@ -38,7 +38,7 @@ module.exports = {
                     }, 5400)
                 }).catch(err => {
                     db.delete(`User.Request.${message.author.id}`)
-                    return message.channel.send(`${e.Attention} | Ocorreu um erro no processo deste comando.\n\`${err}\``).catch(() => { })
+                    return message.channel.send(`${e.Warn} | Ocorreu um erro no processo deste comando.\n\`${err}\``).catch(() => { })
                 })
             })
 
@@ -57,7 +57,7 @@ module.exports = {
 
         }).catch(err => {
             db.delete(`User.Request.${message.author.id}`)
-            return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``).catch(() => { })
+            return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``).catch(() => { })
         })
     }
 }

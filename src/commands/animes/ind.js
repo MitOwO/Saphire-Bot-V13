@@ -408,7 +408,7 @@ module.exports = {
 
         }).catch(err => {
             db.delete(`User.Request.${message.author.id}`)
-            return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+            return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
         })
     }
 }

@@ -99,10 +99,10 @@ module.exports = {
                     return message.reply({ embeds: [AnimeSearchEmbed] }).catch(err => { return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`') })
                 }
             }).catch(err => {
-                return message.reply(`${e.Attention} | Houve um erro ao executar este comando.\n\`${err}\``)
+                return message.reply(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
             })
         }).catch(err => {
-            message.reply(`${e.Attention} **ERROR ANIME SEARCH**\n~CONSOLE LOG: "${err}"`)
+            message.reply(`${e.Warn} **ERROR ANIME SEARCH**\n~CONSOLE LOG: "${err}"`)
             return message.reply(`${e.Deny} | Nenhum resultado obtido para: **${search}**`).catch(err => { return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`') })
         })
     }

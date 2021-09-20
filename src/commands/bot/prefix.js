@@ -30,7 +30,7 @@ module.exports = {
         if (!args[0]) { return message.reply({ embeds: [prefixembed] }) }
         if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) { return message.reply(`${e.Info} | Permissão necessária: "Administrador"`) }
 
-        if (['reset', 'resetar', 'delete', 'deletar'].includes(args[0].toLowerCase())) {
+        if (['reset', 'resetar', 'delete', 'deletar'].includes(args[0]?.toLowerCase())) {
 
 
             if (prefix === "-") { return message.reply(`${e.Info} | O prefixo atual é o meu padrão: \`-\``) }

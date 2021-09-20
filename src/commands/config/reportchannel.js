@@ -42,8 +42,8 @@ module.exports = {
                             msg.edit(`${e.Check} | Request Autenticada | ${message.author.id}`).catch(err => { })
                             message.channel.send(`${e.BrilanceBlob} | Nice, nice! Desativei o sistema de reports.`)
                         }, 3500)
-                    }).catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
-                }).catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
+                    }).catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
+                }).catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
             }
         }
 
@@ -60,11 +60,11 @@ module.exports = {
                     }, 4000)
                 }).catch(err => {
                     db.delete(`User.Request.${message.author.id}`)
-                    return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
+                    return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
                 })
             }).catch(err => {
                 db.delete(`User.Request.${message.author.id}`)
-                return message.channel.send(`${e.Attention} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
+                return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
             })
         }
     }

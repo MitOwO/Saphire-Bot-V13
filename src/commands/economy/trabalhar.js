@@ -9,15 +9,15 @@ module.exports = {
     ClientPermissions: '',
     emoji: `${e.Coin}`,
     usage: '<trabalhar>',
-    description: 'Trabalhe e ganha uma quantia em dinheiro',
+    description: 'Trabalhe e ganhe uma quantia em dinheiro',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
-        let timeout1 = 9140000
-        let author1 = db.get(`User.${message.author.id}.Timeouts.Preso`)
 
-        if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
-            let time = ms(timeout1 - (Date.now() - author1))
-            return message.reply(`${e.Sirene} | Você está sob detenção máxima por mais \`${time.hours}h ${time.minutes}m e ${time.seconds}s\` `)
+        let timeout2 = 7200000
+        let author2 = db.get(`User.${message.author.id}.Timeouts.Preso`)
+        if (author2 !== null && timeout2 - (Date.now() - author2) > 0) {
+            let time = ms(timeout2 - (Date.now() - author2))
+            return message.reply(`Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``)
         } else {
 
             let timeout = 66400000

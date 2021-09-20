@@ -20,7 +20,7 @@ module.exports = {
         let vip = db.get(`Vip_${message.author.id}`)
         let bank = db.get(`Bank_${message.author.id}`) || '0'
 
-        if (db.get(`User.${message.author.id}.Timeouts.Preso`) !== null && 600000 - (Date.now() - db.get(`User.${message.author.id}.Timeouts.Preso`)) > 0) return TimeoutPrisionMax(message)
+        if (db.get(`User.${message.author.id}.Timeouts.Preso`) !== null && 7200000 - (Date.now() - db.get(`User.${message.author.id}.Timeouts.Preso`)) > 0) return TimeoutPrisionMax(message)
 
         const LojaEmbed = new MessageEmbed()
             .setColor('YELLOW')
@@ -29,7 +29,7 @@ module.exports = {
             .addFields(
                 {
                     name: 'Disponíveis',
-                    value: '🎣 `Vara de Pesca` 180 🪙Moedas\n🔫 `Arma` 4.700 🪙Moedas\n⛏️ `Picareta` 120 🪙Moedas\n🪓 `Machado` 120 🪙Moedas\n🎟️ `Fichas` 5 🪙Moedas\n💌 `Carta de Amor` 2 🪙Moedas\n🥘 `Comida` 2 🪙Moedas\n🪱 `Isca` 1 🪙Moedas\n🥤 `Água` 1 🪙Moedas'
+                    value: '🎣 `Vara de Pesca` 180 🪙Moedas\n🔫 `Arma` 4.800 🪙Moedas\n⛏️ `Picareta` 120 🪙Moedas\n🪓 `Machado` 120 🪙Moedas\n🎟️ `Fichas` 5 🪙Moedas\n💌 `Carta de Amor` 2 🪙Moedas\n🥘 `Comida` 2 🪙Moedas\n🪱 `Isca` 1 🪙Moedas\n🥤 `Água` 1 🪙Moedas'
                 },
                 {
                     name: 'Loteria',

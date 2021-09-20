@@ -29,25 +29,32 @@ module.exports = {
             return message.reply({ embeds: [BitEmbed] })
         } else {
 
-            let timeout = 7200000
-            let author = db.get(`User.${message.author.id}.Timeouts.Bitcoin`)
-
-            if (author !== null && timeout - (Date.now() - author) > 0) {
-                let time = ms(timeout - (Date.now() - author))
-                return message.reply(`${e.BitCoin} | Status: \`${Bits}/1000\` | Reset em \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
-
+            let timeout1 = 7200000
+            let author1 = db.get(`User.${message.author.id}.Timeouts.Preso`)
+            if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
+                let time = ms(timeout1 - (Date.now() - author1))
+                return message.reply(`Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``)
             } else {
-                Bits === 1000 ? NewBitCoin() : MineBitCoin()
-            }
 
-            function NewBitCoin() {
-                db.set(`User.${message.author.id}.Bits`, 1); db.add(`Bitcoin_${message.author.id}`, 1); db.add(`Bank_${message.author.id}`, 1000000)
-                return message.reply(`${e.Tada} | Você obteve 1 ${e.BitCoin} BitCoin\n+1000000 ${e.Coin}Moedas`)
-            }
+                let timeout = 7200000
+                let author = db.get(`User.${message.author.id}.Timeouts.Bitcoin`)
+                if (author !== null && timeout - (Date.now() - author) > 0) {
+                    let time = ms(timeout - (Date.now() - author))
+                    return message.reply(`${e.BitCoin} | Status: \`${Bits}/1000\` | Reset em \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
 
-            function MineBitCoin() {
-                db.add(`User.${message.author.id}.Bits`, 1); db.set(`User.${message.author.id}.Timeouts.Bitcoin`, Date.now())
-                return message.reply(`${e.BitCoin} | +1 | \`${Bits + 1}/1000\` | Reset em \`2 horas\``)
+                } else {
+                    Bits === 1000 ? NewBitCoin() : MineBitCoin()
+                }
+
+                function NewBitCoin() {
+                    db.set(`User.${message.author.id}.Bits`, 1); db.add(`Bitcoin_${message.author.id}`, 1); db.add(`Bank_${message.author.id}`, 1000000)
+                    return message.reply(`${e.Tada} | Você obteve 1 ${e.BitCoin} BitCoin\n+1000000 ${e.Coin}Moedas`)
+                }
+
+                function MineBitCoin() {
+                    db.add(`User.${message.author.id}.Bits`, 1); db.set(`User.${message.author.id}.Timeouts.Bitcoin`, Date.now())
+                    return message.reply(`${e.BitCoin} | +1 | \`${Bits + 1}/1000\` | Reset em \`2 horas\``)
+                }
             }
         }
     }

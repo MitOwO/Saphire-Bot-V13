@@ -41,7 +41,7 @@ module.exports = {
                                     msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { })
                                     return message.channel.send(`${e.Nagatoro} | Prontinho, sistema de ideias desativado.`)
                                 }, 5000)
-                            }).catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })
+                            }).catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
                             return message.channel.send(`${e.Deny} | Request cancelada.`)
@@ -85,7 +85,7 @@ module.exports = {
                                     msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { })
                                     return message.channel.send(`${e.NezukoJump} | Prontinho, sistema de ideias ativado.\nO comando é simples --> \`${prefix}ideia a sua ideia em diante\``)
                                 }, 6000)
-                            }).catch(err => { return message.channel.send(`${e.Attention} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })
+                            }).catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
                             return message.channel.send(`${e.Deny} | Request cancelada.`)

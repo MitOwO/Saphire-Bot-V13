@@ -24,7 +24,7 @@ module.exports = {
             .setTitle(`${e.Planet} Afk Global System`)
             .setDescription('Utilize este comando para avisar que você está offline.')
             .addField(`${e.Info} | Emojis de Ativação`, `✅ | Ative o AFK somente no servidor\n🌎 | Ative o AFK em todos os servidores\n❓ | Esta paginazinha de Ajuda\n❌ | Cancele o comando`)
-            .addField(`${e.Attention} | Atenção!`, `1. \`Modo Global\` Será desativado quando você mandar mensagem em qualquer servidor que eu esteja.\n2. \`Ativação sem mensagem\` Eu direi que você está offline, porém, sem recado algum.`)
+            .addField(`${e.Warn} | Atenção!`, `1. \`Modo Global\` Será desativado quando você mandar mensagem em qualquer servidor que eu esteja.\n2. \`Ativação sem mensagem\` Eu direi que você está offline, porém, sem recado algum.`)
 
         return message.reply(`${e.Planet} | AFK Global System`).then(msg => {
             db.set(`User.Request.${message.author.id}`, 'ON')
@@ -68,7 +68,7 @@ module.exports = {
             AfkInfo.on('end', () => { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { }) })
             Cancel.on('end', () => { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { }) })
         }).catch(err => {
-            return message.reply(`${e.Attention} | Houve um erro ao executar este comando.\n\`${err}\``)
+            return message.reply(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
         })
     }
 }

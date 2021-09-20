@@ -8,7 +8,7 @@ module.exports = {
     category: 'economy',
     UserPermissions: '',
     ClientPermissions: 'ADD_REACTIONS',
-    emoji: `${e.Attention}`,
+    emoji: `${e.Warn}`,
     usage: '<cu>',
     description: 'Você daria seu traseiro por dinheiro?',
 
@@ -19,13 +19,12 @@ module.exports = {
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
-
             return message.reply(`${e.Deny} | Pelo bem do seu querido anûs, espere mais \`${time.minutes}m e ${time.seconds}s\``)
         } else {
 
             if (request) return message.reply(`${e.Deny} | ${f.Request}`)
 
-            return message.reply(`${e.Attention} | O anús é algo valioso, você realmente deseja entrega-lo por dinheiro?`).then(msg => {
+            return message.reply(`${e.Warn} | O anús é algo valioso, você realmente deseja entrega-lo por dinheiro?`).then(msg => {
                 db.set(`User.Request.${message.author.id}`, 'ON')
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X

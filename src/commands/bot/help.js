@@ -65,7 +65,7 @@ module.exports = {
                         {
                             label: 'Configurações',
                             description: 'Comandos de configurações do servidor/usuário',
-                            emoji: `${e.Activ}`,
+                            emoji: `${e.On}`,
                             value: 'Config',
                         },
                         {
@@ -228,9 +228,9 @@ module.exports = {
                             .setColor('BLUE')
                             .setTitle(`${e.Planet} Afk Global System`)
                             .setDescription('Utilize este comando para avisar que você está offline.')
-                            .addField(`${e.Activ} Comando`, `\`${prefix}afk Estou ocupado...\` Frase de sua escolha`)
+                            .addField(`${e.On} Comando`, `\`${prefix}afk Estou ocupado...\` Frase de sua escolha`)
                             .addField(`${e.Info} | Emojis de Ativação`, `✅ | Ative o AFK somente no servidor\n🌎 | Ative o AFK em todos os servidores\n❓ | Esta paginazinha de Ajuda\n❌ | Cancele o comando`)
-                            .addField(`${e.Attention} | Atenção!`, `1. \`Modo Global\` Será desativado quando você mandar mensagem em qualquer servidor que eu esteja.\n2. \`Ativação sem mensagem\` Eu direi que você está offline, porém, sem recado algum.`)
+                            .addField(`${e.Warn} | Atenção!`, `1. \`Modo Global\` Será desativado quando você mandar mensagem em qualquer servidor que eu esteja.\n2. \`Ativação sem mensagem\` Eu direi que você está offline, porém, sem recado algum.`)
 
                         msg.edit({ embeds: [AfkInfoEmbed], components: [painel] });
                     }

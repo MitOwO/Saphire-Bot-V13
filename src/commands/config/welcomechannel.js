@@ -118,7 +118,7 @@ module.exports = {
                                             }, 1900)
                                         }).catch(err => {
                                             db.delete(`User.Request.${message.author.id}`)
-                                            return message.channel.send(`${e.Attention} | Houve um erro na execução deste comando.\n\`${err}\``)
+                                            return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``)
                                         })
                                     })
                                 }, 4000)

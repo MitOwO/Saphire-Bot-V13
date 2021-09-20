@@ -13,13 +13,12 @@ module.exports = {
     description: 'Pague outras pessoas',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
-        let timeout1 = 9140000
-        let author1 = db.get(`User.${message.author.id}.Timeouts.Preso`)
 
-        if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
-            let time = ms(timeout1 - (Date.now() - author1))
-
-            return message.reply(`${e.Sirene} Você está sob detenção máxima por mais \`${time.hours}h ${time.minutes}m e ${time.seconds}s\` `)
+        let timeout2 = 7200000
+        let author2 = db.get(`User.${message.author.id}.Timeouts.Preso`)
+        if (author2 !== null && timeout2 - (Date.now() - author2) > 0) {
+            let time = ms(timeout2 - (Date.now() - author2))
+            return message.reply(`Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``)
         } else {
 
             let money = db.get(`Balance_${message.author.id}`) || '0'
@@ -27,8 +26,8 @@ module.exports = {
             const noargs = new MessageEmbed()
                 .setColor('BLUE')
                 .setTitle('💸 Sistema de Pagamento')
-                .setDescription(`Page a galera, é simples e rápido!\n \n${e.Attention} *Moedas perdidas não serão recuperadas. Cuidado para não ser enganado*`)
-                .addField(`${e.Activ} Comando`, `\`${prefix}pay @user quantia\`\n\`${prefix}pay @user all/tudo\``)
+                .setDescription(`Page a galera, é simples e rápido!\n \n${e.Warn} *Moedas perdidas não serão recuperadas. Cuidado para não ser enganado*`)
+                .addField(`${e.On} Comando`, `\`${prefix}pay @user quantia\`\n\`${prefix}pay @user all/tudo\``)
                 .setFooter('Apenas o dinheiro na carteira será válido para pagamentos.')
 
             if (request) return message.reply(`${e.Deny} | ${f.Request}`)
@@ -66,7 +65,7 @@ module.exports = {
                         db.delete(`User.Request.${message.author.id}`)
                         db.add(`Balance_${user.id}`, cache)
                         db.delete(`User.${message.author.id}.Caches.Pay`)
-                        msg.edit(`${e.Check} | Transação efetuada com sucesso!\n${message.author.tag}: -${parseInt(args[1])} ${e.Coin} Moedas\n${user.user.tag}: +${args[1]} ${e.Coin} Moedas`)
+                        msg.edit(`${e.Check} | Transação efetuada com sucesso!\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag}: -${parseInt(args[1])} ${e.Coin} Moedas\n${user.user.tag}: +${args[1]} ${e.Coin} Moedas`)
                         msg.reactions.removeAll().catch(err => { })
                     } else {
                         db.delete(`User.Request.${message.author.id}`)

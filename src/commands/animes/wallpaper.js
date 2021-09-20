@@ -25,7 +25,6 @@ module.exports = {
           ${prefix}w YoujoSenki        ${prefix}w HajimetenoGal
           ${prefix}w Takagi-san        ${prefix}w IsekaiQuartet
           ${prefix}w Naruto            ${prefix}w Given
-          ${prefix}w Naruto            ${prefix}w HunterxHunter
           ${prefix}w ZeroTwo           ${prefix}w Yakusoku
           ${prefix}w HighSchoolDxD     ${prefix}w Nagatoro
           ${prefix}w Kimetsu           ${prefix}w Ishuzoku
@@ -44,12 +43,12 @@ module.exports = {
           ${prefix}w Kuroko            ${prefix}w NoGameNoLife
           ${prefix}w GoToubun          ${prefix}w ReCreators
           ${prefix}w RWBY              ${prefix}w ShingekiNoKyojin
-          ${prefix}w ShokugekiNoSouma  - PÁGINA 2 EM BREVE -
+          ${prefix}w ShokugekiNoSouma  ${prefix}w HunterxHunter
        `
 
         const categorias = new MessageEmbed()
             .setColor('BLUE')
-            .addField(`${e.Attention} | Atenção!`, `\`\`\`txt\n1. Alguns wallpapers contém spoilers, tome cuidado!\n2. Não use espaços no nome do anime\`\`\``)
+            .addField(`${e.Warn} | Atenção!`, `\`\`\`txt\n1. Alguns wallpapers contém spoilers, tome cuidado!\n2. Não use espaços no nome do anime\`\`\``)
             .addField(`${e.Download} | Quer algum anime na lista?`, `\`\`\`${prefix}sugest Coloca wallpaper do anime XXX\`\`\``)
             .addField(`${e.Check} | Animes Disponíveis`, `\`\`\`txt\n${WallPapersIndents}\`\`\``)
             .setFooter(`Package: 2875 Wallpapers | ${prefix}wallpaper credits | ${prefix}servers`)
@@ -96,11 +95,11 @@ module.exports = {
 
             }).catch(err => {
                 db.delete(`User.Request.${message.author.id}`)
-                return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+                return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })
         }
 
-        let pedido = args[0].toLowerCase()
+        let pedido = args[0]?.toLowerCase()
         switch (pedido) {
             case 'shokugekinosouma':
                 WallPapers(Wallpapers.ShokugekiNoSouma);

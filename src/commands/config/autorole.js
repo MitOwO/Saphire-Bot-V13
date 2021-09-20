@@ -6,7 +6,7 @@ module.exports = {
     name: 'autorole',
     aliases: ['autorolestats'],
     category: 'config',
-    UserPermissions: 'ADMINISTRATOR',
+    UserPermissions: 'MANAGE_ROLES',
     ClientPermissions: 'MANAGE_ROLES',
     emoji: `${e.Verify}`,
     usage: '<autorole> <1/2> <role> | <status> | <1/2> <off>',
@@ -23,15 +23,17 @@ module.exports = {
         const AutoroleArgs0 = new MessageEmbed()
             .setColor('BLUE')
             .setTitle(`${e.Verify} Autorole System`)
-            .setDescription(`O Sistema ${client.user.username} garante 2 autoroles simuntâneas.\n \n${e.QuestionMark} **O que é Autorole?**\nAutorole é um sistema automático em que todo membro que entrar no servidor, receberá um cargo (dado por mim) pré definido pela staff do servidor.`)
-            .addField(`${e.Attention} ATENÇÃO`, `\n1. Para perfeito funcionamento, o meu cargo **DEVE** estar **ACIMA** dos cargos definidos.\n \n2. Não é permito cargos com a permissão **ADMINISTRADOR, KICK/BAN, GERENCIAMENTOS** ativada. Caso ative pós configuração, o cargo será deletado da configuração autorole na entrada de um novo membro.\n \n3. Cargos em que eu não tenho poder de manusea-los, também serão ignorados.`)
+            .setDescription(`O Sistema ${client.user.username} garante 2 autoroles simuntâneas.`)
+            .addField(`${e.QuestionMark} **O que é Autorole?**`, `Autorole é um sistema automático em que todo membro que entrar no servidor, receberá um cargo (dado por mim) pré definido pela staff do servidor.`)
+            .addField(`${e.Warn} ATENÇÃO`, `\n1. Para perfeito funcionamento, o meu cargo **DEVE** estar **ACIMA** dos cargos definidos.\n \n2. Não é permito cargos com a permissão **ADMINISTRADOR, KICK/BAN, GERENCIAMENTOS** ativada. Caso ative pós configuração, o cargo será deletado da configuração autorole na entrada de um novo membro.\n \n3. Cargos em que eu não tenho poder de manusea-los, também serão ignorados.`)
             .addField('• Comandos do Autorole', `\`${prefix}autorole 1 @cargo\`\n\`${prefix}autorole 2 @cargo\`\n\`${prefix}autorole Status\``, true)
             .addField('• Comando de desativação', `\`${prefix}autorole 1/2 off\`\n\`${prefix}autorole off\``, true)
-            .setFooter(`${prefix}sugest | ${prefix}bug`)
+            .addField(`${e.Obs} Forte recomendação`, `Ative a função \`${prefix}logs\`.\nLá eu mandarei relatórios se qualquer coisa der errado ou algum bobinho(a) fizer besteira com os cargos.`)
+            .setFooter(`${prefix}sugest | ${prefix}bug | ${prefix}logs`)
 
         if (!args[0]) return message.reply({ embeds: [AutoroleArgs0] })
 
-        if (['status', 'stats', 'info'].includes(args[0].toLowerCase())) {
+        if (['status', 'stats', 'info'].includes(args[0]?.toLowerCase())) {
             const AutoroleEmbed = new MessageEmbed().setColor('BLUE').setTitle(':satellite: | Autorole System Status')
             if (!Autorole2 && Autorole1) { AutoroleEmbed.setDescription(`Autorole 1: <@&${Autorole1}>\nAutorole 2: Desativado`) }
             if (!Autorole1 && Autorole2) { AutoroleEmbed.setDescription(`Autorole 1: Desativado\nAutorole 2: <@&${Autorole2}>`) }
@@ -41,7 +43,7 @@ module.exports = {
             return
         }
 
-        if (['off', 'desligar', 'desativar'].includes(args[0].toLowerCase())) {
+        if (['off', 'desligar', 'desativar'].includes(args[0]?.toLowerCase())) {
 
             let autorole = db.get(`Servers.${message.guild.id}.Autorole1`) || db.get(`Servers.${message.guild.id}.Autorole2`)
             if (autorole === null || autorole === undefined) { return message.reply(`${e.Info} | O Autorole System já está desativado.`) }
@@ -77,7 +79,7 @@ module.exports = {
                             }, 2400)
                         }).catch(err => {
                             db.delete(`User.Request.${message.author.id}`)
-                            return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+                            return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                         })
 
                     } else {
@@ -90,7 +92,7 @@ module.exports = {
                 })
             }).catch(err => {
                 db.delete(`User.Request.${message.author.id}`)
-                return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+                return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })
         }
 
@@ -123,7 +125,7 @@ module.exports = {
                                     }, 2400)
                                 }).catch(err => {
                                     db.delete(`User.Request.${message.author.id}`)
-                                    message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+                                    message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                                 })
                             } else {
                                 msg.edit(`${e.Deny} | Request Cancelada`)
@@ -136,14 +138,14 @@ module.exports = {
                         })
                     }).catch(err => {
                         db.delete(`User.Request.${message.author.id}`)
-                        message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+                        message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                     })
                 } else {
                     return message.reply(`${e.Deny} O Autorole 1 já está desativado.`)
                 }
             }
 
-            if (args[1] === '@everyone') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`).catch(err => { }) }, 1900) }) }).catch(err => { return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``) }) }
+            if (args[1] === '@everyone') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`).catch(err => { }) }, 1900) }) }).catch(err => { return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``) }) }
             if (args[1] === '@here') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Está de brincation with me?`).catch(err => { }) }, 1900) }) }) }
             if (!role) { return message.reply(`${e.Deny} | Mencione um cargo que deseja como Autorole 1.`) }
             if (role.botRole) { return message.reply(`${e.Deny} | Sério que você quer configuar um cargo de bot como autorole? ${e.Nagatoro}`) }
@@ -262,7 +264,7 @@ module.exports = {
                             }, 2400)
                         }).catch(err => {
                             db.delete(`User.Request.${message.author.id}`)
-                            return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+                            return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                         })
 
                     } else {
@@ -275,7 +277,7 @@ module.exports = {
                 })
             }).catch(err => {
                 db.delete(`User.Request.${message.author.id}`)
-                return message.reply(`${e.Attention} | Houve um erro ao executar este comando\n\`${err}\``)
+                return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })
         } else {
             return message.reply(`${e.Deny} | Você está nas profundezas do código do autorole. Use \`${prefix}help autorole\` ou apenas \`${prefix}autorole\` que eu te mando todos os comandos do sistema.`)
