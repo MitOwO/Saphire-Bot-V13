@@ -45,6 +45,6 @@ client.on('guildMemberRemove', async (member) => {
         let LeaveChannel = db.get(`Servers.${member.guild.id}.LeaveChannel`)
         const canal = await member.guild.channels.cache.get(LeaveChannel)
         if (!canal) return
-        canal.send(`${e.SadPanda} | ${member.user.username} saiu do servidor.`).catch(err => { })
+        canal.send(`${e.Leave} | ${member.user.username} saiu do servidor.`).catch(err => { })
     }
 })

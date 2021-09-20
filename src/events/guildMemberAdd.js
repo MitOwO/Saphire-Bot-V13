@@ -27,22 +27,24 @@ client.on('guildMemberAdd', async (member) => {
 
     async function AutoroleSystem1() {
 
-        await role1.permissions.has(Permissions.FLAGS.KICK_MEMBERS) ? Checking = 'KICK_MEMBERS' : ''
-        await role1.permissions.has(Permissions.FLAGS.BAN_MEMBERS) ? Checking = 'BAN_MEMBERS' : ''
-        await role1.permissions.has(Permissions.FLAGS.MANAGE_GUILD) ? Checking = 'MANAGE_GUILD' : ''
-        await role1.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) ? Checking = 'MANAGE_MESSAGES' : ''
-        await role1.permissions.has(Permissions.FLAGS.MUTE_MEMBERS) ? Checking = 'MUTE_MEMBERS' : ''
-        await role1.permissions.has(Permissions.FLAGS.DEAFEN_MEMBERS) ? Checking = 'DEAFEN_MEMBERS' : ''
-        await role1.permissions.has(Permissions.FLAGS.MOVE_MEMBERS) ? Checking = 'MOVE_MEMBERS' : ''
-        await role1.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES) ? Checking = 'MANAGE_NICKNAMES' : ''
-        await role1.permissions.has(Permissions.FLAGS.MANAGE_ROLES) ? Checking = 'MANAGE_ROLES' : ''
-        await role1.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking = 'ADMINISTRATOR' : ''
+        role1.permissions.has(Permissions.FLAGS.KICK_MEMBERS) ? Checking = 'KICK_MEMBERS' : ''
+        role1.permissions.has(Permissions.FLAGS.BAN_MEMBERS) ? Checking = 'BAN_MEMBERS' : ''
+        role1.permissions.has(Permissions.FLAGS.MANAGE_GUILD) ? Checking = 'MANAGE_GUILD' : ''
+        role1.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) ? Checking = 'MANAGE_CHANNELS' : ''
+        role1.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) ? Checking = 'MANAGE_MESSAGES' : ''
+        role1.permissions.has(Permissions.FLAGS.MUTE_MEMBERS) ? Checking = 'MUTE_MEMBERS' : ''
+        role1.permissions.has(Permissions.FLAGS.DEAFEN_MEMBERS) ? Checking = 'DEAFEN_MEMBERS' : ''
+        role1.permissions.has(Permissions.FLAGS.MOVE_MEMBERS) ? Checking = 'MOVE_MEMBERS' : ''
+        role1.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES) ? Checking = 'MANAGE_NICKNAMES' : ''
+        role1.permissions.has(Permissions.FLAGS.MANAGE_ROLES) ? Checking = 'MANAGE_ROLES' : ''
+        role1.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking = 'ADMINISTRATOR' : ''
 
         switch (Checking) {
             case 'ADMINISTRATOR': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **ADMINISTRADOR** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'KICK_MEMBERS': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **EXPULSAR MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'BAN_MEMBERS': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **BANIR MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'MANAGE_GUILD': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **GERENCIAR SERVIDOR** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
+            case 'MANAGE_CHANNELS': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **GERENCIAR CANAIS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'MANAGE_MESSAGES': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **GERENCIAR MENSAGENS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'MUTE_MEMBERS': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **SILENCIAR MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'DEAFEN_MEMBERS': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **ENSURDECER MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
@@ -50,28 +52,30 @@ client.on('guildMemberAdd', async (member) => {
             case 'MANAGE_NICKNAMES': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **GERENCIAR APELIDOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'MANAGE_ROLES': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **GERENCIAR CARGOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
 
-            default: member.roles.add(role1).catch(err => { return Notify(`${e.Attention} | Houve um erro na adição de cargo referente ao **Autorole 1**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n\`${err}\``) }); break;
+            default: member.roles.add(role1).catch(err => { return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nHouve um erro na adição de cargo referente ao **Autorole 1**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n~~ \`${err}\` ~~`) }); break;
         }
     }
 
     async function AutoroleSystem2() {
 
-        await role2.permissions.has(Permissions.FLAGS.KICK_MEMBERS) ? Checking2 = 'KICK_MEMBERS' : ''
-        await role2.permissions.has(Permissions.FLAGS.BAN_MEMBERS) ? Checking2 = 'BAN_MEMBERS' : ''
-        await role2.permissions.has(Permissions.FLAGS.MANAGE_GUILD) ? Checking2 = 'MANAGE_GUILD' : ''
-        await role2.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) ? Checking2 = 'MANAGE_MESSAGES' : ''
-        await role2.permissions.has(Permissions.FLAGS.MUTE_MEMBERS) ? Checking2 = 'MUTE_MEMBERS' : ''
-        await role2.permissions.has(Permissions.FLAGS.DEAFEN_MEMBERS) ? Checking2 = 'DEAFEN_MEMBERS' : ''
-        await role2.permissions.has(Permissions.FLAGS.MOVE_MEMBERS) ? Checking2 = 'MOVE_MEMBERS' : ''
-        await role2.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES) ? Checking2 = 'MANAGE_NICKNAMES' : ''
-        await role2.permissions.has(Permissions.FLAGS.MANAGE_ROLES) ? Checking2 = 'MANAGE_ROLES' : ''
-        await role2.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking2 = 'ADMINISTRATOR' : ''
+        role2.permissions.has(Permissions.FLAGS.KICK_MEMBERS) ? Checking2 = 'KICK_MEMBERS' : ''
+        role2.permissions.has(Permissions.FLAGS.BAN_MEMBERS) ? Checking2 = 'BAN_MEMBERS' : ''
+        role2.permissions.has(Permissions.FLAGS.MANAGE_GUILD) ? Checking2 = 'MANAGE_GUILD' : ''
+        role2.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS) ? Checking = 'MANAGE_CHANNELS' : ''
+        role2.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES) ? Checking2 = 'MANAGE_MESSAGES' : ''
+        role2.permissions.has(Permissions.FLAGS.MUTE_MEMBERS) ? Checking2 = 'MUTE_MEMBERS' : ''
+        role2.permissions.has(Permissions.FLAGS.DEAFEN_MEMBERS) ? Checking2 = 'DEAFEN_MEMBERS' : ''
+        role2.permissions.has(Permissions.FLAGS.MOVE_MEMBERS) ? Checking2 = 'MOVE_MEMBERS' : ''
+        role2.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES) ? Checking2 = 'MANAGE_NICKNAMES' : ''
+        role2.permissions.has(Permissions.FLAGS.MANAGE_ROLES) ? Checking2 = 'MANAGE_ROLES' : ''
+        role2.permissions.has(Permissions.FLAGS.ADMINISTRATOR) ? Checking2 = 'ADMINISTRATOR' : ''
 
         switch (Checking2) {
             case 'ADMINISTRATOR': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **ADMINISTRADOR** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'KICK_MEMBERS': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **EXPULSAR MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'BAN_MEMBERS': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **BANIR MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'MANAGE_GUILD': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **GERENCIAR SERVIDOR** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
+            case 'MANAGE_CHANNELS': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **GERENCIAR CANAIS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'MANAGE_MESSAGES': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **GERENCIAR MENSAGENS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'MUTE_MEMBERS': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **SILENCIAR MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'DEAFEN_MEMBERS': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **ENSURDECER MEMBROS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
@@ -79,7 +83,7 @@ client.on('guildMemberAdd', async (member) => {
             case 'MANAGE_NICKNAMES': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **GERENCIAR APELIDOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'MANAGE_ROLES': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **GERENCIAR CARGOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
 
-            default: member.roles.add(role2).catch(err => { return Notify(`${e.Attention} | Houve um erro na adição de cargo referente ao **Autorole 2**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n\`${err}\``) }); break;
+            default: member.roles.add(role2).catch(err => { return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nHouve um erro na adição de cargo referente ao **Autorole 2**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n~~ \`${err}\` ~~`) }); break;
         }
     }
 
@@ -87,12 +91,12 @@ client.on('guildMemberAdd', async (member) => {
     function DisableAutorole2() { db.delete(`Servers.${member.guild.id}.Autorole2`) }
 
     async function Notify(Msg) {
-        const canal = await client.channels.cache.get(db.get(`Servers.${member.guild.id}.LogChannel`))
+        const canal = client.channels.cache.get(db.get(`Servers.${member.guild.id}.LogChannel`))
         canal ? canal.send(Msg).catch(() => { }) : ''
     }
 
     async function Welcome() {
-        const canal = await member.guild.channels.cache.get(db.get(`Servers.${member.guild.id}.WelcomeChannel`))
-        canal ? canal.send(`${e.NezukoJump} | ${member} entrou no servidor.`).catch(err => { member.guild.channels.cache.get(config.ownerId).send(`${e.Attention} | Erro no evento "guildMemberAdd" (Linha Emit: 97)\n\`${err}\``) }) : ''
+        const canal = member.guild.channels.cache.get(db.get(`Servers.${member.guild.id}.WelcomeChannel`))
+        canal ? canal.send(`${e.Join} | ${member} entrou no servidor.`).catch(err => { member.guild.channels.cache.get(config.ownerId).send(`${e.Warn} | Erro no evento "guildMemberAdd" (Linha Emit: 97)\n\`${err}\``) }) : ''
     }
 })
