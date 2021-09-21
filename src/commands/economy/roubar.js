@@ -1,5 +1,6 @@
 const ms = require("parse-ms")
 const { e } = require('../../../Routes/emojis.json')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'roubar',
@@ -35,7 +36,7 @@ module.exports = {
             let daily = db.get(`User.${message.author.id}.Timeouts.Roubo`)
             if (daily !== null && timeout - (Date.now() - daily) > 0) {
                 let time = ms(timeout - (Date.now() - daily))
-                return message.reply(`${e.Deny} | ${message.author}, você já roubou alguém. Para não ser preso, tente novamente em ${time.minutes}m e ${time.seconds}s.`)
+                return message.reply(`${e.Deny} | ${message.author}, você já roubou alguém. Para não ser preso, tente novamente em \`${time.minutes}m e ${time.seconds}s\`.`)
             } else {
 
                 let user = message.mentions.members.first() || client.users.cache.get(args[0]) || message.member
@@ -53,12 +54,12 @@ module.exports = {
 
                 function lose() {
                     db.subtract(`Bank_${message.author.id}`, amount); db.add(`Loteria.Prize`, amount / 2); db.add(`Bank_${user.id}`, amount / 2); db.set(`User.${message.author.id}.Timeouts.Roubo`, Date.now())
-                    return message.reply(`${e.Sirene} | A polícia te pegou e você foi preso!\n-${amount} ${e.Coin}Moedas`)
+                    return message.reply(`${e.Sirene} | A polícia te pegou e você foi preso!\n-${amount} ${Moeda(message)}`)
                 }
 
                 function win() {
                     db.subtract(`Balance_${user.id}`, amount1); db.add(`Balance_${message.author.id}`, amount1); db.set(`User.${message.author.id}.Timeouts.Roubo`, Date.now())
-                    return message.reply(`${e.PandaBag} | Você roubou ${user.user.username} com sucesso!\n+${amount1} ${e.Coin}Moedas`)
+                    return message.reply(`${e.PandaBag} | Você roubou ${user.username} com sucesso!\n+${amount1} ${Moeda(message)}`)
                 }
 
                 result === 'true' ? win() : lose()

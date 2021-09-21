@@ -2,6 +2,7 @@ const Kitsu = require('kitsu.js')
 const kitsu = new Kitsu()
 const translate = require('@iamtraction/google-translate')
 const { e } = require('../../../Routes/emojis.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'anime',
@@ -84,7 +85,10 @@ module.exports = {
                         .addField('📊 Status', `Nota Média: ${Nota}\nRank: ${AnimeRanking}\nPopularidade: ${AnimePop}\nEpisódios: ${Epsodios}\nLancamento: ${Lancamento}\nTérmino: ${Termino}`)
                         .setImage(anime.posterImage.original)
 
-                    return message.reply({ embeds: [AnimeSearchEmbed] }).catch(err => { return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`') })
+                    return message.reply({ embeds: [AnimeSearchEmbed] }).catch(err => {
+                        Error(message, err)
+                        return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`')
+                    })
 
                 } else {
 
@@ -96,14 +100,21 @@ module.exports = {
                         .addField('📊 Status', `Nota Média: ${Nota}\nRank: ${AnimeRanking}\nPopularidade: ${AnimePop}\nEpisódios: ${Epsodios}\nLancamento: ${Lancamento}\nTérmino: ${new Date(Termino).toLocaleDateString("pt-br")}`)
                         .setImage(anime.posterImage.original)
 
-                    return message.reply({ embeds: [AnimeSearchEmbed] }).catch(err => { return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`') })
+                    return message.reply({ embeds: [AnimeSearchEmbed] }).catch(err => {
+                        Error(message, err)
+                        return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`')
+                    })
                 }
             }).catch(err => {
+                Error(message, err)
                 return message.reply(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
             })
         }).catch(err => {
-            message.reply(`${e.Warn} **ERROR ANIME SEARCH**\n~CONSOLE LOG: "${err}"`)
-            return message.reply(`${e.Deny} | Nenhum resultado obtido para: **${search}**`).catch(err => { return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`') })
+            Error(message, err)
+            return message.reply(`${e.Deny} | Nenhum resultado obtido para: **${search}**`).catch(err => {
+                Error(message, err)
+                return message.reply('Ocorreu um erro no comando "anime"\n`' + err + '`')
+            })
         })
     }
 }

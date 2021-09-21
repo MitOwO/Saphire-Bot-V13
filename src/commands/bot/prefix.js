@@ -120,7 +120,6 @@ module.exports = {
                     db.delete(`User.Request.${message.author.id}`)
                     msg.edit(`${e.Check} | Comando cancelado por: Tempo expirado`).catch(err => { })
                 })
-
             })
         }
     }

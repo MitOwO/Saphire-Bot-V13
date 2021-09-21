@@ -1,6 +1,7 @@
 const { e } = require('../../../Routes/emojis.json');
 const { N } = require('../../../Routes/nomes.json');
 const { f } = require('../../../Routes/frases.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'ind',
@@ -388,6 +389,7 @@ module.exports = {
                 user.send({ embeds: [IndEmbed.setDescription(`From: ${message.guild.name}`)] }).then(() => {
                     return message.channel.send(`${e.Check} | Envio concluido, ${user}!`)
                 }).catch(() => {
+                    Error(message, err)
                     return message.channel.send(`${e.Deny} | Seu privado está bloqueado, ${user}. Verifique suas configurações e tente novamente`)
                 })
             })
@@ -407,6 +409,7 @@ module.exports = {
             })
 
         }).catch(err => {
+            Error(message, err)
             db.delete(`User.Request.${message.author.id}`)
             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
         })

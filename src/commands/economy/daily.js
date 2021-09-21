@@ -1,6 +1,7 @@
 
 const { e } = require('../../../Routes/emojis.json')
 const ms = require("parse-ms")
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'daily',
@@ -35,7 +36,7 @@ module.exports = {
                 db.add(`Xp_${message.author.id}`, amountxp)
                 db.set(`User.${message.author.id}.Timeouts.Daily`, Date.now())
 
-                message.reply(`${e.Check} | Você adquiriu +${amountcoins} ${e.Coin} Moedas e +${amountxp} ${e.RedStar} XP`)
+                message.reply(`${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP`)
             }
         }
     }

@@ -1,6 +1,7 @@
 const { g } = require('../../../Routes/Images/gifs.json')
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
   name: 'sao',
@@ -51,6 +52,7 @@ module.exports = {
         msg.delete().then(() => { i = 0 }).catch(err => { })
       })
     }).catch(err => {
+      Error(message, err)
       db.delete(`User.Request.${message.author.id}`)
       return message.reply(`${Attention} | Houve um erro ao executar este comando\n\`${err}\``)
     })

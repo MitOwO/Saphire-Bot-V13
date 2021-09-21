@@ -1,6 +1,7 @@
 const { e } = require('../../../Routes/emojis.json')
 const ms = require("parse-ms")
 const { f } = require('../../../Routes/frases.json')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'pig',
@@ -18,8 +19,8 @@ module.exports = {
         let LastWinner = db.get('Porquinho.LastWinner') || 'Ninguém por enquanto'
         let LastPrize = db.get('Porquinho.LastPrize') || '0'
 
-        if (['coins', 'moedas', 'moeda', 'status', 'moedas'].includes(args[0])) {
-            const StatusPigEmbed = new MessageEmbed().setColor('#BA49DA').setTitle(`${e.Pig} Status`).setDescription(`Tente quebrar o Pig e ganhe todo o dinheiro dele`).addField('Último ganhador', `${LastWinner}\n${LastPrize}${e.Coin}`, true).addField('Montante', `${PorquinhoMoney}${e.Coin}`, true)
+        if (['coins', 'moedas', 'moeda', 'status'].includes(args[0])) {
+            const StatusPigEmbed = new MessageEmbed().setColor('#BA49DA').setTitle(`${e.Pig} Status`).setDescription(`Tente quebrar o Pig e ganhe todo o dinheiro dele`).addField('Último ganhador', `${LastWinner}\n${LastPrize}${Moeda(message)}`, true).addField('Montante', `${PorquinhoMoney}${Moeda(message)}`, true)
             return message.reply({ embeds: [StatusPigEmbed] })
         }
 
@@ -54,7 +55,7 @@ module.exports = {
 
                     let luck = ['win', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose'] // 1% de chance de vitória
                     let result = luck[Math.floor(Math.random() * luck.length)]
-                    result === "win" ? PigBroken() : message.reply(`${e.Deny} | Não foi dessa vez! Veja o status: \`${prefix}pig coins\`\n-10 ${e.Coin}Moedas!`)
+                    result === "win" ? PigBroken() : message.reply(`${e.Deny} | Não foi dessa vez! Veja o status: \`${prefix}pig coins\`\n-10 ${Moeda(message)}!`)
                 }
 
                 function PigBroken() {
@@ -62,11 +63,11 @@ module.exports = {
                     db.add(`Balance_${message.author.id}`, PorquinhoMoney)
                     db.delete('Porquinho.Money')
                     db.set(`Porquinho.LastWinner`, `${message.author.tag}\n*(${message.author.id})*`)
-                    return message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${PorquinhoMoney} ${e.Coin}Moedas!`)
+                    return message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${PorquinhoMoney} ${Moeda(message)}!`)
                 }
 
                 function Question() {
-                    message.reply(`${e.QuestionMark} | Você não tem dinheiro na carteira, deseja retirar -10 ${e.Coin}Moedas do banco? `).then(msg => {
+                    message.reply(`${e.QuestionMark} | Você não tem dinheiro na carteira, deseja retirar -10 ${Moeda(message)} do banco? `).then(msg => {
                         db.set(`User.Request.${message.author.id}`, 'ON')
                         msg.react('✅').catch(err => { }) // Check
                         msg.react('❌').catch(err => { }) // X

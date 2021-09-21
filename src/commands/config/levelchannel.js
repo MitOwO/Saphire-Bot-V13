@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'levelchannel',
@@ -37,6 +38,7 @@ module.exports = {
                         message.channel.send(`${e.CatJump} | Pode deixar comigo! Eu vou avisar no canal ${channel} sempre que alguém passar de level.`).catch(() => { })
                     }, 5400)
                 }).catch(err => {
+                    Error(message, err)
                     db.delete(`User.Request.${message.author.id}`)
                     return message.channel.send(`${e.Warn} | Ocorreu um erro no processo deste comando.\n\`${err}\``).catch(() => { })
                 })
@@ -56,6 +58,7 @@ module.exports = {
 
 
         }).catch(err => {
+            Error(message, err)
             db.delete(`User.Request.${message.author.id}`)
             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``).catch(() => { })
         })

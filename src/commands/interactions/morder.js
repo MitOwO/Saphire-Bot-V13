@@ -1,15 +1,17 @@
-const { e } = require('../../../Routes/emojis.json')
 const { g } = require('../../../Routes/Images/gifs.json')
+const { e } = require('../../../Routes/emojis.json')
+const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
-    name: 'soco',
-    aliases: ['punch', 'socar'],
+    name: 'morder',
+    aliases: ['bite', 'mordida'],
     category: 'interactions',
     UserPermissions: '',
-    ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS'],
-    emoji: `${e.Confuse}`,
-    usage: '<soco> [@user]',
-    description: 'Dê um soco em quem merece',
+    ClientPermissions: ['EMBED_LINKS', 'MANAGE_MESSAGES', 'ADD_REACTIONS'],
+    emoji: '😁',
+    usage: '<morder> <@user>',
+    description: 'Morder de jeitinho é bom',
+
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}`)
@@ -17,22 +19,22 @@ module.exports = {
         let NoReactAuthor = db.get(`User.${message.author.id}.NoReact`)
         if (NoReactAuthor) return message.reply(`${e.Deny} | Você está com o \`${prefix}noreact\` ativado.`)
 
-        let rand = g.Soco[Math.floor(Math.random() * g.Soco.length)]
+        let rand = g.Morder[Math.floor(Math.random() * g.Morder.length)]
         let user = message.mentions.users.first() || message.member
-
-        if (user.id === client.user.id) {
-            db.subtract(`Balance_${message.author.id}`, 40); db.add(`Bank_${client.user.id}`, 40)
-            return message.reply(`${e.Deny} | Por tentar me bater, você perdeu 40 ${Moeda(message)}, baka!`)
-        }
-
-        if (user.id === message.author.id) { return message.reply(`${e.Deny} | Não bata em você mesmo, poxa...`) }
 
         let NoReact = db.get(`User.${user.id}.NoReact`)
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
+        if (user.id === client.user.id) {
+            db.subtract(`Balance_${message.author.id}`, 100); db.add(`Bank_${client.user.id}`, 100)
+            return message.reply(`${e.MaikaAngry} Morde eu não.`)
+        }
+
+        if (user.id === message.author.id) return message.reply(`${e.Confuse} | Morder você mesmo é meio estranho.`)
+
         const embed = new MessageEmbed()
             .setColor('BLUE')
-            .setDescription(`${e.GunRight} | ${message.author} está dando socos em você ${user}`)
+            .setDescription(`${e.Bite} | ${message.author} está mordendo ${user}`)
             .setImage(rand)
             .setFooter('🔁 retribuir')
 
@@ -48,13 +50,13 @@ module.exports = {
 
                 if (reaction.emoji.name === '🔁') {
                     db.delete(`User.Request.${message.author.id}`)
-                    const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`${message.author} e ${user} estão trocando socos!`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Soco[Math.floor(Math.random() * g.Soco.length)])
+                    const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`${e.Bite} ${user} retribuiu a mordida de ${message.author} ${e.Bite}`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Morder[Math.floor(Math.random() * g.Morder.length)])
                     msg.edit({ embeds: [TradeEmbed] }).catch(err => { })
                 }
 
             }).catch(() => {
                 db.delete(`User.Request.${message.author.id}`)
-                embed.setColor('RED').setDescription(`${e.Deny} | ${message.author} deu socos em ${user} e ele(a) saiu correndo.`).setFooter(`${message.author.id}/${user.id}`)
+                embed.setColor('RED').setFooter(`${message.author.id}/${user.id}`)
                 msg.edit({ embeds: [embed] }).catch(err => { })
             })
         })

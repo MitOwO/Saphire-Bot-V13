@@ -1,10 +1,11 @@
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
 const ms = require("parse-ms")
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'cu',
-    aliases: ['anus', 'bunda', 'traseiro'],
+    aliases: ['anus', 'bunda', 'traseiro', 'popo'],
     category: 'economy',
     UserPermissions: '',
     ClientPermissions: 'ADD_REACTIONS',
@@ -44,12 +45,12 @@ module.exports = {
                             db.delete(`User.Request.${message.author.id}`)
                             db.add(`Balance_${message.author.id}`, din)
                             db.set(`User.${message.author.id}.Timeouts.Cu`, Date.now())
-                            return msg.edit(`${e.Check} | ${message.author}, o cliente anônimo gostou dos seus serviços e te pagou +${din}${e.Coin} Moedas`)
+                            return msg.edit(`${e.Check} | ${message.author}, o cliente anônimo gostou dos seus serviços e te pagou +${din}${Moeda(message)}`)
                         } else {
                             db.delete(`User.Request.${message.author.id}`)
                             db.subtract(`Balance_${message.author.id}`, din)
                             db.set(`User.${message.author.id}.Timeouts.Cu`, Date.now())
-                            return msg.edit(`${e.Deny} | ${message.author}, o cliente anônimo não gostou dos seus serviços e seu prejuízo foi de -${din}${e.Coin} Moedas`)
+                            return msg.edit(`${e.Deny} | ${message.author}, o cliente anônimo não gostou dos seus serviços e seu prejuízo foi de -${din}${Moeda(message)}`)
                         }
                     } else {
                         msg.edit(`${e.Deny} | Comando cancelado`)

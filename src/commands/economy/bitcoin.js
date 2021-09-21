@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const ms = require('parse-ms')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'bitcoin',
@@ -48,7 +49,7 @@ module.exports = {
 
                 function NewBitCoin() {
                     db.set(`User.${message.author.id}.Bits`, 1); db.add(`Bitcoin_${message.author.id}`, 1); db.add(`Bank_${message.author.id}`, 1000000)
-                    return message.reply(`${e.Tada} | Você obteve 1 ${e.BitCoin} BitCoin\n+1000000 ${e.Coin}Moedas`)
+                    return message.reply(`${e.Tada} | Você obteve 1 ${e.BitCoin} BitCoin\n+1000000 ${Moeda(message)}`)
                 }
 
                 function MineBitCoin() {

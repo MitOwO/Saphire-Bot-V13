@@ -1,6 +1,7 @@
 const ms = require("parse-ms")
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
   name: 'esmola',
@@ -43,10 +44,10 @@ module.exports = {
           collector.on('collect', (reaction, user) => {
             if (user.id === client.user.id || user.id === message.author.id) return
             let money = db.get(`Balance_${user.id}`)
-            if (money < 50) { return message.channel.send(`${e.Deny} | ${user}, você não tem 50 ${e.Coin}Moedas na carteira para ajudar ${message.author}`) }
+            if (money < 50) { return message.channel.send(`${e.Deny} | ${user}, você não tem 50 ${Moeda(message)} na carteira para ajudar ${message.author}`) }
             db.subtract(`Balance_${user.id}`, 50)
             db.add(`Balance_${message.author.id}`, 50)
-            message.channel.send(`${e.MoneyWings} | ${user} ajudou ${message.author} com 50 ${e.Coin}Moedas`)
+            message.channel.send(`${e.MoneyWings} | ${user} ajudou ${message.author} com 50 ${Moeda(message)}`)
           });
 
           collector.on('end', collected => {

@@ -3,6 +3,7 @@ const { e } = require('../../../Routes/emojis.json')
 const { N } = require('../../../Routes/nomes.json')
 const { f } = require('../../../Routes/frases.json')
 const { stripIndent } = require('common-tags')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'wallpaper',
@@ -94,6 +95,7 @@ module.exports = {
                 CancelSession.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
 
             }).catch(err => {
+                Error(message, err)
                 db.delete(`User.Request.${message.author.id}`)
                 return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })

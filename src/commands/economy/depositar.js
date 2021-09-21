@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const ms = require("parse-ms")
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'depositar',
@@ -34,7 +35,7 @@ module.exports = {
                 if (money > 0) {
                     db.add(`Bank_${message.author.id}`, money)
                     db.subtract(`Balance_${message.author.id}`, money)
-                    return message.reply(`${e.Check} | ${message.author} depositou ${money} ${e.Coin} Moedas`)
+                    return message.reply(`${e.Check} | ${message.author} depositou ${money} ${Moeda(message)}`)
                 }
             }
 
@@ -46,7 +47,7 @@ module.exports = {
 
             db.add(`Bank_${message.author.id}`, Amount)
             db.subtract(`Balance_${message.author.id}`, Amount)
-            return message.reply(`${e.Check} | ${message.author} depositou ${Amount} ${e.Coin} Moedas`)
+            return message.reply(`${e.Check} | ${message.author} depositou ${Amount} ${Moeda(message)}`)
         }
     }
 }

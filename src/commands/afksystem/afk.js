@@ -57,7 +57,7 @@ module.exports = {
 
             AfkGlobal.on('collect', (reaction, user) => {
                 db.set(`Client.AfkSystem.${message.author.id}`, Motivo)
-                message.channel.sendTyping().then(() => { setTimeout(() => { db.delete(`User.Request.${message.author.id}`); return message.reply(`${e.Planet} | Deixa comigo! Vou avisar a todos que você está offline. ${e.Menhera}`) }, 2000) }).catch(err => { })
+                message.channel.sendTyping().then(() => { setTimeout(() => { db.delete(`User.Request.${message.author.id}`); return message.reply(`${e.Planet} | Deixa comigo! Vou avisar em todos os servidores que você está offline. ${e.Menhera}`) }, 2000) }).catch(err => { })
             })
 
             AfkInfo.on('collect', () => { message.channel.sendTyping().then(() => { setTimeout(() => { db.delete(`User.Request.${message.author.id}`); return message.reply({ embeds: [AfkInfoEmbed] }) }, 2000) }).catch(err => { }) })

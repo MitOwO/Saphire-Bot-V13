@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const ms = require("parse-ms")
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'trabalhar',
@@ -42,13 +43,13 @@ module.exports = {
                     db.add(`Balance_${message.author.id}`, gorjeta)
                     db.add(`Balance_${message.author.id}`, work)
                     db.add(`Xp_${message.author.id}`, xp)
-                    return message.reply(`${e.Check} | Você trabalhou e ganhou ${work} ${e.Coin}Moedas, ${xp} ${e.RedStar}XP e uma gorjeta de ${gorjeta} ${e.Coin}Moedas`)
+                    return message.reply(`${e.Check} | Você trabalhou e ganhou ${work} ${Moeda(message)}, ${xp} ${e.RedStar}XP e uma gorjeta de ${gorjeta} ${Moeda(message)}`)
                 }
 
                 if (result === 'lose') {
                     db.add(`Balance_${message.author.id}`, work)
                     db.add(`Xp_${message.author.id}`, xp)
-                    return message.reply(`${e.Check} | Você trabalhou e ganhou ${work} ${e.Coin}Moedas e ${xp} ${e.RedStar}XP`)
+                    return message.reply(`${e.Check} | Você trabalhou e ganhou ${work} ${Moeda(message)} e ${xp} ${e.RedStar}XP`)
                 }
             }
         }

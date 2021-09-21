@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const { config } = require('../../../Routes/config.json')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'balance',
@@ -26,17 +27,17 @@ module.exports = {
             .setColor('YELLOW')
             .setAuthor(`Finanças de ${user.user.username}`, user.user.displayAvatarURL({ dynamic: true }))
             .setDescription(frase)
-            .addField('👝 Carteira', `${e.Coin}${bal}`, true)
+            .addField('👝 Carteira', `${bal} ${Moeda(message)}`, true)
 
         if (!oculto) {
-            embed.addField('🏦 Banco', `${e.Coin}${bank}`, true)
+            embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`, true)
         } else if (oculto) {
             if (message.author.id === config.ownerId) {
-                embed.addField('🏦 Banco', `${e.Coin}${bank}`, true)
+                embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`, true)
             } else if (user.id === message.author.id) {
-                embed.addField('🏦 Banco', `${e.Coin}${bank}`, true)
+                embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`, true)
             } else {
-                embed.addField('🏦 Banco', `${e.Coin}||Oculto||`, true)
+                embed.addField('🏦 Banco', `||Oculto|| ${Moeda(message)}`, true)
             }
         }
 

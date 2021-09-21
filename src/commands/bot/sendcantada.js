@@ -2,6 +2,7 @@ const { config } = require('../../../Routes/config.json')
 const { e } = require('../../../Routes/emojis.json')
 const { N } = require('../../../Routes/nomes.json')
 const ms = require('parse-ms')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'sendcantada',
@@ -55,7 +56,9 @@ module.exports = {
                 message.channel.sendTyping()
                 setTimeout(() => { message.reply(`${e.Check} | Sua cantada foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
 
-            }).catch(err => { return message.channel.send(`${e.Deny} | Ocorreu um erro no envio.\n\`${err}\``) })
+            }).catch(err => {
+                Error(message, err)
+                return message.channel.send(`${e.Deny} | Ocorreu um erro no envio.\n\`${err}\``) })
         }
     }
 }

@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'leavechannel',
@@ -127,7 +128,9 @@ module.exports = {
                                                         })
                                                 })
                                             }, 1900)
-                                        }).catch(err => { return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``) })
+                                        }).catch(err => {
+                                            Error(message, err)
+                                            return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``) })
                                     })
                                 }, 4000)
                             })

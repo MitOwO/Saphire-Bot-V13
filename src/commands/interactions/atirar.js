@@ -24,7 +24,7 @@ module.exports = {
 
     if (user.id === client.user.id) {
       db.subtract(`Balance_${message.author.id}`, 100); db.add(`Bank_${client.user.id}`, 100)
-      return message.reply(`${e.Deny} | **NÃO** é pra atirar em mim, que isso? Só pela ousadia, eu peguei 100 ${e.Coin}Moedas emprestadas, ||pra sempre||.`)
+      return message.reply(`${e.Deny} | **NÃO** é pra atirar em mim, que isso? Só pela ousadia, eu peguei 100 ${Moeda(message)} emprestadas, ||pra sempre||.`)
     }
 
     if (user.id === message.author.id) { return message.reply(`${e.Deny} | Não atire em você mesmo, que coisa feia.`) }
@@ -50,14 +50,12 @@ module.exports = {
 
         if (reaction.emoji.name === '🔁') {
           db.delete(`User.Request.${message.author.id}`)
-          db.delete(`User.Request.${user.id}`)
           const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`${e.GunRight} ${message.author} e ${user} estão trocando tiros! ${e.GunLeft}`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Atirar[Math.floor(Math.random() * g.Atirar.length)])
           msg.edit({ embeds: [TradeEmbed] }).catch(err => { })
         }
 
       }).catch(() => {
         db.delete(`User.Request.${message.author.id}`)
-        db.delete(`User.Request.${user.id}`)
         embed.setColor('RED').setDescription(`${e.Deny} | ${message.author} atirou e ${user} saiu correndo.`).setFooter(`${message.author.id}/${user.id}`)
         msg.edit({ embeds: [embed] }).catch(err => { })
       })

@@ -1,6 +1,7 @@
 const { Permissions } = require('discord.js')
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'autorole',
@@ -78,6 +79,7 @@ module.exports = {
                                 return message.reply(`${e.Menhera} | Prontinho! Eu desativei o Autorole System.`)
                             }, 2400)
                         }).catch(err => {
+                            Error(message, err)
                             db.delete(`User.Request.${message.author.id}`)
                             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                         })
@@ -91,6 +93,7 @@ module.exports = {
                     db.delete(`User.Request.${message.author.id}`)
                 })
             }).catch(err => {
+                Error(message, err)
                 db.delete(`User.Request.${message.author.id}`)
                 return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })
@@ -137,6 +140,7 @@ module.exports = {
                             db.delete(`User.Request.${message.author.id}`)
                         })
                     }).catch(err => {
+                        Error(message, err)
                         db.delete(`User.Request.${message.author.id}`)
                         message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                     })
@@ -263,6 +267,7 @@ module.exports = {
                                 return message.reply(`${e.NezukoJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
                             }, 2400)
                         }).catch(err => {
+                            Error(message, err)
                             db.delete(`User.Request.${message.author.id}`)
                             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                         })
@@ -276,6 +281,7 @@ module.exports = {
                     msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`)
                 })
             }).catch(err => {
+                Error(message, err)
                 db.delete(`User.Request.${message.author.id}`)
                 return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })

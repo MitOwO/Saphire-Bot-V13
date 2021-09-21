@@ -2,6 +2,7 @@ const { config } = require('../../../Routes/config.json')
 const { e } = require('../../../Routes/emojis.json')
 const { N } = require('../../../Routes/nomes.json')
 const ms = require('parse-ms')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'ideiasaphire',
@@ -44,7 +45,10 @@ module.exports = {
                         const channel = client.channels.cache.get(ChannelId); if (!channel) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                             channel.send({ embeds: [newideia] }).then(() => {
                                 message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
-                            }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                            }).catch(err => {
+                                Error(message, err)
+                                return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``)
+                            })
                         }
                     }
                 }).catch(() => {
@@ -54,7 +58,10 @@ module.exports = {
                         const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
                             channel.send({ embeds: [newideianoinvite] }).then(() => {
                                 message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
-                            }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                            }).catch(err => {
+                                Error(message, err)
+                                return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``)
+                            })
                         }
                     }
                 })
@@ -67,7 +74,10 @@ module.exports = {
                     const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
                         channel.send({ embeds: [newideianoinvite] }).then(() => {
                             message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
-                        }).catch(err => { return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``) })
+                        }).catch(err => {
+                            Error(message, err)
+                            return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``)
+                        })
                     }
                 }
             }

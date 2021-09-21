@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const { g } = require('../../../Routes/Images/gifs.json')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
   name: 'baka',
@@ -29,7 +30,7 @@ module.exports = {
     if (user.id === client.user.id) {
       db.subtract(`Balance_${message.author.id}`, 60); db.add(`Bank_${client.user.id}`, 60)
       db.set(`User.${message.author.id}.Baka`, 'ON')
-      return message.reply(`${e.Deny} | Você que é baka! To magoada, peguei 60 ${e.Coin}Moedas emprestadas pra comprar sorvetes, bye bye!`)
+      return message.reply(`${e.Deny} | Você que é baka! To magoada, peguei 60 ${Moeda(message)} emprestadas pra comprar sorvetes, bye bye!`)
     }
 
     const embed = new MessageEmbed()

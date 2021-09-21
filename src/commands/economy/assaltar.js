@@ -1,6 +1,7 @@
 const { e } = require('../../../Routes/emojis.json')
 const ms = require('parse-ms')
 const Error = require('../../../Routes/functions/errors')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'assaltar',
@@ -15,6 +16,9 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let target = message.mentions.members.first() || message.member
+        let TargetMoney = db.get(`Balance_${target.id}`) || 0
+        let AuthorMoney = db.get(`Balance_${message.author.id}`) || 0
+        let Amount = Math.floor(Math.random() * AuthorMoney) + 1
 
         const AssaltoEmbed = new MessageEmbed().setColor('BLUE').setTitle(`${e.PandaBag} Comando Assalto`).setDescription('Função: Assaltar **100%** do dinheiro presente na carteira do alvo definido.')
             .addFields(
@@ -28,7 +32,7 @@ module.exports = {
                 },
                 {
                     name: `${e.Info} Alvo com arma`,
-                    value: 'Assaltar alguém que tenha uma arma é um pouco mais complicado. Chances:\n**25% de sucesso\n25% de ser assaltado de volta** e alvo receber um valor aleatório do próprio dinheiro\n**25% de ser preso\n25% de receber um tiro** e pagar o tramatamento de **1~5000 moedas**'
+                    value: `Assaltar alguém que tenha uma arma é um pouco mais complicado. Chances:\n**25% de sucesso\n25% de ser assaltado de volta** e alvo receber um valor aleatório do próprio dinheiro\n**25% de ser preso\n25% de receber um tiro** e pagar o tramatamento de **1~5000 ${Moeda(message)}**`
                 },
                 {
                     name: `${e.Info} Preso`,
@@ -55,11 +59,6 @@ module.exports = {
                 if (target.id === message.author.id) return message.reply(`${e.Deny} | @Marque alguém ou responda a mensagem da pessoa. Você também pode usar \`${prefix}assalto info\``)
 
                 let TargetGun = db.get(`User.${target.id}.Slot.Arma`)
-
-                let TargetMoney = db.get(`Balance_${target.id}`) || 0
-                let AuthorMoney = db.get(`Balance_${message.author.id}`) || 0
-                let Amount = Math.floor(Math.random() * AuthorMoney) + 1
-
                 if (target.id === client.user.id) return AssaltClient()
                 if (TargetMoney <= 0) return message.reply(`${e.PandaProfit} | ${target.user.username} não possui dinheiro na carteira.`)
 
@@ -80,7 +79,7 @@ module.exports = {
                         message.reply(`${e.Loading} | ${message.author} está assaltando ${target}`).then(msg => {
                             setTimeout(function () {
                                 AuthorAdd(cache); Timeout()
-                                msg.edit(`${e.PandaBag} | ${message.author} assaltou todo o dinheiro de ${target}.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} +${cache} ${e.Coin} Moedas\n${target.user.tag} -${cache} ${e.Coin} Moedas`)
+                                msg.edit(`${e.PandaBag} | ${message.author} assaltou todo o dinheiro de ${target}.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} +${cache} ${Moeda(message)}\n${target.user.tag} -${cache} ${Moeda(message)}`)
                                 db.delete(`User.${message.author.id}.Caches.Assalto`)
                             }, 4500)
                         }).catch(err => {
@@ -95,7 +94,7 @@ module.exports = {
                             setTimeout(function () {
                                 AuthorSubtract(Amount); TargetAdd(cache + Amount)
                                 Timeout()
-                                msg.edit(`${e.Deny} | ${target} estava armado e assaltou ${message.author} devolta.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} -${Amount} ${e.Coin} Moedas\n${target.user.tag} +${Amount} ${e.Coin} Moedas`)
+                                msg.edit(`${e.Deny} | ${target} estava armado e assaltou ${message.author} devolta.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} -${Amount} ${Moeda(message)}\n${target.user.tag} +${Amount} ${Moeda(message)}`)
                                 db.delete(`User.${message.author.id}.Caches.Assalto`)
                             }, 4500)
                         }).catch(err => {
@@ -125,7 +124,7 @@ module.exports = {
                                 AuthorSubtract(tratamento)
                                 Timeout()
                                 TargetAdd(cache)
-                                msg.edit(`🏥 | ${message.author}, você levou um tiro e correu perigo de vida. Debitamos do seu banco os gastos necessário.\n${e.PandaProfit} -${tratamento} ${e.Coin} Moedas`)
+                                msg.edit(`🏥 | ${message.author}, você levou um tiro e correu perigo de vida. Debitamos do seu banco os gastos necessário.\n${e.PandaProfit} -${tratamento} ${Moeda(message)}`)
                                 db.delete(`User.${message.author.id}.Caches.Assalto`)
                             }, 4500)
                         }).catch(err => {
@@ -143,7 +142,7 @@ module.exports = {
 
                 if (result <= 70) {
                     AuthorAdd(TargetMoney); TargetSubtract(TargetMoney)
-                    return message.reply(`${e.PandaBag} | ${message.author} assaltou todo o dinheiro de ${target}.\n${e.PandaProfit} +${TargetMoney} ${e.Coin} Moedas`)
+                    return message.reply(`${e.PandaBag} | ${message.author} assaltou todo o dinheiro de ${target}.\n${e.PandaProfit} +${TargetMoney} ${Moeda(message)}`)
                 } else {
                     Timeout()
                     return message.reply(`${e.Sirene} | Havia policías por perto e você foi preso!`)
@@ -155,7 +154,7 @@ module.exports = {
                 AuthorSubtract(multa)
                 Loteria(multa / 2)
                 db.set(`User.${message.author.id}.Timeouts.Preso`, Date.now())
-                return message.channel.send(`👩‍⚖️ | Eu decreto a prisão de ${message.author} *\`${message.author.tag} | ${message.author.id}\`* por tentar me assaltar mais multa.\n${e.PandaProfit} -${multa} ${e.Coin} Moedas`)
+                return message.channel.send(`👩‍⚖️ | Eu decreto a prisão de ${message.author} *\`${message.author.tag} | ${message.author.id}\`* por tentar me assaltar mais multa.\n${e.PandaProfit} -${multa} ${Moeda(message)}`)
             }
 
             function AuthorAdd(x) { db.add(`Balance_${message.author.id}`, x) }
