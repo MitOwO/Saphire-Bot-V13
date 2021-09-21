@@ -151,7 +151,7 @@ module.exports = {
 
             coletor.on('end', async (collected) => {
                 db.delete(`User.Request.${message.author.id}`)
-                const Embed = new MessageEmbed().setColor('RED').setTitle(`${e.Deny} Central de Ajuda ${client.user.username}`).setDescription(`Sessão encerrada por Tempo Expirado.\nCaso queira ver o help novamente, basta usar \`${prefix}help\``)
+                PrincipalEmbed.setColor('RED').setFooter('Request cancelada ' + message.author.id)
                 msg.edit({ embeds: [Embed] }).catch(err => { })
             })
 
@@ -212,7 +212,7 @@ module.exports = {
                         break;
                     case 'Close':
                         db.delete(`User.Request.${message.author.id}`)
-                        msg.edit({ embeds: [new MessageEmbed().setColor('RED').setFooter(message.author.id)] })
+                        msg.edit({ embeds: [PrincipalEmbed.setColor('RED').setFooter('Request cancelada ' + message.author.id)] })
                         break;
                     default:
                         msg.edit({ embeds: [PrincipalEmbed], components: [painel] })
