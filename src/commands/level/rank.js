@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const { config } = require('../../../Routes/config.json')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'rank',
@@ -96,10 +97,10 @@ module.exports = {
             let loteria = db.get('Loteria.Prize') || '0'
             const embedxp = new MessageEmbed()
                 .setColor('YELLOW')
-                .setTitle("👑 Ranking - Moedas")
-            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${e.Coin}Moedas\n🏦 ${d.bank} ${e.Coin}Moedas`) })
+                .setTitle(`👑 Ranking - Global Money`)
+            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}\n🏦 ${d.bank} ${Moeda(message)}`) })
             embedxp.setFooter(`Seu ranking: ${myrank} | Rank Base: Banco`)
-            embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${e.Coin}Moedas`)
+            embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
             return message.reply({ embeds: [embedxp] })
 
         } else if (['rep', 'reputação'].includes(args[0])) {

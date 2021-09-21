@@ -12,7 +12,8 @@ module.exports = {
     description: 'Veja o que os outros estão escutando',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
-        let user = message.mentions.users.first() || message.repliedUser || message.member
+
+        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
         let avatar = user.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
 
         let fotospot = 'https://imgur.com/vw6z7v4.png'

@@ -14,9 +14,17 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        
         let user = message.mentions.users.first() || message.author || message.repliedUser || message.member
         let avatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 })
         let linkavatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
+
+        if (!isNaN(args[0])) {
+            user = message.guild.members.cache.get(args[0])
+            if (!user) return message.reply(`${e.Deny} | Não achei ninguém com esse ID no servidor`)
+            avatar = user.user.avatarURL({ dynamic: true, format: "png", size: 1024 })
+            linkavatar = user.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
+        }
 
         const embed = new MessageEmbed()
             .setColor('BLUE')

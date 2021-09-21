@@ -1,5 +1,5 @@
 const { e } = require('../../../Routes/emojis.json')
-const { Permissions } = require('discord.js')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
   name: 'clear',
@@ -38,7 +38,7 @@ module.exports = {
         }).catch(err => { return message.channel.send(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
       }).catch(err => { return message.reply(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
-    } else if (['bot', "bots"].includes(args[0])) {
+    } else if (['bot', "bots"].includes(args[0]?.toLowerCase())) {
 
       let MsgsPraDeletar = args[1]
       if (!MsgsPraDeletar) { return message.reply(`${e.Deny} | Tenta usar deste jeito: \`${prefix}clear bots 0~100\``) }
@@ -54,7 +54,7 @@ module.exports = {
         }).catch(err => { return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
       }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
-    } else if (['images', "imagens", "fotos", "foto", "imagem", "midia"].includes(args[0])) {
+    } else if (['images', "imagens", "fotos", "foto", "imagem", "midia"].includes(args[0]?.toLowerCase())) {
 
       let MsgsPraDeletar = args[1]
       if (!MsgsPraDeletar) { return message.reply(`${e.Deny} | Tenta usar deste jeito: \`${prefix}clear imagens 0~100\``) }
@@ -70,6 +70,7 @@ module.exports = {
       }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
     } else if (typeof (parseInt(args[0])) == "number") {
+      return message.reply(`Calminha que este comando está passando por uma reforma.`)
 
       message.delete().then(() => {
 
@@ -82,7 +83,10 @@ module.exports = {
             message.channel.send(`${e.Check} | Deletei um total ${msg.size} mensagens sob as ordens de ${message.author}`)
           }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
         })
-      }).catch(err => { return message.reply(`${e.Deny} | Estou sem a permissão "Gerenciar Mensagens".`) })
+      }).catch(err => {
+        Error(message, err)
+        return message.reply(`${e.Deny} | Estou sem a permissão "Gerenciar Mensagens".`)
+      })
     } else {
       message.reply(`${e.Info} | O argumento X \`${prefix}clear "X"\` precisa ser um número para deletar as mensagens fora da clase \`mídas/bots/@users\`.`)
     }

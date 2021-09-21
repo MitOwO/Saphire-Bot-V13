@@ -26,6 +26,8 @@ module.exports = {
                 message.guild.emojis.create(url, parsedEmoji.name)
                     .then((emoji) => message.channel.send(`${e.Check} | Prontinho!\n${emoji.url}`))
                     .catch(err => { message.reply(`${e.Deny} | Não foi possivel adicionar não... Isso é mesmo um emoji?`) })
+            } else {
+                message.reply(`${e.Deny} | Este emoji não é um emoji customizado.`)
             }
         }
     }

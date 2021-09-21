@@ -124,7 +124,7 @@ module.exports = {
             return message.reply(`${e.Check} | Feito!`)
         }
 
-        if (['money', 'coins', 'moedas'].includes(args[0])) {
+        if (['money', 'coins', 'moedas', 'dinheiro'].includes(args[0])) {
 
             if (!user) return message.reply('`' + prefix + 'del money @user/args`')
 
