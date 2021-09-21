@@ -212,7 +212,6 @@ module.exports = {
                         break;
                     case 'Close':
                         db.delete(`User.Request.${message.author.id}`)
-                        msg.delete()
                         msg.edit({ embeds: [new MessageEmbed().setColor('RED').setFooter(message.author.id)] })
                         break;
                     default:
