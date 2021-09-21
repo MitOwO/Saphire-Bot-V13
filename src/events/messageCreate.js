@@ -81,7 +81,10 @@ client.on('messageCreate', async message => {
 
                 cooldown.add(message.author.id)
                 setTimeout(() => { cooldown.delete(message.author.id) }, 1500)
-            }).catch(err => { return message.channel.send(`${e.Warn} | Houve um erro crítico em um sistema prioritário do meu sistema. Por favor, fale com meu criador >-- **${N.Rody}** <-- e reporte este erro.\n\`${err}\``) })
+            }).catch(err => {
+                Error(message, err)
+                return message.channel.send(`${e.Warn} | Houve um erro crítico em um sistema prioritário do meu sistema. Por favor, fale com meu criador >-- **${N.Rody}** <-- e reporte este erro.\n\`${err}\``)
+            })
         }
     } else {
         if (!message.content.startsWith(prefix)) return
