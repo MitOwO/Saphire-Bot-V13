@@ -1,6 +1,7 @@
 const { Message, MessageEmbed } = require('discord.js')
 const db = require('quick.db')
 const { e } = require('../emojis.json')
+const Moeda = require('../../Routes/functions/moeda')
 
 /** 
 * @param {Message} message
@@ -13,7 +14,7 @@ function BuyingAway(message, prefix, args, args1) {
     let bank = db.get(`Bank_${message.author.id}`) || 0
     const BuyColorEmbed = new MessageEmbed()
 
-    function NoMoney(x) { message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${e.Coin} Moedas na carteira para comprar este item.`) }
+    function NoMoney(x) { message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`) }
     function JaPossui() { message.reply(`${e.Info} | Você já possui este item.`) }
     function AddLoteria(x) { db.add(`Loteria.Prize`, x) }
 
@@ -58,7 +59,7 @@ function BuyingAway(message, prefix, args, args1) {
             db.subtract(`Balance_${message.author.id}`, 1000000)
             AddLoteria(500000)
             db.set(`User.${message.author.id}.Slot.Estrela.1`, "ON")
-            return message.reply(`${e.Check} | ${message.author} comprou a ⭐ \`Estrela 1\`\n${e.PandaProfit} | -1000000 ${e.Coin} Moedas`)
+            return message.reply(`${e.Check} | ${message.author} comprou a ⭐ \`Estrela 1\`\n${e.PandaProfit} | -1000000 ${Moeda(message)}`)
         } else { NoMoney(1000000) }
     }
 
@@ -73,7 +74,7 @@ function BuyingAway(message, prefix, args, args1) {
             AddLoteria(1000000)
             db.set(`User.${message.author.id}.Slot.Estrela.2`, "ON")
             db.delete(`User.${message.author.id}.Slot.Estrela.1`)
-            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐ \`Estrela 2\`\n${e.PandaProfit} | -2000000 ${e.Coin} Moedas`)
+            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐ \`Estrela 2\`\n${e.PandaProfit} | -2000000 ${Moeda(message)}`)
         } else { NoMoney(2000000) }
     }
 
@@ -86,7 +87,7 @@ function BuyingAway(message, prefix, args, args1) {
             AddLoteria(1500000)
             db.set(`User.${message.author.id}.Slot.Estrela.3`, "ON")
             db.delete(`User.${message.author.id}.Slot.Estrela.2`)
-            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐⭐ \`Estrela 3\`\n${e.PandaProfit} | -3000000 ${e.Coin} Moedas`)
+            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐⭐ \`Estrela 3\`\n${e.PandaProfit} | -3000000 ${Moeda(message)}`)
         } else { NoMoney(3000000) }
     }
 
@@ -99,7 +100,7 @@ function BuyingAway(message, prefix, args, args1) {
             AddLoteria(2000000)
             db.set(`User.${message.author.id}.Slot.Estrela.4`, "ON")
             db.delete(`User.${message.author.id}.Slot.Estrela.3`)
-            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐⭐⭐ \`Estrela 4\`\n${e.PandaProfit} | -4000000 ${e.Coin} Moedas`)
+            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐⭐⭐ \`Estrela 4\`\n${e.PandaProfit} | -4000000 ${Moeda(message)}`)
         } else { NoMoney(4000000) }
     }
 
@@ -112,7 +113,7 @@ function BuyingAway(message, prefix, args, args1) {
             AddLoteria(2500000)
             db.set(`User.${message.author.id}.Slot.Estrela.5`, "ON")
             db.delete(`User.${message.author.id}.Slot.Estrela.4`)
-            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐⭐⭐⭐ \`Estrela 5\`\n${e.PandaProfit} | -5000000 ${e.Coin} Moedas`)
+            return message.reply(`${e.Check} | ${message.author} comprou a ⭐⭐⭐⭐⭐ \`Estrela 5\`\n${e.PandaProfit} | -5000000 ${Moeda(message)}`)
         } else { NoMoney(5000000) }
     }
 
@@ -123,7 +124,7 @@ function BuyingAway(message, prefix, args, args1) {
         function BuyItemFunction() {
             db.subtract(`Balance_${message.author.id}`, Price); AddLoteria(Price / 2)
             db.set(`User.${message.author.id}.Slot.${NameDB}`, `${NameDB}`)
-            return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`${ItemName}\`\n${e.PandaProfit} | -${Price} ${e.Coin} Moedas`)
+            return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`${ItemName}\`\n${e.PandaProfit} | -${Price} ${Moeda(message)}`)
         }
     }
 
@@ -140,7 +141,7 @@ function BuyingAway(message, prefix, args, args1) {
             db.subtract(`Balance_${message.author.id}`, parseInt(args1) * 10); db.add(`Loteria.Tickets_${message.author.id}`, parseInt(args1)); AddLoteria(parseInt(args1) * 10); db.add('Loteria.TicketsCompradosAoTodo', parseInt(args1));
             return message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
                 for (let i = 0; i === parseInt(args1); i++) { db.push('Loteria.Users', `${message.author.id}`) }
-                msg.edit(`${e.Check} | ${message.author} comprou ${parseInt(args1)} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${parseInt(db.get('Loteria.Prize'))} ${e.Coin}Moedas.\n${e.PandaProfit} | -${parseInt(args1) * 10} ${e.Coin} Moedas`).catch(err => { })
+                msg.edit(`${e.Check} | ${message.author} comprou ${parseInt(args1)} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${parseInt(db.get('Loteria.Prize'))} ${Moeda(message)}.\n${e.PandaProfit} | -${parseInt(args1) * 10} ${Moeda(message)}`).catch(err => { })
             }).catch(err => {
                 message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
             })
@@ -159,7 +160,7 @@ function BuyingAway(message, prefix, args, args1) {
         let q = quantia * Price
         let check = quantia + Consumiveis
 
-        if (q > money) { return message.reply(`${e.PandaProfit} | Você precisa ter pelo menos ${q} ${e.Coin} Moedas na carteira para comprar ${quantia} ${NomeUser}.`) }
+        if (q > money) { return message.reply(`${e.PandaProfit} | Você precisa ter pelo menos ${q} ${Moeda(message)} na carteira para comprar ${quantia} ${NomeUser}.`) }
 
         if (check >= Limit) { Complete() } else { BuyItens() }
 
@@ -167,7 +168,7 @@ function BuyingAway(message, prefix, args, args1) {
             db.add(`User.${message.author.id}.Slot.${NomeTec}`, quantia)
             db.subtract(`Balance_${message.author.id}`, quantia * Price)
             AddLoteria((quantia * Price) / 2)
-            message.channel.send(`${e.Check} | ${message.author} comprou ${quantia} ${NomeUser} ficando com um total de ${db.get(`User.${message.author.id}.Slot.${NomeTec}`)} ${NomeUser}.\n${e.PandaProfit} | -${q} ${e.Coin} Moedas`)
+            message.channel.send(`${e.Check} | ${message.author} comprou ${quantia} ${NomeUser} ficando com um total de ${db.get(`User.${message.author.id}.Slot.${NomeTec}`)} ${NomeUser}.\n${e.PandaProfit} | -${q} ${Moeda(message)}`)
         }
 
         function Complete() {
@@ -178,7 +179,7 @@ function BuyingAway(message, prefix, args, args1) {
                 AddLoteria(Price / 2)
                 i++
             } while (db.get(`User.${message.author.id}.Slot.${NomeTec}`) <= Limit)
-            message.channel.send(`${e.Check} | ${message.author} completou o limite de ${NomeUser} comprando +${i - 1} ${NomeUser}.\n${e.PandaProfit} | -${Price * i - 1} ${e.Coin} Moedas`)
+            message.channel.send(`${e.Check} | ${message.author} completou o limite de ${NomeUser} comprando +${i - 1} ${NomeUser}.\n${e.PandaProfit} | -${Price * i - 1} ${Moeda(message)}`)
         }
     }
 
@@ -190,7 +191,7 @@ function BuyingAway(message, prefix, args, args1) {
             db.set(`User.${message.author.id}.Color.${NameEN}`, Code)
             AddLoteria(Price / 2)
             BuyColorEmbed.setColor(Code).setDescription(`\`${prefix}setcolor\``)
-            return message.reply({ content: `${e.Check} | ${message.author} comprou a cor ${NamePT}\n${e.PandaProfit} -${Price} ${e.Coin} Moedas`, embeds: [BuyColorEmbed] })
+            return message.reply({ content: `${e.Check} | ${message.author} comprou a cor ${NamePT}\n${e.PandaProfit} -${Price} ${Moeda(message)}`, embeds: [BuyColorEmbed] })
         } else { NoMoney(Price) }
     }
 }

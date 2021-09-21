@@ -3,6 +3,7 @@ const client = require('../../index')
 const { config } = require('../config.json')
 const { e } = require('../emojis.json')
 const db = require('quick.db')
+const Moeda = require('../../Routes/functions/moeda')
 
 /**
  * @param { Message } message
@@ -29,7 +30,7 @@ function Error(message, err) {
     function Block() {
         db.set(`ComandoBloqueado.${cmd}`, 'BUG')
         db.add(`Balance_${message.author.id}`, 1000)
-        message.channel.send(`${e.Warn} Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.PandaProfit} +1000 ${e.Coin} Moedas`).catch(err => { })
+        message.channel.send(`${e.Warn} Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.PandaProfit} +1000 ${Moeda(message)}`).catch(err => { })
     }
 }
 
