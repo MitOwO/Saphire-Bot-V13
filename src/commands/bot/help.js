@@ -152,7 +152,7 @@ module.exports = {
             coletor.on('end', async (collected) => {
                 db.delete(`User.Request.${message.author.id}`)
                 PrincipalEmbed.setColor('RED').setFooter('Request cancelada ' + message.author.id)
-                msg.edit({ embeds: [Embed] }).catch(err => { })
+                msg.edit({ embeds: [PrincipalEmbed] }).catch(err => { })
             })
 
             coletor.on('collect', async (collected) => {
