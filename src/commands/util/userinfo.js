@@ -43,7 +43,7 @@ module.exports = {
         let associado = User.pending ? "Não" : "Sim"
 
         const UserEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor(color || 'BLUE')
             .setTitle(`${e.Info} Informações de usuários`)
             .setDescription(`Usuário: ${user}`)
             .setThumbnail(avatar)

@@ -10,10 +10,22 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (['all', 'client'].includes(args[0])) {
-            db.set('Rebooting', 'ON')
-            return message.reply(`${e.Loading} Relogando Client...`)
+        let features = ''
+        args[0] ? features = args.join(' ') : features = 'Nenhum dado fornecido.'
+        
+        if (['commands', 'comandos'].includes(args[0]?.toLowerCase())){
+            RebootCommands()
         } else {
+            RebootLock(features)
+        }
+
+        function RebootLock(x) {
+            db.set('Rebooting.ON', true)
+            db.set('Rebooting.Features', `${x}`)
+            message.channel.send(`${e.Check} Accepted!\n${e.Loading} Rebooting starting...`)
+        }
+
+        function RebootCommands() {
             client.commands.sweep(() => true)
             glob(`${__dirname}/../**/*.js`, async (err, filePaths) => {
                 if (err) return

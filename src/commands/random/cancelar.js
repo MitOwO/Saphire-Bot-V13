@@ -15,8 +15,10 @@ module.exports = {
 
         let cancel = f.Cancelamentos[Math.floor(Math.random() * f.Cancelamentos.length)]
         let user = message.mentions.members.first() || message.member
+        let motivo = args.slice(1).join(' ')
+        if (!user || user.id === message.author.id) motivo = cancel
 
-        args[0] ? CancelWithArgs() : CancelWithoutArgs()
+        user ? CancelWithArgs() : CancelWithoutArgs()
 
         function CancelWithoutArgs() {
             if (user.id === message.author.id) return message.reply(`${e.Deny} | Marque alguém para ser cancelado`)
@@ -29,7 +31,7 @@ module.exports = {
             if (Mensagem.length > 250) return message.reply(`${e.Deny} | Seu motivo de cancelamento não pode ultrapassar **250 caracteres**`)
             if (user.id === message.author.id) return message.reply(`${e.Deny} | Marque alguém para ser cancelado`)
             if (user.id === client.user.id) { return message.channel.send(`🔇 | ${message.author} foi cancelado por tentar me cancelar.`) }
-            return message.channel.send(`🔇 | ${message.author.username} cancelou ${user.user.username}.\n${args.slice(1).join(' ')}`)
+            return message.channel.send(`🔇 | ${message.author.username} cancelou ${user.user.username}.\n${motivo}`)
         }
     }
 }

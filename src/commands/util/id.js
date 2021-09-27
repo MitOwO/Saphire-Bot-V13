@@ -12,7 +12,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first() || message.member || message.repliedUser
+        let user = message.mentions.members.first() || message.member || message.mentions.repliedUser
         let avatar = user.user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
 
         const embed = new MessageEmbed()

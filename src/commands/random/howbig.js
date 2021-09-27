@@ -14,7 +14,7 @@ module.exports = {
 
         if (args[1]) { return message.reply(`${e.Deny} Sem informações além do @user, por favor.`) }
 
-        let user = message.mentions.members.first() || message.repliedUser || message.member
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.member
         if (user.id === client.user.id) { return message.reply(`${e.Deny} | Eu não tenho essa coisa, para com isso!`) }
 
         let array = [

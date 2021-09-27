@@ -13,22 +13,16 @@ module.exports = {
         if (!args[0]) return message.reply(`Apenas o nome do comando que deseja desbloquear.\nExemplo: \`${prefix}liberar botinfo\``)
 
         if (['tudo', 'all'].includes(args[0]?.toLowerCase())) {
+
             db.delete('ComandoBloqueado')
-            return message.reply('Todos os comandos foram liberados.')
-        }
+            return message.reply(`${e.Check} Todos os comandos foram liberados.`)
 
-        if (args[1]) { return message.reply(`Apenas o \`args[0]\`, nada mais.`) }
+        } else if (db.get(`ComandoBloqueado.${args[0]?.toLowerCase()}`)) {
 
-        if (args[0]) {
-
-            if (!db.get(`ComandoBloqueado.${args[0]}`)) {
-                return message.reply(`O argumento \`${args[0]}\` não se encontra na lista de Comandos Bloqueados.`)
-            } else {
-                db.delete(`ComandoBloqueado.${args[0]}`)
-                return message.reply(`O comando \`${args[0]}\` foi liberado com sucesso!`)
-            }
+            db.delete(`ComandoBloqueado.${args[0]}`)
+            return message.reply(`O comando \`${args[0]}\` foi liberado com sucesso!`)
         } else {
-            return message.reply('Argumento invalido.')
+            return message.reply(`${e.Deny} | Este comando não está bloqueado ou não existe.`)
         }
     }
 }

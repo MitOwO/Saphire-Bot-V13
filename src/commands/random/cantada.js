@@ -12,7 +12,7 @@ module.exports = {
   description: 'Veja cantadas muito "boas"',
 
   run: async (client, message, args, prefix, db, MessageEmbed, request) => {
-    if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+    if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
     const Cantadas = f.Cantadas[Math.floor(Math.random() * f.Cantadas.length)]
 
@@ -22,7 +22,7 @@ module.exports = {
       .addField('----------', `${Cantadas}`)
 
     return message.reply({ embeds: [CantadasEmbed] }).then(msg => {
-      db.set(`User.Request.${message.author.id}`, 'ON')
+      db.set(`Request.${message.author.id}`, `${msg.url}`)
       msg.react('🔄').catch(err => { }) // 1º Embed
       msg.react('❌').catch(err => { }) // Cancel
 
@@ -38,13 +38,13 @@ module.exports = {
       });
 
       collector.on('end', collected => {
-        db.delete(`User.Request.${message.author.id}`)
+        db.delete(`Request.${message.author.id}`)
         CantadasEmbed.setColor('RED').setFooter(`Tempo expirado | ${message.author.id} | ${prefix}sendcantada`)
         msg.edit({ embeds: [CantadasEmbed] }).catch(err => { })
       })
 
       CancelCollector.on('collect', (reaction, user) => {
-        db.delete(`User.Request.${message.author.id}`)
+        db.delete(`Request.${message.author.id}`)
         CantadasEmbed.setColor('RED').setFooter(`Comando cancelado | ${message.author.id} | ${prefix}sendcantada`)
         msg.edit({ embeds: [CantadasEmbed] }).catch(err => { })
         msg.reactions.removeAll().catch(err => { })

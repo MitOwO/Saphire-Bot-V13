@@ -1,15 +1,18 @@
 const { e } = require('../../../Routes/emojis.json')
+const { config } = require('../../../Routes/config.json')
 
 module.exports = {
     name: 'delete',
     aliases: ['del', 'deletar'],
-    usage: '<item/class/caches> [@user]',
+    usage: '<item/class/Cache> [@user]',
     category: 'owner',
     ClientPermissions: 'ADD_REACTIONS',
     emoji: `${e.OwnerCrow}`,
     description: 'permite meu criador deletar qualquer coisa de qualquer um dentro do meu sistema',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
+
+        if (message.author.id !== config.ownerId) return message.reply(`${e.Deny} | Este é um comando privado.`)
 
         const commands = new MessageEmbed()
             .setColor('BLUE')
@@ -22,10 +25,10 @@ module.exports = {
 
         let user = message.mentions.members.first() || message.member
 
-        if (['caches', 'cache'].includes(args[0])) {
+        if (['Cache', 'cache'].includes(args[0])) {
 
             if (!user) { return message.reply('`' + prefix + 'del cache @user`') }
-            db.delete(`Caches_${user.id}`)
+            db.delete(`Cache_${user.id}`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -48,7 +51,7 @@ module.exports = {
         }
 
         if (['request', 'requests'].includes(args[0])) {
-            db.delete(`User.Request`)
+            db.delete(`Request`)
             return message.reply('Todas as request de todos os servidores foram apagadas.')
         }
 
@@ -63,13 +66,13 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del uesrid @user`') }
 
-            db.delete(`User.${user.id}`)
+            db.delete(`${user.id}`)
             db.delete(`Bank_${user.id}`)
             db.delete(`Balance_${user.id}`)
             db.delete(`Xp_${user.id}`)
             db.delete(`level_${user.id}`)
             db.delete(`Vip_${user.id}`)
-            db.delete(`rp_${user.id}`)
+            db.delete(`Likes_${user.id}`)
             db.delete(`Bitcoin_${user.id}`)
             return message.reply(`Todos os dados de ${user} foram deletados.`)
         }
@@ -81,19 +84,19 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}`)
+            db.delete(`${id}`)
             db.delete(`Bank_${id}`)
             db.delete(`Balance_${id}`)
             db.delete(`Xp_${id}`)
             db.delete(`level_${id}`)
             db.delete(`Vip_${id}`)
-            db.delete(`rp_${id}`)
+            db.delete(`Likes_${id}`)
             db.delete(`Bitcoin_${id}`)
             return message.reply(`Todos os dados de <@${id}> *\`${id}\`* foram deletados.`)
         }
 
-        if (['cachesAll', 'cacheAll'].includes(args[0])) {
-            db.delete('Caches_')
+        if (['CacheAll', 'cacheAll'].includes(args[0])) {
+            db.delete('Cache_')
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -120,7 +123,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del cachorro @user`') }
 
-            db.delete(`User.${user.id}.Slot.Cachorro`)
+            db.delete(`${user.id}.Slot.Cachorro`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -154,8 +157,8 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del medalha @user`') }
 
-            db.delete(`User.${user.id}.Slot.MedalhaAcess`)
-            db.delete(`User.${user.id}.Perfil.Medalha`)
+            db.delete(`${user.id}.Slot.MedalhaAcess`)
+            db.delete(`${user.id}.Perfil.Medalha`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -166,8 +169,8 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply('❌ Esse ID não é um número.') }
 
-            db.delete(`User.${id}.Slot.MedalhaAcess`)
-            db.delete(`User.${id}.Perfil.Medalha`)
+            db.delete(`${id}.Slot.MedalhaAcess`)
+            db.delete(`${id}.Perfil.Medalha`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -178,7 +181,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply('❌ Esse ID não é um número.') }
 
-            db.delete(`User.${id}.Slot.Cachorro`)
+            db.delete(`${id}.Slot.Cachorro`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -186,7 +189,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del estrelas @user`') }
 
-            db.delete(`User.${user.id}.Slot.Estrela`)
+            db.delete(`${user.id}.Slot.Estrela`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -197,7 +200,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Slot.Estrela`)
+            db.delete(`${id}.Slot.Estrela`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -205,7 +208,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del status @user`') }
 
-            db.delete(`User.${user.id}.Perfil.Status`)
+            db.delete(`${user.id}.Perfil.Status`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -216,7 +219,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Perfil.Status`)
+            db.delete(`${id}.Perfil.Status`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -251,7 +254,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del marry @user`') }
 
-            db.delete(`User.${user.id}.Perfil.Marry`)
+            db.delete(`${user.id}.Perfil.Marry`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -262,7 +265,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Perfil.Marry`)
+            db.delete(`${id}.Perfil.Marry`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -270,7 +273,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del family @user`') }
 
-            db.delete(`User.${user.id}.Perfil.Family`)
+            db.delete(`${user.id}.Perfil.Family`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -278,7 +281,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del family1 @user`') }
 
-            db.delete(`User.${user.id}.Perfil.Family.1`)
+            db.delete(`${user.id}.Perfil.Family.1`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -289,7 +292,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Perfil.Family.1`)
+            db.delete(`${id}.Perfil.Family.1`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -297,7 +300,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del family2 @user`') }
 
-            db.delete(`User.${user.id}.Perfil.Family.2`)
+            db.delete(`${user.id}.Perfil.Family.2`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -308,7 +311,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Perfil.Family.2`)
+            db.delete(`${id}.Perfil.Family.2`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -316,7 +319,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del family2 @user`') }
 
-            db.delete(`User.${user.id}.Perfil.Family.3`)
+            db.delete(`${user.id}.Perfil.Family.3`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -327,7 +330,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Perfil.Family.3`)
+            db.delete(`${id}.Perfil.Family.3`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -335,7 +338,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del título @user`') }
 
-            db.delete(`User.${user.id}.Perfil.TitlePerm`)
+            db.delete(`${user.id}.Perfil.TitlePerm`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -348,7 +351,7 @@ module.exports = {
                 return message.reply(`${e.Check} | Feito!`)
             }
 
-            db.delete(`User.${user.id}.Timeouts`)
+            db.delete(`${user.id}.Timeouts`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -359,7 +362,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Perfil.TitlePerm`)
+            db.delete(`${id}.Perfil.TitlePerm`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -367,7 +370,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del remedio @user`') }
 
-            db.delete(`User.${user.id}.Slot.Remedio`)
+            db.delete(`${user.id}.Slot.Remedio`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -378,7 +381,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Slot.Remedio`)
+            db.delete(`${id}.Slot.Remedio`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -386,7 +389,7 @@ module.exports = {
 
             if (!user) { return message.reply('`' + prefix + 'del niver @user`') }
 
-            db.delete(`User.${user.id}.Perfil.Aniversario`)
+            db.delete(`${user.id}.Perfil.Aniversario`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -397,7 +400,7 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
 
-            db.delete(`User.${id}.Perfil.Aniversario`)
+            db.delete(`${id}.Perfil.Aniversario`)
             return message.reply(`${e.Check} | Feito!`)
         }
 

@@ -22,7 +22,7 @@ module.exports = {
             if (!amount) { return message.channel.send('`' + prefix + 'remove fichas @user Valor`') }
             if (isNaN(amount)) { return message.channel.send(`**${args[2]}** não é um número.`) }
 
-            db.subtract(`User.${user.id}.Slot.Fichas`, amount)
+            db.subtract(`${user.id}.Slot.Fichas`, amount)
             return message.channel.send(`✅ Sucesso!`)
         }
 
@@ -37,7 +37,7 @@ module.exports = {
             if (!amount) { return message.channel.send('`' + prefix + 'remove fichasid ID Valor`') }
             if (isNaN(amount)) { return message.channel.send(`**${args[2]}** não é um número.`) }
 
-            db.subtract(`User.${id}.Slot.Fichas`, amount)
+            db.subtract(`${id}.Slot.Fichas`, amount)
             return message.channel.send(`✅ Sucesso!`)
         }
 

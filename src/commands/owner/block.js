@@ -47,7 +47,7 @@ module.exports = {
                             msg.edit(`${e.Loading} | Autenticando o bloqueio do usuário: *\`${id}\`\*`)
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.set(`Client.BlockUsers.${id}`, 'BLOCKED')
+                                    db.set(`Client.BlockUsers.${id}`, true)
                                     msg.edit(`${e.Check} | Autenticação concluida.`)
                                     message.reply(`${e.Check} | Bloqueio do usuário *\`${id}\`* efetuado sucesso!`)
                                 }, 4000)
@@ -76,7 +76,7 @@ module.exports = {
                             msg.edit(`${e.Loading} | Autenticando o bloqueio do usuário: *\`${id}\`\*`)
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.set(`Client.BlockUsers.${id}`, 'BLOCKED')
+                                    db.set(`Client.BlockUsers.${id}`, true)
                                     msg.edit(`${e.Check} | Autenticação concluida.`)
                                     message.reply(`${e.Check} | Bloqueio do usuário *\`${id}\`* efetuado sucesso!`)
                                 }, 4000)

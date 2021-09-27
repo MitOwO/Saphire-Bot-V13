@@ -39,12 +39,12 @@ module.exports = {
             if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
             if (isNaN(id)) { return message.reply("❌ Isso não é um número.") }
 
-            db.set(`Client.Acess.${id}`, id)
+            db.set(`Client.Acess.${id}`, true)
             return message.reply(`O usuário "<@${id}> *\`(${id})\`*" foi adicionado a lista de acesso.`)
         } else if (['add', 'give', 'liberar', 'user'].includes(args[0])) {
 
             if (!user) { return message.reply('`' + prefix + 'acess give @user`') }
-            db.set(`Client.Acess.${user.id}`, "ON")
+            db.set(`Client.Acess.${user.id}`, true)
             return message.reply(`O usuário "${user}" *\`${user.id}\`* foi adicionado a lista de acesso.`)
 
         } else {

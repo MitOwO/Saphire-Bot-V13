@@ -44,6 +44,18 @@ module.exports = {
                 {
                     name: `${e.Report} Canal de Reports`,
                     value: GetChannel('ReportChannel')
+                },
+                {
+                    name: '🔦 Canal de Busca',
+                    value: GetChannel('BuscaChannel')
+                },
+                {
+                    name: '🎣 Canal de Pesca',
+                    value: GetChannel('PescaChannel')
+                },
+                {
+                    name: '⛏️ Canal de Mineração',
+                    value: GetChannel('MineChannel')
                 }
             )
 
@@ -57,7 +69,7 @@ module.exports = {
             Autorole2 ? Autorole2 = `Autorole 2: <@&${Autorole2}>` : Autorole2 = 'Autorole 2: Desativado'
             return `${Autorole1}\n${Autorole2}`
         }
-
+        
         function GetChannel(x) {
             let canal = db.get(`Servers.${message.guild.id}.${x}`)
             canal ? canal = `Ativado: <#${canal}>` : canal = 'Desativado'

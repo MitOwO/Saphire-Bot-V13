@@ -11,18 +11,20 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first()
+        let user = message.mentions.members.first() || message.mentions.repliedUser
         let razao = args.slice(2).join(" ")
         if (!razao) razao = 'Nenhum motivo especificado.'
 
-        if (user.id === message.author.id) return BlacklistRanking()
+        if (!args[0]) {
+            if (user.id === message.author.id) return BlacklistRanking()
+        }
         if (message.author.id !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
         if (['adicionar', 'add', 'colocar'].includes(args[0]?.toLowerCase())) return BlacklistAdd()
         if (['addid', 'adicionarid'].includes(args[0]?.toLowerCase())) return BlacklistAddById()
         if (['remover', 'remove', 're', 'tirar'].includes(args[0]?.toLowerCase())) return BlacklistRemove()
-        if (['delid', 'removerid', 'removeid', 'reid', 'tirarid'].includes(args[0]?.toLowerCase())) BlacklistRemoveById()
+        if (['delid', 'removerid', 'removeid', 'reid', 'tirarid'].includes(args[0]?.toLowerCase())) return BlacklistRemoveById()
 
-        return message.repy(`${e.Obs} | Opções: adicionar | addid | remover | removerid | addserver | addserverid | removeserver | removerserverid`)
+        return message.reply(`${e.Obs} | Opções: add | addid | remover | removerid | addserver | addserverid | removeserver | removerserverid`)
 
         function BlacklistRemoveById() {
 
@@ -42,8 +44,9 @@ module.exports = {
             if (!id) return message.reply(`${e.Deny} | \`${prefix}bl addid id Razão\``)
             if (id.length < 17) { return message.reply(`${e.Deny} | Isso não é um ID`) }
             if (isNaN(id)) { return message.reply(`${e.Deny} | Isso não é um número.`) }
+            let razao = args.slice(2).join(' ') || 'Sem razão definida'
 
-            db.set(`Blacklist_${id}`, id)
+            db.set(`Blacklist_${id}`, true)
             db.set(`Blacklist.${id}`, razao)
             return message.reply(`${e.Check} O usuário "<@${id}> *\`${id}\`*" foi adicionado a Blacklist.`)
         }
@@ -59,24 +62,11 @@ module.exports = {
 
         function BlacklistAdd() {
 
-            if (args[1] !== user) {
+            if (!user) return message.reply(`${e.Deny} | \`${prefix}bl add @user razão\``)
 
-                let id = args[1]
-                if (!id) id = message.guild.id
-                if (id.length < 17) { return message.reply(`${e.Deny} | Isso não é um ID`) }
-                if (isNaN(id)) { return message.reply(`${e.Deny} | Isso não é um número.`) }
-
-                db.set(`blacklistServers_${id}`, id)
-                db.set(`blacklistServers.${id}`, razao)
-                return message.reply(`${e.Check} O servidor *\`${id}\`*" foi adicionado a Blacklist.`)
-            } else {
-
-                if (!user) return message.reply(`${e.Deny} | \`${prefix}bl add @user razão\``)
-
-                db.set(`Blacklist_${user.id}`, user.id)
-                db.set(`Blacklist.${user.id}`, razao)
-                return message.reply(`O usuário "${user} *\`${user.id}\`*" foi adicionado a Blacklist.`)
-            }
+            db.set(`Blacklist_${user.id}`, true)
+            db.set(`Blacklist.${user.id}`, razao)
+            return message.reply(`O usuário "${user} *\`${user.id}\`*" foi adicionado a Blacklist.`)
         }
 
         async function BlacklistRanking() {

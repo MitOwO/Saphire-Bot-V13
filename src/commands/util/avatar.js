@@ -13,9 +13,9 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         
-        let user = message.mentions.users.first() || message.author || message.repliedUser || message.member
+        let user = message.mentions.users.first() || message.author || message.mentions.repliedUser || message.member
         let avatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 })
         let linkavatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
 
@@ -38,7 +38,7 @@ module.exports = {
             .setFooter(`Foto enviada de: ${message.guild.name}`)
 
         return message.reply({ embeds: [embed] }).then(msg => {
-            db.set(`User.Request.${message.author.id}`, 'ON')
+            db.set(`Request.${message.author.id}`, `${msg.url}`)
             msg.react('❌').catch(err => { }) // X
             msg.react('📨').catch(err => { }) // Carta
 
@@ -49,7 +49,7 @@ module.exports = {
             let PraDm = msg.createReactionCollector({ filter: FilterSend, time: 30000, errors: 'time' })
 
             Delete.on('collect', (reaction, user) => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 msg.delete().catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro ao excluir a mensagem.\n\`${err}\``) })
                 message.delete().catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro ao excluir a mensagem dde origem.\n\`${err}\``) })
             })
@@ -68,7 +68,7 @@ module.exports = {
             })
 
             PraDm.on('end', () => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 embed.setColor('RED').setFooter('Tempo expirado.')
                 msg.edit({ embeds: [embed] }).catch(err => { })
             })

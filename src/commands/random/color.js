@@ -37,7 +37,7 @@ module.exports = {
                 })
             }
 
-        } else if (['preto', 'black', 'dark', 'preta'].includes(args[0])) {
+        } else if (['preto', 'black', 'dark', 'preta'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Preto').setColor(c.Black[1])
             for (let i = 0; i < c.Black.length; i++) {
@@ -46,7 +46,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['blue', 'azul'].includes(args[0])) {
+        } else if (['blue', 'azul'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Azul').setColor(c.Blue[8])
             for (let i = 0; i < c.Blue.length; i++) {
@@ -55,7 +55,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['cyan', 'ciano'].includes(args[0])) {
+        } else if (['cyan', 'ciano'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Ciano').setColor(c.Cyan[1])
             for (let i = 0; i < c.Cyan.length; i++) {
@@ -64,7 +64,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['green', 'verde'].includes(args[0])) {
+        } else if (['green', 'verde'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Verde').setColor(c.Green[2])
             for (let i = 0; i < c.Green.length; i++) {
@@ -73,7 +73,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['red', 'vermelho'].includes(args[0])) {
+        } else if (['red', 'vermelho'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Vermelho').setColor(c.Red[1])
             for (let i = 0; i < c.Red.length; i++) {
@@ -82,7 +82,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['pink', 'rosa'].includes(args[0])) {
+        } else if (['pink', 'rosa'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Rosa').setColor(c.Pink[1])
             for (let i = 0; i < c.Pink.length; i++) {
@@ -91,7 +91,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['purple', 'roxo'].includes(args[0])) {
+        } else if (['purple', 'roxo'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Roxo').setColor(c.Purple[1])
             for (let i = 0; i < c.Purple.length; i++) {
@@ -100,7 +100,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['orange', 'laranja'].includes(args[0])) {
+        } else if (['orange', 'laranja'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Laranja').setColor(c.Orange[1])
             for (let i = 0; i < c.Orange.length; i++) {
@@ -109,7 +109,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['yellow', 'amarelo'].includes(args[0])) {
+        } else if (['yellow', 'amarelo'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Amarelo').setColor(c.Yellow[1])
             for (let i = 0; i < c.Yellow.length; i++) {
@@ -118,7 +118,7 @@ module.exports = {
             }
             return message.reply({ embeds: [embed] })
 
-        } else if (['white', 'branco'].includes(args[0])) {
+        } else if (['white', 'branco'].includes(args[0]?.toLowerCase())) {
 
             embed.setTitle('🎨 #HEX: Branco').setColor(c.White[0])
             for (let i = 0; i < c.White.length; i++) {

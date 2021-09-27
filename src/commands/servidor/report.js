@@ -35,7 +35,7 @@ module.exports = {
                 .addField('Quer mais?', '`' + prefix + 'help report`')
 
             const channel = db.get(`Servers.${message.guild.id}.ReportChannel`)
-            let user = message.mentions.members.first() || message.repliedUser
+            let user = message.mentions.members.first() || message.mentions.repliedUser
 
             if (['help', 'ajuda'].includes(args[0])) { return message.channel.send({ embeds: [help] }) }
             if (!channel || channel === null || channel === undefined) { return message.channel.send({ embeds: [nochannel1] }) }

@@ -13,21 +13,24 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
+        return message.reply(`${e.Loading} Em construção...`)
+
         let Cargo1 = db.get(`Servers.${message.guild.id}.Roles.1`)
         let Cargo2 = db.get(`Servers.${message.guild.id}.Roles.2`)
         let Cargo3 = db.get(`Servers.${message.guild.id}.Roles.3`)
         let Cargo4 = db.get(`Servers.${message.guild.id}.Roles.4`)
         let Cargo5 = db.get(`Servers.${message.guild.id}.Roles.5`)
 
-        let Role1 = message.guild.roles.cache.get(Cargo1); if (!Role1) Role1 = false
-        let Role2 = message.guild.roles.cache.get(Cargo2); if (!Role2) Role2 = false
-        let Role3 = message.guild.roles.cache.get(Cargo3); if (!Role3) Role3 = false
-        let Role4 = message.guild.roles.cache.get(Cargo4); if (!Role4) Role4 = false
-        let Role5 = message.guild.roles.cache.get(Cargo5); if (!Role5) Role5 = false
+        let Role1 = message.guild.roles.cache.get(Cargo1); Role1 ? true : false
+        let Role2 = message.guild.roles.cache.get(Cargo2); Role2 ? true : false
+        let Role3 = message.guild.roles.cache.get(Cargo3); Role3 ? true : false
+        let Role4 = message.guild.roles.cache.get(Cargo4); Role4 ? true : false
+        let Role5 = message.guild.roles.cache.get(Cargo5); Role5 ? true : false
 
+        let Random = ''
         let Roles = [Role1, Role2, Role3, Role4, Role5]
         do {
-            let Random = Roles[Math.floor(Math.random() * Roles.length)]
+            Random = Roles[Math.floor(Math.random() * Roles.length)]
         } while (Random !== false)
 
         const embed = new MessageEmbed()
