@@ -15,7 +15,8 @@ function Error(message, err) {
     const args = message.content.slice(prefix.length).trim().split(/ +/g)
     const cmd = args.shift().toLowerCase()
 
-    Send(); Block();
+    Send();
+    Block();
 
     function Send() {
         message.channel.createInvite({ maxAge: 0 }).then(ChannelInvite => {
@@ -28,7 +29,7 @@ function Error(message, err) {
     }
 
     function Block() {
-        db.set(`ComandoBloqueado.${cmd}`, 'BUG')
+        db.set(`ComandoBloqueado.${cmd}`, `${err.message}`)
         db.add(`Balance_${message.author.id}`, 1000)
         message.channel.send(`${e.Warn} Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.PandaProfit} +1000 ${Moeda(message)}`).catch(err => { })
     }

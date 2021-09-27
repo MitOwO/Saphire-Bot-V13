@@ -26,8 +26,8 @@ function AfkSystem(message) {
     if (UserAfk) {
         let RecadoGlobal = db.get(`Client.AfkSystem.${UserAfk.id}`)
         let RecadoServidor = db.get(`Servers.${message.guild.id}.AfkSystem.${UserAfk.id}`)
-        if (db.get(`Client.AfkSystem.${UserAfk.id}`)) { message.channel.sendTyping(), setTimeout(() => { message.reply(`${e.Planet} | ${UserAfk.user.username} está offline. --> ✍️ | ${RecadoGlobal}`) }, 1500) }
-        if (db.get(`Servers.${message.guild.id}.AfkSystem.${UserAfk.id}`)) { message.channel.sendTyping(), setTimeout(() => { message.reply(`${e.Afk} | ${UserAfk.user.username} está offline. --> ✍️ | ${RecadoServidor}`) }, 1500) }
+        if (db.get(`Client.AfkSystem.${UserAfk.id}`)) { message.reply(`${e.Planet} | ${UserAfk.user.username} está offline. --> ✍️ | ${RecadoGlobal}`) }
+        if (db.get(`Servers.${message.guild.id}.AfkSystem.${UserAfk.id}`)) { message.reply(`${e.Afk} | ${UserAfk.user.username} está offline. --> ✍️ | ${RecadoServidor}`) }
     }
 }
 

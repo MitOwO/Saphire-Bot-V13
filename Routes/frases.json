@@ -1,7 +1,7 @@
 {
     "f": {
         "Request": [
-            "Você tem uma request aberta. Feche ela e tente usar este comando novamente."
+            "Você tem uma request aberta. Feche ela e tente usar este comando novamente.\n"
         ],
         "Cantadas": [
             "Tua mãe é uma rosa, o teu pai e um jasmim, adimiro eles pq fizeram você especialmente pra mim\n¸,ø¤{'' ลℓωลýร ђล†э∂''}ø¤º°#6146",
@@ -195,6 +195,41 @@
             "O que é um pontinho vermelho que pula e dança na selva?\n||Um MORANGO-TANGO||",
             "O Draco Malfoy\n||E já voltou||",
             "Visitando os EUA fiquei impressionada com o nível da educação pública americana\n||Várias crianças de 3-4 anos já falando inglês||"
+        ],
+        "Tsundere": [
+            "Não",
+            "Tô afim não",
+            "Não enche",
+            "Sai daqui",
+            "Ocupada",
+            "Tô com preguiça",
+            "Implore e talvez eu faça isso",
+            "Vou matá-lo(a) por você ter tentado me controlar",
+            "Agora? Volta depois que talvez eu recuse de novo",
+            "Quem você pensa que é pra me pedir algo?",
+            "Acha que manda em mim? Tenta mais tarde",
+            "Sai cara, me deixa em paz",
+            "Sabia? eu ate que gostava de você uns segundinhos atrás..."
+        ],
+        "BalanceTypes": [
+            "Sabia que dá pra ocultar o banco? Use `ocultar`",
+            "Pessoas podem te roubar, tenha cuidado.",
+            "Mantenha seu dinheiro no banco",
+            "Sabia que você pode roubar o dinheiro de outras pessoas?",
+            "Já jogou blackjack hoje?",
+            "O banco é impossível de roubar.",
+            "A loteria é um bom lugar para investir",
+            "Jogadores com arma podem pegar todo dinheiro da carteira",
+            "Existem vários meios de se obter dinheiro",
+            "Na loja tem vários itens legais para se comprar",
+            "Os melhores players tem mais estrelas no perfil",
+            "Já viu o ranking hoje?",
+            "Você pode dobrar seu dinheiro no blackjack",
+            "A roleta é uma boa forma de ganhar e perder dinheiro",
+            "Já pescou hoje?",
+            "Já minerou hoje?",
+            "A loteria é um bom lugar para os sortudos",
+            "Já apostou na loteria hoje?"
         ]
     }
 }

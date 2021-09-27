@@ -6,7 +6,10 @@ const { Message } = require('discord.js')
 */
 
 function RequestAutoDelete(message) {
-    setTimeout(() => { db.delete(`User.Request.${message.author.id}`) }, 120000)
+    setTimeout(() => {
+        let request = db.delete(`Request.${message.author.id}`)
+        request ? db.delete(`Request.${message.author.id}`) : ''
+    }, 120000)
 }
 
 module.exports = RequestAutoDelete
