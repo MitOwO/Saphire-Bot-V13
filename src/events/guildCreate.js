@@ -25,7 +25,7 @@ client.on("guildCreate", async (guild) => {
         const channel = await client.channels.cache.get(config.guildCreateChannelId)
         if (!channel) return
 
-        const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription('Registro no banco de dados com concluido!').addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
+        const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription('Registro no banco de dados concluido!').addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
 
         function WithChannel() {
             CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {

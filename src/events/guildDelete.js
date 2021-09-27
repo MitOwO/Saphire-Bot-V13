@@ -16,9 +16,8 @@ client.on("guildDelete", async (guild) => {
         .addField('Servidor', `${guild.name} *\`(${guild.id})\`*`)
         .addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
 
-    let ChannelId = config.guildDeleteChannelId
-    if (!ChannelId) return
+    if (!config.guildDeleteChannelId) return
 
-    const channel = client.channels.cache.get(ChannelId)
+    const channel = client.channels.cache.get(config.guildDeleteChannelId)
     channel ? channel.send({ embeds: [Embed] }).catch(err => { }) : ''
 })

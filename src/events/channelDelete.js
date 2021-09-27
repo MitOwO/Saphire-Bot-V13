@@ -2,43 +2,23 @@ const client = require('../../index')
 const db = require('quick.db')
 
 client.on('channelDelete', async (channel) => {
-    channel.id === db.get(`Servers.${channel.guild.id}.IdeiaChannel`) ? IdeiaChannelDeleted() : ''
-    channel.id === db.get(`Servers.${channel.guild.id}.LeaveChannel`) ? LeaveChannelDeleted() : ''
-    channel.id === db.get(`Servers.${channel.guild.id}.XPChannel`) ? XPChannelDeleted() : ''
-    channel.id === db.get(`Servers.${channel.guild.id}.ReportChannel`) ? ReportChannelDeleted() : ''
-    channel.id === db.get(`Servers.${channel.guild.id}.LogChannel`) ? LogChannelDeleted() : ''
-    channel.id === db.get(`Servers.${channel.guild.id}.WelcomeChannel`) ? WelcomeChannelDeleted() : ''
 
-    function IdeiaChannelDeleted() {
-        db.delete(`Servers.${channel.guild.id}.IdeiaChannel`)
-        let Msg = `🛰️ | **Global System Notification** | Recurso Desabilitado\n \nO canal **${channel.name}** configurado como **Canal de Ideias/Sugestões** foi deletado.`
-        Notify(Msg)
+    switch (channel.id) {
+        case db.get(`Servers.${channel.guild.id}.IdeiaChannel`): DeletedChannel('IdeiaChannel', 'Canal de Ideias/Sugestões'); break;
+        case db.get(`Servers.${channel.guild.id}.LeaveChannel`): DeletedChannel('LeaveChannel', 'Canal de Saída'); break;
+        case db.get(`Servers.${channel.guild.id}.XPChannel`): DeletedChannel('XPChannel', 'Canal de Level Up'); break;
+        case db.get(`Servers.${channel.guild.id}.ReportChannel`): DeletedChannel('ReportChannel', 'Canal de Reportes'); break;
+        case db.get(`Servers.${channel.guild.id}.LogChannel`): db.delete(`Servers.${channel.guild.id}.LogChannel`); break;
+        case db.get(`Servers.${channel.guild.id}.WelcomeChannel.Canal`): DeletedChannel('WelcomeChannel', 'Canal de Boas-Vindas'); break;
+        case db.get(`Servers.${channel.guild.id}.BuscaChannel`): DeletedChannel('BuscaChannel', 'Farming Floresta Cammum'); break;
+        case db.get(`Servers.${channel.guild.id}.PescaChannel`): DeletedChannel('PescaChannel', 'Farming Pesca'); break;
+        case db.get(`Servers.${channel.guild.id}.MineChannel`): DeletedChannel('MineChannel', 'Farming Mineração'); break;
+        default: break;
     }
 
-    function LeaveChannelDeleted() {
-        db.delete(`Servers.${channel.guild.id}.LeaveChannel`)
-        let Msg = `🛰️ | **Global System Notification** | Recurso Desabilitado\n \nO canal **${channel.name}** configurado como **Canal de Saída** foi deletado.`
-        Notify(Msg)
-    }
-
-    function XPChannelDeleted() {
-        db.delete(`Servers.${channel.guild.id}.XPChannel`)
-        let Msg = `🛰️ | **Global System Notification** | Recurso Desabilitado\n \nO canal **${channel.name}** configurado como **Canal de Level Up** foi deletado.`
-        Notify(Msg)
-    }
-
-    function ReportChannelDeleted() {
-        db.delete(`Servers.${channel.guild.id}.ReportChannel`)
-        let Msg = `🛰️ | **Global System Notification** | Recurso Desabilitado\n \nO canal **${channel.name}** configurado como **Canal de Reporte/Denúncia** foi deletado.`
-        Notify(Msg)
-    }
-
-    function LogChannelDeleted() { db.delete(`Servers.${channel.guild.id}.LogChannel`) }
-
-    function WelcomeChannelDeleted() {
-        db.delete(`Servers.${channel.guild.id}.WelcomeChannel`)
-        let Msg = `🛰️ | **Global System Notification** | Recurso Desabilitado\n \nO canal **${channel.name}** configurado como **Canal de Boas-Vindas** foi deletado.`
-        Notify(Msg)
+    function DeletedChannel(ChannelDB, CanalFunction) {
+        db.delete(`Servers.${channel.guild.id}.${ChannelDB}`)
+        Notify(`🛰️ | **Global System Notification** | Recurso Desabilitado\n \nO canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
     }
 
     async function Notify(Msg) {

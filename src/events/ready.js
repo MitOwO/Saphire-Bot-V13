@@ -6,7 +6,7 @@ const { e } = require('../../Routes/emojis.json')
 client.on("ready", () => {
 
     console.log('Event Ready | OK!')
-    db.delete('Rebooting'); db.delete(`User.Request`)
+    db.delete('Rebooting'); db.delete(`Request`);
 
     let Options = [e.Pikachu, e.NezukoDance, e.Deidara, e.NezukoJump, e.CoolDoge, e.Nagatoro, e.PatBear, 'Tô online.', 'Online', 'Login successfully']
     let Emoji = Options[Math.floor(Math.random() * Options.length)]

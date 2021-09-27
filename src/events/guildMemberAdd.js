@@ -96,7 +96,12 @@ client.on('guildMemberAdd', async (member) => {
     }
 
     async function Welcome() {
-        const canal = member.guild.channels.cache.get(db.get(`Servers.${member.guild.id}.WelcomeChannel`))
-        canal ? canal.send(`${e.Join} | ${member} entrou no servidor.`).catch(err => { member.guild.channels.cache.get(config.ownerId).send(`${e.Warn} | Erro no evento "guildMemberAdd" (Linha Emit: 97)\n\`${err}\``) }) : ''
+        let WS = db.get(`Servers.${member.guild.id}.WelcomeChannel`)
+        let MessageMsg = WS.Mensagem
+        MessageMsg ? MessageMsg = WS.Mensagem : MessageMsg = 'entrou no servidor.'
+        let Emoji = WS.Emoji
+        Emoji ? Emoji = WS.Emoji : Emoji = `${e.Join}`
+        const canal = await member.guild.channels.cache.get(WS.Canal)
+        canal ? canal.send(`${Emoji} | ${member} ${MessageMsg}`).catch(err => { member.guild.channels.cache.get(config.ownerId).send(`${e.Warn} | Erro no evento "guildMemberAdd" (Linha Emit: 104)\n\`${err}\``) }) : ''
     }
 })
