@@ -27,6 +27,7 @@ module.exports = {
             .addField('Pegue o ID', `\`${prefix}channel id <#canal>\``)
             .addField('Crie um convite', `\`${prefix}channel invite <#canal>\``)
             .addField('Sincrozine as permissiões com a categoria', `\`${prefix}channel sync [#canal]\``)
+            .addField('Crie canais Farming', `\`${prefix}channel farm buscar/pescar/mine\``)
 
         const canal = message.mentions.channels.first() || message.channel
         if (!args[0]) return message.reply({ embeds: [noargs] })
@@ -55,6 +56,9 @@ module.exports = {
                 break;
             case 'sync': case 'sincronize': case 'sincronizar':
                 Sync()
+                break;
+            case 'farm': case 'farmin': case 'farming':
+                Farm()
                 break;
             default: message.reply(`${e.Deny} | **${args[0]}** | Não está na lista de sub-comandos do comando \`${prefix}channel\`. <- Use este comando que te mando tudinho sobre o comando.`)
                 break;
@@ -123,11 +127,11 @@ module.exports = {
         }
 
         function ChannelDelete() {
-            if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+            if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
             if (args[2]) { return message.reply(`${e.Deny} | Tenta usar assim.\n\`${prefix}channel delete [#Canal(opcional)]\``) }
 
             return message.reply(`${e.QuestionMark} | Este comando vai literalmente deletar este canal, deseja prosseguir?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -137,16 +141,16 @@ module.exports = {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         canal.delete().catch(err => {
                             return message.reply('Ocorreu um erro na exclusão do canal.\n \n ' + err)
                         })
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Deny} | Request cancelada.`)
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Request cancelada por tempo expirado.`)
                 })
             })
@@ -172,5 +176,59 @@ module.exports = {
             }).catch(err => { return message.channel.send(`${e.Deny} | Ocorreu um erro ao trocar o nome do canal.\n\`${err}\``) })
         }
 
+        function Farm() {
+            args[1] ? Arguments = args[1] : Arguments = 'InvalidArgument'
+
+            switch (Arguments) {
+                case 'busca': case 'buscar':
+                    BuscaChannel()
+                    break;
+                case 'pesca': case 'pescar':
+                    PescaChannel()
+                    break;
+                case 'mine': case 'minerar':
+                    MineChannel()
+                    break;
+                default:
+                    message.reply(`${e.Deny} | Opções válidas para criação de canais farming: \`busca\` \`pesca\` \`minerar\``)
+                    break;
+            }
+
+            function BuscaChannel() {
+                if (db.get(`Servers.${message.guild.id}.BuscaChannel`)) {
+                    return message.reply(`${e.Info} | Já existe um canal farming neste servidor. -> <#${db.get(`Servers.${message.guild.id}.BuscaChannel`)}>`)
+                }
+                message.guild.channels.create('floresta-cammum', { type: 'GUILD_TEXT' }).then(channel => {
+                    db.set(`Servers.${message.guild.id}.BuscaChannel`, channel.id)
+                    let canal = message.guild.channels.cache.get(channel.id)
+                    canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
+                        canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}busca\`. Boa sorte!`).catch(() => { })
+                    }).catch(() => { })
+                    return message.reply(`${e.Check} | Canal farming criado com sucesso! | ${channel}`)
+                }).catch(err => { message.channel.send(`${e.Deny} | Ocorreu um erro ao criar o canal farming.\n\`${err}\``) })
+            }
+
+            function PescaChannel() {
+                message.guild.channels.create('farm-pesca', { type: 'GUILD_TEXT' }).then(channel => {
+                    db.set(`Servers.${message.guild.id}.PescaChannel`, channel.id)
+                    let canal = message.guild.channels.cache.get(channel.id)
+                    canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
+                        canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}pesca\`. Boa sorte!`).catch(() => { })
+                    }).catch(() => { })
+                    return message.reply(`${e.Check} | Canal farming criado com sucesso! | ${channel}`)
+                }).catch(err => { message.channel.send(`${e.Deny} | Ocorreu um erro ao criar o canal farming.\n\`${err}\``) })
+            }
+
+            function MineChannel() {
+                message.guild.channels.create('mineração', { type: 'GUILD_TEXT' }).then(channel => {
+                    db.set(`Servers.${message.guild.id}.MineChannel`, channel.id)
+                    let canal = message.guild.channels.cache.get(channel.id)
+                    canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
+                        canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}mine\`. Boa sorte!`).catch(() => { })
+                    }).catch(() => { })
+                    return message.reply(`${e.Check} | Canal farming criado com sucesso! | ${channel}`)
+                }).catch(err => { message.channel.send(`${e.Deny} | Ocorreu um erro ao criar o canal farming.\n\`${err}\``) })
+            }
+        }
     }
 }

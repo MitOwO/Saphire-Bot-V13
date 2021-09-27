@@ -14,9 +14,9 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.repliedUser
+        let user = message.mentions.members.first() || message.mentions.repliedUser
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja esconder.`) }
 
@@ -28,7 +28,7 @@ module.exports = {
         if (user) {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Confuse} | Por qual motivo você esconderia esse canal de um Administrador?`)
             message.channel.send(`${e.QuestionMark} | ${message.author}, ao esconder o canal de ${user}, você precisará entrar nas configurações do canal para reverter o ato ou responder qualquer mensagem do usuário e digitar o comando \`${prefix}unhide\``).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -41,17 +41,17 @@ module.exports = {
                         if (reaction.emoji.name === '✅') {
                             msg.edit(`${e.Loading} | Retirando ${user} do chat...`).catch(err => { })
                                 setTimeout(function () {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     message.channel.permissionOverwrites.create(user, { VIEW_CHANNEL: false })
                                     msg.edit(`🔒 | ${message.author} escondeu o canal de ${user}`)
                                 }, 1700)
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             msg.edit(`${e.NezukoDance} | Comando cancelado.`)
                             msg.reactions.removeAll().catch(err => { })
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`)
                     })
             })

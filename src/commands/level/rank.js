@@ -4,7 +4,7 @@ const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'rank',
-    aliases: ['podio'],
+    aliases: ['podio', 'ranking'],
     category: 'level',
     UserPermissions: '',
     ClientPermissions: 'EMBED_LINKS',
@@ -20,7 +20,7 @@ module.exports = {
             .setDescription('Aqui você pode ver os top 10 em cada clase')
             .addField('Ranking XP', '`' + prefix + 'rank xp`')
             .addField('Ranking Money', '`' + prefix + 'rank money`')
-            .addField('Ranking Reputação', '`' + prefix + 'rank reputação`')
+            .addField('Ranking Reputação', '`' + prefix + 'rank likes`')
 
         if (!args[0]) { return message.reply({ embeds: [RankingEmbed] }) }
 
@@ -41,7 +41,6 @@ module.exports = {
                 lb.push({ user: { id, tag: user }, rank, level, xp, xpreq })
             }
 
-
             const embedxp = new MessageEmbed()
                 .setColor('YELLOW')
                 .setTitle(`${e.Star} Ranking - Experiência`)
@@ -50,7 +49,7 @@ module.exports = {
             return message.reply({ embeds: [embedxp] })
 
         } else if (['xpid', 'levelid', 'nivelid'].includes(args[0])) {
-            if (message.author.id !== config.ownerId) return message.reply(`Ranking Fechado.`)
+            if (message.author.id !== config.ownerId) return
 
             let data = db.all().filter(i => i.ID.startsWith("Xp_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply(`${e.Deny} | Sem ranking por enquanto`)
@@ -62,7 +61,7 @@ module.exports = {
                 let user = await client.users.fetch(id)
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`level_${id}`); if (!level) level + 1
+                let level = db.get(`level_${id}`) || 1
                 let xp = db.get(`Xp_${id}`)
                 let xpreq = Math.floor(level * 550)
                 lb.push({ user: { id, tag: user }, rank, level, xp, xpreq })
@@ -103,10 +102,10 @@ module.exports = {
             embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
             return message.reply({ embeds: [embedxp] })
 
-        } else if (['rep', 'reputação'].includes(args[0])) {
-            let data = db.all().filter(i => i.ID.startsWith("rp_")).sort((a, b) => b.data - a.data)
+        } else if (['like', 'curtidas', 'likes'].includes(args[0])) {
+            let data = db.all().filter(i => i.ID.startsWith("Likes_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply("Sem ranking por enquanto")
-            let myrank = data.map(m => m.ID).indexOf(`rp_${message.author.id}`) + 1 || "N/A"
+            let myrank = data.map(m => m.ID).indexOf(`Likes_${message.author.id}`) + 1 || "N/A"
             data.length = 10
             let lb = []
             for (let i in data) {
@@ -114,22 +113,23 @@ module.exports = {
                 let user = await client.users.fetch(id)
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`rp_${id}`)
+                let level = db.get(`Likes_${id}`)
                 let xp = data[i].data
                 lb.push({ user: { id, tag: user }, rank, level, xp, })
             }
 
             const embedrep = new MessageEmbed()
                 .setColor('YELLOW')
-                .setTitle("👑 Ranking - Reputação")
-            lb.forEach(d => { embedrep.addField(`${d.rank}. ${d.user.tag}`, `💌 ${d.level} Reputações`) })
+                .setTitle(`👑 Ranking - Likes`)
+            lb.forEach(d => { embedrep.addField(`${d.rank}. ${d.user.tag}`, `${e.Like} ${d.level} Likes`) })
             embedrep.setFooter(`Seu ranking: ${myrank}`)
             return message.reply({ embeds: [embedrep] })
 
         } else if (['repid', 'reputaçãoid'].includes(args[0])) {
-            let data = db.all().filter(i => i.ID.startsWith("rp_")).sort((a, b) => b.data - a.data)
+            if (message.author.id !== config.ownerId) return
+            let data = db.all().filter(i => i.ID.startsWith("Likes_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply("Sem ranking por enquanto")
-            let myrank = data.map(m => m.ID).indexOf(`rp_${message.author.id}`) + 1 || "N/A"
+            let myrank = data.map(m => m.ID).indexOf(`Likes_${message.author.id}`) + 1 || "N/A"
             data.length = 10
             let lb = []
             for (let i in data) {
@@ -137,7 +137,7 @@ module.exports = {
                 let user = await client.users.fetch(id)
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`rp_${id}`)
+                let level = db.get(`Likes_${id}`)
                 let xp = data[i].data
                 lb.push({ user: { id, tag: user }, rank, level, xp, })
             }

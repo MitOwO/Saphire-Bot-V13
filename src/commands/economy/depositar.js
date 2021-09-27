@@ -1,5 +1,4 @@
 const { e } = require('../../../Routes/emojis.json')
-const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
@@ -13,13 +12,6 @@ module.exports = {
     description: 'Deposite dinheiro no banco',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
-
-        let timeout2 = 7200000
-        let author2 = db.get(`User.${message.author.id}.Timeouts.Preso`)
-        if (author2 !== null && timeout2 - (Date.now() - author2) > 0) {
-            let time = ms(timeout2 - (Date.now() - author2))
-            return message.reply(`Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``)
-        } else {
 
             let money = db.get(`Balance_${message.author.id}`) || 0
 
@@ -49,5 +41,4 @@ module.exports = {
             db.subtract(`Balance_${message.author.id}`, Amount)
             return message.reply(`${e.Check} | ${message.author} depositou ${Amount} ${Moeda(message)}`)
         }
-    }
 }

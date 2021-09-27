@@ -14,8 +14,9 @@ module.exports = {
 
   run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-    let user = message.mentions.users.first() || message.author || message.repliedUser
+    let user = message.mentions.users.first() || message.author || message.mentions.repliedUser
     let avatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
+    if (user.id === client.user.id) return message.reply('Ó, tu para!')
 
     const image = await canvacord.affect(avatar)
     const affect = new Discord.MessageAttachment(image, 'affect.png')

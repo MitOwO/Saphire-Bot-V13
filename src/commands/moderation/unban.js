@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         if (!args[0]) return message.reply(`${e.Info} | Para desbanir um usuário, é necessário o ID dele. Para ver todos os membros banidos do servidor, use \`${prefix}ban list\`, basta copiar o ID e usar \`${prefix}unban ID [...Motivo]\``)
 
         let msgreason = args.slice(1).join(" ")
@@ -27,7 +27,7 @@ module.exports = {
 
         await message.guild.bans.fetch(ID).then(() => {
             return message.channel.send(`${e.QuestionMark} | Deseja desbanir o ID \`${ID}\` ?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -41,17 +41,17 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         message.guild.bans.remove(ID, reason).then(ban => {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             IdChannel ? Notify(ban) : message.channel.send(`${e.NotStonks} | Servidor sem meu sistema logs? Usa \`${prefix}logs\` aí poxa...\n${e.Stonks} | But, no problem! ${ban.tag} foi desban com sucesso.`)
                             msg.delete().catch(() => { })
                         }).catch(err => { return message.channel.send(`${e.Warn} | O desban falhou! Caso você não saiba resolver o problema, use \`${prefix}bug\` e reporte o problema.\n\`${err}\``) })
 
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Check} | Request abortada | ${ID}/${message.author.id}/${message.guild.id}`)
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Check} | Request abortada: Tempo expirado | ${ID}/${message.author.id}/${message.guild.id}`)
                 })
 

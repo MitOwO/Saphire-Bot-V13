@@ -15,6 +15,9 @@ module.exports = {
 
     let user = message.mentions.members.first()
 
+    let NoReactAuthor = db.get(`${message.author.id}.NoReact`)
+    if (NoReactAuthor) return message.reply(`${e.Deny} | Você está com o \`${prefix}noreact\` ativado.`)
+
     const LoveEmbedSemArgs = new MessageEmbed()
       .setColor('RED')
       .setTitle(`${e.NezukoDance} Medidor de Amor da ${client.user.username}`)
@@ -26,6 +29,9 @@ module.exports = {
     if (user.id === client.user.id) { return message.reply(`${e.Deny} | Opa, opa! Eu não namoro ninguém, muito menos gosto, vou ficar te devendo essa.`) }
     if (user.id === message.author.id) { return message.reply(`${e.Deny} | Gostei do seu amor próprio, mas assim... Não é assim que esse comando funciona sabe...`) }
     if (args[2]) { return message.reply(`${e.Deny} | Só marca até duas pessoas, tá bom?`) }
+
+    let NoReact = db.get(`${user.id}.NoReact`)
+    if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
     if (args[1]) {
       let user2 = message.mentions.members.last()

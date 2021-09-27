@@ -12,14 +12,14 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let oculto = db.get(`User.${message.author.id}.BankOcult`)
+        let oculto = db.get(`${message.author.id}.BankOcult`)
         if (args[1]) return message.reply(`${e.Deny} | Não diga nada além do comando em si.`)
 
         if (['off', 'desligar', 'no'].includes(args[0])) {
             if (!oculto) {
                 return message.reply(`${e.Deny} | O seu banco não está ocultado.`)
             } else {
-                db.delete(`User.${message.author.id}.BankOcult`)
+                db.delete(`${message.author.id}.BankOcult`)
                 return message.reply(`${e.Check} | O seu banco não está mais ocultado.`)
             }
         }
@@ -27,7 +27,7 @@ module.exports = {
         if (oculto) {
             return message.reply(`${e.Deny} | O seu banco já está ocultado.`)
         } else {
-            db.set(`User.${message.author.id}.BankOcult`, 'OCULT')
+            db.set(`${message.author.id}.BankOcult`, true)
             return message.reply(`${e.Check} | O seu banco está ocultado.`)
         }
 

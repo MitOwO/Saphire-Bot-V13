@@ -1,6 +1,7 @@
 const { e } = require('../../../Routes/emojis.json')
 const { config } = require('../../../Routes/config.json')
 const Moeda = require('../../../Routes/functions/moeda')
+const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
     name: 'balance',
@@ -14,18 +15,24 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first() || message.member || message.repliedUser
+        let u = message.mentions.members.first() || client.users.cache.get(args[0]) || message.member || message.mentions.repliedUser
+        let user = client.users.cache.get(u.id)
+        if (!isNaN(args[0]) && !client.users.cache.get(args[0])) {
+            if (!user) return message.reply(`${e.Deny} | Eu não encontrei ninguém com esse ID...`)
+        }
 
-        let bal = await parseInt(db.get(`Balance_${user.id}`)) || 0
+        let bal = parseInt(db.get(`Balance_${user.id}`)) || 0
         let bank = parseInt(db.get(`Bank_${user.id}`)) || 0
         let vip = db.get(`Vip_${user.id}`)
-        let oculto = db.get(`User.${user.id}.BankOcult`)
-        let list = [`Quer ocultar o banco? \`${prefix}ocultar\``, 'Pessoas podem te roubar, tenha cuidado.', 'Mantenha seu dinheiro no banco', 'Sabia que você pode roubar o dinheiro de outras pessoas?', 'Já jogou blackjack hoje?', 'O banco é impossível de roubar.', 'A loteria é um bom lugar para investir', 'Jogadores com arma podem pegar todo dinheiro da carteira', 'Existem vários meios de se obter dinheiro', 'Na loja tem vários itens legais para se comprar', 'Os melhores players tem mais estrelas no perfil', 'Já viu o ranking hoje?', 'Você pode dobrar seu dinheiro no blackjack', 'A roleta é uma boa forma de ganhar e perder dinheiro', 'Já pescou hoje?', 'Já minerou hoje?', 'A loteria é um bom lugar para os sortudos', 'Já apostou na loteria hoje?']
-        let frase = list[Math.floor(Math.random() * list.length)]
+        let oculto = db.get(`${user.id}.BankOcult`)
+        let frase = f.BalanceTypes[Math.floor(Math.random() * f.BalanceTypes.length)]
+        let cache = db.get(`${user.id}.Cache.Resgate`) || 0
+        let avatar = user?.displayAvatarURL({ dynamic: true }) || user.user.displayAvatarURL({ dynamic: true })
+        let name = user.username || user.user.username
 
         const embed = new MessageEmbed()
             .setColor('YELLOW')
-            .setAuthor(`Finanças de ${user.user.username}`, user.user.displayAvatarURL({ dynamic: true }))
+            .setAuthor(`Finanças de ${name}`, avatar)
             .setDescription(frase)
             .addField('👝 Carteira', `${bal} ${Moeda(message)}`, true)
 
@@ -40,6 +47,9 @@ module.exports = {
                 embed.addField('🏦 Banco', `||Oculto|| ${Moeda(message)}`, true)
             }
         }
+
+        embed.addField('📦 Cache', `${cache} ${Moeda(message)}`)
+            .setFooter(`Dinhero no cache? ${prefix}resgatar`)
 
         if (vip) { embed.setDescription(`${e.Star} ${frase}`) }
         return message.reply({ embeds: [embed] })

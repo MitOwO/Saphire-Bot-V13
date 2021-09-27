@@ -13,6 +13,8 @@ module.exports = {
 
   run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
+    // return message.reply(`${e.Loading} | O comando clear está com vida própria, então está fechado para uma reforminha`)
+
     const clearembed = new MessageEmbed()
       .setColor("BLUE")
       .setTitle("🧹 Comando Clear")
@@ -69,19 +71,21 @@ module.exports = {
         }).catch(err => { return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
       }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
-    } else if (typeof (parseInt(args[0])) == "number") {
-      return message.reply(`Calminha que este comando está passando por uma reforma.`)
+    } else if (typeof parseInt(args[0]) === "number") {
 
-      message.delete().then(() => {
+      message.delete().then(async () => {
 
-        if (isNaN(args[0])) { return message.channel.send(`${e.Deny} | Hey! Me fala números para que eu possa contar, ok?`) }
-        if (args[1]) { return message.reply(`${e.Deny} | Nada além do ${args[0]}! Use \`${prefix}clear\` para mais informações.`) }
+        if (isNaN(args[0])) return message.channel.send(`${e.Deny} | Hey! Me fala números para que eu possa contar, ok?`)
+        if (args[1]) return message.reply(`${e.Deny} | Nada além do ${args[0]}! Use \`${prefix}clear\` para mais informações.`)
         if (parseInt(args[0]) > 100 || parseInt(args[0]) < 1) return message.reply(`${e.Deny} | Me fala um número de 0 a 100, ok?`)
 
-        message.channel.messages.fetch({ limit: parseInt(args[0]) }).then(messages => {
+        await message.channel.messages.fetch({ limit: parseInt(args[0]) }).then(messages => {
           message.channel.bulkDelete(messages).then(msg => {
             message.channel.send(`${e.Check} | Deletei um total ${msg.size} mensagens sob as ordens de ${message.author}`)
-          }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+          }).catch(err => {
+            Error(message, err)
+            return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
+          })
         })
       }).catch(err => {
         Error(message, err)

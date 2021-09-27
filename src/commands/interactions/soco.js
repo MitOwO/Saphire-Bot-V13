@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const { g } = require('../../../Routes/Images/gifs.json')
+const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
     name: 'soco',
@@ -12,9 +13,9 @@ module.exports = {
     description: 'Dê um soco em quem merece',
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
-        let NoReactAuthor = db.get(`User.${message.author.id}.NoReact`)
+        let NoReactAuthor = db.get(`${message.author.id}.NoReact`)
         if (NoReactAuthor) return message.reply(`${e.Deny} | Você está com o \`${prefix}noreact\` ativado.`)
 
         let rand = g.Soco[Math.floor(Math.random() * g.Soco.length)]
@@ -27,7 +28,7 @@ module.exports = {
 
         if (user.id === message.author.id) { return message.reply(`${e.Deny} | Não bata em você mesmo, poxa...`) }
 
-        let NoReact = db.get(`User.${user.id}.NoReact`)
+        let NoReact = db.get(`${user.id}.NoReact`)
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
         const embed = new MessageEmbed()
@@ -37,8 +38,7 @@ module.exports = {
             .setFooter('🔁 retribuir')
 
         return message.reply({ embeds: [embed] }).then(msg => {
-            db.set(`User.Request.${message.author.id}`, 'ON')
-            db.set(`User.Request.${user.id}`, 'ON')
+            db.set(`Request.${message.author.id}`, `${msg.url}`)
             msg.react('🔁').catch(err => { }) // Check
 
             const filter = (reaction, u) => { return ['🔁'].includes(reaction.emoji.name) && u.id === user.id }
@@ -47,13 +47,13 @@ module.exports = {
                 const reaction = collected.first()
 
                 if (reaction.emoji.name === '🔁') {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`${message.author} e ${user} estão trocando socos!`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Soco[Math.floor(Math.random() * g.Soco.length)])
                     msg.edit({ embeds: [TradeEmbed] }).catch(err => { })
                 }
 
             }).catch(() => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 embed.setColor('RED').setDescription(`${e.Deny} | ${message.author} deu socos em ${user} e ele(a) saiu correndo.`).setFooter(`${message.author.id}/${user.id}`)
                 msg.edit({ embeds: [embed] }).catch(err => { })
             })

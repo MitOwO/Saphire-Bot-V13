@@ -1,164 +1,150 @@
 const { e } = require('../../../Routes/emojis.json')
 const ms = require("parse-ms")
-const { f } = require('../../../Routes/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'crime',
     category: 'economy',
     UserPermissions: '',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: 'MANAGE_MESSAGES',
     emoji: `${e.PandaBag}`,
     usage: '<crime> [... category]',
     description: 'A vida no crime não é um bom negócio',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (['info', 'help', 'ajuda', 'status'].includes(args[0])) {
+        if (['info', 'help', 'ajuda', 'status'].includes(args[0])) return CrimeHelp()
+
+        let timeout5 = 250000
+        let crimetime = db.get(`${message.author.id}.Timeouts.Crime`)
+        if (crimetime !== null && timeout5 - (Date.now() - crimetime) > 0) {
+            let time = ms(timeout5 - (Date.now() - crimetime))
+            return message.reply(`Calminha! O mundo do crime é perigoso, volte em \`${time.minutes}m e ${time.seconds}s\``)
+        } else {
+
+            return message.reply(`${e.QuestionMark} | Qual lugar você deseja roubar? *Você pode ser preso e perder dinheiro.*\n \n🏠 Casa\n🏦 Mansão\n🏛️ Prefeitura\n🏣 Cartório\n📨 Correios\n💍 joalheria\n🏢 Shopping\n🏭 Fabrica\n🏩 Motel\n🪙 Banco\n${e.Deny} Cancelar`).then(msg => {
+
+                const filter = m => m.author.id === message.author.id
+                const collector = message.channel.createMessageCollector({ filter, max: 1, time: 15000 });
+                db.set('Edit', true)
+                // 🏠 1  Casa - 🏦 2 Mansão - 🏛️ 3 Prefeitura - 🏣 4 Cartório - 📨 5 Correios - 💍 6 joalheria - 🏢 7 Shopping - 🏭 8 Fabrica - 🏩 9 Motel - 🪙 10 Banco
+                collector.on('collect', m => {
+                    db.delete('Edit')
+                    let content = m.content.toLowerCase()
+                    db.set(`${message.author.id}.Timeouts.Crime`, Date.now())
+
+                    switch (content) {
+                        case 'casa': Casa(); break;
+                        case 'mansão': case 'mansao': Mansao(); break;
+                        case 'prefeitura': Prefeitura(); break;
+                        case 'cartorio': case 'cartório': Cartorio(); break;
+                        case 'correios': Correios(); break;
+                        case 'joalheria': joalheria(); break;
+                        case 'shopping': Shopping(); break;
+                        case 'fabrica': Fabrica(); break;
+                        case 'motel': Motel(); break;
+                        case 'banco': Banco(); break;
+                        case 'cancelar': case 'cancel': msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { }); db.delete(`${message.author.id}.Timeouts.Crime`, Date.now()); break;
+                        default: msg.edit(`${e.Deny} | Comando cancelado: Resposta invalida.`).catch(() => { }); db.delete(`${message.author.id}.Timeouts.Crime`, Date.now()); break;
+                    }
+                });
+
+                setTimeout(() => {
+                    if (db.get('Edit')) {
+                        msg.edit(`${e.Deny} | Comando cancelado: Tempo expirado.`).catch(() => { });
+                        db.delete(`${message.author.id}.Timeouts.Crime`, Date.now());
+                    }
+                }, 15000)
+
+                // FUNCTIONS
+                function Preso() { db.set(`${message.author.id}.Timeouts.Preso`, Date.now()) }
+                function Result() { return Math.floor(Math.random() * 101) }
+                let multa = Math.floor(Math.random() * 4001)
+
+                function Casa() {
+                    let amount = Math.floor(Math.random() * 400) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou uma casa.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 70 ? Win() : Lose()
+                }
+
+                function Mansao() {
+                    let amount = Math.floor(Math.random() * 2000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou uma mansão.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 50 ? Win() : Lose()
+                }
+
+                function Prefeitura() {
+                    let amount = Math.floor(Math.random() * 300) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou a prefeitura.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 40 ? Win() : Lose()
+                }
+
+                function Cartorio() {
+                    let amount = Math.floor(Math.random() * 23000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou o cartório.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 30 ? Win() : Lose()
+                }
+
+                function Correios() {
+                    let amount = Math.floor(Math.random() * 15000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou os correios.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 45 ? Win() : Lose()
+                }
+
+                function joalheria() {
+                    let amount = Math.floor(Math.random() * 240000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou uma joalheria.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 12 ? Win() : Lose()
+                }
+
+                function Shopping() {
+                    let amount = Math.floor(Math.random() * 9000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou um shopping.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 60 ? Win() : Lose()
+                }
+
+                function Fabrica() {
+                    let amount = Math.floor(Math.random() * 10000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou uma fábrica.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 49 ? Win() : Lose()
+                }
+
+                function Motel() {
+                    let amount = Math.floor(Math.random() * 1000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou um motel.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 80 ? Win() : Lose()
+                }
+
+                function Banco() {
+                    let amount = Math.floor(Math.random() * 1805000) + 1
+                    function Win() { db.add(`Balance_${message.author.id}`, amount); return msg.edit(`${e.PandaBag} | ${message.author} roubou um banco.\n+ ${amount} ${Moeda(message)}`).catch(() => { }) }
+                    function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return msg.edit(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`).catch(() => { }) }
+                    Result() <= 5 ? Win() : Lose()
+                }
+            }).catch(err => {
+                Error(message, err)
+                return message.reply(`${e.Deny} | Algo de errado não está certo.\n\`${err}\``)
+            })
+        }
+
+        function CrimeHelp() {
             const Info = new MessageEmbed()
                 .setColor('#2f3136')
                 .setTitle(`${e.Info} | Detalhes do comando Crime`)
                 .setDescription(`Com o comando Crime, você pode obter dinheiro de forma perigosa, porém, pode ser preso e perder dinheiro.`)
-                .addField(`Chances e Porcentagens de Sucesso`, '🏠 Casa: 70%\n🏦 Mansão: 50%\n🏛️ Prefeitura: 40%\n🏣 Cartório: 30%\n📨 Correios: 45%\n💍 Joaleria: 25%\n🏢 Shopping: 60%\n🏭 Fabrica: 49%\n🏩 Motel: 80%\n🪙 Banco: 5%')
+                .addField(`Chances e Porcentagens de Sucesso`, '🏠 Casa: 70%\n🏦 Mansão: 50%\n🏛️ Prefeitura: 40%\n🏣 Cartório: 30%\n📨 Correios: 45%\n💍 joalheria: 12%\n🏢 Shopping: 60%\n🏭 Fabrica: 49%\n🏩 Motel: 80%\n🪙 Banco: 5%')
                 .addField(`Observação`, `Quanto menor a chance, maior é a recompensa.\nCasa: 400 ~~~~ Banco: 18050000 ${Moeda(message)}\n~O valor obtido é aleatório.`)
             return message.reply({ embeds: [Info] })
-        }
-
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
-
-        let timeout2 = 7200000
-        let author2 = db.get(`User.${message.author.id}.Timeouts.Preso`)
-        if (author2 !== null && timeout2 - (Date.now() - author2) > 0) {
-            let time = ms(timeout2 - (Date.now() - author2))
-            return message.reply(`Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``)
-        } else {
-
-            let timeout5 = 180000
-            let crimetime = db.get(`User.${message.author.id}.Timeouts.Crime`)
-            if (crimetime !== null && timeout5 - (Date.now() - crimetime) > 0) {
-                let time = ms(timeout5 - (Date.now() - crimetime))
-                return message.reply(`Calminha! O mundo do crime é perigoso, volte em \`${time.minutes}m e ${time.seconds}s\``)
-            } else {
-
-                db.set(`User.${message.author.id}.Timeouts.Crime`, Date.now())
-
-                return message.reply(`${e.QuestionMark} | Qual lugar você deseja roubar? *Você pode ser preso e perder dinheiro.*\n \n🏠 Casa\n🏦 Mansão\n🏛️ Prefeitura\n🏣 Cartório\n📨 Correios\n💍 Joaleria\n🏢 Shopping\n🏭 Fabrica\n🏩 Motel\n🪙 Banco`).then(msg => {
-                    db.set(`User.${message.author.id}.Timeouts.Procurado`, Date.now())
-                    db.set(`User.Request.${message.author.id}`, 'ON')
-                    msg.react('❌').catch(err => { }) // X
-                    msg.react('🏠').catch(err => { }) // 1
-                    msg.react('🏦').catch(err => { }) // 2
-                    msg.react('🏛️').catch(err => { }) // 3
-                    msg.react('🏣').catch(err => { }) // 4
-                    msg.react('📨').catch(err => { }) // 5
-                    msg.react('💍').catch(err => { }) // 6
-                    msg.react('🏢').catch(err => { }) // 7
-                    msg.react('🏭').catch(err => { }) // 8
-                    msg.react('🏩').catch(err => { }) // 9
-                    msg.react('🪙').catch(err => { }) // 10
-                    // 🏠 1  Casa - 🏦 2 Mansão - 🏛️ 3 Prefeitura - 🏣 4 Cartório - 📨 5 Correios - 💍 6 Joaleria - 🏢 7 Shopping - 🏭 8 Fabrica - 🏩 9 Motel - 🪙 10 Banco
-
-                    const filter = (reaction, user) => { return ['🏠', '🏦', '🏛️', '🏣', '📨', '💍', '🏢', '🏭', '🏩', '🪙'].includes(reaction.emoji.name) && user.id === message.author.id }
-                    msg.awaitReactions({ filter, max: 1, time: 20000, errors: ['time'] }).then(collected => {
-                        const reaction = collected.first()
-
-                        switch (reaction.emoji.name) {
-                            case '❌': MsgDelete(); break;
-                            case '🏠': MsgDelete(); Casa(); break;
-                            case '🏦': MsgDelete(); Mansao(); break;
-                            case '🏛️': MsgDelete(); Prefeitura(); break;
-                            case '🏣': MsgDelete(); Cartorio(); break;
-                            case '📨': MsgDelete(); Correios(); break;
-                            case '💍': MsgDelete(); Joaleria(); break;
-                            case '🏢': MsgDelete(); Shopping(); break;
-                            case '🏭': MsgDelete(); Fabrica(); break;
-                            case '🏩': MsgDelete(); Motel(); break;
-                            case '🪙': MsgDelete(); Banco(); break;
-                            default: message.channel.send(`${e.Deny} | Aconteceu algo que não era para acontecer. Use o comando novamente.`); break;
-                        }
-
-                    }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`); db.delete(`User.${message.author.id}.Timeouts.Procurado`)
-                        msg.edit(`${e.Deny} | Request cancelada: Tempo esgotado.`); db.delete(`User.${message.author.id}.Timeouts.Procurado`)
-                    })
-
-                    // FUNCTIONS
-                    function MsgDelete() { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { db.delete(`User.${message.author.id}.Timeouts.Procurado`); return message.channel.send(`${e.Deny} | Error Class: Interferência | Não apague minhas mensagens para não haver interferências e interrupções nos meus comandos.`) }) }
-                    function Preso() { db.set(`User.${message.author.id}.Timeouts.Preso`, Date.now()) }
-                    function Result() { return Math.floor(Math.random() * 101) }
-                    let multa = Math.floor(Math.random() * 4001)
-
-                    function Casa() {
-                        let amount = Math.floor(Math.random() * 400) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou uma casa.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 70 ? Win() : Lose()
-                    }
-
-                    function Mansao() {
-                        let amount = Math.floor(Math.random() * 2000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou uma mansão.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 50 ? Win() : Lose()
-                    }
-
-                    function Prefeitura() {
-                        let amount = Math.floor(Math.random() * 300) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou a prefeitura.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 40 ? Win() : Lose()
-                    }
-
-                    function Cartorio() {
-                        let amount = Math.floor(Math.random() * 23000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou o cartório.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 30 ? Win() : Lose()
-                    }
-
-                    function Correios() {
-                        let amount = Math.floor(Math.random() * 15000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou os correios.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 45 ? Win() : Lose()
-                    }
-
-                    function Joaleria() {
-                        let amount = Math.floor(Math.random() * 240000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou uma joaleria.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 25 ? Win() : Lose()
-                    }
-
-                    function Shopping() {
-                        let amount = Math.floor(Math.random() * 9000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou um shopping.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 60 ? Win() : Lose()
-                    }
-
-                    function Fabrica() {
-                        let amount = Math.floor(Math.random() * 10000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou uma fabrica.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 49 ? Win() : Lose()
-                    }
-
-                    function Motel() {
-                        let amount = Math.floor(Math.random() * 1000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou um motel.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 80 ? Win() : Lose()
-                    }
-
-                    function Banco() {
-                        let amount = Math.floor(Math.random() * 1805000) + 1
-                        function Win() { db.add(`Balance_${message.author.id}`, amount); return message.reply(`${e.PandaBag} | ${message.author} roubou um motel.\n+ ${amount} ${Moeda(message)}`) }
-                        function Lose() { db.subtract(`Balance_${message.author.id}`, multa); Preso(); return message.reply(`${e.Sirene} | A polícia te prendeu!\n-${multa} ${Moeda(message)}`) }
-                        Result() <= 5 ? Win() : Lose()
-                    }
-                })
-            }
         }
     }
 }

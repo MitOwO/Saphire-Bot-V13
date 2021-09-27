@@ -16,17 +16,23 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let timeout = 600000
-        let author = db.get(`User.${message.author.id}.Timeouts.Cu`)
+        let author = db.get(`${message.author.id}.Timeouts.Cu`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
             return message.reply(`${e.Deny} | Pelo bem do seu querido anûs, espere mais \`${time.minutes}m e ${time.seconds}s\``)
         } else {
 
-            if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+            if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
-            return message.reply(`${e.Warn} | O anús é algo valioso, você realmente deseja entrega-lo por dinheiro?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+            let user = message.mentions.members.first() || message.guild.members.cache.get(args[0])
+
+            let msg = `${e.Warn} | O anús é algo valioso, você realmente deseja entrega-lo por dinheiro?`
+            if (user) msg = `${e.Warn} | Você realmente deseja sacrificar o anûs de ${user.user.username} por dinheiro?`
+            if (user?.id === client.user.id) return message.reply('Saiiii, fumo pólvora?')
+
+            return message.reply(`${msg}`).then(msg => {
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -42,22 +48,22 @@ module.exports = {
                         let din = Math.floor(Math.random() * 100) + 1
 
                         if (result === "win") {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             db.add(`Balance_${message.author.id}`, din)
-                            db.set(`User.${message.author.id}.Timeouts.Cu`, Date.now())
-                            return msg.edit(`${e.Check} | ${message.author}, o cliente anônimo gostou dos seus serviços e te pagou +${din}${Moeda(message)}`)
+                            db.set(`${message.author.id}.Timeouts.Cu`, Date.now())
+                            return msg.edit(`${e.Check} | ${message.author}, o cliente anônimo gostou dos serviços e te pagou +${din}${Moeda(message)}`).catch(err => { })
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             db.subtract(`Balance_${message.author.id}`, din)
-                            db.set(`User.${message.author.id}.Timeouts.Cu`, Date.now())
-                            return msg.edit(`${e.Deny} | ${message.author}, o cliente anônimo não gostou dos seus serviços e seu prejuízo foi de -${din}${Moeda(message)}`)
+                            db.set(`${message.author.id}.Timeouts.Cu`, Date.now())
+                            return msg.edit(`${e.Deny} | ${message.author}, o cliente anônimo não gostou dos serviços e seu prejuízo foi de -${din}${Moeda(message)}`).catch(err => { })
                         }
                     } else {
-                        msg.edit(`${e.Deny} | Comando cancelado`)
-                        msg.reactions.removeAll().catch(err => { })
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Comando cancelado`).catch(err => { })
                     }
                 }).catch(() => {
-                    msg.edit(`${e.Deny} | Comando cancelado | Tempo expirado`)
+                    msg.edit(`${e.Deny} | Comando cancelado | Tempo expirado`).catch(err => { })
                 })
 
             })

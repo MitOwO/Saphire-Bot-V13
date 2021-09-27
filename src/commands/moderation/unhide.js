@@ -14,7 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.repliedUser
+        let user = message.mentions.members.first() || message.mentions.repliedUser
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja esconder.`) }
 

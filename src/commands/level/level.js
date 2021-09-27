@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first() || message.member || message.repliedUser
+        let user = message.mentions.members.first() || message.member || message.mentions.repliedUser
         let avatar = user.user.displayAvatarURL({ format: "png", size: 1024 })
 
         if (user.user.bot) return message.reply(`${e.Deny} | Bots não possuem experiência.`)
@@ -38,7 +38,7 @@ module.exports = {
             .setProgressBarTrack('#FFFFFF')
             .setLevel(level)
 
-        if (user.presence.status) { card.setStatus(user.presence.status) }
+        user.presence?.status ? card.setStatus(user.presence.status) : ''
 
         await card.build().then(card => {
             const RankImage = new MessageAttachment(card, 'RankCard.png')

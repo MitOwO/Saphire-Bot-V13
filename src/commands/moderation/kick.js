@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         let member
         if (!isNaN(args[0])) {
@@ -36,7 +36,7 @@ module.exports = {
         if (member.id === message.author.id) { return message.reply(`${e.Deny} | Foi mal, mas eu não vou te expulsar.`) }
 
         return message.reply(`${e.QuestionMark} | Você deseja expulsar ${member} do servidor pelo motivo: **${reason}**`).then(msg => {
-            db.set(`User.Request.${message.author.id}`, 'ON')
+            db.set(`Request.${message.author.id}`, `${msg.url}`)
             msg.react('✅').catch(err => { }) // Check
             msg.react('❌').catch(err => { }) // X
 
@@ -46,7 +46,7 @@ module.exports = {
                 const reaction = collected.first()
 
                 if (reaction.emoji.name === '✅') {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     const KickEmbed = new MessageEmbed().setColor('BLUE')            .setTitle(`🛰️ | Global System Notification | Kick`).setThumbnail(member.user.displayAvatarURL({ dynamic: true })).addField('Usuário Expulso', member.user.tag).addField('ID', `*\`${member.user.id}\`*`).addField('Kickado por', message.author.username).addField('Razão', reason).setFooter(`${message.guild.name}`).setTimestamp()
                     member.kick([`Author do Kick: ${message.author.tag} | ${reason}`]).then(() => {
 
@@ -58,11 +58,11 @@ module.exports = {
                     })
 
                 } else {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}`).catch(err => { })
                 }
             }).catch(err => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 msg.edit(`${e.Deny} | Request cancelada: Tempo expirado | ${message.author.id}`).catch(err => { })
             })
         })

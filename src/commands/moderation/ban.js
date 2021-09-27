@@ -15,7 +15,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let IdChannel = db.get(`Servers.${message.guild.id}.LogChannel`)
 
         let reason = args.slice(1).join(" ")
@@ -49,7 +49,7 @@ module.exports = {
             }).catch(() => {
 
                 return message.reply(`${e.QuestionMark} | Desejar forçar o ban do ID \`${ID}\` ?`).then(msg => {
-                    db.set(`User.Request.${message.author.id}`, 'ON')
+                    db.set(`Request.${message.author.id}`, `${msg.url}`)
                     msg.react('✅').catch(err => { }) // e.Check
                     msg.react('❌').catch(err => { }) // X
 
@@ -59,18 +59,18 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             return message.guild.bans.create(ID).then(ban => {
                                 IdChannel ? (message.reply(`${e.Check} | Prontinho! Eu mandei as informações no canal <#${IdChannel}>`), Notify(ban, true)) : message.reply(`${e.Check} | Prontinho! Eu não achei o canal de logs no servidor :( Ativa ele ou apenas veja do que ele é capaz -> \`-logs\``)
                             }).catch(err => {
                                 return message.channel.send(`${e.Info} | Este usuário não existe ou é dono do servidor ou eu não tenho permissão o suficiente.\n${err}`)
                             })
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             msg.edit(`${e.Check} | Request FORCEBAN abortada | ${ID}/${message.author.id}/${message.guild.id}`)
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Check} | Request FORCEBAN abortada: Tempo Expirado | ${ID}/${message.author.id}/${message.guild.id}`)
                     })
                 })
@@ -88,7 +88,7 @@ module.exports = {
             if (!user.bannable) return message.reply(`${e.Confuse} | Por algum motivo eu não posso banir esta pessoa.`)
 
             return message.reply(`${e.QuestionMark} | ${message.author}, você está prestes a banir ${user} do servidor pelo motivo -> "**${reason}**".\nDeseja prosseguir com o banimento?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -99,18 +99,18 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         user.ban({ days: 7, reason: reason }).then(ban => {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             IdChannel ? (msg.edit(`${e.Check} | Prontinho chefe! Eu mandei as informações no canal <#${IdChannel}>`), Notify(ban, false)) : message.reply(`${e.Check} | Feito! Cof Cof... \`-logs\``)
                         }).catch(err => {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             message.reply(`${e.Warn} | Ocorreu um erro durante o banimento... Caso você não saiba resolver, use o comando \`${prefix}bug\` e relate o problema.\n\`${err}\``)
                         })
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Check} | Request BAN abortada | ${user.id}/${message.author.id}/${message.guild.id}`)
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Check} | Request BAN abortada: Tempo Expirado | ${user.id}/${message.author.id}/${message.guild.id}`)
                 })
             })

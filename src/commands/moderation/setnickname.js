@@ -14,7 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
 
-        let user = message.mentions.members.first() || message.repliedUser
+        let user = message.mentions.members.first() || message.mentions.repliedUser
         if (user) {
             if (user.id === message.guild.ownerId) { return message.reply(`${e.Deny} | Opa, não posso alterar o nick do grande ser e honrado/a dono/a do servidor.`) }
             if (user.id === message.author.id) { return message.reply(`${e.Deny} | Para mudar seu próprio nome, você não precisa se marcar, sabia? ${e.Nagatoro}`) }
