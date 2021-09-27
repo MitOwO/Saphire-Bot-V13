@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         if (!message.guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG)) { return message.reply('⚖️ | Eu não tenho a permissão: "Ver o registro de auditoria"') }
         if (!message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) { return message.reply('⚖️ | Eu não tenho a permissão: "Gerenciar canais"') }
@@ -43,7 +43,7 @@ module.exports = {
             if (!atual) return message.reply(`${e.Info} | O Sistema GSN não está ativado.`)
 
             return message.reply(`${e.QuestionMark} | Você deseja desativar o Sistema GSN?\nCanal atual: <#${atual}> ?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -55,19 +55,19 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`${e.Loading} | Autenticando request...`)
+                            msg.edit(`${e.Loading} | Autenticando request...`).catch(err => { })
                             setTimeout(function () {
-                                db.delete(`User.Request.${message.author.id}`)
+                                db.delete(`Request.${message.author.id}`)
                                 db.delete(`Servers.${message.guild.id}.LogChannel`)
-                                msg.edit(`${e.Check} | Sistema GSN Desativado!`)
+                                msg.edit(`${e.Check} | Sistema GSN Desativado!`).catch(err => { })
                             }, 4000)
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`Comando cancelado por: ${message.author}`)
+                            msg.edit(`Comando cancelado por: ${message.author}`).catch(err => { })
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.reactions.removeAll().catch(err => { })
                         msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { })
                     })
@@ -80,7 +80,7 @@ module.exports = {
             atual ? atual = `<#${atual}>` : atual = "Nenhum canal definido"
 
             return message.reply(`${e.QuestionMark} | Você deseja ativar o Sistema GSN no canal: ${channel} ?\nCanal atual: ${atual}`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -92,19 +92,19 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`${e.Loading} | Autenticando "${channel}" como Canal do Sistema GSN...`)
+                            msg.edit(`${e.Loading} | Autenticando "${channel}" como Canal do Sistema GSN...`).catch(err => { })
                             setTimeout(function () {
-                                db.delete(`User.Request.${message.author.id}`)
+                                db.delete(`Request.${message.author.id}`)
                                 db.set(`Servers.${message.guild.id}.LogChannel`, channel.id)
-                                msg.edit(`${e.Check} | Sistema GSN Ativado!\nCanal: ${channel}`)
+                                msg.edit(`${e.Check} | Sistema GSN Ativado!\nCanal: ${channel}`).catch(err => { })
                             }, 4000)
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`Comando cancelado por: ${message.author}`)
+                            msg.edit(`Comando cancelado por: ${message.author}`).catch(err => { })
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.reactions.removeAll().catch(err => { })
                         msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { })
                     })
@@ -116,7 +116,7 @@ module.exports = {
             if (atual) return message.reply(`${e.Info} | O canal atual do Sistema GSN é esse aqui: <#${atual}>`)
 
             return message.reply(`${e.QuestionMark} | Você permite que eu crie um canal novo e ative o Sistema GSN?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -126,7 +126,7 @@ module.exports = {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
 
                         message.guild.channels.create('log-channel', {
                             type: 'GUILD_TEXT',
@@ -142,11 +142,11 @@ module.exports = {
                             channel.send(`${e.Check} | ${message.author}, canal criado com sucesso!\nQuer testar o novo sistema? Vou dar uma dica:\n1. Crie um novo cargo e o configure como autorole \`${prefix}autorole 1 @novo cargo\`\n2. Delete o novo cargo e veja o que acontece.`)
                         }).catch(err => { message.reply(`${e.Deny} | Ocorreu um erro ao criar o novo canal.\n\`${err}\``) })
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}/${messge.guild.id}`).catch(err => { })
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Request cancelada: Tempo expirado`).catch(err => { })
                 })
 

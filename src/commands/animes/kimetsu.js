@@ -15,7 +15,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let gif = g.KimetsuNoYaiba[Math.floor(Math.random() * g.KimetsuNoYaiba.length)]
 
         const KimetsuEmbed = new MessageEmbed()
@@ -24,7 +24,7 @@ module.exports = {
             .setImage(gif)
 
         return message.reply({ embeds: [KimetsuEmbed] }).then(msg => {
-            db.set(`User.Request.${message.author.id}`, 'ON')
+            db.set(`Request.${message.author.id}`, `${msg.url}`)
             msg.react('🔄').catch(err => { }) // Troca
             msg.react('❌').catch(err => { }) // Cancel
 
@@ -42,18 +42,18 @@ module.exports = {
             })
 
             Collector.on('end', () => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 KimetsuEmbed.setColor('RED').setTitle(`${e.Deny} Anime: Demon Slayer: Kimetsu no Yaiba`).setFooter(`Sessão Expirada | ${i} Requests solicitadas.`)
                 msg.edit({ embeds: [KimetsuEmbed] }).then(() => { i = 0 }).catch(err => { })
             })
 
             Collector2.on('end', () => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 msg.delete().then(() => { i = 0 }).catch(err => { })
             })
         }).catch(err => {
             Error(message, err)
-            db.delete(`User.Request.${message.author.id}`)
+            db.delete(`Request.${message.author.id}`)
             return message.reply(`${Attention} | Houve um erro ao executar este comando\n\`${err}\``)
         })
     }

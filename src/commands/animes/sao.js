@@ -15,7 +15,7 @@ module.exports = {
 
   run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-    if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+    if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
     let saophotos = g.SwordArtOnline[Math.floor(Math.random() * g.SwordArtOnline.length)]
 
     const SAOEmbed = new MessageEmbed()
@@ -24,7 +24,7 @@ module.exports = {
       .setImage(saophotos)
 
     return message.reply({ embeds: [SAOEmbed] }).then(msg => {
-      db.set(`User.Request.${message.author.id}`, 'ON')
+      db.set(`Request.${message.author.id}`, `${msg.url}`)
       msg.react('🔄').catch(err => { }) // 1º Embed
       msg.react('❌').catch(err => { })
 
@@ -42,18 +42,18 @@ module.exports = {
       })
 
       Collector.on('end', (reaction, user) => {
-        db.delete(`User.Request.${message.author.id}`)
+        db.delete(`Request.${message.author.id}`)
         SAOEmbed.setColor('RED').setTitle(`${e.Deny} Anime: SAO - Sword Art Online`).setFooter(`Sessão Expirada | ${i} Requests solicitadas.`)
         msg.edit({ embeds: [SAOEmbed] }).then(() => { i = 0 }).catch(err => { })
       })
 
       Collector2.on('end', (reaction, user) => {
-        db.delete(`User.Request.${message.author.id}`)
+        db.delete(`Request.${message.author.id}`)
         msg.delete().then(() => { i = 0 }).catch(err => { })
       })
     }).catch(err => {
       Error(message, err)
-      db.delete(`User.Request.${message.author.id}`)
+      db.delete(`Request.${message.author.id}`)
       return message.reply(`${Attention} | Houve um erro ao executar este comando\n\`${err}\``)
     })
   }

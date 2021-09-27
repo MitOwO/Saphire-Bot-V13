@@ -7,7 +7,7 @@ const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'help',
-    aliases: ['comandos', 'comando', 'commands', 'h', 'ajuda', 'socorro'],
+    aliases: ['comandos', 'comando', 'commands', 'h', 'ajuda', 'socorro', 'info', 'comands'],
     usage: '<help> [NomeDoComando]',
     category: 'bot',
     UserPermissions: '',
@@ -141,25 +141,24 @@ module.exports = {
 
         if (args[0]) return HelpWithArgs(args[0])
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         message.reply({ embeds: [PrincipalEmbed], components: [painel] }).then(msg => {
-            db.set(`User.Request.${message.author.id}`, 'ON')
+            db.set(`Request.${message.author.id}`, `${msg.url}`)
 
             const filtro = (interaction) => interaction.customId === 'menu' && interaction.user.id === message.author.id
 
             const coletor = msg.createMessageComponentCollector({ filtro, idle: 60000 });
 
             coletor.on('end', async (collected) => {
-                db.delete(`User.Request.${message.author.id}`)
-                PrincipalEmbed.setColor('RED').setFooter('Request cancelada ' + message.author.id)
-                msg.edit({ embeds: [PrincipalEmbed] }).catch(err => { })
+                db.delete(`Request.${message.author.id}`)
+                msg.edit({ embeds: [] }).catch(err => { })
             })
 
             coletor.on('collect', async (collected) => {
                 if (collected.user.id !== message.author.id) return
 
                 let valor = collected.values[0]
-                collected.deferUpdate()
+                collected.deferUpdate().catch(() => { })
 
                 switch (valor) {
                     case 'PainelPrincipal':
@@ -211,11 +210,11 @@ module.exports = {
                         HelpPainel('util')
                         break;
                     case 'Close':
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit({ embeds: [PrincipalEmbed.setColor('RED').setFooter('Request cancelada ' + message.author.id)] })
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit({ components: [] }).catch(err => { })
                         break;
                     default:
-                        msg.edit({ embeds: [PrincipalEmbed], components: [painel] })
+                        msg.edit({ embeds: [PrincipalEmbed], components: [painel] }).catch(err => { })
                         break;
                 }
 
@@ -228,7 +227,7 @@ module.exports = {
                         .addField(`${e.Info} | Emojis de Ativação`, `✅ | Ative o AFK somente no servidor\n🌎 | Ative o AFK em todos os servidores\n❓ | Esta paginazinha de Ajuda\n❌ | Cancele o comando`)
                         .addField(`${e.Warn} | Atenção!`, `1. \`Modo Global\` Será desativado quando você mandar mensagem em qualquer servidor que eu esteja.\n2. \`Ativação sem mensagem\` Eu direi que você está offline, porém, sem recado algum.`)
 
-                    msg.edit({ embeds: [AfkInfoEmbed], components: [painel] });
+                    msg.edit({ embeds: [AfkInfoEmbed], components: [painel] }).catch(err => { })
                 }
 
                 function HelpPainel(x) {
@@ -272,7 +271,7 @@ module.exports = {
                             .setDescription(`Use \`${prefix}help [comando]\` para obter mais informações.`)
                             .addFields(catts)
 
-                        return msg.edit({ embeds: [combed], components: [painel] });
+                        return msg.edit({ embeds: [combed], components: [painel] }).catch(err => { })
                     }
                 }
 

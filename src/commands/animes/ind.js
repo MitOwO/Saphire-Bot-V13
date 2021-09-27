@@ -15,7 +15,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) { return message.reply(`${e.Deny} | ${f.Request}`) } 
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         var i = 'Isekai'
         var h = 'Hentai'
@@ -359,7 +359,7 @@ module.exports = {
             .setDescription('Receba indicações clicando nos emojis a baixo.')
 
         return message.reply({ embeds: [IndEmbed] }).then(msg => {
-            db.set(`User.Request.${message.author.id}`, 'ON')
+            db.set(`Request.${message.author.id}`, `${msg.url}`)
             msg.react('🔄').catch(err => { }) // Trocar
             msg.react('📨').catch(err => { }) // Carta
             msg.react('❌').catch(err => { }) // Cancel
@@ -395,22 +395,22 @@ module.exports = {
             })
 
             CancelCollector.on('collect', (reaction, user) => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 msg.reactions.removeAll().catch(() => { })
                 IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { })
+                msg.edit({ embeds: [IndEmbed] }).catch(err => { })
             })
 
             CancelCollector.on('end', (reaction, user) => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 msg.reactions.removeAll().catch(() => { })
                 IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).then(() => { i = 0}).catch(err => { })
+                msg.edit({ embeds: [IndEmbed] }).catch(err => { })
             })
 
         }).catch(err => {
             Error(message, err)
-            db.delete(`User.Request.${message.author.id}`)
+            db.delete(`Request.${message.author.id}`)
             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
         })
     }

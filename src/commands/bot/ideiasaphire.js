@@ -20,7 +20,7 @@ module.exports = {
         if (block) return message.reply(`${e.Deny} | Você está bloqueado e perdeu acesso aos seguintes comandos: \`${prefix}bug\` \`${prefix}sendcantada\` \`${prefix}ideiasaphire\` \`${prefix}gif\``)
 
         let timeout = 900000
-        let author = db.get(`User.${message.author.id}.Timeouts.Ideiasaphire`)
+        let author = db.get(`${message.author.id}.Timeouts.Ideiasaphire`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
@@ -38,7 +38,7 @@ module.exports = {
             let CanalDeConvite = await message.channel
 
             function WithChannel() {
-                db.set(`User.${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
+                db.set(`${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
                 CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {
                     const newideia = new MessageEmbed().setColor('GREEN').setTitle('📢 Nova Sugestão Recebida').addField('Enviado por', `${message.author.tag} - *\`${message.author.id}\`*`, true).addField('Servidor', `[${message.guild.name}](${ChannelInvite.url}) - *\`${message.guild.id}\`*`).addField('Sugestão', mensagem)
                     if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
@@ -52,7 +52,7 @@ module.exports = {
                         }
                     }
                 }).catch(() => {
-                    db.set(`User.${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
+                    db.set(`${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
                     const newideianoinvite = new MessageEmbed().setColor('GREEN').setTitle('📢 Nova Sugestão Recebida').addField('Enviado por', `${message.author.tag} - *\`${message.author.id}\`*`, true).addField('Servidor', `${message.guild.name} - *\`${message.guild.id}\`*`).addField('Sugestão', mensagem)
                     if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                         const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
@@ -68,7 +68,7 @@ module.exports = {
             }
 
             function WithoutChannel() {
-                db.set(`User.${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
+                db.set(`${message.author.id}.Timeouts.Ideiasaphire`, Date.now())
                 const newideianoinvite = new MessageEmbed().setColor('GREEN').setTitle('📢 Nova Sugestão Recebida').addField('Enviado por', `${message.author.tag} - *\`${message.author.id}\`*`, true).addField('Servidor', `${message.guild.name} - *\`${message.guild.id}\`*`).addField('Sugestão', mensagem)
                 if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                     const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {

@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
         let canal = db.get(`Servers.${message.guild.id}.ReportChannel`)
 
@@ -37,7 +37,7 @@ module.exports = {
                 return message.channel.send(`${e.Loading} | Ok, espera um pouquinho... | ${canal}/${message.author.id}`).then(msg => {
                     message.channel.sendTyping().then(() => {
                         setTimeout(function () {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             db.delete(`Servers.${message.guild.id}.ReportChannel`)
                             msg.edit(`${e.Check} | Request Autenticada | ${message.author.id}`).catch(err => { })
                             message.channel.send(`${e.BrilanceBlob} | Nice, nice! Desativei o sistema de reports.`)
@@ -53,17 +53,17 @@ module.exports = {
             return message.reply(`${e.Loading} | Ooopa, entendido! Pera só um pouco. | ${channel.id}/${message.author.id}`).then(msg => {
                 message.channel.sendTyping().then(() => {
                     setTimeout(function () {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         db.set(`Servers.${message.guild.id}.ReportChannel`, channel.id)
                         msg.edit(`${e.Check} | Request Autenticada | ${channel.id}/${message.guild.id}`).catch(err => { })
                         return message.channel.send(`${e.NezukoJump} | Aeeee, sistema de report está ativadoooo!!\n\`${prefix}report [@user(opicional)] o seu reporte em diante\``)
                     }, 4000)
                 }).catch(err => {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
                 })
             }).catch(err => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
             })
         }

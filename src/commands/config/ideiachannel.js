@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         if (['desligar', 'off'].includes(args[0])) {
 
             let canal = db.get(`Servers.${message.guild.id}.IdeiaChannel`)
@@ -23,7 +23,7 @@ module.exports = {
             await message.guild.channels.fetch(canal).then(channel => {
 
                 return message.channel.send(`${e.QuestionMark} | Deseja desativar o sistema de ideias? Canal atual: ${channel}`).then(msg => {
-                    db.set(`User.Request.${message.author.id}`, 'ON')
+                    db.set(`Request.${message.author.id}`, `${msg.url}`)
                     msg.react('✅').catch(err => { }) // e.Check
                     msg.react('❌').catch(err => { }) // X
 
@@ -33,11 +33,11 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.edit(`${e.Loading} | Espera só um pouquinho...`)
+                            msg.edit(`${e.Loading} | Espera só um pouquinho...`).catch(err => { })
 
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.IdeiaChannel`)
                                     msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { })
                                     return message.channel.send(`${e.Nagatoro} | Prontinho, sistema de ideias desativado.`)
@@ -46,16 +46,16 @@ module.exports = {
                                 Error(message, err)
                                 return message.channel.send(`${e.Warn} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             return message.channel.send(`${e.Deny} | Request cancelada.`)
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request cancelada: Tempo expirado.`)
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Request cancelada: Tempo expirado.`).catch(err => { })
                     })
                 })
             }).catch(() => {
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 return message.reply(`${e.Deny} | O sistema de ideias já está desativado`)
             })
 
@@ -69,7 +69,7 @@ module.exports = {
             } else {
 
                 return message.reply(`${e.QuestionMark} | Deseja autenticar o canal ${channel} como canal de ideias?`).then(msg => {
-                    db.set(`User.Request.${message.author.id}`, 'ON')
+                    db.set(`Request.${message.author.id}`, `${msg.url}`)
                     msg.react('✅').catch(err => { }) // e.Check
                     msg.react('❌').catch(err => { }) // X
 
@@ -79,11 +79,11 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.edit(`${e.Loading} | Espera aí, ok? Estou arrumando umas caixas no meu banco de dados...`)
+                            msg.edit(`${e.Loading} | Espera aí, ok? Estou arrumando umas caixas no meu banco de dados...`).catch(err => { })
 
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     db.set(`Servers.${message.guild.id}.IdeiaChannel`, channel.id)
                                     msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { })
                                     return message.channel.send(`${e.NezukoJump} | Prontinho, sistema de ideias ativado.\nO comando é simples --> \`${prefix}ideia a sua ideia em diante\``)
@@ -92,12 +92,12 @@ module.exports = {
                                 Error(message, err)
                                 return message.channel.send(`${e.Warn} | Ocorreu um erro na execução do comando. Caso não saiba resolver, use o comando \`${prefix}bug\` e reporte o seu problema.`) })
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             return message.channel.send(`${e.Deny} | Request cancelada.`)
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request cancelada: Tempo expirado.`)
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Request cancelada: Tempo expirado.`).catch(err => { })
                     })
                 })
             }

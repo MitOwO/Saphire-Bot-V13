@@ -6,14 +6,14 @@ module.exports = {
     aliases: ['off', 'offline'],
     category: 'afksystem',
     UserPermissions: '',
-    ClientPermissions: ['ADD_REACTIONS', 'MANAGE_MESSAEGES'],
+    ClientPermissions: ['ADD_REACTIONS', 'MANAGE_MASSAGES'],
     emoji: `${e.Afk}`,
     usage: '<afk> <motivo>',
     description: 'Com este comando, eu aviso pra todos que chamarem você que você está offline',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         let Motivo = args.join(" ")
         if (Motivo.length > 150) return message.reply(`${e.Deny} | O seu motivo não pode passar de 150 caracteres.`)
@@ -27,7 +27,7 @@ module.exports = {
             .addField(`${e.Warn} | Atenção!`, `1. \`Modo Global\` Será desativado quando você mandar mensagem em qualquer servidor que eu esteja.\n2. \`Ativação sem mensagem\` Eu direi que você está offline, porém, sem recado algum.`)
 
         return message.reply(`${e.Planet} | AFK Global System`).then(msg => {
-            db.set(`User.Request.${message.author.id}`, 'ON')
+            db.set(`Request.${message.author.id}`, `${msg.url}`)
             msg.react('✅').catch(err => { }) // AFK Server
             msg.react('🌎').catch(err => { }) // AFK Global
             msg.react('❓').catch(err => { }) // AFK Info
@@ -49,7 +49,7 @@ module.exports = {
                 db.set(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`, Motivo)
                 message.channel.sendTyping().then(() => {
                     setTimeout(() => {
-                        db.delete(`User.Request.${message.author.id}`);
+                        db.delete(`Request.${message.author.id}`);
                         return message.reply(`${e.Check} | Pode deixar! Vou avisar a todos nesse servidor que te chamarem que você está offline. ${e.Nagatoro}`)
                     }, 2000)
                 }).catch(err => { })
@@ -57,16 +57,16 @@ module.exports = {
 
             AfkGlobal.on('collect', (reaction, user) => {
                 db.set(`Client.AfkSystem.${message.author.id}`, Motivo)
-                message.channel.sendTyping().then(() => { setTimeout(() => { db.delete(`User.Request.${message.author.id}`); return message.reply(`${e.Planet} | Deixa comigo! Vou avisar em todos os servidores que você está offline. ${e.Menhera}`) }, 2000) }).catch(err => { })
+                message.channel.sendTyping().then(() => { setTimeout(() => { db.delete(`Request.${message.author.id}`); return message.reply(`${e.Planet} | Deixa comigo! Vou avisar em todos os servidores que você está offline. ${e.Menhera}`) }, 2000) }).catch(err => { })
             })
 
-            AfkInfo.on('collect', () => { message.channel.sendTyping().then(() => { setTimeout(() => { db.delete(`User.Request.${message.author.id}`); return message.reply({ embeds: [AfkInfoEmbed] }) }, 2000) }).catch(err => { }) })
+            AfkInfo.on('collect', () => { message.channel.sendTyping().then(() => { setTimeout(() => { db.delete(`Request.${message.author.id}`); return message.reply({ embeds: [AfkInfoEmbed] }) }, 2000) }).catch(err => { }) })
 
-            Cancel.on('collect', () => { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { }) })
-            AfkServer.on('end', () => { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { }) })
-            AfkGlobal.on('end', () => { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { }) })
-            AfkInfo.on('end', () => { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { }) })
-            Cancel.on('end', () => { db.delete(`User.Request.${message.author.id}`); msg.delete().catch(err => { }) })
+            Cancel.on('collect', () => { db.delete(`Request.${message.author.id}`); msg.delete().catch(err => { }) })
+            AfkServer.on('end', () => { db.delete(`Request.${message.author.id}`); msg.delete().catch(err => { }) })
+            AfkGlobal.on('end', () => { db.delete(`Request.${message.author.id}`); msg.delete().catch(err => { }) })
+            AfkInfo.on('end', () => { db.delete(`Request.${message.author.id}`); msg.delete().catch(err => { }) })
+            Cancel.on('end', () => { db.delete(`Request.${message.author.id}`); msg.delete().catch(err => { }) })
         }).catch(err => {
             return message.reply(`${e.Warn} | Houve um erro ao executar este comando.\n\`${err}\``)
         })

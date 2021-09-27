@@ -13,12 +13,12 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
-        let ReactStats = db.get(`User.${message.author.id}.NoReact`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
+        let ReactStats = db.get(`${message.author.id}.NoReact`)
 
         function NoReact() {
             return message.reply(`${e.QuestionMark} | Deseja bloquear a interação dos comandos da categoria \`interação\`?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -28,23 +28,23 @@ module.exports = {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        db.delete(`User.Request.${message.author.id}`)
-                        db.set(`User.${message.author.id}.NoReact`, 'ON')
-                        msg.edit(`${e.Check} | Feito! Ninguém mais vai interagir com você usando os meus comandos da categoria \`Interação\``)
+                        db.delete(`Request.${message.author.id}`)
+                        db.set(`${message.author.id}.NoReact`, true)
+                        msg.edit(`${e.Check} | Feito! Ninguém mais vai interagir com você usando os meus comandos da categoria \`Interação\``).catch(err => { })
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}`).catch(err => { })
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request cancelada: Tempo expirado | ${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
+                    msg.edit(`${e.Deny} | Request cancelada: Tempo expirado | ${message.author.id}`).catch(err => { })
                 })
             })
         }
 
         function React() {
             return message.reply(`${e.QuestionMark} | Deseja retirar o bloqueio de interação?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -54,16 +54,16 @@ module.exports = {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        db.delete(`User.Request.${message.author.id}`)
-                        db.delete(`User.${message.author.id}.NoReact`)
-                        msg.edit(`${e.Check} | Feito! Bloqueio retirados de todos comandos da categoria \`Interação\``)
+                        db.delete(`Request.${message.author.id}`)
+                        db.delete(`${message.author.id}.NoReact`)
+                        msg.edit(`${e.Check} | Feito! Bloqueio retirados de todos comandos da categoria \`Interação\``).catch(err => { })
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}`).catch(err => { })
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request cancelada: Tempo expirado | ${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
+                    msg.edit(`${e.Deny} | Request cancelada: Tempo expirado | ${message.author.id}`).catch(err => { })
                 })
             })
         }

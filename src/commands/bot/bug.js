@@ -31,7 +31,7 @@ module.exports = {
         if (!args[0]) { return message.reply({ embeds: [noargs] }) }
 
         let timeout = 900000
-        let author = db.get(`User.${message.author.id}.Timeouts.Bug`)
+        let author = db.get(`${message.author.id}.Timeouts.Bug`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
@@ -46,7 +46,7 @@ module.exports = {
             let CanalDeConvite = await message.channel
 
             function WithChannel() {
-                db.set(`User.${message.author.id}.Timeouts.Bug`, Date.now())
+                db.set(`${message.author.id}.Timeouts.Bug`, Date.now())
                 CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {
                     const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `[${message.guild.name}](${ChannelInvite.url}) (*${message.guild.id}*)`).addField('Relatório', mensagem)
                     if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
@@ -61,7 +61,7 @@ module.exports = {
                     }
                 }).catch(() => {
                     Error(message, err)
-                    db.set(`User.${message.author.id}.Timeouts.Bug`, Date.now())
+                    db.set(`${message.author.id}.Timeouts.Bug`, Date.now())
                     const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `${message.guild.name} (*${message.guild.id}*)`).addField('Relatório', mensagem)
                     if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                         const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
@@ -77,7 +77,7 @@ module.exports = {
             }
 
             function WithoutChannel() {
-                db.set(`User.${message.author.id}.Timeouts.Bug`, Date.now())
+                db.set(`${message.author.id}.Timeouts.Bug`, Date.now())
                 const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `${message.guild.name} (*${message.guild.id}*)`).addField('Relatório', mensagem)
                 if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                     const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {

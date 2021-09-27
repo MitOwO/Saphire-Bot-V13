@@ -17,7 +17,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         const WallPapersIndents = stripIndent`
           ${prefix}w Charlotte         ${prefix}w Kanojo
@@ -74,7 +74,7 @@ module.exports = {
                 .setImage(wallpaper)
 
             return message.reply({ embeds: [WallPaperEmbed] }).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('🔄').catch(err => { }) // 1º Embed
                 msg.react('❌').catch(err => { })
 
@@ -88,15 +88,15 @@ module.exports = {
                     msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { })
 
                 })
-                TradeWallpaper.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
+                TradeWallpaper.on('end', (reaction, user) => { db.delete(`Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
 
                 let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }; let CancelSession = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 30000, errors: ['time', 'max'] })
                 CancelSession.on('collect', (reaction, user) => { msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
-                CancelSession.on('end', (reaction, user) => { db.delete(`User.Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
+                CancelSession.on('end', (reaction, user) => { db.delete(`Request.${message.author.id}`); msg.reactions.removeAll().catch(err => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(err => { }) })
 
             }).catch(err => {
                 Error(message, err)
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })
         }

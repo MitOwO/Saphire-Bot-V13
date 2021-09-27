@@ -41,7 +41,7 @@ module.exports = {
         if (!tema) { return message.reply({ embeds: [noargs] }) }
 
         let timeout = 900000
-        let author = db.get(`User.${message.author.id}.Timeouts.Gif`)
+        let author = db.get(`${message.author.id}.Timeouts.Gif`)
 
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
@@ -64,7 +64,7 @@ module.exports = {
             const canal = await client.channels.cache.get(channel)
             if (!canal) return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`)
             canal.send({ embeds: [newgif] }).then(() => {
-                db.set(`User.${message.author.id}.Timeouts.Gif`, Date.now())
+                db.set(`${message.author.id}.Timeouts.Gif`, Date.now())
                 message.channel.sendTyping()
                 setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
             }).catch(err => {

@@ -19,7 +19,7 @@ module.exports = {
         let Autorole1 = db.get(`Servers.${message.guild.id}.Autorole1`)
         let Autorole2 = db.get(`Servers.${message.guild.id}.Autorole2`)
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         const AutoroleArgs0 = new MessageEmbed()
             .setColor('BLUE')
@@ -60,7 +60,7 @@ module.exports = {
             return message.reply(`${e.QuestionMark} | Você deseja desativar o sistema de autorole?\nAutorole 1: ${AutoroleUm}\nAutorole 2: ${AutoroleDois}`).then(msg => {
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -74,27 +74,27 @@ module.exports = {
                             setTimeout(function () {
                                 db.delete(`Servers.${message.guild.id}.Autorole1`)
                                 db.delete(`Servers.${message.guild.id}.Autorole2`)
-                                db.delete(`User.Request.${message.author.id}`)
-                                msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`)
+                                db.delete(`Request.${message.author.id}`)
+                                msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`).catch(err => { })
                                 return message.reply(`${e.Menhera} | Prontinho! Eu desativei o Autorole System.`)
                             }, 2400)
                         }).catch(err => {
                             Error(message, err)
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                         })
 
                     } else {
-                        msg.edit(`${e.Deny} | Request Cancelada`)
-                        db.delete(`User.Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
+                        db.delete(`Request.${message.author.id}`)
                     }
                 }).catch(() => {
-                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`)
-                    db.delete(`User.Request.${message.author.id}`)
+                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
+                    db.delete(`Request.${message.author.id}`)
                 })
             }).catch(err => {
                 Error(message, err)
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })
         }
@@ -110,7 +110,7 @@ module.exports = {
                     return message.reply(`${e.QuestionMark} | Você deseja desativar o Autorole 1? --> <@&${Autorole1}>`).then(msg => {
                         msg.react('✅').catch(err => { }) // e.Check
                         msg.react('❌').catch(err => { }) // X
-                        db.set(`User.Request.${message.author.id}`, 'ON')
+                        db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                         const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -122,26 +122,26 @@ module.exports = {
                                 message.channel.sendTyping().then(() => {
                                     setTimeout(function () {
                                         db.delete(`Servers.${message.guild.id}.Autorole1`)
-                                        db.delete(`User.Request.${message.author.id}`)
-                                        msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`)
+                                        db.delete(`Request.${message.author.id}`)
+                                        msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`).catch(err => { })
                                         return message.reply(`${e.SadPanda} | Adeeeus cargo... Foi bom enquanto durou.`)
                                     }, 2400)
                                 }).catch(err => {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                                 })
                             } else {
-                                msg.edit(`${e.Deny} | Request Cancelada`)
-                                db.delete(`User.Request.${message.author.id}`)
+                                msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
+                                db.delete(`Request.${message.author.id}`)
                             }
 
                         }).catch(err => {
-                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`)
-                            db.delete(`User.Request.${message.author.id}`)
+                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
+                            db.delete(`Request.${message.author.id}`)
                         })
                     }).catch(err => {
                         Error(message, err)
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                     })
                 } else {
@@ -162,7 +162,7 @@ module.exports = {
             return message.reply(`${e.QuestionMark} | Você deseja configuar o cargo "${role}" como Autorole 1?`).then(msg => {
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -171,23 +171,23 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
 
-                        msg.edit(`${e.Loading} | Autenticando...`)
+                        msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
                         message.channel.sendTyping().then(() => {
                             setTimeout(function () {
                                 db.set(`Servers.${message.guild.id}.Autorole1`, role.id)
-                                db.delete(`User.Request.${message.author.id}`)
-                                msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}/${role.id}`)
+                                db.delete(`Request.${message.author.id}`)
+                                msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}/${role.id}`).catch(err => { })
                                 return message.reply(`${e.CatJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
                             }, 2400)
                         })
 
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request Cancelada`)
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`)
+                    db.delete(`Request.${message.author.id}`)
+                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
                 })
             })
         }
@@ -203,7 +203,7 @@ module.exports = {
                     return message.reply(`${e.QuestionMark} | Você deseja desativar o Autorole 2? --> <@&${Autorole2}>`).then(msg => {
                         msg.react('✅').catch(err => { }) // e.Check
                         msg.react('❌').catch(err => { }) // X
-                        db.set(`User.Request.${message.author.id}`, 'ON')
+                        db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                         const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -214,20 +214,20 @@ module.exports = {
                                 msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
                                 message.channel.sendTyping().then(() => {
                                     setTimeout(function () {
-                                        db.delete(`User.Request.${message.author.id}`)
+                                        db.delete(`Request.${message.author.id}`)
                                         db.delete(`Servers.${message.guild.id}.Autorole2`)
                                         msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`)
                                         return message.reply(`${e.SadPanda} | Adeeeus carguinho... Vou sentir saudades.`)
                                     }, 2400)
                                 })
                             } else {
-                                db.delete(`User.Request.${message.author.id}`)
-                                msg.edit(`${e.Deny} | Request Cancelada`)
+                                db.delete(`Request.${message.author.id}`)
+                                msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
                             }
 
                         }).catch(err => {
-                            db.delete(`User.Request.${message.author.id}`)
-                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`)
+                            db.delete(`Request.${message.author.id}`)
+                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
                         })
                     })
 
@@ -249,7 +249,7 @@ module.exports = {
             return message.reply(`${e.QuestionMark} | Você deseja configuar o cargo "${role}" como Autorole 2?`).then(msg => {
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -262,27 +262,27 @@ module.exports = {
                         message.channel.sendTyping().then(() => {
                             setTimeout(function () {
                                 db.set(`Servers.${message.guild.id}.Autorole2`, role.id)
-                                db.delete(`User.Request.${message.author.id}`)
+                                db.delete(`Request.${message.author.id}`)
                                 msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}/${role.id}`)
                                 return message.reply(`${e.NezukoJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
                             }, 2400)
                         }).catch(err => {
                             Error(message, err)
-                            db.delete(`User.Request.${message.author.id}`)
+                            db.delete(`Request.${message.author.id}`)
                             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
                         })
 
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request Cancelada`)
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`)
+                    db.delete(`Request.${message.author.id}`)
+                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
                 })
             }).catch(err => {
                 Error(message, err)
-                db.delete(`User.Request.${message.author.id}`)
+                db.delete(`Request.${message.author.id}`)
                 return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
             })
         } else {

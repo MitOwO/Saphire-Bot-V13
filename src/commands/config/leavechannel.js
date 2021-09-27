@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
 
         let canal = db.get(`Servers.${message.guild.id}.LeaveChannel`)
@@ -35,7 +35,7 @@ module.exports = {
                     .setDescription(`${e.QuestionMark} | Você deseja desativar o sistema de saídas?`)
 
                 return message.reply({ embeds: [QuestionEmbed] }).then(msg => {
-                    db.set(`User.Request.${message.author.id}`, 'ON')
+                    db.set(`Request.${message.author.id}`, `${msg.url}`)
                     msg.react('✅').catch(err => { }) // e.Check
                     msg.react('❌').catch(err => { }) // X
 
@@ -46,20 +46,20 @@ module.exports = {
                             const reaction = collected.first()
 
                             if (reaction.emoji.name === '✅') {
-                                msg.edit({ embeds: [Autenticando] })
+                                msg.edit({ embeds: [Autenticando] }).catch(err => { })
                                 message.channel.sendTyping().then(() => {
                                     setTimeout(function () {
-                                        db.delete(`User.Request.${message.author.id}`)
+                                        db.delete(`Request.${message.author.id}`)
                                         db.delete(`Servers.${message.guild.id}.LeaveChannel`)
                                         msg.edit({ embeds: [Autenticado] }).catch(err => { })
                                         message.reply(`${e.Nagatoro} | Prontinho, agora eu não vou dizer mais nada quando alguém sair no servidor.`)
                                     }, 4000)
                                 })
                             } else {
-                                db.delete(`User.Request.${message.author.id}`)
-                                msg.edit({ embeds: [Abortada] })
+                                db.delete(`Request.${message.author.id}`)
+                                msg.edit({ embeds: [Abortada] }).catch(err => { })
                             }
-                        }).catch(() => { db.delete(`User.Request.${message.author.id}`); msg.edit({ embeds: [Expired] }) })
+                        }).catch(() => { db.delete(`Request.${message.author.id}`); msg.edit({ embeds: [Expired] }) })
                 })
             }
 
@@ -73,7 +73,7 @@ module.exports = {
                 .setFooter(`Request: ${message.author.id}`)
 
             return message.reply({ embeds: [QuestionsEmbed] }).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -84,19 +84,19 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.edit({ embeds: [Autenticando] })
+                            msg.edit({ embeds: [Autenticando] }).catch(err => { })
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     db.set(`Servers.${message.guild.id}.LeaveChannel`, channel.id)
-                                    msg.edit({ embeds: [Autenticado] })
+                                    msg.edit({ embeds: [Autenticado] }).catch(err => { })
                                     message.channel.send(`Aeee ${e.NezukoJump}! De agora em diante, vou falar no canal ${channel} sobre todo mundo que sair do servidor.`).then(() => {
 
                                         if (WelcomeChannel) return
                                         message.channel.sendTyping().then(() => {
                                             setTimeout(() => {
                                                 message.channel.send(`${e.QuestionMark} | Ei, ei ${message.author}! Posso ativar o sistema de boas-vindas no canal "${channel}" também?`).then(msg => {
-                                                    db.set(`User.Request.${message.author.id}`, 'ON')
+                                                    db.set(`Request.${message.author.id}`, `${msg.url}`)
                                                     msg.react('✅').catch(err => { }) // e.Check
                                                     msg.react('❌').catch(err => { }) // X
 
@@ -111,7 +111,7 @@ module.exports = {
 
                                                                     message.channel.sendTyping().then(() => {
                                                                         setTimeout(function () {
-                                                                            db.delete(`User.Request.${message.author.id}`)
+                                                                            db.delete(`Request.${message.author.id}`)
                                                                             db.set(`Servers.${message.guild.id}.WelcomeChannel`, channel.id)
                                                                             x.edit({ content: `${e.Check} | Autenticação aprovada | ${message.channel.id}`, embeds: [Autenticado] }).catch(err => { })
                                                                             message.channel.send(`${e.NezukoJump} | Nice, nice! Daqui pra frente, eu vou avisar no canal "${channel}" sobre todo mundo que entrar e sair do servidor.`)
@@ -119,12 +119,12 @@ module.exports = {
                                                                     })
                                                                 })
                                                             } else {
-                                                                db.delete(`User.Request.${message.author.id}`)
-                                                                msg.edit(`${e.Deny} | Indicação abortada | ${client.user.id}`)
+                                                                db.delete(`Request.${message.author.id}`)
+                                                                msg.edit(`${e.Deny} | Indicação abortada | ${client.user.id}`).catch(err => { })
                                                             }
                                                         }).catch(() => {
-                                                            db.delete(`User.Request.${message.author.id}`)
-                                                            msg.edit(`${e.Deny} | Indicação abortada | Tempo expirado`)
+                                                            db.delete(`Request.${message.author.id}`)
+                                                            msg.edit(`${e.Deny} | Indicação abortada | Tempo expirado`).catch(err => { })
                                                         })
                                                 })
                                             }, 1900)
@@ -135,12 +135,12 @@ module.exports = {
                                 }, 4000)
                             })
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
-                            msg.edit({ embeds: [Abortada] })
+                            db.delete(`Request.${message.author.id}`)
+                            msg.edit({ embeds: [Abortada] }).catch(err => { })
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit({ embeds: [Expired] })
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit({ embeds: [Expired] }).catch(err => { })
                     })
             })
         }

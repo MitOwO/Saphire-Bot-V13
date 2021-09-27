@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}`)
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         const prefixembed = new MessageEmbed()
             .setColor('BLUE')
@@ -36,7 +36,7 @@ module.exports = {
             if (prefix === "-") { return message.reply(`${e.Info} | O prefixo atual é o meu padrão: \`-\``) }
 
             return message.reply(`${e.QuestionMark} | Você deseja resetar meu prefix para \`-\`?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -50,19 +50,19 @@ module.exports = {
                             msg.delete().catch(err => { })
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.Prefix`)
                                     message.reply(`${e.Check} | ${message.author.username} resetou meu prefixo para \`-\``)
                                 }, 4000)
                             })
                         } else {
-                            db.delete(`User.Request.${message.author.id}`)
-                            msg.edit(`${e.NezukoDance} | Comando cancelado.`)
+                            db.delete(`Request.${message.author.id}`)
+                            msg.edit(`${e.NezukoDance} | Comando cancelado.`).catch(err => { })
                             msg.reactions.removeAll().catch(err => { })
                         }
                     }).catch(() => {
-                        db.delete(`User.Request.${message.author.id}`)
-                        msg.edit('⏱️ | Comando cancelado por: Tempo Expirado.')
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit('⏱️ | Comando cancelado por: Tempo Expirado.').catch(err => { })
                         msg.reactions.removeAll().catch(err => { })
                     })
             })
@@ -75,7 +75,7 @@ module.exports = {
         if (args[0]) {
 
             return message.reply(`${e.QuestionMark} | Deseja alterar meu prefixo para: \`${args[0]}\` ?`).then(msg => {
-                db.set(`User.Request.${message.author.id}`, 'ON')
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X
 
@@ -89,35 +89,37 @@ module.exports = {
 
                         if (args[0] === "-") {
 
-                            msg.edit(`${e.Loading} | Este é o meu prefixo padrão... Resetando prefixo deste servidor...`)
+                            msg.edit(`${e.Loading} | Este é o meu prefixo padrão... Resetando prefixo deste servidor...`).catch(err => { })
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.Prefix`)
                                     msg.delete().catch(err => { })
                                     message.reply(`${e.Check} | ${message.author}, o prefixo foi resetado. Prefixo atual: \`-\``).catch(err => { })
                                 }, 3000)
                             })
+                        } if (args[0] === "<") {
+                            return message.reply(`${e.Deny} Opa opa, você achou um prefixo proibido`)
                         } else {
                             msg.delete().catch(err => { })
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
-                                    db.delete(`User.Request.${message.author.id}`)
+                                    db.delete(`Request.${message.author.id}`)
                                     db.set(`Servers.${message.guild.id}.Prefix`, args[0])
                                 }, 3000)
                             })
                             setTimeout(() => {
-                                db.delete(`User.Request.${message.author.id}`)
+                                db.delete(`Request.${message.author.id}`)
                                 message.reply(`Prefixo \`${args[0]}\` novinho em folha! Só não esquece, ok? ${e.Nagatoro}`)
                             }, 3100)
                         }
                     } else {
-                        db.delete(`User.Request.${message.author.id}`)
+                        db.delete(`Request.${message.author.id}`)
                         msg.reactions.removeAll().catch(err => { })
                         msg.edit(`${e.Check} | Comando cancelado por: ${message.author}`).catch(err => { })
                     }
                 }).catch(() => {
-                    db.delete(`User.Request.${message.author.id}`)
+                    db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Check} | Comando cancelado por: Tempo expirado`).catch(err => { })
                 })
             })
