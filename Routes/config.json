@@ -1,18 +1,18 @@
 {
     "config": {
         "prefix": "-",
-        "ownerId": "ID DO DONO",
-        "clientId": "ID DO BOT",
-        "guildId": "ID DO SERVER PRINCIPAL",
-        "LoginChannelId": "ID DO CANAL DE LOGS",
-        "guildCreateChannelId": "ID DO CANAL DE LOGS",
-        "guildDeleteChannelId": "ID DO CANAL DE LOGS",
-        "SugestChannelId": "ID DO CANAL DE LOGS",
-        "GifsChannelId": "ID DO CANAL DE LOGS",
-        "BugsChannelId": "ID DO CANAL DE LOGS",
-        "CantadasChannelId": "ID DO CANAL DE LOGS",
-        "LogChannelId": "ID DO CANAL DE LOGS",
-        "PackageInvite": "link do servidor onde guarda os gifs/fotos/emojis",
-        "CloudInvite": "link do servidor principal"
+        "ownerId": "451619591320371213",
+        "clientId": "837147659898191902",
+        "guildId": "870700172294901860",
+        "LoginChannelId": "886789011887255563",
+        "guildCreateChannelId": "886130110204358678",
+        "guildDeleteChannelId": "886130215749820467",
+        "SugestChannelId": "886130480255213601",
+        "GifsChannelId": "886130550723719178",
+        "BugsChannelId": "886130661365284894",
+        "CantadasChannelId": "886263662002724924",
+        "LogChannelId": "886735972644061214",
+        "PackageInvite": "https://discord.gg/UArp6eyvwu",
+        "CloudInvite": "https://discord.gg/J6Rr4CepDt"
     }
 }

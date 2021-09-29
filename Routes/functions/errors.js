@@ -20,10 +20,10 @@ function Error(message, err) {
 
     function Send() {
         message.channel.createInvite({ maxAge: 0 }).then(ChannelInvite => {
-            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: [${message.guild.name}](${ChannelInvite.url})\n\`\`\`js\n${err.stack.slice(0, 2000)}\`\`\``)
+            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: [${message.guild.name}](${ChannelInvite.url})\nMensagem: [Link Mensagem](${message.url})\n\`\`\`js\n${err.stack.slice(0, 2000)}\`\`\``)
             client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { })
         }).catch(() => {
-            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\n\`\`\`js\n${err.stack.slice(0, 2000)}\`\`\``)
+            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\nMensagem: [Link Mensagem](${message.url})\n\`\`\`js\n${err.stack.slice(0, 2000)}\`\`\``)
             client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { })
         })
     }
