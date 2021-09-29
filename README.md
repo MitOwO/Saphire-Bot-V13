@@ -7,7 +7,7 @@ Prefixo padrão: ( - )
 
 - Tutorial dos comandos
 
-• `-ban [@fulano]` Itens dentro de [] são **argumentos obrigatórios** para que o comando funcione
+• `-ban [@fulano]` Itens dentro de [ ] são **argumentos obrigatórios** para que o comando funcione
 
 • `-avatar <@membro>` Itens dentro de <> são **argumentos opcionais**, o comando vai funcionar com ou sem ele
 
