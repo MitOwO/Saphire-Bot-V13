@@ -77,6 +77,25 @@ module.exports = {
             return message.reply(`Todos os dados de ${user} foram deletados.`)
         }
 
+        if (['vip'].includes(args[0])) {
+
+            if (!user) { return message.reply('`' + prefix + 'del vip @user`') }
+
+            db.delete(`Vip_${user.id}`)
+            return message.reply(`O vip de ${user} foi deletado.`)
+        }
+
+        if (['vipid'].includes(args[0])) {
+
+            let id = args[1]
+            if (!id) { return message.reply('`' + prefix + 'del vipid ID`') }
+            if (id.length < 17) { return message.reply("❌ Isso não é um ID") }
+            if (isNaN(id)) { return message.reply(`❌ **${args[1]}** não é um número.`) }
+
+            db.delete(`Vip_${id}`)
+            return message.reply(`O vip de \`${id}\` foi deletado.`)
+        }
+
         if (['userid', 'usuárioid'].includes(args[0])) {
 
             let id = args[1]
@@ -133,6 +152,7 @@ module.exports = {
 
             db.delete(`Bank_${user.id}`)
             db.delete(`Balance_${user.id}`)
+            db.delete(`${user.id}.Cache.Resgate`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -150,6 +170,7 @@ module.exports = {
 
             db.delete(`Balance_${id}`)
             db.delete(`Bank_${id}`)
+            db.delete(`${id}.Cache.Resgate`)
             return message.reply(`${e.Check} | Feito!`)
         }
 

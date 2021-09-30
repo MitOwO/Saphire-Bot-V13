@@ -50,7 +50,7 @@ module.exports = {
                 message.channel.sendTyping().then(() => {
                     setTimeout(() => {
                         db.delete(`Request.${message.author.id}`);
-                        return message.reply(`${e.Check} | Pode deixar! Vou avisar a todos nesse servidor que te chamarem que você está offline. ${e.Nagatoro}`)
+                        return message.reply(`${e.Check} | Pode deixar! Vou avisar a todos nesse servidor que te chamarem que você está offline. ${e.SaphireFeliz}`)
                     }, 2000)
                 }).catch(err => { })
             })

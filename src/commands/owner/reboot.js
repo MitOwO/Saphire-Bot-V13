@@ -21,6 +21,7 @@ module.exports = {
 
         function RebootLock(x) {
             db.set('Rebooting.ON', true)
+            db.set('Lotery.Close', true)
             db.set('Rebooting.Features', `${x}`)
             message.channel.send(`${e.Check} Accepted!\n${e.Loading} Rebooting starting...`)
         }

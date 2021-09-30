@@ -3,7 +3,7 @@ const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
     name: 'settitulo',
-    aliases: ['titulo', 'settitle', 'title'],
+    aliases: ['titulo', 'settitle', 'title', 'título'],
     category: 'perfil',
     UserPermissions: '',
     ClientPermissions: '',
@@ -18,7 +18,7 @@ module.exports = {
 
         function AlterarTitulo() {
 
-            if (!args[0]) return message.reply(`${e.Obs} | Você precisa me dizer qual o seu novo título.`)
+            if (!args[0]) return message.reply(`${e.SaphireObs} | Você precisa me dizer qual o seu novo título.`)
 
             let NewTitle = args.join(' ')
             if (NewTitle.length > 20) { return message.reply(`${e.Deny} | O título não pode ultrapassar **20 caracteres**`) }

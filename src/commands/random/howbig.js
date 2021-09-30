@@ -12,10 +12,10 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (args[1]) { return message.reply(`${e.Deny} Sem informações além do @user, por favor.`) }
-
-        let user = message.mentions.members.first() || message.mentions.repliedUser || message.member
-        if (user.id === client.user.id) { return message.reply(`${e.Deny} | Eu não tenho essa coisa, para com isso!`) }
+        let u = message.mentions.users.first() || client.users.cache.get(args[0]) || client.users.cache.get(args[1]) || message.mentions.repliedUser || message.author || message.member
+        let user = client.users.cache.get(u.id)
+        if (!user) return message.reply(`${e.Deny} | Não achei ninguém...`)
+        if (user.id === client.user.id) return message.reply(`${e.Deny} | Eu não tenho essa coisa, para com isso!`)
 
         let array = [
             '3====================D',
@@ -45,7 +45,7 @@ module.exports = {
 
         const Piiinto = new MessageEmbed()
             .setColor('BLUE')
-            .setTitle(`🍆 | Tamanho do brinquedo de ${user.user.username}`)
+            .setTitle(`🍆 | Tamanho do brinquedo de ${user.username}`)
             .setDescription(piiiinto)
         return message.reply({ embeds: [Piiinto] })
     }

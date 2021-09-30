@@ -14,24 +14,10 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let cancel = f.Cancelamentos[Math.floor(Math.random() * f.Cancelamentos.length)]
-        let user = message.mentions.members.first() || message.member
-        let motivo = args.slice(1).join(' ')
-        if (!user || user.id === message.author.id) motivo = cancel
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
+        if (!user || user.id === message.author.id) return message.reply(`${e.Deny} | Mencione alguém para ser cancelado`)
+        if (user.id === client.user.id) { return message.channel.send(`🔇 | ${message.author} foi cancelado por tentar me cancelar.`) }
 
-        user ? CancelWithArgs() : CancelWithoutArgs()
-
-        function CancelWithoutArgs() {
-            if (user.id === message.author.id) return message.reply(`${e.Deny} | Marque alguém para ser cancelado`)
-            if (user.id === client.user.id) { return message.channel.send(`🔇 | ${message.author} foi cancelado por tentar me cancelar.`) }
-            return message.channel.send(`🔇 | ${user.user.username} ${cancel}`)
-        }
-
-        function CancelWithArgs() {
-            let Mensagem = args.join(' ')
-            if (Mensagem.length > 250) return message.reply(`${e.Deny} | Seu motivo de cancelamento não pode ultrapassar **250 caracteres**`)
-            if (user.id === message.author.id) return message.reply(`${e.Deny} | Marque alguém para ser cancelado`)
-            if (user.id === client.user.id) { return message.channel.send(`🔇 | ${message.author} foi cancelado por tentar me cancelar.`) }
-            return message.channel.send(`🔇 | ${message.author.username} cancelou ${user.user.username}.\n${motivo}`)
-        }
+        return message.channel.send(`🔇 | ${user.user.username} ${cancel}`)
     }
 }

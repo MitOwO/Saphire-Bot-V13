@@ -1,4 +1,5 @@
 const { e } = require('../../../Routes/emojis.json')
+const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
     name: 'anivesario',
@@ -11,107 +12,84 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        const noargs = new MessageEmbed()
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
+
+        const NiverEmbed = new MessageEmbed()
             .setColor('BLUE')
             .setTitle('🎉 Data de Aniversário')
-            .setDescription('Defina sua data de aniversário no seu perfil atráves deste comando. Claro, é tudo opicional.\n \nObs: É obrigatório seguir o formato do exemplo! Com **espaçamento** e no **formato DD / MM / AAAA**')
-            .addField('`' + prefix + 'setniver 15 / 03 / 2007`', '**Desative**\n`' + prefix + 'setniver off`')
+            .setDescription(`Defina sua data de aniversário no seu perfil atráves deste comando.\n \n${e.SaphireObs} | É obrigatório seguir o formato. Ok?\nCom **espaçamento** e no **formato DD MM AAAA**`)
+            .addField(`${e.On} Ative`, `\`${prefix}setniver 15 03 2007\``)
+            .addField(`${e.Off} Desative`, `\`${prefix}setniver delete\``)
             .setFooter('Siga o formato, ok?')
 
-        if (!args[0]) { return message.reply(noargs) }
+        if (!args[0]) return message.reply({ embeds: [NiverEmbed] })
 
-        const erro = new MessageEmbed()
-            .setColor('#8B0000')
-            .setTitle('Siga o formato correto')
-            .setDescription('✅ `' + prefix + 'setniver 15 / 03 / 2007`\n❌ ' + '`' + prefix + 'setniver 15/03/2007`')
+        let niver = db.get(`${message.author}.Perfil.Aniversario`) || false
 
-        if (['off', 'delete', 'deletar'].includes(args[0])) {
+        if (['off', 'delete', 'del', 'deletar'].includes(args[0]?.toLowerCase())) return DeleteBirthData()
+        let dia = parseInt(args[0])
+        let mes = parseInt(args[1])
+        let ano = parseInt(args[2])
+        if (!dia || !mes || !ano) return message.reply(`${e.Info} | Segue esse formato -> **DD MM AAAA** | **26 06 1999**`)
+        if (isNaN(dia) || isNaN(mes) || isNaN(ano)) return message.reply(`${e.Deny} | Datas são **NÚMEROS**, ok?`)
+        if (args[0].length !== 2) return message.reply(`${e.Deny} | Dias contém apenas 2 caractes, ele vão de 01 a 31`)
+        if (args[1].length !== 2) return message.reply(`${e.Deny} | Meses contém apenas 2 caractes, ele vão de 01 a 12`)
+        if (args[2].length !== 4) return message.reply(`${e.Deny} | Os anos válidos estão entre 1910 e 2015`)
 
-            return message.reply('❗ Você realmente deseja deletar sua data de aniversário do perfil?').then(msg => {
-                msg.react('✅').catch(err => { })
-                msg.react('❌').catch(err => { })
-                msg.delete({ timeout: 30000 }).catch(err => { })
+        // Dia
+        if (dia > 31 || dia < 1) return message.reply(`${e.Deny} | Hey, fala um dia do mês! Eu acho que os meses começa no dia 1 e termina no dia 31`)
 
-                msg.awaitReactions((reaction, user) => {
-                    if (message.author.id !== user.id) return
+        // Mês
+        if (mes > 12 || mes < 1) return message.reply(`${e.Deny} | Quantos meses tem seu ano?`)
+        if (dia > 28 && mes === 02) return message.reply(`${e.Deny} | Fevereiro não tem mais de 28 dias`)
+        if ((dia >= 31) && ['02', '04', '06', '09', '10', '11'].includes(args[1])) return message.reply(`${e.Deny} | Esse mês não tem o dia 31, baka.`)
+
+        // Ano
+        if (ano > 2015 || ano < 1910) return message.reply(`${e.Deny} | Os anos válidos estão entre 1910 e 2015`)
+
+        if (args[3]) return message.reply(`${e.Deny} | Só a data, ok?`)
+
+        let NewData = `${dia}/${mes}/${ano}`
+
+        niver === NewData ? message.reply(`${e.Info} | Esta já é sua data de aniversário atual.`) : SetNewData(NewData)
+
+        function SetNewData(data) {
+
+            return message.reply(`${e.QuestionMark} | Você confirma a sua data de aniversário? \`${data}\``).then(msg => {
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
+
+                const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
+
+                msg.awaitReactions({ filter, max: 1, time: 15000, errors: ['time'] }).then(collected => {
+                    const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        msg.delete().catch(err => { })
-                        db.delete(`aniversario_${message.author.id}`)
-                        message.reply('✅ Sua data de aniversário foi deletada com sucesso.')
+                        db.delete(`Request.${message.author.id}`)
+                        db.set(`${message.author.id}.Perfil.Aniversario`, `${data}`)
+                        return msg.edit(`${e.Check} | Data de aniversário atualizada com sucesso!`)
+                    } else {
+                        db.delete(`Request.${message.author.id}`)
+                        return msg.edit(`${e.Deny} | Comando cancelado.`)
                     }
-
-                    if (reaction.emoji.name === '❌') {
-                        msg.delete().catch(err => { })
-                        return message.reply('✅ Comando cancelado.')
-                    }
+                }).catch(() => {
+                    db.delete(`Request.${message.author.id}`)
+                    return msg.edit(`${e.Deny} | Comando cancelado por tempo expirado.`)
                 })
+
             })
         }
 
-        if (args[0] > 31) { return message.reply('Hey, fala um dia do mês, eu acho que o mês acaba no dia 31', erro) }
-        if (args[0] < 1) { return message.reply('Hey, esse dia não existe nos meses', erro) }
-        if (isNaN(args[0])) { return message.reply('Números por favor, números.', erro) }
-        if (args[0].length > 2) { return message.reply('Hey, esse dia não existe nos meses', erro) }
-        if (args[0].length < 2) { return message.reply('Hey, esse dia não existe nos meses', erro) }
-        if (args[1] !== "/") { return message.reply(erro) }
-        if (args[2] > 12) { return message.reply('Quantos meses tem seu ano?', erro) }
-        if (args[0] > 28 && args[2] === '02') { return message.reply('Fevereiro não tem mais de 28 dias', erro) }
-        if (args[2] < 1) { return message.reply('Qual é, colabora!', erro) }
-        if (isNaN(args[2])) { return message.reply('Sem letras poxa', erro) }
-        if (args[2].length < 2) { return message.reply('Não trolla', erro) }
-        if (args[2].length > 2) { return message.reply('Tá de zoeira né?', erro) }
-        if (args[0] > 30 && args[2] === "02" || "04" || "06" || "09" || "10" || "11") { return message.reply('Esse mês não tem o dia 31, baka.', erro) }
-        if (args[3] !== "/") { return message.reply('Qual é, colabora!', erro) }
-        if (args[4] > 2015) { return message.reply('Calminha, você tem menos de 7 anos? Você não deveria estar usando o Discord') }
-        if (args[4] < 1902) { return message.reply('Eu acho que você não é a pessoa mais velha do mundo...') }
-        if (isNaN(args[4])) { return message.reply('N Ú M E R O S....') }
-        if (args[4].length > 4) { return message.reply('Tá de zoeira né?', erro) }
-        if (args[4].length < 4) { return message.reply('Qual é...', erro) }
-        if (args[5]) { return message.reply('Espera um pouco, essa data não é válida!', erro) }
+        function DeleteBirthData() {
+            niver ? Delete() : message.reply(`${e.Info} | O sua data de aniversário já está resetada.`)
 
-        let atual = db.get(`aniversario_${message.author.id}`)
-        let niver = `${args[0]}/${args[2]}/${args[4]}`
+            function Delete() {
+                db.delete(`${message.author}.Perfil.Aniversario`)
+                message.reply(`${e.Check} | ${message.author} resetou sua data de aniversário.`)
+            }
+        }
 
-        if (niver === atual) { return message.reply('✅ Esta já é sua data de aniversário atual.') }
 
-        const confirm = new MessageEmbed()
-            .setColor('#22A95E')
-            .setDescription(':question: | **Sua data de aniversário está correta?**\n`' + niver + '`')
-
-        const ValidandoEmbed = new MessageEmbed()
-            .setColor('BLUE')
-            .setTitle(`🔄 | Validando dados para autenticação...`)
-            .setDescription(`Usuário: ${message.author} *(${message.author.id})*\nData: ${niver}`)
-
-        return message.reply(confirm).then(msg => {
-            msg.react('✅').catch(err => { })
-            msg.react('❌').catch(err => { })
-            setTimeout(function () { msg.reactions.removeAll().catch(err => { }) }, 30000)
-            setTimeout(function () { msg.edit(confirm.setDescription('Tempo de resposta expirado.').setColor('#808080')).catch(err => { }) }, 30000)
-
-            msg.awaitReactions((reaction, user) => {
-                if (message.author.id !== user.id) return
-
-                if (reaction.emoji.name === '✅') {
-                    msg.delete().catch(err => { })
-
-                    message.reply(ValidandoEmbed).then(m => {
-
-                        setTimeout(function () {
-                            db.set(`aniversario_${message.author.id}`, niver)
-                            m.edit(`${prefix}perfil`, ValidandoEmbed.setColor('GREEN').setTitle('🎉 Sucesso!').setDescription('✅ | Sua data de aniversário foi salva com sucesso.'))
-                        }, 11000)
-
-                        setTimeout(function () { m.edit(ValidandoEmbed.setDescription('🔄 | Autenticando informações no banco de dados...').setTitle('Por favor, espere...')) }, 6000)
-                    })
-                }
-
-                if (reaction.emoji.name === '❌') {
-                    msg.delete().catch(err => { })
-                    return message.reply('Comando cancelado.')
-                }
-            })
-        })
     }
 }

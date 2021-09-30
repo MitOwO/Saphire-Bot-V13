@@ -8,7 +8,7 @@ module.exports = {
   category: 'reactions',
   UserPermissions: '',
   ClientPermissions: ['EMBED_LINKS', 'MANAGE_MESSAGES'],
-  emoji: '😢',
+  emoji: '😂',
   usage: '<risada> [motivo]',
   description: 'Rir é o melhor remédio',
 

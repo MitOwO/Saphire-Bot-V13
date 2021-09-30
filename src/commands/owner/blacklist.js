@@ -14,17 +14,15 @@ module.exports = {
         let user = message.mentions.members.first() || message.mentions.repliedUser
         let razao = args.slice(2).join(" ")
         if (!razao) razao = 'Nenhum motivo especificado.'
-
-        if (!args[0]) {
-            if (user.id === message.author.id) return BlacklistRanking()
-        }
+       
+        if (!args[0]) return BlacklistRanking()
         if (message.author.id !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
         if (['adicionar', 'add', 'colocar'].includes(args[0]?.toLowerCase())) return BlacklistAdd()
         if (['addid', 'adicionarid'].includes(args[0]?.toLowerCase())) return BlacklistAddById()
         if (['remover', 'remove', 're', 'tirar'].includes(args[0]?.toLowerCase())) return BlacklistRemove()
         if (['delid', 'removerid', 'removeid', 'reid', 'tirarid'].includes(args[0]?.toLowerCase())) return BlacklistRemoveById()
 
-        return message.reply(`${e.Obs} | Opções: add | addid | remover | removerid | addserver | addserverid | removeserver | removerserverid`)
+        return message.reply(`${e.SaphireObs} | Opções: add | addid | remover | removerid | addserver | addserverid | removeserver | removerserverid`)
 
         function BlacklistRemoveById() {
 

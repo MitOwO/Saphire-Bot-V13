@@ -11,12 +11,12 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
+        let user = message.mentions.users.first() || client.users.cache.get(args[0]) || message.mentions.repliedUser
         // let timeout = 1800000 // 30 Minutos
         let rptimeout = db.get(`${message.author.id}.Timeouts.Rep`)
 
-        if (user.id === message.author.id) return message.reply(`${e.Like} | @marca, responda a mensagem ou diga o ID da pessoa que deseja dar like.`)
-        if (user.id === client.user.id) return message.reply(`Olha, eu agradeço... Mas você já viu meu \`${prefix}perfil\`?`)
+        if (!user || user.id === message.author.id) return message.reply(`${e.Like} | @marca, responda a mensagem ou diga o ID da pessoa que deseja dar like.`)
+        if (user.id === client.user.id) return message.reply(`Olha, eu agradeço... Mas você já viu meu \`${prefix}perfil @Saphire\`?`)
         if (user.bot) return message.reply(`${e.Deny} | Sem likes para bots.`)
 
         if (rptimeout !== null && 1800000 - (Date.now() - rptimeout) > 0) {
@@ -29,7 +29,7 @@ module.exports = {
             db.add(`Likes_${user.id}`, 1)
             db.set(`${message.author.id}.Timeouts.Rep`, Date.now())
 
-            message.reply(`${e.Check} Você deu um like para ${user}.\nAgora, ${user} possui um total de ${e.Like} ${cp} likes.`)
+            message.reply(`${e.Check} Você deu um like para ${user.username}.\nAgora, ${user.username} possui um total de ${e.Like} ${cp} likes.`)
         }
     }
 }

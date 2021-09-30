@@ -14,7 +14,7 @@ module.exports = {
         if (['atividade', 'activity', 'atv'].includes(args[0]?.toLowerCase())) return SetActivity()
         if (['action', 'ação'].includes(args[0]?.toLowerCase())) return SetAction()
         if (['status'].includes(args[0]?.toLowerCase())) return SetStatus()
-        return message.reply(`${e.Obs} | Aqui vai os comandos deste comando:\n\`${prefix}setactivity <atividade> No atividade (35 carac max)\`\n\`${prefix}setactivity <action> Opções: PLAYING, STREAMING, LISTENING, WATCHING, CUSTOM, COMPETING\`\n\`${prefix}setactivity <status> Opções: online, idle, invisible, dnd\``)
+        return message.reply(`${e.SaphireObs} | Aqui vai os comandos deste comando:\n\`${prefix}setactivity <atividade> No atividade (35 carac max)\`\n\`${prefix}setactivity <action> Opções: PLAYING, STREAMING, LISTENING, WATCHING, CUSTOM, COMPETING\`\n\`${prefix}setactivity <status> Opções: online, idle, invisible, dnd\``)
 
         function SetActivity() {
             if (args.slice(1).join(' ').length > 35) return message.reply(`${e.Deny} | Limite máx: 35 caracteres.`)
@@ -42,7 +42,7 @@ module.exports = {
                 }
             } else {
                 db.delete('Client.Status.SetAction')
-                return message.reply(`${e.Obs} | Opções: PLAYING, STREAMING, LISTENING, WATCHING, COMPETING`)
+                return message.reply(`${e.SaphireObs} | Opções: PLAYING, STREAMING, LISTENING, WATCHING, COMPETING`)
             }
         }
 
@@ -60,7 +60,7 @@ module.exports = {
                 }
             } else {
                 db.delete('Client.Status.setStatus')
-                return message.reply(`${e.Obs} | Opções: online, idle, invisible, dnd`)
+                return message.reply(`${e.SaphireObs} | Opções: online, idle, invisible, dnd`)
             }
         }
     }

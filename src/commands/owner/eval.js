@@ -1,4 +1,5 @@
 const { e } = require('../../../Routes/emojis.json')
+const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
     name: 'eval',
@@ -11,9 +12,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let code = args.join(" ")
-        if (!code) { return message.reply({ content: "... Código.", }) }
-
-        const LoadingEmbed = new MessageEmbed().setColor('BLUE').setDescription(`${e.Loading} Rodando código...`)
+        if (!code) return message.reply({ content: "... Código."})
 
         let result
         try {

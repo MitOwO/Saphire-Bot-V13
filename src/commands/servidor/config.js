@@ -35,7 +35,7 @@ module.exports = {
                 },
                 {
                     name: `${e.Join} Canal de Boas-Vindas`,
-                    value: GetChannel('WelcomeChannel')
+                    value: GetChannel('WelcomeChannel.Canal')
                 },
                 {
                     name: `${e.RedStar} Canal de XP`,

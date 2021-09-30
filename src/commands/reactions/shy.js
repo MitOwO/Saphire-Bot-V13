@@ -8,7 +8,7 @@ module.exports = {
   category: 'reactions',
   UserPermissions: '',
   ClientPermissions: ['EMBED_LINKS', 'MANAGE_MESSAGES'],
-  emoji: `${e.Aa}`,
+  emoji: `${e.SaphireTimida}`,
   usage: '<wow> [motivo]',
   description: 'Sou tímido, sai',
 

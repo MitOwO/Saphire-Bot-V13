@@ -15,7 +15,7 @@ module.exports = {
         let num = Math.floor(Math.random() * 100) + 1
         let user = message.mentions.members.first() || message.member
 
-        if (user.id === client.user.id) { return message.reply(`${e.Aa} | Eu não sou gada, sai pra lá.`) }
+        if (user.id === client.user.id) { return message.reply(`${e.SaphireTimida} | Eu não sou gada, sai pra lá.`) }
 
         return message.reply({
             embeds: [new MessageEmbed()

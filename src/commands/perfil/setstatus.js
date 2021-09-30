@@ -14,7 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
-        if (!args[0]) return message.reply(`${e.Obs} | Você precisa me dizer qual o seu novo status.`)
+        if (!args[0]) return message.reply(`${e.SaphireObs} | Você precisa me dizer qual o seu novo status.`)
 
         let NewStatus = args.join(' ')
         if (NewStatus.length > 140) { return message.reply(`${e.Deny} | O status não pode ultrapassar **140 caracteres**`) }

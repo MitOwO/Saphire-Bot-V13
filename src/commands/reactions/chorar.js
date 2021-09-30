@@ -8,7 +8,7 @@ module.exports = {
   category: 'reactions',
   UserPermissions: '',
   ClientPermissions: ['EMBED_LINKS', 'MANAGE_MESSAGES'],
-  emoji: '😢',
+  emoji: `${e.SaphireCry}`,
   usage: '<cry> [motivo]',
   description: 'Chorar as vezes faz bem',
 
