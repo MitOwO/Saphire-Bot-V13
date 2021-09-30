@@ -20,8 +20,8 @@ module.exports = {
             .setColor(Colors(message.member))
             .setTitle(`💴 Bingo ${client.user.username}`)
             .setDescription('Jogar bingo é MUITO BOM! Com este comando você e todo o chat pode jogar bingo sem toda aquela burocracia')
-            .addField(`${e.Obs} Como jogar?`, `Quando alguém mandar um bingo no chat, basta você digitar o **NÚMERO** que você acha que é.`)
-            .addField(`${e.Obs} Como iniciar um bingo?`, `Use o comando \`${prefix}bingo [quantia/all]\`. É só isso mesmo.`)
+            .addField(`${e.SaphireObs} Como jogar?`, `Quando alguém mandar um bingo no chat, basta você digitar o **NÚMERO** que você acha que é.`)
+            .addField(`${e.SaphireObs} Como iniciar um bingo?`, `Use o comando \`${prefix}bingo [quantia/all]\`. É só isso mesmo.`)
 
         if (!args[0]) return message.reply({ embeds: [BingoEmbed] })
 

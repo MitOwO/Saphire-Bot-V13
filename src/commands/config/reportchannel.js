@@ -28,7 +28,7 @@ module.exports = {
             .setFooter(`A ${client.user.username} não se responsabiliza pelo conteúdo enviado atráves deste sistema.`)
 
         if (['help', 'ajuda'].includes(args[0])) { return message.reply(noargs) }
-        if (args[1]) return message.reply(`${e.Deny} | Nada além do canal coisinha fofa ${e.Nagatoro}`)
+        if (args[1]) return message.reply(`${e.Deny} | Nada além do canal coisinha fofa ${e.SaphireFeliz}`)
 
         if (args[0] === 'off') {
             if (canal === null) {

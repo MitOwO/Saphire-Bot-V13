@@ -1,6 +1,7 @@
 const { g } = require('../../../Routes/Images/gifs.json')
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
+const  Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
   name: 'atirar',

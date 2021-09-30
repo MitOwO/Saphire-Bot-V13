@@ -57,7 +57,7 @@ module.exports = {
                 result === 'true' ? win(u) : lose(u)
 
                 function lose(u) {
-                    db.subtract(`Bank_${message.author.id}`, amount); db.add(`Loteria.Prize`, amount / 2); db.add(`Bank_${u.id}`, amount / 2); db.set(`${message.author.id}.Timeouts.Roubo`, Date.now())
+                    db.subtract(`Balance_${message.author.id}`, amount); db.add(`Loteria.Prize`, amount / 2); db.add(`Bank_${u.id}`, amount / 2); db.set(`${message.author.id}.Timeouts.Roubo`, Date.now())
                     return message.reply(`${e.Sirene} | A polícia te pegou mas você escapou.\n-${amount} ${Moeda(message)}`)
                 }
 

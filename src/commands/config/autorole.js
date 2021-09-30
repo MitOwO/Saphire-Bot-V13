@@ -29,7 +29,7 @@ module.exports = {
             .addField(`${e.Warn} ATENÇÃO`, `\n1. Para perfeito funcionamento, o meu cargo **DEVE** estar **ACIMA** dos cargos definidos.\n \n2. Não é permito cargos com a permissão **ADMINISTRADOR, KICK/BAN, GERENCIAMENTOS** ativada. Caso ative pós configuração, o cargo será deletado da configuração autorole na entrada de um novo membro.\n \n3. Cargos em que eu não tenho poder de manusea-los, também serão ignorados.`)
             .addField('• Comandos do Autorole', `\`${prefix}autorole 1 @cargo\`\n\`${prefix}autorole 2 @cargo\`\n\`${prefix}autorole Status\``, true)
             .addField('• Comando de desativação', `\`${prefix}autorole 1/2 off\`\n\`${prefix}autorole off\``, true)
-            .addField(`${e.Obs} Forte recomendação`, `Ative a função \`${prefix}logs\`.\nLá eu mandarei relatórios se qualquer coisa der errado ou algum bobinho(a) fizer besteira com os cargos.`)
+            .addField(`${e.SaphireObs} Forte recomendação`, `Ative a função \`${prefix}logs\`.\nLá eu mandarei relatórios se qualquer coisa der errado ou algum bobinho(a) fizer besteira com os cargos.`)
             .setFooter(`${prefix}sugest | ${prefix}bug | ${prefix}logs`)
 
         if (!args[0]) return message.reply({ embeds: [AutoroleArgs0] })
@@ -152,14 +152,14 @@ module.exports = {
             if (args[1] === '@everyone') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`).catch(err => { }) }, 1900) }) }).catch(err => { return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``) }) }
             if (args[1] === '@here') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Está de brincation with me?`).catch(err => { }) }, 1900) }) }) }
             if (!role) { return message.reply(`${e.Deny} | Mencione um cargo que deseja como Autorole 1.`) }
-            if (role.botRole) { return message.reply(`${e.Deny} | Sério que você quer configuar um cargo de bot como autorole? ${e.Nagatoro}`) }
+            if (role.botRole) { return message.reply(`${e.Deny} | Sério que você quer configurar um cargo de bot como autorole? ${e.SaphireWhat}`) }
             if (!role.editable) { return message.reply(`${e.Deny} | Eu não tenho permissão para gerenciar o cargo selecionado.`) }
             if (role.id === Autorole1) { return message.reply(`${e.Deny} | O cargo mencionado é o mesmo do Autorole 1.`) }
             if (role.id === Autorole2) { return message.reply(`${e.Deny} | O cargo mencionado é o mesmo do Autorole 2.`) }
             if (message.author.id !== message.guild.ownerId) { if (role.comparePositionTo(message.member.roles.highest) > -1) { return message.reply(`${e.Deny} | Você não tem permissão para gerenciar o cargo ${role}.`) } }
             if (role.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) { return message.reply(`${e.Deny} | Você não pode configurar um cargo com permissão de "ADMINISTRADOR" ativada como Autorole.`) }
 
-            return message.reply(`${e.QuestionMark} | Você deseja configuar o cargo "${role}" como Autorole 1?`).then(msg => {
+            return message.reply(`${e.QuestionMark} | Você deseja configurar o cargo "${role}" como Autorole 1?`).then(msg => {
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -239,14 +239,14 @@ module.exports = {
             if (args[1] === '@everyone') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`) }, 1900) }) }).catch(err => { }) }
             if (args[1] === '@here') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Está de brincation with me?`) }, 1900) }) }).catch(err => { }) }
             if (!role) { return message.reply(`${e.Deny} | Mencione um cargo que deseja como Autorole 2.`) }
-            if (role.botRole) { return message.reply(`${e.Deny} | Sério que você quer configuar um cargo de bot como autorole? ${e.Nagatoro}`) }
+            if (role.botRole) { return message.reply(`${e.Deny} | Sério que você quer configurar um cargo de bot como autorole? ${e.SaphireWhat}`) }
             if (!role.editable) { return message.reply(`${e.Deny} | Eu não tenho permissão para gerenciar o cargo selecionado.`) }
             if (role.id === Autorole1) { return message.reply(`${e.Deny} | O cargo mencionado é o mesmo do Autorole 1.`) }
             if (role.id === Autorole2) { return message.reply(`${e.Deny} | O cargo mencionado já é o Autorole 2.`) }
             if (message.author.id !== message.guild.ownerId) { if (role.comparePositionTo(message.member.roles.highest) > -1) { return message.reply(`${e.Deny} | Você não tem permissão para gerenciar o cargo ${role}.`) } }
             if (role.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) { return message.reply(`${e.Deny} | Você não pode configurar um cargo com permissão de "ADMINISTRADOR" ativada como Autorole.`) }
 
-            return message.reply(`${e.QuestionMark} | Você deseja configuar o cargo "${role}" como Autorole 2?`).then(msg => {
+            return message.reply(`${e.QuestionMark} | Você deseja configurar o cargo "${role}" como Autorole 2?`).then(msg => {
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
                 db.set(`Request.${message.author.id}`, `${msg.url}`)

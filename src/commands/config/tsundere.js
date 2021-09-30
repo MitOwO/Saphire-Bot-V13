@@ -14,7 +14,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         if (message.author.id !== message.guild.ownerId) return message.reply(`${e.Deny} | Este comando tem impacto direto a todos os meus comandos dentro desse servidor, então somente o(a) <@${message.guild.ownerId}> pode ativa-lo.`)
-        if (!args[0]) return message.reply(`${e.Obs} | Opa opa, pra ativar o lado Tsundere da ${client.user.username}, você tem que usar \`ON/OFF\` logo depois do comando.\nFique ciente, de que a ${client.user.username} vai se recusar a fazer alguns comandos. Então, pense bem.\n\`${prefix}tsundere ON/OFF\``)
+        if (!args[0]) return message.reply(`${e.SaphireObs} | Opa opa, pra ativar o lado Tsundere da ${client.user.username}, você tem que usar \`ON/OFF\` logo depois do comando.\nFique ciente, de que a ${client.user.username} vai se recusar a fazer alguns comandos. Então, pense bem.\n\`${prefix}tsundere ON/OFF\``)
 
         if (['on', 'ligar', 'ativar'].includes(args[0]?.toLowerCase())) return TurnOn()
         if (['off', 'desligar', 'desativar'].includes(args[0]?.toLowerCase())) return TurnOff()
@@ -52,7 +52,7 @@ module.exports = {
         function TurnOn() {
             if (db.get(`Server.${message.guild.id}.Tsundere`)) return message.reply(`${e.Info} | Meu lado tsundere já está ativado.`)
             
-            return message.reply(`${e.Hmmm} | Certeza que quer ativar meu lado tsundere? Eu vou recusar uns comandos de vez em quando... ${e.Nagatoro}`).then(msg => {
+            return message.reply(`${e.Hmmm} | Certeza que quer ativar meu lado tsundere? Eu vou recusar uns comandos de vez em quando... ${e.SaphireFeliz}`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X

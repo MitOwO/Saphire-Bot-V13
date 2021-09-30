@@ -25,7 +25,7 @@ module.exports = {
 
         if (user) {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-                return message.reply(`${e.Confuse} | Um administrador pode ver este canal mesmo bloqueado, sabia? Mas vou liberar mesmo assim.`).then(() => {
+                return message.reply(`${e.SaphireQ} | Um administrador pode ver este canal mesmo bloqueado, sabia? Mas vou liberar mesmo assim.`).then(() => {
 
                     message.channel.sendTyping().then(() => {
                         setTimeout(() => {

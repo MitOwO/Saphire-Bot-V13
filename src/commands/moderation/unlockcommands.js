@@ -16,7 +16,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
 
-        if (!db.get(`Servers.${message.guild.id}.Blockchannels.${channel.id}`)) return message.reply(`${e.Check} | ${channel} já está desbloqueado.`)
+        if (!db.get(`Servers.${message.guild.id}.Blockchannels.${channel.id}`) && !db.get(`Servers.${message.guild.id}.Blockchannels.Bots.${message.channel.id}`)) return message.reply(`${e.Check} | ${channel} já está desbloqueado.`)
 
         return message.reply(`${e.QuestionMark} | Você deseja desbloquear todos os comandos no canal ${channel}?`).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -36,7 +36,7 @@ module.exports = {
                         db.delete(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`)
                         db.delete(`Servers.${message.guild.id}.Blockchannels.Bots.${message.channel.id}`)
                         msg.edit(`${e.Check} | Request autenticada.`)
-                        return message.reply(`🔓 | ${message.author} desbloqueou todos os comandos no canal ${channel}.`)
+                        return message.reply(`🔓 | ${message.author} desbloqueou todos os comandos (meu e de outros bots) no canal ${channel}.`)
                     }, 2000)
 
                 } else {

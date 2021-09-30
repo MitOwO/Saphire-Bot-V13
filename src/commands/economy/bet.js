@@ -16,7 +16,7 @@ module.exports = {
 
         let money = db.get(`Balance_${message.author.id}`) || 0
         let cache = db.get(`${message.author.id}.Cache.Resgate`) || 0
-        if (db.get(`Request.${message.author.id}.BetCommand`)) return message.reply(`${e.Deny} | Você está com uma aposta rolando no momento.\nBet Link: ${db.get(`Request.${message.author.id}.BetCommand`)}`)
+        if (db.get(`BetRequest.${message.author.id}`)) return message.reply(`${e.Deny} | Você está com uma aposta rolando no momento.\nBet Link: ${db.get(`BetRequest.${message.author.id}`)}`)
 
         const Embed = new MessageEmbed()
             .setColor(Colors(message.member))
@@ -36,7 +36,7 @@ module.exports = {
         const BetEmbed = new MessageEmbed()
             .setColor('GREEN')
             .setThumbnail('https://imgur.com/k5NKfe8.gif')
-            .setTitle(`${message.member.displayName} inicou uma nova aposta`)
+            .setTitle(`${message.member.displayName} iniciou uma nova aposta`)
 
         if (money >= quantia) {
             db.add(`${message.author.id}.BetPrize`, quantia)
@@ -51,11 +51,11 @@ module.exports = {
 
             BetEmbed
                 .setDescription(`Valor da aposta: ${prize} ${Moeda(message)}\n**Participantes**\n${message.author}\n`)
-                .addField(`----------`, `💸 Apostar\n✅ Encerrar`)
+                .addField('⠀', `✅ Encerrar | 💸 Apostar`)
 
             return message.channel.send({ embeds: [BetEmbed] }).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                db.set(`Request.${message.author.id}.BetCommand`, `${msg.url}`)
+                db.set(`BetRequest.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(() => { })
                 msg.react('💸').catch(() => { })
 
@@ -64,6 +64,13 @@ module.exports = {
 
                 const cancel = (reaction, user) => { return reaction.emoji.name === '✅' && user.id === message.author.id; };
                 const CollectorCancel = msg.createReactionCollector({ filter: cancel, max: 1, time: 120000, errors: 'max' })
+
+                CollectorCancel.on('collect', collected => {
+                    db.delete(`Request.${message.author.id}`)
+                    db.delete(`BetRequest.${message.author.id}`)
+                    collector.stop()
+                    // msg.delete().catch(() => { return message.channel.send(`${e.Deny} | Falha ao forçar o sorteio do lance.`) })
+                });
 
                 collector.on('collect', (reaction, user) => {
                     if (user.id === client.user.id) return
@@ -78,42 +85,39 @@ module.exports = {
                     let desc = BetEmbed.description
                     BetEmbed.setDescription(`${desc}${user}\n`)
                     msg.edit({ embeds: [BetEmbed] }).catch(() => { })
+                    message.channel.send(`${e.MoneyWings} | ${user} entrou na aposta aumentando o prêmio para **${db.get(`${message.author.id}.BetPrize`)} ${Moeda(message)}**`)
 
                 });
 
                 collector.on('end', collected => {
                     db.delete(`Request.${message.author.id}`)
-                    db.delete(`Request.${message.author.id}.BetCommand`)
+                    db.delete(`BetRequest.${message.author.id}`)
                     Win(db.get(`${message.author.id}.BetPrize`))
                 });
 
-                CollectorCancel.on('collect', collected => {
-                    db.delete(`Request.${message.author.id}`)
-                    db.delete(`Request.${message.author.id}.BetCommand`)
-                    msg.delete().catch(() => { return message.channel.send(`${e.Deny} | Falha ao forçar o sorteio do lance.`) })
-                });
-
                 function Win(prize) {
-                    if (db.get(`Bet.${message.author.id}`).length <= 0) {
+                    if (db.get(`Bet.${message.author.id}`).length <= 1) {
                         db.delete(`Bet.${message.author.id}`)
-                        BetEmbed.setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setFooter('Finalizado')
-                        msg.edit({ embeds: [BetEmbed] }).catch(() => { })
+                        const BetEmbedCancel = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description} \n${e.Deny} Essa aposta foi cancelada por não haver participantes`)
+                        msg.edit({ embeds: [BetEmbedCancel] }).catch(() => { })
                         db.add(`${message.author.id}.Cache.Resgate`, prize)
                         db.get(`${message.author.id}.BetPrize`) ? db.delete(`${message.author.id}.BetPrize`) : ''
                         return message.channel.send(`${e.Deny} | Aposta cancelada.\n${e.PandaProfit} | ${db.get(`${message.author.id}.Cache.Resgate`) || 0} ${Moeda(message)} estão no cache. Use \`${prefix}resgate\` para resgatar o dinheiro.`)
-                    } else {
+                    } 
+                    
+                    if (db.get(`Bet.${message.author.id}`).length >= 2) {
                         let winner = db.get(`Bet.${message.author.id}`)[Math.floor(Math.random() * db.get(`Bet.${message.author.id}`).length)]
                         db.add(`${winner}.Cache.Resgate`, prize)
                         db.get(`${message.author.id}.BetPrize`) ? db.delete(`${message.author.id}.BetPrize`) : ''
                         message.channel.send(`${e.MoneyWings} | <@${winner}> ganhou a aposta no valor de ${prize} ${Moeda(message)} iniciada por ${message.author}\n${e.PandaProfit} | <@${winner}>, você possui ${(db.get(`${winner}.Cache.Resgate`) || 0)} ${Moeda(message)} no cache. Use \`${prefix}resgate\` para resgatar o dinheiro.`).catch(err => { })
                         db.delete(`Bet.${message.author.id}`)
-                        BetEmbed.setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setFooter('Finalizado')
-                        msg.edit({ embeds: [BetEmbed] }).catch(() => { })
+                        const NewWinner = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description} \n🏆 <@${winner}> ganhou a aposta`)
+                        msg.edit({ embeds: [NewWinner] }).catch(() => { })
                     }
                 }
 
             }).catch(err => {
-                db.delete(`Request.${message.author.id}.BetCommand`)
+                db.delete(`BetRequest.${message.author.id}`)
                 db.add(`${message.author.id}.Cache.Resgate`, (db.get(`${message.author.id}.BetPrize`) || 0))
                 db.get(`${message.author.id}.BetPrize`) ? db.delete(`${message.author.id}.BetPrize`) : ''
                 Error(message, err)

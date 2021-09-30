@@ -19,7 +19,7 @@ module.exports = {
             if (args[1]) { return message.reply(`${e.Deny} | Apenas a quantia que você deseja depositar, tudo bem?`)}
             if ([',', '.', '-'].includes(args[0])) { return message.reply(`${e.Deny} | Nada de tentar quebrar o sistema com pontos e virgulas, tudo bem?`) }
 
-            if (['all', 'tudo'].includes(args[0])) {
+            if (['all', 'tudo'].includes(args[0]?.toLowerCase())) {
 
                 if (money === 0) { return message.reply(`${e.Deny} | Você não tem nada para depositar.`) }
                 if (money < 0) { return message.reply(`${e.Deny} | Você está negativado.`) }

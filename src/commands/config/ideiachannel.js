@@ -40,7 +40,7 @@ module.exports = {
                                     db.delete(`Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.IdeiaChannel`)
                                     msg.edit(`${e.Check} | Request autenticada | ${channel.id}|${message.guild.id}`).catch(err => { })
-                                    return message.channel.send(`${e.Nagatoro} | Prontinho, sistema de ideias desativado.`)
+                                    return message.channel.send(`${e.SaphireFeliz} | Prontinho, sistema de ideias desativado.`)
                                 }, 5000)
                             }).catch(err => {
                                 Error(message, err)

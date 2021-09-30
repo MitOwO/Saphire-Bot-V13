@@ -24,7 +24,7 @@ module.exports = {
 
         let MedalhaAcess = db.get(`${user.id}.Slot.MedalhaAcess`) || false
         let title = db.get(`${user.id}.Perfil.TitlePerm`) || false
-        title ? title = "🔰 Título" : title = ""
+        title ? title = "\n🔰 Título" : title = ""
         let peixes = db.get(`${user.id}.Slot.Peixes`) || "0"
         let iscas = db.get(`${user.id}.Slot.Iscas`) || "0"
         let comida = db.get(`${user.id}.Slot.Comidas`) || "0"
@@ -40,6 +40,8 @@ module.exports = {
         let rosas = db.get(`${user.id}.Slot.Rosas`) || "0"
         let arma = db.get(`${user.id}.Slot.Arma`) || false
         arma ? arma = "\n🔫 Arma" : arma = ""
+        let anel = db.get(`${user.id}.Slot.Anel`) || false
+        anel ? anel = "\n💍 Anel de Casamento" : anel = ""
         let xusos = (db.get(`${user.id}.Slot.Picareta.Usos`)) || "0"
         let picareta = db.get(`${user.id}.Slot.Picareta`) || false
         picareta ? picareta = `\n⛏️ Picareta | ${xusos} usos restantes` : picareta = ""
@@ -60,6 +62,8 @@ module.exports = {
         dogname ? dogname = `\n${e.Doguinho} ${db.get(`${user.id}.Slot.Dogname`)}` : dogname = `\n${e.Doguinho} Doguinho sem nome`
         let medalha = db.get(`${user.id}.Perfil.Medalha`) || false
         medalha ? medalha = "\n🏅 Medalha Cammum" : medalha = ""
+        let cores = db.get(`${user.id}.Color.Perm`) || false
+        cores ? cores = '\n🎨 Cores' : cores = ''
         let bola = db.get(`${user.id}.Slot.Bola`) || false
         bola ? bola = "\n🥎 Bola" : bola = ""
         let fossil = db.get(`${user.id}.Slot.Fossil`) || false
@@ -70,28 +74,8 @@ module.exports = {
         mamute ? mamute = "\n🦣 Mamute" : mamute = ""
         let nada = !arma && !picareta && !vara && !machado && !cartas
         nada ? nada = 'Não há nada aqui' : nada = ""
-        let nada2 = !title && !faca && !loli && !fossil && !mamute && !bola && !cachorro && !remedio && !diamante
+        let nada2 = !cores && !title && !faca && !loli && !fossil && !mamute && !diamante && !medalha && !bola && !cachorro && !remedio
         nada2 ? nada2 = 'Não há nada aqui' : nada2 = ""
-        let vermelho = db.get(`${user.id}.Color.Red`) || false
-        vermelho ? vermelho = 'Vermelho' : vermelho = ""
-        let branco = db.get(`${user.id}.Color.White`) || false
-        branco ? branco = '\nBranco' : branco = ""
-        let laranja = db.get(`${user.id}.Color.Orange`) || false
-        laranja ? laranja = '\nLaranja' : laranja = ""
-        let rosa = db.get(`${user.id}.Color.Pink`) || false
-        rosa ? rosa = '\nRosa' : rosa = ""
-        let ciane = db.get(`${user.id}.Color.Ciane`) || false
-        ciane ? ciane = '\nCiano' : ciane = ""
-        let verde = db.get(`${user.id}.Color.Green`) || false
-        verde ? verde = '\nVerde' : verde = ""
-        let amarelo = db.get(`${user.id}.Color.Yellow`) || false
-        amarelo ? amarelo = '\nAmarelo' : amarelo = ""
-        let azul = db.get(`${user.id}.Color.Blue`) || false
-        azul ? azul = '\nAzul' : azul = ""
-        let nada3 = !vermelho && !branco && !laranja && !rosa && !ciane
-        nada3 ? nada3 = 'Nenhuma cor foi comprada ainda.' : nada3 = ""
-        let nada4 = !verde && !amarelo && !azul
-        nada4 ? nada4 = 'Nenhuma cor foi comprada.' : nada4 = ""
 
         if (MedalhaAcess) { cachorro = "", bola = "", remedio = "" }
 
@@ -101,11 +85,13 @@ module.exports = {
         db.get(`${user.id}.Perfil.Estrela.3`) ? star = `${e.Star}${e.Star}${e.Star}${e.GrayStar}${e.GrayStar}` : star = star
         db.get(`${user.id}.Perfil.Estrela.4`) ? star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.GrayStar}` : star = star
         db.get(`${user.id}.Perfil.Estrela.5`) ? star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}` : star = star
+        if (user.id === '351903530161799178') star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
+        if (user.id === '451619591320371213') star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
 
         const VipEmbed = new MessageEmbed()
         .setColor(color)
             .setAuthor(`Inventário VIP de ${user.username}`, avatar)
-            .addField('Cores Liberadas', `${nada3}${vermelho}${branco}${laranja}${rosa}${ciane}`)
+            .setDescription(`${e.SaphireEntaoKkk} Tudo vázio`)
             .setFooter(`${prefix}buy | ${prefix}vip`)
 
         if (message.content?.toLowerCase().includes('vip')) {
@@ -115,14 +101,13 @@ module.exports = {
                 .setColor(color)
                 .setAuthor(`Inventário de ${user.username}`, avatar)
                 .setDescription(`${star}`)
-                .addField('Itens Comprados', `${nada}${arma}${picareta}${vara}${machado}${cartas}`)
+                .addField('Itens Comprados', `${nada}${arma}${anel}${picareta}${vara}${machado}${cartas}`)
                 .setFooter(`${prefix}buy | ${prefix}vender | ${prefix}slot vip`)
-            if (!medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${nada2}${title}${faca}${loli}${fossil}${mamute}${diamante}${cachorro}${bola}${remedio}`) }
+            if (!medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${nada2}${cores}${title}${faca}${loli}${fossil}${mamute}${diamante}${cachorro}${bola}${remedio}`) }
             // if (!medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${e.Loading} Manutenção`) }
-            if (medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${nada2}${title}${faca}${loli}${fossil}${mamute}${diamante}${medalha}${dogname}`) }
+            if (medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${nada2}${cores}${title}${faca}${loli}${fossil}${mamute}${diamante}${medalha}${dogname}`) }
             // if (medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${e.Loading} Manutenção`) }
             NormalSlotEmbed.addField('Mantimentos', `🐟 ${peixes} Peixes\n🥘 ${comida} Comidas\n🪱 ${iscas} Iscas\n🥤 ${agua} Águas\n🎟️ ${fichas} Fichas\n🍤 ${camarao} Camarões\n🦴 ${ossos} Ossos\n🌹 ${rosas} Rosas\n🍎 ${apple} Maças\n🪨 ${minerio} Minérios\n💎 ${diamond} Diamantes`)
-            NormalSlotEmbed.addField('Cores', `${nada4}${verde}${amarelo}${azul}`)
             return message.reply({ embeds: [NormalSlotEmbed] })
         }
     }

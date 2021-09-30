@@ -1,6 +1,7 @@
 const { e } = require('../../../Routes/emojis.json')
 const { config } = require('../../../Routes/config.json')
 const Moeda = require('../../../Routes/functions/moeda')
+const Colors = require('../../../Routes/functions/colors')
 const { f } = require('../../../Routes/frases.json')
 
 module.exports = {
@@ -21,17 +22,17 @@ module.exports = {
             if (!user) return message.reply(`${e.Deny} | Eu não encontrei ninguém com esse ID...`)
         }
 
-        let bal = parseInt(db.get(`Balance_${user.id}`)) || 0
-        let bank = parseInt(db.get(`Bank_${user.id}`)) || 0
+        let bal = db.get(`Balance_${user.id}`)?.toFixed(0) || 0
+        let bank = db.get(`Bank_${user.id}`)?.toFixed(0) || 0
         let vip = db.get(`Vip_${user.id}`)
         let oculto = db.get(`${user.id}.BankOcult`)
         let frase = f.BalanceTypes[Math.floor(Math.random() * f.BalanceTypes.length)]
-        let cache = db.get(`${user.id}.Cache.Resgate`) || 0
+        let cache = db.get(`${user.id}.Cache.Resgate`)?.toFixed(0) || 0
         let avatar = user?.displayAvatarURL({ dynamic: true }) || user.user.displayAvatarURL({ dynamic: true })
         let name = user.username || user.user.username
 
         const embed = new MessageEmbed()
-            .setColor('YELLOW')
+            .setColor(Colors(user))
             .setAuthor(`Finanças de ${name}`, avatar)
             .setDescription(frase)
             .addField('👝 Carteira', `${bal} ${Moeda(message)}`, true)

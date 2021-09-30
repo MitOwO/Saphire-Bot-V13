@@ -27,7 +27,7 @@ module.exports = {
 
         if (user.id === client.user.id) return message.reply('Sai pra lá bixo feio.')
 
-        if (user.id === message.author.id) { return message.reply(`${e.Confuse} | Lamber você mesmo é meio estranho... Faz isso não`) }
+        if (user.id === message.author.id) { return message.reply(`${e.SaphireQ} | Lamber você mesmo é meio estranho... Faz isso não`) }
 
         const embed = new MessageEmbed()
             .setColor('BLUE')

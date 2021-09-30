@@ -15,7 +15,7 @@ module.exports = {
         message.author.id === config.ownerId ? SendOwner() : SendCommum()
 
         function SendOwner() {
-            let Message = args.join(' ')
+            let Message = args.join(' ').slice(0, 2000)
             if (!Message) { return message.reply(`${e.Deny} | Você precisa dizer algo para que eu envie.`) }
             message.delete().then(() => {
                 return message.channel.send(Message)
@@ -29,7 +29,7 @@ module.exports = {
             if (!message.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES))
                 return message.reply(`${e.Deny} | Permissão necessária: Gerenciar Mensagens`)
 
-            let Message = args.join(' ')
+            let Message = args.join(' ').slice(0, 2000)
             if (!Message) { return message.reply(`${e.Deny} | Você precisa dizer algo para que eu envie.`) }
 
             message.delete().then(() => {

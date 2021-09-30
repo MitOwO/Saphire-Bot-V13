@@ -29,7 +29,7 @@ module.exports = {
             message.channel.permissionsFor(Role).has(Permissions.FLAGS.SEND_MESSAGES) ? LockRole() : AnswerRole()
 
         function LockUser() {
-            if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Confuse} | Por qual motivo você bloquearia esse canal de um Administrador?`)
+            if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.SaphireQ} | Por qual motivo você bloquearia esse canal de um Administrador?`)
             message.channel.permissionOverwrites.create(user, { SEND_MESSAGES: false })
             return message.channel.send(`🔒 | ${message.author} proibiu ${user} de falar neste canal. -> \`${prefix}unlock @${user.displayName}\``)
         }

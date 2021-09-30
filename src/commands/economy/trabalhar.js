@@ -4,7 +4,7 @@ const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'trabalhar',
-    aliases: ['work', 'trabalho'],
+    aliases: ['work'],
     category: 'economy',
     UserPermissions: '',
     ClientPermissions: '',

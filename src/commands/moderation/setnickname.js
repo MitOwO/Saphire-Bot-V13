@@ -48,7 +48,7 @@ module.exports = {
                 return message.reply(`${e.Deny} | Vish, algo deu errado aqui...\n\`${err}\``)
             })
         } else {
-            return message.reply(`${e.Confuse} | Acho que você fez algo e parou onde não deveria estar.\nUse \`${prefix}help setnickname\` e veja como user este comando`)
+            return message.reply(`${e.SaphireQ} | Acho que você fez algo e parou onde não deveria estar.\nUse \`${prefix}help setnickname\` e veja como user este comando`)
         }
     }
 }

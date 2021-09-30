@@ -32,10 +32,10 @@ module.exports = {
             let remedio = db.get(`${message.author.id}.Slot.Remedio`) || false
 
             if (!canal)
-                return message.reply(`${e.Deny} | Este comando requer um canal específico.\n${e.Obs} | Você pode usar \`${prefix}channel farm buscar\` que eu faço tudo pra você!`)
+                return message.reply(`${e.Deny} | Este comando requer um canal específico.\n${e.SaphireObs} | Você pode usar \`${prefix}channel farm buscar\` que eu faço tudo pra você!`)
 
             if (canal.id !== message.channel.id)
-                return message.reply(`${e.Obs} | Este não é o canal de busca. Chega mais, é aqui: ${canal}`)
+                return message.reply(`${e.SaphireObs} | Este não é o canal de busca. Chega mais, é aqui: ${canal}`)
 
             if (canal.rateLimitPerUser < 1)
                 canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).catch(err => { return message.channel.send(`${e.Warn} | Falha ao configurar o cooldown em 1 segundos.\n\`\`\`${err}\`\`\``) })
@@ -51,6 +51,7 @@ module.exports = {
                 let rand = Math.floor(Math.random() * 100)
                 let randa = Math.floor(Math.random() * 100)
 
+                db.subtract(`Xp_${message.author.id}`, 2)
                 db.set(`${message.author.id}.Timeouts.Buscar`, Date.now())
                 db.subtract(`${message.author.id}.Slot.Comidas`, 1)
                 db.subtract(`${message.author.id}.Slot.Machado.Usos`, 1)

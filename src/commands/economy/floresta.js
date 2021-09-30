@@ -62,9 +62,9 @@ module.exports = {
 
         if (['final'].includes(args[0]?.toLowerCase())) {
 
-            let MedalhaAcess = db.get(`${message.author.id}.Slot.MedalhaAcess`)
+            db.get(`${message.author.id}.Slot.MedalhaAcess`) ? '' : db.set(`${message.author.id}.Slot.MedalhaAcess`, true)
+            db.get(`${message.author.id}.Perfil.Medalha`) ? db.delete(`${message.author.id}.Slot.MedalhaAcess`) : ''
             let FinalPart = dog && bola && remedio
-            if (!MedalhaAcess) { db.set(`${message.author.id}.Slot.MedalhaAcess`, true) }
             if (!FinalPart) return message.reply(`${e.Deny} | Você precisa resgatar o Cachorro Brown, achar a bolinha dele e ajudar o Velho Welter! \`${prefix}floresta continue\``)
             if (FinalPart) return message.reply({ embeds: [CammumFinal, CammumFinal2] })
 

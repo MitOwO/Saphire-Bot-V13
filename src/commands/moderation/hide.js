@@ -26,7 +26,7 @@ module.exports = {
         }
 
         if (user) {
-            if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Confuse} | Por qual motivo você esconderia esse canal de um Administrador?`)
+            if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.SaphireQ} | Por qual motivo você esconderia esse canal de um Administrador?`)
             message.channel.send(`${e.QuestionMark} | ${message.author}, ao esconder o canal de ${user}, você precisará entrar nas configurações do canal para reverter o ato ou responder qualquer mensagem do usuário e digitar o comando \`${prefix}unhide\``).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check

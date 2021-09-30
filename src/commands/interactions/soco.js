@@ -1,6 +1,7 @@
 const { e } = require('../../../Routes/emojis.json')
 const { g } = require('../../../Routes/Images/gifs.json')
 const { f } = require('../../../Routes/frases.json')
+const Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
     name: 'soco',
@@ -8,7 +9,7 @@ module.exports = {
     category: 'interactions',
     UserPermissions: '',
     ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS'],
-    emoji: `${e.Confuse}`,
+    emoji: `${e.SaphireQ}`,
     usage: '<soco> [@user]',
     description: 'Dê um soco em quem merece',
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {

@@ -63,6 +63,7 @@ module.exports = {
                         msg.edit(`${e.Deny} | Comando cancelado`).catch(err => { })
                     }
                 }).catch(() => {
+                    db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Comando cancelado | Tempo expirado`).catch(err => { })
                 })
 

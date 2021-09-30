@@ -28,7 +28,7 @@ module.exports = {
         if (['reset', 'delete', 'padrão'].includes(args[0]?.toLowerCase())) return ResetWelcome()
         if (['emoji', 'emote'].includes(args[0]?.toLowerCase())) return Emoji()
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return Info()
-        return Info()
+        return SetWelcomeChannel()
 
         function Info() {
             return message.reply({
@@ -36,7 +36,7 @@ module.exports = {
                     new MessageEmbed()
                         .setColor('BLUE')
                         .setTitle(`${e.Join} Sistema de Boas-vindas`)
-                        .setDescription(`${e.Obs} Com este sistema eu aviso sobre todas as pessoas que entrarem no servidor. Mando uma mensagem simples(customizada) no canal definido.`)
+                        .setDescription(`${e.SaphireObs} Com este sistema eu aviso sobre todas as pessoas que entrarem no servidor. Mando uma mensagem simples(customizada) no canal definido.`)
                         .addFields(
                             {
                                 name: `${e.On} Ative`,
@@ -51,7 +51,7 @@ module.exports = {
                                 value: `\`${prefix}welcomechannel mensagem <A sua mensagem de boas vindas>\``
                             },
                             {
-                                name: `${e.Nagatoro} Escolhe o emoji`,
+                                name: `${e.SaphireFeliz} Escolhe o emoji`,
                                 value: `\`${prefix}welcomechannel emoji <EMOJI>\``
                             },
                             {
@@ -81,8 +81,8 @@ module.exports = {
         function MsgEdit() {
             if (!canal) return message.reply(`${e.Deny} | O sistema de boas-vindas deve estar ativado para usar esta função.`)
 
-            let mensagem = args[1]
-            if (!mensagem) return message.channel.send(`${e.Info} | Mensagem de boas-vindas padrão: **${WelcomeMsg}**\n${e.Obs} | Caso queira personalizar, use \`${prefix}welcome mensagem A mensagem de boas vindas\``)
+            let mensagem = args[1].join(' ')
+            if (!mensagem) return message.channel.send(`${e.Info} | Mensagem de boas-vindas padrão: **${WelcomeMsg}**\n${e.SaphireObs} | Caso queira personalizar, use \`${prefix}welcome mensagem A mensagem de boas vindas\``)
             if (mensagem.length > 1400) return message.reply(`${e.Deny} | A mensagem de boas-vindas não pode ultrapassar **1400 caracteres**.`)
 
             db.set(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`, mensagem)
@@ -103,7 +103,6 @@ module.exports = {
                 message.reply(`${e.Deny} | Este emoji não é um emoji customizado.`)
             }
         }
-
 
         function SetWelcomeOff() {
             canal ? SetOff() : message.reply(`${e.Deny} | O Welcome System já está desativado.`)
@@ -167,7 +166,9 @@ module.exports = {
 
                                         return msg.edit(`Aeee ${e.NezukoJump}! De agora em diante, vou falar no canal ${channel} sobre todo mundo que chegar aqui.\nTenta usar o \`${prefix}welcomechannel info\``).then(() => {
 
-                                            if (LeaveChannel) return
+                                            if (db.get(`Servers.${message.guild.id}.LeaveChannel`))
+                                                return
+
                                             message.channel.sendTyping().then(() => {
                                                 setTimeout(() => {
                                                     message.channel.send(`${e.QuestionMark} | ${message.author}, posso ativar o sistema de saídas no "${channel}" também?`).then(msg => {
@@ -184,11 +185,11 @@ module.exports = {
                                                                 if (reaction.emoji.name === '✅') {
                                                                     msg.edit(`${e.Loading} |  Autenticando... `).catch(err => { })
 
-                                                                        setTimeout(function () {
-                                                                            db.delete(`Request.${message.author.id}`)
-                                                                            db.set(`Servers.${message.guild.id}.LeaveChannel`, channel.id)
-                                                                            msg.edit(`${e.NezukoJump} | Ok, ok! Pode deixar comigo. Vou avisar no canal ${channel} sobre todo mundo que entrar e sair. ${e.Menhera}\nTenta usar o \`${prefix}welcomewelcomechannel info\``)
-                                                                        }, 3100)
+                                                                    setTimeout(function () {
+                                                                        db.delete(`Request.${message.author.id}`)
+                                                                        db.set(`Servers.${message.guild.id}.LeaveChannel`, channel.id)
+                                                                        msg.edit(`${e.NezukoJump} | Ok, ok! Pode deixar comigo. Vou avisar no canal ${channel} sobre todo mundo que entrar e sair. ${e.Menhera}\nTenta usar o \`${prefix}welcomewelcomechannel info\``)
+                                                                    }, 3100)
                                                                 } else {
                                                                     db.delete(`Request.${message.author.id}`)
                                                                     msg.edit(`${e.Deny} | Indicação abortada | ${client.user.id}`).catch(err => { })

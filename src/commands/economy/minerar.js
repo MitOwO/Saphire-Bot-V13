@@ -29,10 +29,10 @@ module.exports = {
         const Embed = new MessageEmbed()
 
         if (!canal)
-            return message.reply(`${e.Deny} | Este comando requer um canal específico.\n${e.Obs} | Você pode usar \`${prefix}channel farm minerar\` que eu faço tudo pra você!`)
+            return message.reply(`${e.Deny} | Este comando requer um canal específico.\n${e.SaphireObs} | Você pode usar \`${prefix}channel farm minerar\` que eu faço tudo pra você!`)
 
         if (canal.id !== message.channel.id)
-            return message.reply(`${e.Obs} | Este não é o canal de busca. Chega mais, é aqui: ${canal}`)
+            return message.reply(`${e.SaphireObs} | Este não é o canal de busca. Chega mais, é aqui: ${canal}`)
 
         if (canal.rateLimitPerUser < 1)
             canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).catch(err => { return message.channel.send(`${e.Warn} | Falha ao configurar o cooldown em 1 segundos.\n\`\`\`${err}\`\`\``) })
@@ -46,6 +46,7 @@ module.exports = {
         if (xusos <= 0)
             return message.reply(`${e.Deny} | **Picareta Danificada!** | Restaure ela na \`${prefix}loja\``)
 
+        db.subtract(`Xp_${message.author.id}`, 2)
         db.subtract(`${message.author.id}.Slot.Aguas`, 1)
         db.subtract(`${message.author.id}.Slot.Picareta.Usos`, 1)
         let rand = Math.floor(Math.random() * 15)

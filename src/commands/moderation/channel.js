@@ -51,7 +51,7 @@ module.exports = {
             case 'id':
                 ChannelId()
                 break;
-            case 'invite': case 'convite': case 'inv':
+            case 'invite': case 'convite': case 'inv': case 'link':
                 canal.permissionsFor(message.guild.me).has(Permissions.FLAGS.CREATE_INSTANT_INVITE) ? ChannelInvite() : message.reply(`${e.Deny} | Eu não tenho permissão para criar convites neste canal.`)
                 break;
             case 'sync': case 'sincronize': case 'sincronizar':
@@ -195,12 +195,13 @@ module.exports = {
             }
 
             function BuscaChannel() {
-                if (db.get(`Servers.${message.guild.id}.BuscaChannel`)) {
+                if (db.get(`Servers.${message.guild.id}.BuscaChannel`))
                     return message.reply(`${e.Info} | Já existe um canal farming neste servidor. -> <#${db.get(`Servers.${message.guild.id}.BuscaChannel`)}>`)
-                }
+
                 message.guild.channels.create('floresta-cammum', { type: 'GUILD_TEXT' }).then(channel => {
                     db.set(`Servers.${message.guild.id}.BuscaChannel`, channel.id)
                     let canal = message.guild.channels.cache.get(channel.id)
+                    canal.setTopic(`Use "${prefix}busca" para farmar`).catch(err => { })
                     canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
                         canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}busca\`. Boa sorte!`).catch(() => { })
                     }).catch(() => { })
@@ -209,9 +210,13 @@ module.exports = {
             }
 
             function PescaChannel() {
+                if (db.get(`Servers.${message.guild.id}.PescaChannel`))
+                    return message.reply(`${e.Info} | Já existe um canal farming neste servidor. -> <#${db.get(`Servers.${message.guild.id}.PescaChannel`)}>`)
+
                 message.guild.channels.create('farm-pesca', { type: 'GUILD_TEXT' }).then(channel => {
                     db.set(`Servers.${message.guild.id}.PescaChannel`, channel.id)
                     let canal = message.guild.channels.cache.get(channel.id)
+                    canal.setTopic(`Use "${prefix}pesca" para farmar`).catch(err => { })
                     canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
                         canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}pesca\`. Boa sorte!`).catch(() => { })
                     }).catch(() => { })
@@ -220,9 +225,13 @@ module.exports = {
             }
 
             function MineChannel() {
+                if (db.get(`Servers.${message.guild.id}.MineChannel`))
+                    return message.reply(`${e.Info} | Já existe um canal farming neste servidor. -> <#${db.get(`Servers.${message.guild.id}.MineChannel`)}>`)
+
                 message.guild.channels.create('mineração', { type: 'GUILD_TEXT' }).then(channel => {
                     db.set(`Servers.${message.guild.id}.MineChannel`, channel.id)
                     let canal = message.guild.channels.cache.get(channel.id)
+                    canal.setTopic(`Use "${prefix}mine" para farmar`).catch(err => { })
                     canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
                         canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}mine\`. Boa sorte!`).catch(() => { })
                     }).catch(() => { })

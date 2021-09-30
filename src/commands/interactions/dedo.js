@@ -24,7 +24,7 @@ module.exports = {
 
         if (user.id === client.user.id) return message.reply(`... ${e.SadPanda}`)
 
-        if (user.id === message.author.id) { return message.reply(`${e.Confuse} | Pqe faria isso?`) }
+        if (user.id === message.author.id) { return message.reply(`${e.SaphireQ} | Pqe faria isso?`) }
 
         let NoReact = db.get(`${user.id}.NoReact`)
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)

@@ -52,7 +52,7 @@ module.exports = {
                                         db.delete(`Request.${message.author.id}`)
                                         db.delete(`Servers.${message.guild.id}.LeaveChannel`)
                                         msg.edit({ embeds: [Autenticado] }).catch(err => { })
-                                        message.reply(`${e.Nagatoro} | Prontinho, agora eu não vou dizer mais nada quando alguém sair no servidor.`)
+                                        message.reply(`${e.SaphireFeliz} | Prontinho, agora eu não vou dizer mais nada quando alguém sair no servidor.`)
                                     }, 4000)
                                 })
                             } else {

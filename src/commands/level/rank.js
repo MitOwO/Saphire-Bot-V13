@@ -24,32 +24,7 @@ module.exports = {
 
         if (!args[0]) { return message.reply({ embeds: [RankingEmbed] }) }
 
-        if (['xp', 'level', 'nivel'].includes(args[0])) {
-            let data = db.all().filter(i => i.ID.startsWith("Xp_")).sort((a, b) => b.data - a.data)
-            if (data.length < 1) return message.reply(`${e.Deny} | Sem ranking por enquanto`)
-            let myrank = data.map(m => m.ID).indexOf(`Xp_${message.author.id}`) + 1 || "N/A"
-            data.length = 10
-            let lb = []
-            for (let i in data) {
-                let id = data[i].ID.split("_")[1]
-                let user = await client.users.fetch(id)
-                user = user ? user.tag : "Usuário não encontrado"
-                let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`level_${id}`); if (!level) level + 1
-                let xp = db.get(`Xp_${id}`)
-                let xpreq = Math.floor(level * 550)
-                lb.push({ user: { id, tag: user }, rank, level, xp, xpreq })
-            }
-
-            const embedxp = new MessageEmbed()
-                .setColor('YELLOW')
-                .setTitle(`${e.Star} Ranking - Experiência`)
-            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `${e.RedStar} ${d.level} *(${d.xp} / ${d.xpreq})*`) })
-            embedxp.setFooter(`Seu ranking: ${myrank}`)
-            return message.reply({ embeds: [embedxp] })
-
-        } else if (['xpid', 'levelid', 'nivelid'].includes(args[0])) {
-            if (message.author.id !== config.ownerId) return
+        if (['xp', 'level', 'nivel'].includes(args[0]?.toLowerCase())) {
 
             let data = db.all().filter(i => i.ID.startsWith("Xp_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply(`${e.Deny} | Sem ranking por enquanto`)
@@ -58,7 +33,7 @@ module.exports = {
             let lb = []
             for (let i in data) {
                 let id = data[i].ID.split("_")[1]
-                let user = await client.users.fetch(id)
+                let user = await client.users.cache.get(id) 
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
                 let level = db.get(`level_${id}`) || 1
@@ -76,7 +51,7 @@ module.exports = {
             embedxp.setFooter(`Seu ranking: ${myrank}`)
             return message.reply({ embeds: [embedxp] })
 
-        } else if (['dinheiro', 'money', 'cash', 'sp', 'coin', 'moeda', 'bank', 'coins'].includes(args[0])) {
+        } else if (['dinheiro', 'money', 'cash', 'sp', 'coin', 'moeda', 'bank', 'coins'].includes(args[0]?.toLowerCase())) {
 
             let data = db.all().filter(i => i.ID.startsWith("Bank_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply("Sem ranking por enquanto")
@@ -85,7 +60,7 @@ module.exports = {
             let lb = []
             for (let i in data) {
                 let id = data[i].ID.split("_")[1]
-                let user = await client.users.fetch(id)
+                let user = await client.users.cache.get(id) 
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
                 let balance = db.get(`Balance_${id}`) || '0'
@@ -102,7 +77,33 @@ module.exports = {
             embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
             return message.reply({ embeds: [embedxp] })
 
-        } else if (['like', 'curtidas', 'likes'].includes(args[0])) {
+        } else if (['carteira', 'wallet'].includes(args[0]?.toLowerCase())) {
+
+            let data = db.all().filter(i => i.ID.startsWith("Balance_")).sort((a, b) => b.data - a.data)
+            if (data.length < 1) return message.reply("Sem ranking por enquanto")
+            let myrank = data.map(m => m.ID).indexOf(`Balance_${message.author.id}`) + 1 || "N/A"
+            data.length = 10
+            let lb = []
+            for (let i in data) {
+                let id = data[i].ID.split("_")[1]
+                let user = await client.users.cache.get(id) 
+                user = user ? user.tag : "Usuário não encontrado"
+                let rank = data.indexOf(data[i]) + 1
+                let bank = db.get(`Bank_${id}`) || '0'
+                let balance = data[i].data
+                lb.push({ user: { id, tag: user }, rank, balance, bank, })
+            }
+
+            let loteria = db.get('Loteria.Prize') || '0'
+            const embedxp = new MessageEmbed()
+                .setColor('YELLOW')
+                .setTitle(`👑 Ranking - Global Money`)
+            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}\n🏦 ${d.bank} ${Moeda(message)}`) })
+            embedxp.setFooter(`Seu ranking: ${myrank} | Rank Base: Carteira`)
+            embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
+            return message.reply({ embeds: [embedxp] })
+
+        } else if (['like', 'curtidas', 'likes'].includes(args[0]?.toLowerCase())) {
             let data = db.all().filter(i => i.ID.startsWith("Likes_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply("Sem ranking por enquanto")
             let myrank = data.map(m => m.ID).indexOf(`Likes_${message.author.id}`) + 1 || "N/A"
@@ -110,7 +111,7 @@ module.exports = {
             let lb = []
             for (let i in data) {
                 let id = data[i].ID.split("_")[1]
-                let user = await client.users.fetch(id)
+                let user = await client.users.cache.get(id) 
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
                 let level = db.get(`Likes_${id}`)
@@ -122,30 +123,6 @@ module.exports = {
                 .setColor('YELLOW')
                 .setTitle(`👑 Ranking - Likes`)
             lb.forEach(d => { embedrep.addField(`${d.rank}. ${d.user.tag}`, `${e.Like} ${d.level} Likes`) })
-            embedrep.setFooter(`Seu ranking: ${myrank}`)
-            return message.reply({ embeds: [embedrep] })
-
-        } else if (['repid', 'reputaçãoid'].includes(args[0])) {
-            if (message.author.id !== config.ownerId) return
-            let data = db.all().filter(i => i.ID.startsWith("Likes_")).sort((a, b) => b.data - a.data)
-            if (data.length < 1) return message.reply("Sem ranking por enquanto")
-            let myrank = data.map(m => m.ID).indexOf(`Likes_${message.author.id}`) + 1 || "N/A"
-            data.length = 10
-            let lb = []
-            for (let i in data) {
-                let id = data[i].ID.split("_")[1]
-                let user = await client.users.fetch(id)
-                user = user ? user.tag : "Usuário não encontrado"
-                let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`Likes_${id}`)
-                let xp = data[i].data
-                lb.push({ user: { id, tag: user }, rank, level, xp, })
-            }
-
-            const embedrep = new MessageEmbed()
-                .setColor('YELLOW')
-                .setTitle("👑 Ranking - Reputação")
-            lb.forEach(d => { embedrep.addField(`${d.rank}. ${d.user.tag}`, `:id: *(${d.user.id})*\n💌 ${d.level} Reputações`) })
             embedrep.setFooter(`Seu ranking: ${myrank}`)
             return message.reply({ embeds: [embedrep] })
 

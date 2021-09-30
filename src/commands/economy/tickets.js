@@ -36,8 +36,8 @@ module.exports = {
 
         !isNaN(args[0]) ? Id(user.username, i) : User(i)
 
-        function Id(u, i) { message.channel.send(`${e.PandaProfit} | ${u} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(3)}% de chance de ganhar.\n🌐 | ${db.get('Loteria.Users').length} 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${db.get('Loteria.Prize') || 0} ${Moeda(message)} acumulados`) }
-        function User(i) { message.channel.send(`${e.PandaProfit} | ${user.user.username} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(3)}% de chance de ganhar.\n🌐 | ${db.get('Loteria.Users').length} 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${db.get('Loteria.Prize') || 0} ${Moeda(message)} acumulados`) }
+        function Id(u, i) { message.channel.send(`${e.PandaProfit} | ${u} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(2)}% de chance de ganhar.\n🌐 | ${db.get('Loteria.Users').length}/10000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${db.get('Loteria.Prize')?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${db.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`) }
+        function User(i) { message.channel.send(`${e.PandaProfit} | ${user.user.username} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(2)}% de chance de ganhar.\n🌐 | ${db.get('Loteria.Users').length}/10000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${db.get('Loteria.Prize')?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${db.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`) }
 
         function LockLotery() {
             if (db.get('Lotery.Close')) {

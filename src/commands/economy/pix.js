@@ -14,10 +14,6 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return InfoPix()
 
-        let time = ms(600000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Pix`)))
-        if (db.get(`${message.author.id}.Timeouts.Pix`) !== null && 600000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Pix`)) > 0)
-            return message.reply(`${e.Obs} | Você pode fazer um Pix a cada 10 Minutos.\n${e.Pix} | Tempo para o próximo Pix: \`${time.minutes}m e ${time.seconds}s\``).catch(err => { })
-
         let user = message.mentions.users.first() || client.users.cache.get(args[0]) || client.users.cache.get(args[1]) || message.mentions.repliedUser
         if (!isNaN(args[0]) && !user) return message.reply(`${e.Deny} | Eu não encontrei ninguém com esse ID...`)
         if (!user) return message.reply(`${e.Pix} | Transfira dinheiro de banco para banco, evitando roubos e assaltos. É assim olha: \`${prefix}pix <@user/id> <quantia>\``)
@@ -58,7 +54,6 @@ module.exports = {
         })
 
         function NewPix(msg) {
-            db.set(`${message.author.id}.Timeouts.Pix`, Date.now())
             db.add(`Bank_${user.id}`, (db.get(`${message.author.id}.Cache.Pix`) || 0))
             db.delete(`${message.author.id}.Cache.Pix`)
 
@@ -80,7 +75,7 @@ module.exports = {
         }
 
         function InfoPix() {
-            const PixEmbed = new MessageEmbed().setColor('#00BDAE').setTitle(`${e.Pix} ${client.user.username} PIX`).setDescription(`${e.Obs} Com o comando \`${prefix}pix\`, você pode fazer uma transferência de banco para banco.`).addField(`- Comando`, `\`${prefix}pix <@user/Id> <quantia>\``)
+            const PixEmbed = new MessageEmbed().setColor('#00BDAE').setTitle(`${e.Pix} ${client.user.username} PIX`).setDescription(`${e.SaphireObs} Com o comando \`${prefix}pix\`, você pode fazer uma transferência de banco para banco.`).addField(`- Comando`, `\`${prefix}pix <@user/Id> <quantia>\``)
             return message.reply({ embeds: [PixEmbed] })
         }
     }

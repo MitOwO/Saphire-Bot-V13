@@ -104,7 +104,7 @@ module.exports = {
                         let winner = db.get(`Lance.${message.author.id}`)[Math.floor(Math.random() * db.get(`Lance.${message.author.id}`).length)]
                         db.add(`${winner}.Cache.Resgate`, prize)
                         db.delete(`${message.author.id}.Prize`)
-                        message.channel.send(`${e.MoneyWings} | <@${winner}> pegou o ${prize} ${Moeda(message)} lançado por ${message.author}\n${e.Obs} | <@${winner}>, você possui ${(db.get(`${winner}.Cache.Resgate`) || 0)} ${Moeda(message)} no cache. Use \`${prefix}resgate\` para resgatar o prêmio ou \`${prefix}lance again\` para lançar ${db.get(`${winner}.Cache.Resgate`) || 0} ${Moeda(message)}.`).catch(err => { })
+                        message.channel.send(`${e.MoneyWings} | <@${winner}> pegou o ${prize} ${Moeda(message)} lançado por ${message.author}\n${e.SaphireObs} | <@${winner}>, você possui ${(db.get(`${winner}.Cache.Resgate`) || 0)} ${Moeda(message)} no cache. Use \`${prefix}resgate\` para resgatar o prêmio ou \`${prefix}lance again\` para lançar ${db.get(`${winner}.Cache.Resgate`) || 0} ${Moeda(message)}.`).catch(err => { })
                         db.delete(`Lance.${message.author.id}`)
                         return msg.edit(`${e.Check} ${message.author} lançou ${prize} ${Moeda(message)} no chat. | <@${winner}> levou este lance.`).catch(() => { })
                     }

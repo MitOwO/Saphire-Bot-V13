@@ -3,7 +3,6 @@ const { f } = require('../../../Routes/frases.json')
 const ms = require('parse-ms')
 const { MessageSelectMenu, MessageActionRow } = require("discord.js")
 const BuyingAway = require('../../../Routes/functions/BuyingAway')
-const TimeoutPrisionMax = require('../../../Routes/functions/TimeoutPrisionMax')
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 
@@ -34,26 +33,18 @@ module.exports = {
                 },
                 {
                     name: 'Loteria',
-                    value: `🎫 \`Ticket Loteria\` 10 ${Moeda(message)}\nPrêmio Atual: ${parseInt(db.get(`Loteria.Prize`)) || '0'} ${Moeda(message)}`
+                    value: `🎫 \`Ticket Loteria\` 10 ${Moeda(message)}\nPrêmio Atual: ${db.get(`Loteria.Prize`) ? parseInt(db.get(`Loteria.Prize`))?.toFixed(0) : '0'} ${Moeda(message)}`
                 },
                 {
                     name: 'Perfil',
-                    value: `💍 \`Anel de Casamento\` 350.000 ${Moeda(message)}\n⭐ \`Estrela1\` 1.000.000 ${Moeda(message)}\n⭐⭐ \`Estrela2\` 2.000.000 ${Moeda(message)}\n⭐⭐⭐ \`Estrela3\` 3.000.000 ${Moeda(message)}\n⭐⭐⭐⭐ \`Estrela4\` 4.000.000 ${Moeda(message)}\n🔰 \`Título\` 10.000 ${Moeda(message)}`
+                    value: `💍 \`Anel de Casamento\` 350.000 ${Moeda(message)}\n⭐ \`Estrela1\` 1.000.000 ${Moeda(message)}\n⭐⭐ \`Estrela2\` 2.000.000 ${Moeda(message)}\n⭐⭐⭐ \`Estrela3\` 3.000.000 ${Moeda(message)}\n⭐⭐⭐⭐ \`Estrela4\` 4.000.000 ${Moeda(message)}`
                 },
                 {
-                    name: 'Cores',
-                    value: `\`Verde\` 15000 ${Moeda(message)}\n\`Amarelo\` 15000 ${Moeda(message)}\n\`Azul\` 15000 ${Moeda(message)}`
+                    name: 'Permissões',
+                    value: `🎨 \`Cores\` 2.000.000 ${Moeda(message)}\n🔰 \`Título\` 10.000 ${Moeda(message)}`
                 }
             )
             .setFooter(`${prefix}buy | ${prefix}vender | ${prefix}slot | ${prefix}loja vip`)
-
-        const ColorEmbed = new MessageEmbed()
-            .setColor(color)
-            .setTitle('🎨 Cores')
-            .setDescription('As cores disponíveis customizam as embeds.')
-            .addField(`${e.On} Compre`, `\`${prefix}buy NomeDaCor\``)
-            .addField(`# Código Hex`, `\`${prefix}cor #34B946\` Verde\n\`${prefix}cor #3457B9\` Azul\n\`${prefix}cor #B9B334\` Amarelo`)
-            .addField(`${e.Gear} Configure`, `\`${prefix}setcolor\``)
 
         const itens = new MessageEmbed()
             .setColor(color)
@@ -62,9 +53,9 @@ module.exports = {
             .addField('Itens Únicos', 'Itens únicos são aqueles que você consegue comprar apenas um.\n \n🎣 `Vara de Pesca` Use para pescar `' + prefix + 'pescar`\n🔫 `Arma` Use para assaltar e se proteger `' + prefix + 'assaltar @user`\n🪓 `Machado` Use na floresta `' + prefix + 'floresta`\n')
             .addField('Itens Consumiveis', 'Itens consumiveis são aqueles que são gastos a cada vez que é usado\n \n⛏️ `Picareta` Use para minerar `' + prefix + 'cavar`\n🎫 `Ticket` Aposte na loteria `' + prefix + 'buy ticket`\n🎟️ `Fichas` Use na roleta `' + prefix + 'roleta`\n💌 `Cartas` Use para conquistar alguém `' + prefix + 'carta`\n🥘 `Comida` Use na floresta`' + prefix + 'buscar`\n🪱 `Iscas` Use para pescar `' + prefix + 'pescar`\n🥤 `Água` Use para minerar `' + prefix + 'minerar`')
             .addField('Itens Especiais', `Itens especiais são aqueles que são pegos na sorte nos mini-games\n \n${e.Star} \`Vip\` Mais informações no comando \`${prefix}vip\`\n${e.Loli} \`Loli\` Adquira na pesca \`${prefix}pescar\`\n🔪 \`Faca\` Adquira na pesca \`${prefix}pescar\`\n${e.Fossil} \`Fossil\` Adquira na mineração \`${prefix}minerar\`\n🦣 \`Mamute\` Adquira na mineração \`${prefix}minerar\`\n🐶 \`Brown\` Adquira na Floresta Cammum \`${prefix}floresta\`\n🥎 \`Bola do Brown\` Adquira na Floresta Cammum \`${prefix}floresta\`\n💊 \`Remédio do Velho Welter\` Adquira na Floresta Cammum \`${prefix}floresta\`\n${e.Doguinho} \`Cachorrinho/a\` Adquira no Castelo Heslow \`${prefix}medalha\`\n🏅 \`Medalha\` Adquira no Castelo Heslow \`${prefix}medalha\``)
-            .addField('Perfil', 'Itens de perfil são aqueles que melhora seu perfil\n \n⭐ `Estrela` Estrelas no perfil\n🔰 `Título` Mude o título no perfil `' + prefix + 'help perfil`')
+            .addField('Perfil', 'Itens de perfil são aqueles que melhora seu perfil\n \n⭐ `Estrela` Estrelas no perfil')
             .addField('Itens Coletaveis', 'Itens coletaveis são aqueles que você consegue nos mini-games, você pode vende-los para conseguir mais dinheiro.\n \n🍤 `Camarões` - Baú do Tesouro `' + prefix + 'pescar`\n🐟 `Peixes` - Baú do Tesouro `' + prefix + 'pescar`\n🌹 `Rosas` - Floresta Cammum `' + prefix + 'floresta`\n🍎 `Maças` - Floresta Cammum `' + prefix + 'floresta`\n🦴 `Ossos` - Mineração `' + prefix + 'minerar`\n🪨 `Minérios` - Mineração `' + prefix + 'minerar`\n💎 `Diamantes` - Mineração `' + prefix + 'minerar`')
-            .addField('Cores', 'Cores são utilizadas para editar a cor de suas mensagens')
+            .addField('Permissões', `Permissões libera comandos bloqueados\n \n🔰 \`Título\` Mude o título no perfil \`${prefix}titulo <Novo Título>\`\n🎨 \`Cores\` Mude as cores das suas mensagens \`${prefix}setcolor <#CódigoHex>\``)
 
         let args1 = args[1]
         if (args[0]) return BuyingAway(message, prefix, args, args1)
@@ -172,7 +163,7 @@ module.exports = {
                     },
                     {
                         label: 'Cores',
-                        description: `Personalize sua cor > ${prefix}setcolor`,
+                        description: `Personalize suas cores > ${prefix}setcolor`,
                         emoji: '🎨',
                         value: 'Cores',
                     },
@@ -218,25 +209,38 @@ module.exports = {
                         case 'RestaurarMachado': RestaurarMachado(); break;
                         case 'Picareta': Picareta(); break;
                         case 'RestaurarPicareta': RestaurarPicareta(); break;
-                        case 'Ticket': Ticket(); break;
+                        case 'Ticket': db.get(`${message.author.id}.Tickets`) ? Return() : Ticket(); break;
                         case 'Roleta': Roleta(); break;
                         case 'Carta': Cartas(); break;
                         case 'Comida': Comidas(); break;
                         case 'Iscas': Iscas(); break;
                         case 'Copo': Copos(); break;
+                        case 'Cores': NewColor(); break;
                         case 'Titulo': Titulo(); break;
-                        case 'Cores': Cores(); break;
                         case 'Close': db.delete(`Request.${message.author.id}`); msg.edit({ components: [] }).catch(err => { }); break;
                         default: msg.edit({ components: [PainelLoja] }).catch(err => { }); break;
                     }
                 })
                 function Itens() { msg.edit({ embeds: [itens] }).catch(err => { }) }
                 function Embed() { msg.edit({ embeds: [LojaEmbed] }).catch(err => { }) }
-                function Cores() { msg.edit({ embeds: [ColorEmbed] }).catch(err => { }) }
+                function Return() { return }
             })
         }
 
-        function NoMoney(x) { message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`) }
+        function NoMoney(x) {
+            db.delete(`${message.author.id}.Tickets`)
+            message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`)
+        }
+
+        function NewColor() {
+            db.get(`${message.author.id}.Color.Perm`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) > 2000000 ? BuyNewColor() : NoMoney(2000000))
+        
+            function BuyNewColor() {
+                db.subtract(`Balance_${message.author.id}`, 2000000); AddLoteria(1000000)
+                db.set(`${message.author.id}.Color.Perm`, true)
+                return message.channel.send(`${e.Check} | ${message.author} comprou a permissão 🎨 \`Cores\`.\n${e.PandaProfit} | -2000000 ${Moeda(message)}`)
+            }
+        }
 
         function VaraDePesca() {
             db.get(`${message.author.id}.Slot.Vara`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) > 180 ? BuyVara() : NoMoney(180))
@@ -336,29 +340,33 @@ module.exports = {
         }
 
         function Ticket() {
-            let time = ms(60000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Tickets`)))
-            if (db.get(`${message.author.id}.Timeouts.Tickets`) !== null && 60000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Pix`)) > 0) {
-                return message.reply(`${e.Deny} | Calminha aí: \`${time.seconds}s\``).catch(err => { })
-            } else {
+            if (db.get(`${message.author.id}.Tickets`)) return
 
-                if (db.get('Lotery.Close'))
-                    return message.reply(`${e.Deny} | A loteria não está aberta.`)
+            if (db.get('Lotery.Close'))
+                return message.reply(`${e.Deny} | A loteria não está aberta.`)
 
-                db.get(`Balance_${message.author.id}`) >= 500 ? BuyTicket() : NoMoney(500)
-                async function BuyTicket() {
-                    db.subtract(`Balance_${message.author.id}`, 500); AddLoteria(500);
-                    db.set(`${message.author.id}.Timeouts.Tickets`, Date.now())
-                    await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
-                        let i = 0; do {
-                            db.push('Loteria.Users', `${message.author.id}`)
-                            i++
-                        } while (i <= 50)
-                        msg.edit(`${e.Check} | ${message.author} comprou 50 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(err => { })
-                    }).catch(err => {
-                        message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
-                    })
+            db.get(`Balance_${message.author.id}`) >= 500 ? BuyTicket() : NoMoney(500)
+        }
+
+        async function BuyTicket() {
+            if (db.get(`${message.author.id}.Tickets`)) return
+            db.set(`${message.author.id}.Tickets`, true)
+            db.subtract(`Balance_${message.author.id}`, 500); AddLoteria(500);
+            await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
+                let i = 0; do {
+                    i++
+                    db.push('Loteria.Users', `${message.author.id}`)
+                } while (i <= 49)
+                msg.edit(`${e.Check} | ${message.author} comprou ${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(err => { })
+                setTimeout(() => { db.delete(`${message.author.id}.Tickets`) }, 1000)
+                if (db.get('Loteria.Users').length >= 10000) {
+                    db.set('Lotery.Close', true)
+                    return NewLoteryGiveaway()
                 }
-            }
+            }).catch(err => {
+                db.delete(`${message.author.id}.Tickets`)
+                message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
+            })
         }
 
         function Roleta() {
@@ -417,5 +425,92 @@ module.exports = {
         }
 
         function AddLoteria(x) { db.add('Loteria.Prize', x) }
+
+        function NewLoteryGiveaway() {
+
+            let Tickets = db.get('Loteria.Users') || false
+            let TicketsCompradosAoTodo = Tickets.length || false
+            let TicketPremiado = Tickets[Math.floor(Math.random() * Tickets.length)]
+
+            let i = 0
+            Tickets.forEach(TicketsComprados => {
+                if (TicketsComprados === TicketPremiado)
+                    i++
+            });
+
+            let TicketsComprados = i || '0'
+            let Prize = db.get('Loteria.Prize') || '0'
+            let tag = client.users.cache.get(TicketPremiado)
+
+            const WinEmbed = new MessageEmbed()
+                .setColor('GREEN')
+                .setTitle(`💸 | Loteria ${client.user.username}`)
+                .setDescription(`🎉 Vencedor*(a)*: ${tag.tag}\n:id: *\`${TicketPremiado}\`*\n💸 Prêmio: ${Prize} ${Moeda(message)}\n${tag.username} comprou 🎫 ${TicketsComprados} Tickets`)
+                .setFooter(`${TicketsCompradosAoTodo} Tickets foram comprados nesta loteria.`)
+
+            NewSorteio()
+
+            function NewSorteio() {
+                message.channel.send(`${e.Loading} | Iniciando sorteio...`).then(msg => {
+                    setTimeout(() => { msg.edit(`${e.Check} | Sorteio iniciado!\n${e.Loading} | Contabilizando Tickets...`).catch(() => { }) }, 3000)
+                    setTimeout(() => { msg.edit(`${e.Check} | Sorteio iniciado!\n${e.Check} | ${TicketsCompradosAoTodo} 🎫 Tickets contabilizados\n${e.Loading} | Sorteando um Ticket...`).catch(() => { }) }, 7000)
+                    setTimeout(() => { Winner(msg) }, 12000)
+                })
+            }
+
+            function Winner(msg) {
+                setTimeout(() => { msg.edit(`${e.Check} | Sorteio iniciado!\n${e.Check} | ${TicketsCompradosAoTodo} 🎫 Tickets contabilizados\n${e.Check} | Ticket sorteado!\n${e.Loading} | Autenticando Ticket...`).catch(() => { }) }, 4500)
+                let winner = client.users.cache.get(TicketPremiado)
+                if (!winner) {
+                    return msg.edit(`${e.Check} | Sorteio iniciado!\n
+                ${e.Check} | ${TicketsCompradosAoTodo} 🎫 Tickets contabilizados\n
+                ${e.Check} | Ticket sorteado!\n
+                ${e.Deny} | O ticket prêmiado pertence a um usuário que não está em nenhum servidor em que eu estou.\n
+                ${e.Loading} | Deletando todos os dados deste usuário...`).then(msg => {
+                        db.delete(`${TicketPremiado}`); db.delete(`Bank_${TicketPremiado}`); db.delete(`Balance_${TicketPremiado}`); db.delete(`Xp_${TicketPremiado}`); db.delete(`level_${TicketPremiado}`); db.delete(`Vip_${TicketPremiado}`); db.delete(`Likes_${TicketPremiado}`); db.delete(`Bitcoin_${TicketPremiado}`);
+                        setTimeout(() => {
+                            msg.edit(`${e.Check} | Sorteio iniciado!\n
+                ${e.Check} | ${TicketsCompradosAoTodo} 🎫 Tickets contabilizados\n
+                ${e.Check} | Ticket sorteado!\n
+                ${e.Deny} | O ticket prêmiado pertence a um usuário que não está em nenhum servidor em que eu estou.\n
+                ${e.Check} | Todos os dados pertencentes a \`${TicketPremiado}\` foram deletados com sucesso!\n
+                ${e.Loading} | Iniciando um novo sorteio...`).catch(() => { })
+                        }, 4500)
+                        setTimeout(() => { NewSorteio() }, 9500)
+                    })
+                } else {
+                    setTimeout(() => { NewTicketAwarded(msg, winner) }, 4500)
+                }
+            }
+
+            function NewTicketAwarded(msg, winner) {
+                msg.delete().catch(() => { })
+                message.channel.send({ embeds: [WinEmbed] })
+                db.add(`${winner.id}.Cache.Resgate`, (db.get('Loteria.Prize') || 0))
+                db.set('Loteria.LastWinner', `${winner.tag} *\`${winner.id}\`* | ${parseInt(db.get('Loteria.Prize'))?.toFixed(0) || 'Buguinho de Valores'}`)
+                try {
+                    winner.send(`${e.PandaProfit} | Oi oi, estou passando aqui para te falar que você foi o ganhador*(a)* da Loteria.\n${e.MoneyWings} | Você ganhou o prêmio de ${Prize} ${e.Coin} Moedas.\n${e.SaphireObs} | Você pode resgatar ele a qualquer momento usando \`-resgate\``)
+                } catch (err) {
+                    message.channel.send(`${e.Deny} | Não foi possível contactar o vencedor(a).`)
+                }
+                message.channel.send(`${e.Loading} | Alocando prêmio ao vencedor*(a)* e deletando todos os dados da Loteria...`).then(msg => {
+                    setTimeout(() => {
+                        msg.edit(`${e.Check} | Prêmio entregue com sucesso ao cache do vencedor*(a)* e todos os dados da Loteria foram apagados!`).catch(() => { });
+                        NewLotery()
+                    }, 3500)
+                })
+            }
+
+            function NewLotery() {
+                message.channel.send(`${e.Loading} | Iniciando uma nova loteria...`).then(msg => {
+                    setTimeout(() => {
+                        db.delete('Lotery.Close')
+                        db.delete('Loteria.Prize')
+                        db.set('Loteria.Users', [])
+                        msg.edit(`${e.Check} | Uma nova loteria foi iniciada com sucesso!`)
+                    }, 4000)
+                })
+            }
+        }
     }
 }

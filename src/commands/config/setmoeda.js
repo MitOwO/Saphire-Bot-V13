@@ -21,7 +21,7 @@ module.exports = {
                 new MessageEmbed()
                     .setColor('BLUE')
                     .setTitle(`${e.Info} Edite a moeda do servidor`)
-                    .setDescription(`${e.Obs} Com este comando você pode editar o Emoji e o nome da Moeda no servidor.`)
+                    .setDescription(`${e.SaphireObs} Com este comando você pode editar o Emoji e o nome da Moeda no servidor.`)
                     .addFields(
                         {
                             name: `${e.PandaProfit} Moeda Atual`,
@@ -40,7 +40,7 @@ module.exports = {
             ]
         })
 
-        if (args[2]) return message.reply(`${e.Deny} | Nada além do emoji e do nome da moeda.\n${e.Obs} | O nome da moeda não pode conter espaços.\n${e.Gear} | Comando: \`${prefix}setmoeda [Emoji(opcional)] NomeDaMoeda\``)
+        if (args[2]) return message.reply(`${e.Deny} | Nada além do emoji e do nome da moeda.\n${e.SaphireObs} | O nome da moeda não pode conter espaços.\n${e.Gear} | Comando: \`${prefix}setmoeda [Emoji(opcional)] NomeDaMoeda\``)
         if (['reset', 'del', 'deletar'].includes(args[0]?.toLowerCase())) return ResetMoeda()
 
         let Emoji = Util.parseEmoji(args[0])

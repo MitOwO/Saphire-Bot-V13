@@ -25,9 +25,9 @@ module.exports = {
         let NoReact = db.get(`${user.id}.NoReact`)
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
-        if (user.id === client.user.id) return message.reply(`${e.Aa} | Beija eu naaaum.`)
+        if (user.id === client.user.id) return message.reply(`${e.SaphireTimida} | Beija eu naaaum.`)
 
-        if (user.id === message.author.id) { return message.reply(`${e.Confuse} | Beijar você mesmo é meio impossível, não?`) }
+        if (user.id === message.author.id) { return message.reply(`${e.SaphireQ} | Beijar você mesmo é meio impossível, não?`) }
 
         const embed = new MessageEmbed()
             .setColor('BLUE')

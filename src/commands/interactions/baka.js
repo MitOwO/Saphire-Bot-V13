@@ -8,7 +8,7 @@ module.exports = {
   category: 'interactions',
   UserPermissions: '',
   ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS'],
-  emoji: `${e.Confuse}`,
+  emoji: `${e.SaphireQ}`,
   usage: '<baka> [@user]',
   description: 'Baka baka baka',
 

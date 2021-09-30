@@ -82,10 +82,10 @@ module.exports = {
             let user = message.mentions.members.first()
             if (!args[0] || !user) return message.reply(`${e.Info} | Para banir alguém se faz assim \`${prefix}ban @user Motivo do banimento\`\n${e.QuestionMark} | Quer ver a lista de bans do servidor? \`${prefix}ban list\`\n${e.ModShield} | Quer banir usando a força? \`${prefix}ban ID Motivo do banimento\``)
             if (db.get(`Client.Whitelist.${user.id}`)) { return message.reply(`${e.Deny} | Este usuário está na minha WhiteList.`) }
-            if (user.id === message.author.id) { return message.reply(`${e.Confuse} | Por qual motivo neste mundo você se baniria? Vem ver isso @.everyone! Ele quer se banir`) }
+            if (user.id === message.author.id) { return message.reply(`${e.SaphireQ} | Por qual motivo neste mundo você se baniria? Vem ver isso @.everyone! Ele quer se banir`) }
             if (user.id === message.guild.ownerId) { return message.reply(`${e.Deny} | Não dá para banir o dono do servidor, sabia?`) }
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Deny} | Não posso banir um administrador... Que abuso é esse?`)
-            if (!user.bannable) return message.reply(`${e.Confuse} | Por algum motivo eu não posso banir esta pessoa.`)
+            if (!user.bannable) return message.reply(`${e.SaphireQ} | Por algum motivo eu não posso banir esta pessoa.`)
 
             return message.reply(`${e.QuestionMark} | ${message.author}, você está prestes a banir ${user} do servidor pelo motivo -> "**${reason}**".\nDeseja prosseguir com o banimento?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
