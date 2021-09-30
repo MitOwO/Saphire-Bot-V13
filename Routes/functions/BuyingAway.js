@@ -11,7 +11,6 @@ function BuyingAway(message, prefix, args, args1) {
 
     let vip = db.get(`Vip_${message.author.id}`)
     let money = db.get(`Balance_${message.author.id}`) || 0
-    let bank = db.get(`Bank_${message.author.id}`) || 0
     const BuyColorEmbed = new MessageEmbed()
 
     function NoMoney(x) { message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`) }
@@ -20,11 +19,12 @@ function BuyingAway(message, prefix, args, args1) {
 
     // Itens - BuyItem(NameDB, ItemName, Price)
     if (['vara de pesca', 'vara', 'pesca'].includes(args[0]?.toLowerCase())) return BuyItem('Vara', 'Vara de Pesca', 180) // VaraDePesca()
-    if (['anel'].includes(args[0]?.toLowerCase())) return BuyItem('Anel', 'Anel de Casamento', 350000) // VaraDePesca()
-    if (['machado', 'Machado'].includes(args[0]?.toLowerCase())) return BuyItem('Machado', 'Machado', 120) // Machado()
-    if (['arma', 'gun', 'Arma'].includes(args[0]?.toLowerCase())) return BuyItem('Arma', 'Arma', 4700) // Arma()
+    if (['anel', 'ring'].includes(args[0]?.toLowerCase())) return BuyItem('Anel', 'Anel de Casamento', 350000) // VaraDePesca()
+    if (['machado', 'axe'].includes(args[0]?.toLowerCase())) return BuyItem('Machado', 'Machado', 120) // Machado()
+    if (['arma', 'gun'].includes(args[0]?.toLowerCase())) return BuyItem('Arma', 'Arma', 4700) // Arma()
     if (['picareta'].includes(args[0]?.toLowerCase())) return BuyItem('Picareta', 'Picareta', 120) // Picareta()
-    if (['título', 'title', 'titulo', 'Título'].includes(args[0]?.toLowerCase())) return BuyPerfil('TitlePerm', 'Título', 10000) // Titulo()
+    if (['título', 'title', 'titulo'].includes(args[0]?.toLowerCase())) return BuyPerfil('TitlePerm', 'Título', 10000) // Titulo()
+    if (['cor', 'cores', 'color', 'colors'].includes(args[0]?.toLowerCase())) return ColorPerm() // Color()
 
     // Consumiveis - Consumivel(NomeDB, NomeAwnsers, quantia, Limit, Price)
     if (['ficha', 'fichas'].includes(args[0]?.toLowerCase())) return Consumivel('Fichas', 'fichas', parseInt(args1), 50, 5) // FichasDaRoleta()
@@ -33,15 +33,6 @@ function BuyingAway(message, prefix, args, args1) {
     if (['comida', 'food', 'comidas'].includes(args[0]?.toLowerCase())) return Consumivel('Comidas', 'comidas', parseInt(args1), 70, 2)
     if (['Carta', 'carta', 'cartas', 'Cartas', 'letter', 'Letter'].includes(args[0]?.toLowerCase())) return Consumivel('Cartas', 'cartas', parseInt(args1), 20, 100)
 
-    // Cores - Color('ColorDB', 'ColorName', '#HEX', Price, VIP(boolean))
-    if (['ciano', 'ciane'].includes(args[0]?.toLowerCase())) return Color('Ciane', 'Ciano', '#00FFFF', 1000000, true)
-    if (['vermelho', 'red'].includes(args[0]?.toLowerCase())) return Color('Red', 'Vermelho', '#B62A2A', 100000, true)
-    if (['branco', 'white'].includes(args[0]?.toLowerCase())) return Color('White', 'Branco', '#FFFFFF', 100000, true)
-    if (['rosa', 'pink'].includes(args[0]?.toLowerCase())) return Color('Pink', 'Rosa', '#C71585', 100000, true)
-    if (['laranja', 'orange'].includes(args[0]?.toLowerCase())) return Color('Orange', 'Laranja', '#FF4500', 100000, true)
-    if (['verde', 'green'].includes(args[0]?.toLowerCase())) return Color('Green', 'Verde', '#34b946', 15000, false)
-    if (['amarelo', 'yellow'].includes(args[0]?.toLowerCase())) return Color('Yellow', 'Amarelo', '#b9b334', 15000, false)
-    if (['azul', 'blue'].includes(args[0]?.toLowerCase())) return Color('Blue', 'Azul', '#3457b9', 15000, false)
     if (['estrela1'].includes(args[0]?.toLowerCase())) return Estrela1()
     if (['estrela2'].includes(args[0]?.toLowerCase())) return Estrela2()
     if (['estrela3'].includes(args[0]?.toLowerCase())) return Estrela3()
@@ -125,7 +116,7 @@ function BuyingAway(message, prefix, args, args1) {
 
         function BuyItemFunction() {
             db.subtract(`Balance_${message.author.id}`, Price); AddLoteria(Price / 2)
-            db.set(`${message.author.id}.Slot.${NameDB}`, `${NameDB}`)
+            db.set(`${message.author.id}.Slot.${NameDB}`, true)
             return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`${ItemName}\`\n${e.PandaProfit} | -${Price} ${Moeda(message)}`)
         }
     }
@@ -135,8 +126,18 @@ function BuyingAway(message, prefix, args, args1) {
 
         function BuyItemFunction() {
             db.subtract(`Balance_${message.author.id}`, Price); AddLoteria(Price / 2)
-            db.set(`${message.author.id}.Perfil.${NameDB}`, `${NameDB}`)
+            db.set(`${message.author.id}.Perfil.${NameDB}`, true)
             return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`${ItemName}\`\n${e.PandaProfit} | -${Price} ${Moeda(message)}`)
+        }
+    }
+
+    function ColorPerm() {
+        db.get(`${message.author.id}.Color.Perm`) ? JaPossui() : (money >= 2000000 ? BuyItemFunction() : NoMoney(2000000))
+
+        function BuyItemFunction() {
+            db.subtract(`Balance_${message.author.id}`, 2000000); AddLoteria(1000000)
+            db.set(`${message.author.id}.Color.Perm`, true)
+            return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`Color\`\n${e.PandaProfit} | -2000000 ${Moeda(message)}`)
         }
     }
 
@@ -173,18 +174,6 @@ function BuyingAway(message, prefix, args, args1) {
             } while (db.get(`${message.author.id}.Slot.${NomeTec}`) <= Limit)
             message.channel.send(`${e.Check} | ${message.author} completou o limite de ${NomeUser} comprando +${i - 1} ${NomeUser}.\n${e.PandaProfit} | -${Price * i - 1} ${Moeda(message)}`)
         }
-    }
-
-    function Color(NameEN, NamePT, Code, Price, Vip) {
-        if (Vip === true) { if (!vip) return message.reply(`${e.Star} | Esta é uma cor exclusiva para vips.\nSaiba mais em \`${prefix}vip\``) }
-        if (db.get(`${message.author.id}.Color.${NameEN}`)) { return message.reply(`${e.Deny} | Você já possui este item.`) }
-        if (money >= Price) {
-            db.subtract(`Balance_${message.author.id}`, Price)
-            db.set(`${message.author.id}.Color.${NameEN}`, Code)
-            AddLoteria(Price / 2)
-            BuyColorEmbed.setColor(Code).setDescription(`\`${prefix}setcolor\``)
-            return message.reply({ content: `${e.Check} | ${message.author} comprou a cor ${NamePT}\n${e.PandaProfit} -${Price} ${Moeda(message)}`, embeds: [BuyColorEmbed] })
-        } else { NoMoney(Price) }
     }
 }
 
