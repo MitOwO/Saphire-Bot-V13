@@ -29,6 +29,10 @@ client.on('messageCreate', async message => {
     let PresoTimeout = db.get(`${message.author.id}.Timeouts.Preso`)
     let time = ms(timeout2 - (Date.now() - PresoTimeout))
 
+    if (message.content?.toLowerCase() === 'saphire') {
+        message.channel.send(`${e.SaphireHi} | \`${prefix}help\``).catch(() => { })
+    }
+
     if (message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY) && message.guild.me.permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS) && message.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS)) {
 
         if (!message.author.bot) {
@@ -38,21 +42,18 @@ client.on('messageCreate', async message => {
             AfkSystem(message)
         }
 
-        if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id)) message.channel.send(`${e.Pikachu} | \`${prefix}help\``)
-
-            if (!db.get('451619591320371213.Perfil.Estrela.5')) {
-                if (db.get('Warned')) return
-                client.users.cache.get(config.ownerId).send(`${message.url}\n \nESTRELAS RESETADAS\n \n${message.author}\`${message.author.tag} ${message.author.id}\`\n \nMsg Content: ${message.content}`)
-                db.set('Warned', true)
-            }
+        if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id)) message.channel.send(`${e.SaphireHi} | \`${prefix}help\``)
 
         if (cooldown.has(message.author.id)) {
-            return message.react('⏱️').catch(err => { })
+            return message.react('⏱️').catch(err => {
+                message.reply(`⏱️ | Calminha \`1s\``)
+            })
         } else {
 
             if (db.get(`Servers.${message.guild.id}.Blockchannels.Bots.${message.channel.id}`)) {
                 if (message.author.bot) {
-                    if (message.author.id === client.user.id) return
+                    if (message.author.id === client.user.id)
+                        return
                     message.delete().then(() => {
                         return message.channel.send(`${e.Deny} | Comandos de bots foram bloqueados neste canal.`).then(msg => setTimeout(() => { msg.delete().catch(err => { }) }, 4500))
                     }).catch(err => {
@@ -105,7 +106,7 @@ client.on('messageCreate', async message => {
                     }
                 }
 
-                if (db.get(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.Obs} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? \`${prefix}bug\``)
+                if (db.get(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.SaphireObs} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? \`${prefix}bug\``)
 
                 try {
                     if (db.get(`Server.${message.guild.id}.Tsundere`)) {
