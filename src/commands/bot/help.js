@@ -22,10 +22,10 @@ module.exports = {
             .setColor("BLUE")
             .setTitle(`${e.BlueHeart} Centralzinha de Ajuda da ${client.user.username}`)
             .setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=applications.commands%20bot`)
-            .setDescription(`${e.HiNagatoro} Oi oooi, este é o meu painel de ajuda, seja bem-vindo(a)!`)
-            .addField(`${e.Obs} Painelzinho diferenciado`, `Você pode navegar por todos os meus comandos usando essa barrinha aqui em baixo. Não é nada difícil, te garanto. É tudo dividido em categorias.`)
+            .setDescription(`${e.SaphireFeliz} Oi oooi, este é o meu painel de ajuda, seja bem-vindo(a)!`)
+            .addField(`${e.SaphireObs} Painelzinho diferenciado`, `Você pode navegar por todos os meus comandos usando essa barrinha aqui em baixo. Não é nada difícil, te garanto. É tudo dividido em categorias.`)
             .addField(`${e.Commands} Categorias`, `As categorias representam as classes de cada comando. Logo, o comando que procura está em sua própria categoria. Quer algum comando referente a economia? Só ir na categoria economia, óras bolas.`)
-            .addField(`${e.Info} Comandos de Suporte`, `${e.Report} \`${prefix}bug\` Reporte bugs/erros diretamente ao meu criador.\n${e.Trig} \`${prefix}gif\` Envie gifs para serem adicionados ao package.\n${e.Stonks} \`${prefix}sugest\` Tem alguma ideia/sugestão pra mim?\n${e.NezukoDance} \`${prefix}servers\` Meu servidor e a Super ☁️[Cloud's Kingdom](${CloudKingdomInvite}).`)
+            .addField(`${e.Info} Comandos de Suporte`, `${e.Report} \`${prefix}bug\` Reporte bugs/erros diretamente ao meu criador.\n${e.Trig} \`${prefix}gif\` Envie gifs para serem adicionados ao package.\n${e.Stonks} \`${prefix}sugest\` Tem alguma ideia/sugestão pra mim?\n${e.NezukoDance} \`${prefix}servers\` Meus servidores e a Super ☁️[Cloud's Kingdom](${CloudKingdomInvite}).`)
             .addField(`🛰️ Global System Notification`, `Ative o \`${prefix}logs\` e deixa que eu aviso tudo sobre tudo, pode ficar despreocupado(a)!`)
             .setFooter(`O ${prefix}help fechará por inatividade em 1 minuto.`)
 
@@ -151,7 +151,7 @@ module.exports = {
 
             coletor.on('end', async (collected) => {
                 db.delete(`Request.${message.author.id}`)
-                msg.edit({ embeds: [] }).catch(err => { })
+                msg.edit({ components: [] }).catch(err => { })
             })
 
             coletor.on('collect', async (collected) => {

@@ -110,7 +110,7 @@ module.exports = {
                             })
                             setTimeout(() => {
                                 db.delete(`Request.${message.author.id}`)
-                                message.reply(`Prefixo \`${args[0]}\` novinho em folha! Só não esquece, ok? ${e.Nagatoro}`)
+                                message.reply(`Prefixo \`${args[0]}\` novinho em folha! Só não esquece, ok? ${e.SaphireFeliz}`)
                             }, 3100)
                         }
                     } else {
