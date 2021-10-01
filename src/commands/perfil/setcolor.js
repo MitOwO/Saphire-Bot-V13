@@ -17,14 +17,14 @@ module.exports = {
 
         if (['off', 'delete', 'deletar', 'tirar'].includes(args[0]?.toLowerCase())) return SetColorOff()
 
-        isHex(args[0]) ? setHex(args[0]) : InvalidHex()
+        isHex(args[0]) ? setHex(args[0]) : InvalidHex(args[0])
 
         function isHex(value) {
             return /^#[0-9A-F]{6}$/i.test(`${value}`) // True/False
         }
 
         function InvalidHex(value) {
-            return message.reply(`${e.Deny} | Este não é um código #HEX válido.`)
+            return message.reply(`${e.Deny} | \`${value}\` | Não é um código #HEX válido.`)
         }
 
         function SetColorOff() {

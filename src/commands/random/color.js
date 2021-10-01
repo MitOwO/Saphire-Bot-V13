@@ -28,13 +28,19 @@ module.exports = {
 
         } else if (args[0].startsWith("#")) {
 
-            if (args[0].length !== 7) {
-                return message.reply(`${e.Deny} | Código #HEX Inválido. Verifique se o #HEX possui 7 digitos, incluindo a #.`)
-            } else {
+            isHex(args[0]) ? SentHexMessage(args[0]) : InvalidHex(args[0])
+
+            function isHex(value) {
+                return /^#[0-9A-F]{6}$/i.test(`${value}`) // True/False
+            }
+
+            function InvalidHex(value) {
+                return message.reply(`${e.Deny} | \`${value}\` | Não é um código #HEX válido.`)
+            }
+
+            function SentHexMessage(value) {
                 const EmbedHex = new MessageEmbed().setColor(args[0]).setDescription(`🎨 \`${args[0]}\``)
-                return message.reply({ embeds: [EmbedHex] }).catch(err => {
-                    return message.reply(`${e.Deny} | Código #HEX Inválido.`)
-                })
+                return message.reply({ embeds: [EmbedHex] })
             }
 
         } else if (['preto', 'black', 'dark', 'preta'].includes(args[0]?.toLowerCase())) {
