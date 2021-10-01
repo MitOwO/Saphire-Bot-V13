@@ -92,9 +92,13 @@ module.exports = {
             if (['texto', 'text'].includes(args[1])) {
 
                 const NomeDoCanal = args.slice(2).join(" ").toLowerCase()
-                if (!NomeDoCanal) { return message.reply(`${e.Deny} | Você se esqueceu do nome do canal.\n\`${prefix}channel create text NomeDoCanal\``) }
-                if (NomeDoCanal.length > 40) { return message.reply(`${e.Deny} | O nome do canal não pode ultrapassar **40 caracteres**`) }
-                message.guild.channels.create(NomeDoCanal, { type: 'GUILD_TEXT' }).then(channel => {
+                if (!NomeDoCanal) return message.reply(`${e.Deny} | Você se esqueceu do nome do canal.\n\`${prefix}channel create text NomeDoCanal\``)
+                if (NomeDoCanal.length > 40) return message.reply(`${e.Deny} | O nome do canal não pode ultrapassar **40 caracteres**`)
+
+                message.guild.channels.create(NomeDoCanal, {
+                    type: 'GUILD_TEXT',
+                    topic: `Para definir um tópico, use ${prefix}channel topic <O novo tópico>`
+                }).then(channel => {
                     return message.reply(`${e.Check} | Canal de texto criado com sucesso. | ${channel}`)
                 }).catch(err => {
                     return message.channel.send(`${e.Deny} | Ocorreu um erro ao criar um novo canal.\n\`${err}\``)
@@ -105,7 +109,10 @@ module.exports = {
                 const NomeDoCanal = args.slice(2).join(" ").toLowerCase()
                 if (!NomeDoCanal) { return message.reply(`${e.Deny} | Você se esqueceu do nome do canal.\n\`${prefix}channel create voice NomeDoCanal\``) }
                 if (NomeDoCanal.length > 40) { return message.reply(`${e.Deny} | O nome do canal não pode ultrapassar **40 caracteres**`) }
-                message.guild.channels.create(NomeDoCanal, { type: 'GUILD_VOICE' }).then(channel => {
+                message.guild.channels.create(NomeDoCanal, {
+                    type: 'GUILD_VOICE',
+                    reason: `Canal criador por: ${message.author.tag}`,
+                }).then(channel => {
                     return message.reply(`${e.Check} | Canal de voz criado com sucesso. ${channel}`)
                 }).catch(err => {
                     return message.channel.send(`${e.Deny} | Ocorreu um erro ao criar um novo canal.\n\`${err}\``)
@@ -168,8 +175,9 @@ module.exports = {
         }
 
         function SetName() {
+            if (!message.mentions.channels.first()) return message.reply(`${e.Deny} | Você não me disse o canal.\n\`${prefix}channel name #canal NomeDoCanal\``)
             const NovoNome = args.slice(2).join(" ").toLowerCase()
-            if (!NovoNome) { return message.reply(`${e.Deny} | Você não me disse o novo nome do canal.\n\`${prefix}channel name #canal NomeDoCanal\``) }
+            if (!NovoNome) return message.reply(`${e.Deny} | Você não me disse o novo nome do canal.\n\`${prefix}channel name #canal NomeDoCanal\``)
             if (NovoNome.length > 40) { return message.reply(`${e.Deny} | O nome do canal não pode ultrapassar **40 caracteres**`) }
             canal.setName(NovoNome, [`Author: ${message.author.tag}`]).then(NewName => {
                 return message.reply(`${e.Check} | Canal renomeado para **${NewName}**`)

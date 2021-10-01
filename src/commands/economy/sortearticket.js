@@ -24,13 +24,15 @@ module.exports = {
             if (TicketsComprados === TicketPremiado)
                 i++
         });
+        
         let TicketsComprados = i || '0'
         let Prize = db.get('Loteria.Prize') || '0'
+        let tag = client.users.cache.get(TicketPremiado)
 
         const WinEmbed = new MessageEmbed()
             .setColor('GREEN')
             .setTitle(`💸 | Loteria ${client.user.username}`)
-            .setDescription(`🎉 Vencedor*(a)*: <@${TicketPremiado}>\n:id: *${TicketPremiado}*\n💸 Prêmio: ${Prize} ${Moeda(message)}\n<@${TicketPremiado}> comprou 🎫 ${TicketsComprados} Tickets`)
+            .setDescription(`🎉 Vencedor*(a)*: ${tag.tag}\n:id: *${TicketPremiado}*\n💸 Prêmio: ${Prize} ${Moeda(message)}\n<@${TicketPremiado}> comprou 🎫 ${TicketsComprados} Tickets`)
             .setFooter(`${TicketsCompradosAoTodo} Tickets foram comprados nesta loteria.`)
 
         NewSorteio()
@@ -72,7 +74,7 @@ module.exports = {
         function NewTicketAwarded(msg, winner) {
             msg.delete().catch(() => { })
             message.channel.send({ embeds: [WinEmbed] })
-            db.add(`${winner.id}.Cache.Resgate`, Prize)
+            db.add(`${winner.id}.Cache.Resgate`, (db.get('Loteria.Prize') || 0))
             db.set('Loteria.Users', [])
             try {
                 winner.send(`${e.PandaProfit} | Oi oi, estou passando aqui para te falar que você foi o ganhador*(a)* da Loteria.\n${e.MoneyWings} | Você ganhou o prêmio de ${Prize} ${e.Coin} Moedas.\n${e.Obs} | Você pode resgatar ele a qualquer momento usando \`-resgate\``)

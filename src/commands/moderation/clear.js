@@ -23,7 +23,7 @@ module.exports = {
 
     if (!args[0]) { return message.reply({ embeds: [clearembed] }) }
 
-    let user = message.mentions.members.first()
+    let user = message.mentions.members.first() || message.mentions.repliedUser
     if (user) {
 
       let MsgsPraDeletar = args[1]
@@ -86,6 +86,9 @@ module.exports = {
             Error(message, err)
             return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
           })
+        }).catch(err => {
+          Error(message, err)
+          return message.reply(`${e.Deny} | Opa!"\n\`${err}\``)
         })
       }).catch(err => {
         Error(message, err)

@@ -57,7 +57,7 @@ module.exports = {
             return message.channel.send(`${e.Loading} Verificando código pessoal...`).then(msg => {
                 setTimeout(() => {
                     db.set(`${message.author.id}.Slot.Medalha.Code1`, true)
-                    msg.edit('✅ | 1/2 | Você disse o primeiro código com sucesso!').catch(() => { })
+                    msg.edit(`${e.Check} | 1/2 | Você disse o primeiro código com sucesso!`).catch(() => { })
                 }, 3000)
             })
         }

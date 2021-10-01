@@ -60,17 +60,18 @@ module.exports = {
             const DeniedPaymentCollector = msg.createReactionCollector({ filter: DeniedPaymentFilter, max: 1, time: 60000 });
 
             PaymentCollector.on('collect', (reaction, u) => {
-                if (u.id === client.user.id) return
                 db.push(`${message.author.id}.Pay`, `${u.id}`)
 
-                if (u.id === user.id) {
-                    db.set(`${message.author.id}.EmojiUser`, e.Check)
-                    msg.edit(`${e.QuestionMark} | ${message.author} e ${user}, vocês confirmam a transferência?\n${db.get(`${message.author.id}.EmojiAuthor`) || `${e.Loading}`} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${db.get(`${message.author.id}.EmojiUser`) || `${e.Check}`} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**`).catch(() => { })
-                }
-
-                if (u.id === message.author.id) {
-                    db.set(`${message.author.id}.EmojiAuthor`, e.Check)
-                    msg.edit(`${e.QuestionMark} | ${message.author} e ${user}, vocês confirmam a transferência?\n${db.get(`${message.author.id}.EmojiAuthor`) || `${e.Check}`} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${db.get(`${message.author.id}.EmojiUser`) || `${e.Loading}`} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**`).catch(() => { })
+                switch (u.id) {
+                    case user.id:
+                        db.set(`${message.author.id}.EmojiUser`, e.Check)
+                        msg.edit(`${e.QuestionMark} | ${message.author} e ${user}, vocês confirmam a transferência?\n${db.get(`${message.author.id}.EmojiAuthor`) || `${e.Loading}`} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${db.get(`${message.author.id}.EmojiUser`) || `${e.Check}`} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**`).catch(() => { })
+                        break;
+                    case message.author.id:
+                        db.set(`${message.author.id}.EmojiAuthor`, e.Check)
+                        msg.edit(`${e.QuestionMark} | ${message.author} e ${user}, vocês confirmam a transferência?\n${db.get(`${message.author.id}.EmojiAuthor`) || `${e.Check}`} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${db.get(`${message.author.id}.EmojiUser`) || `${e.Loading}`} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**`).catch(() => { })
+                        break;
+                    default: break;
                 }
 
                 if (db.get(`${message.author.id}.Pay`).includes(`${user.id}`) && db.get(`${message.author.id}.Pay`).includes(`${message.author.id}`)) {
@@ -92,7 +93,7 @@ module.exports = {
 
         }).catch(err => {
             Error(message, err)
-            return message.reply(`${e.Deny} | Houve um erro neste comando.\n\`${err}\``)
+            message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
         })
 
         function NewPaymentStart(msg) {

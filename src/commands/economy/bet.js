@@ -102,7 +102,7 @@ module.exports = {
                         msg.edit({ embeds: [BetEmbedCancel] }).catch(() => { })
                         db.add(`${message.author.id}.Cache.Resgate`, prize)
                         db.get(`${message.author.id}.BetPrize`) ? db.delete(`${message.author.id}.BetPrize`) : ''
-                        return message.channel.send(`${e.Deny} | Aposta cancelada.\n${e.PandaProfit} | ${db.get(`${message.author.id}.Cache.Resgate`) || 0} ${Moeda(message)} estão no cache. Use \`${prefix}resgate\` para resgatar o dinheiro.`)
+                        return message.channel.send(`${e.Deny} | ${message.author}, aposta cancelada.\n${e.PandaProfit} | ${db.get(`${message.author.id}.Cache.Resgate`) || 0} ${Moeda(message)} estão no cache. Use \`${prefix}resgate\` para resgatar o dinheiro.`)
                     } 
                     
                     if (db.get(`Bet.${message.author.id}`).length >= 2) {
