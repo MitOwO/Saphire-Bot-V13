@@ -25,9 +25,6 @@ client.on('messageCreate', async message => {
     let baka = db.get(`${message.author.id}.Baka`)
     let blacklist = db.get(`Blacklist_${message.author.id}`)
     let blacklistServers = db.get(`BlacklistServers_${message.guild.id}`)
-    let timeout2 = 2400000
-    let PresoTimeout = db.get(`${message.author.id}.Timeouts.Preso`)
-    let time = ms(timeout2 - (Date.now() - PresoTimeout))
 
     if (message.content?.toLowerCase() === 'saphire') {
         message.channel.send(`${e.SaphireHi} | \`${prefix}help\``).catch(() => { })
@@ -101,12 +98,13 @@ client.on('messageCreate', async message => {
                     if (!message.guild.me.permissions.has(command.ClientPermissions || [])) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`${command.ClientPermissions || []}\` para continuar com este comando.`)
                     if (command.category === 'owner' && message.author.id !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
                     if (command.category === 'economy') {
-                        if (PresoTimeout !== null && timeout2 - (Date.now() - PresoTimeout) > 0)
+                        let time = ms(1500000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Preso`)))
+                        if (db.get(`${message.author.id}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Preso`)) > 0)
                             return message.reply(`${e.Cadeia} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``)
                     }
                 }
 
-                if (db.get(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.SaphireObs} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? \`${prefix}bug\``)
+                if (db.get(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
 
                 try {
                     if (db.get(`Server.${message.guild.id}.Tsundere`)) {

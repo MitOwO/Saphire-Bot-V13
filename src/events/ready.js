@@ -2,6 +2,7 @@ const client = require('../../index')
 const db = require('quick.db')
 const { config } = require('../../Routes/config.json')
 const { e } = require('../../Routes/emojis.json')
+const Data = require('../../Routes/functions/data')
 
 client.on("ready", () => {
 
@@ -23,5 +24,5 @@ client.on("ready", () => {
     client.user.setStatus(`${Status}`)
 
     const channel = client.channels.cache.get(config.LoginChannelId)
-    channel ? channel.send(`${Emoji}`) : ''
+    channel ? channel.send(`Client Login: ${e.Check}\nEvents: ${e.Check}\nDate and Hours: \`${Data}\`\nErrors: 0`) : ''
 })
