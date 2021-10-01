@@ -9,12 +9,18 @@ client.commands = new Collection()
 client.aliases = new Collection()
 client.categories = fs.readdirSync("./src/commands/")
 
-process.on('unhandledRejection', err => {
-    if (err.code === 10008) return // Unknown Message
-    if (err.code === 50001) return // Missing Acess
-    if (err.code === 50013) return // Missing Permissions
-    const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | unhandledRejection`).setDescription(`\`\`\`js\n${err.stack.slice(0, 2000)}\`\`\``)
-    client.users.cache.get(`${config.ownerId}`).send({ embeds: [NewError] }).catch(err => { })
+process.on('unhandledRejection', (reason) => {
+    const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | unhandledRejection`).setDescription(`\`\`\`js\n${reason.stack.slice(0, 2000)}\`\`\``)
+    client.users.cache.get(`${config.ownerId}`)?.send({ embeds: [NewError] }).catch(err => { })
+});
+
+process.on('uncaughtExceptionMonitor', async (error, origin) => {
+    if (error.code === 10008) return // Unknown Message
+    if (error.code === 50001) return // Missing Acess
+    if (error.code === 50013) return // Missing Permissions
+    const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | uncaughtExceptionMonitor`).setDescription(`\`\`\`js\n${error.stack.slice(0, 2000)}\`\`\``)
+    const NewError2 = new MessageEmbed().setColor('RED').setDescription(`\`\`\`js\n${origin}\`\`\``)
+    client.users.cache.get(`${config.ownerId}`)?.send({ embeds: [NewError, NewError2] }).catch(err => { })
 });
 
 ["command", "event"].forEach(structure => { require(`./src/structures/${structure}`)(client); })
