@@ -20,21 +20,10 @@ module.exports = {
         let canal = db.get(`Servers.${message.guild.id}.LeaveChannel`)
         let WelcomeChannel = db.get(`Servers.${message.guild.id}.WelcomeChannel`)
 
-        const Autenticando = new MessageEmbed().setColor('BLUE').setDescription(`${e.Loading} | Autenticando...`)
-        const Autenticado = new MessageEmbed().setColor('GREEN').setDescription(`${e.Check} | Request autenticada`).setFooter(`${message.author.id}`)
-        const Abortada = new MessageEmbed().setColor('RED').setDescription(`${e.Deny} | Request abortada`).setFooter(`${message.author.id}`)
-        const Expired = new MessageEmbed().setColor('RED').setDescription(`${e.Deny} | Request abortada | Tempo excedido`).setFooter(`${message.author.id}`)
-
         if (args[0] === 'off') {
-            if (canal === null || canal === undefined) {
-                return message.reply(`${e.Deny} | O Leave System já está desativado.`)
-            } else if (canal) {
+            if (canal) {
 
-                const QuestionEmbed = new MessageEmbed()
-                    .setColor('BLUE')
-                    .setDescription(`${e.QuestionMark} | Você deseja desativar o sistema de saídas?`)
-
-                return message.reply({ embeds: [QuestionEmbed] }).then(msg => {
+                return message.reply(`${e.QuestionMark} | Você deseja desativar o sistema de saídas?`).then(msg => {
                     db.set(`Request.${message.author.id}`, `${msg.url}`)
                     msg.react('✅').catch(err => { }) // e.Check
                     msg.react('❌').catch(err => { }) // X
@@ -46,33 +35,33 @@ module.exports = {
                             const reaction = collected.first()
 
                             if (reaction.emoji.name === '✅') {
-                                msg.edit({ embeds: [Autenticando] }).catch(err => { })
+                                msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
                                 message.channel.sendTyping().then(() => {
                                     setTimeout(function () {
                                         db.delete(`Request.${message.author.id}`)
                                         db.delete(`Servers.${message.guild.id}.LeaveChannel`)
-                                        msg.edit({ embeds: [Autenticado] }).catch(err => { })
-                                        message.reply(`${e.SaphireFeliz} | Prontinho, agora eu não vou dizer mais nada quando alguém sair no servidor.`)
-                                    }, 4000)
+                                        msg.edit(`${e.SaphireFeliz} | Prontinho, agora eu não vou dizer mais nada quando alguém sair no servidor.`).catch(() => { })
+                                    }, 2000)
                                 })
                             } else {
                                 db.delete(`Request.${message.author.id}`)
-                                msg.edit({ embeds: [Abortada] }).catch(err => { })
+                                msg.edit(`${e.Deny} | Request abortada.`).catch(err => { })
                             }
-                        }).catch(() => { db.delete(`Request.${message.author.id}`); msg.edit({ embeds: [Expired] }) })
+                        }).catch(() => { db.delete(`Request.${message.author.id}`); msg.edit(`${e.Deny} | Tempo expirada.`) })
+                }).catch(err => {
+                    Error(message, err)
+                    message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
                 })
+
+            } else {
+                return message.reply(`${e.Deny} | O Leave System já está desativado.`)
             }
 
         } else if (channel.id === canal) {
             return message.reply(`${e.Info} | Este canal já foi definido como Leave Channel!`)
         } else if (channel !== canal) {
 
-            const QuestionsEmbed = new MessageEmbed()
-                .setColor('BLUE')
-                .setDescription(`${e.QuestionMark} | Deseja configurar "${channel}" como canal de saídas?`)
-                .setFooter(`Request: ${message.author.id}`)
-
-            return message.reply({ embeds: [QuestionsEmbed] }).then(msg => {
+            return message.reply(`${e.QuestionMark} | Deseja configurar "${channel}" como canal de saídas?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // e.Check
                 msg.react('❌').catch(err => { }) // X
@@ -84,13 +73,14 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.edit({ embeds: [Autenticando] }).catch(err => { })
+                            msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
+
                             message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
                                     db.delete(`Request.${message.author.id}`)
                                     db.set(`Servers.${message.guild.id}.LeaveChannel`, channel.id)
-                                    msg.edit({ embeds: [Autenticado] }).catch(err => { })
-                                    message.channel.send(`Aeee ${e.NezukoJump}! De agora em diante, vou falar no canal ${channel} sobre todo mundo que sair do servidor.`).then(() => {
+                                    
+                                    msg.edit(`Aeee ${e.NezukoJump}! De agora em diante, vou falar no canal ${channel} sobre todo mundo que sair do servidor.`).then(() => {
 
                                         if (WelcomeChannel) return
                                         message.channel.sendTyping().then(() => {
@@ -107,13 +97,13 @@ module.exports = {
                                                             const reaction = collected.first()
 
                                                             if (reaction.emoji.name === '✅') {
-                                                                msg.reply({ embeds: [Autenticando] }).then(x => {
+                                                                msg.reply(`${e.Loading} | Autenticando...`).then(x => {
 
                                                                     message.channel.sendTyping().then(() => {
                                                                         setTimeout(function () {
                                                                             db.delete(`Request.${message.author.id}`)
                                                                             db.set(`Servers.${message.guild.id}.WelcomeChannel`, channel.id)
-                                                                            x.edit({ content: `${e.Check} | Autenticação aprovada | ${message.channel.id}`, embeds: [Autenticado] }).catch(err => { })
+                                                                            x.edit(`${e.Check} | Autenticação aprovada | ${message.channel.id}`).catch(err => { })
                                                                             message.channel.send(`${e.NezukoJump} | Nice, nice! Daqui pra frente, eu vou avisar no canal "${channel}" sobre todo mundo que entrar e sair do servidor.`)
                                                                         }, 3100)
                                                                     })
@@ -130,17 +120,21 @@ module.exports = {
                                             }, 1900)
                                         }).catch(err => {
                                             Error(message, err)
-                                            return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``) })
+                                            return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``)
+                                        })
+                                    }).catch(err => {
+                                        Error(message, err)
+                                        message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo de autenticação. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
                                     })
                                 }, 4000)
                             })
                         } else {
                             db.delete(`Request.${message.author.id}`)
-                            msg.edit({ embeds: [Abortada] }).catch(err => { })
+                            msg.edit(`${e.Deny} | Request abortada.`).catch(err => { })
                         }
                     }).catch(() => {
                         db.delete(`Request.${message.author.id}`)
-                        msg.edit({ embeds: [Expired] }).catch(err => { })
+                        msg.edit(`${e.Deny} | Request abortada.`).catch(err => { })
                     })
             })
         }

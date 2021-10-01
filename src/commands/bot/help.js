@@ -2,7 +2,7 @@ const { readdirSync } = require("fs")
 const { MessageSelectMenu, MessageActionRow } = require("discord.js")
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
-const ms = require('parse-ms')
+const { config } = require('../../../Routes/config.json')
 const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
@@ -17,7 +17,6 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let CloudKingdomInvite = 'https://discord.gg/J6Rr4CepDt'
         const PrincipalEmbed = new MessageEmbed()
             .setColor("BLUE")
             .setTitle(`${e.BlueHeart} Centralzinha de Ajuda da ${client.user.username}`)
@@ -25,7 +24,7 @@ module.exports = {
             .setDescription(`${e.SaphireFeliz} Oi oooi, este é o meu painel de ajuda, seja bem-vindo(a)!`)
             .addField(`${e.SaphireObs} Painelzinho diferenciado`, `Você pode navegar por todos os meus comandos usando essa barrinha aqui em baixo. Não é nada difícil, te garanto. É tudo dividido em categorias.`)
             .addField(`${e.Commands} Categorias`, `As categorias representam as classes de cada comando. Logo, o comando que procura está em sua própria categoria. Quer algum comando referente a economia? Só ir na categoria economia, óras bolas.`)
-            .addField(`${e.Info} Comandos de Suporte`, `${e.Report} \`${prefix}bug\` Reporte bugs/erros diretamente ao meu criador.\n${e.Trig} \`${prefix}gif\` Envie gifs para serem adicionados ao package.\n${e.Stonks} \`${prefix}sugest\` Tem alguma ideia/sugestão pra mim?\n${e.NezukoDance} \`${prefix}servers\` Meus servidores e a Super ☁️[Cloud's Kingdom](${CloudKingdomInvite}).`)
+            .addField(`${e.Info} Comandos de Suporte`, `${e.Report} \`${prefix}bug\` Reporte bugs/erros diretamente ao meu criador.\n${e.Trig} \`${prefix}gif\` Envie gifs para serem adicionados ao package.\n${e.Stonks} \`${prefix}sugest\` Tem alguma ideia/sugestão pra mim?\n${e.NezukoDance} \`${prefix}servers\` Meus servidores e claro [meu servidor principal](${config.ServerLink}).`)
             .addField(`🛰️ Global System Notification`, `Ative o \`${prefix}logs\` e deixa que eu aviso tudo sobre tudo, pode ficar despreocupado(a)!`)
             .setFooter(`O ${prefix}help fechará por inatividade em 1 minuto.`)
 
@@ -277,6 +276,9 @@ module.exports = {
 
             })
 
+        }).catch(err => {
+            Error(message, err)
+            return message.reply(`${e.SaphireQ} | COMO ASSIM O HELP BUGOU????\nUsa \`${prefix}bug\` e reporta isso pelo amor de Deus ${e.SaphireCry}`)
         })
 
         function HelpWithArgs(x) {

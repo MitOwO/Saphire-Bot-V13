@@ -15,7 +15,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         const link1Real = 'https://mpago.la/2YbvxZd'
-        const LinkServidor = `${config.SuportServerLink}`
+        const LinkServidor = `${config.ServerLink}`
 
         const VipEmbed = new MessageEmbed()
             .setColor('#FDFF00')

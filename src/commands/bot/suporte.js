@@ -11,6 +11,6 @@ module.exports = {
     description: 'Obtenha ajuda com a Saphire',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
-        message.channel.send(`${config.SuportServerLink}`)
+        message.channel.send(`${config.ServerLink}`)
     }
 }
