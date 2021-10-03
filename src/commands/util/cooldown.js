@@ -13,47 +13,46 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let u = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || client.users.cache.get(args[0]) || message.member
-        let user = client.users.cache.get(u.id)
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || client.users.cache.get(args[0]) || message.member
         if (!user) return message.reply(`${e.Deny} | Eu não achei, o que será que aconteceu?`)
 
         let TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu
-        let Dpn = `\`Disponível\``
+        let Dpn = `${e.Check} \`Disponível\``
 
         // Timeout Preso
         let TempoPreso = ms(1500000 - (Date.now() - db.get(`${user.id}.Timeouts.Preso`)))
         if (db.get(`${user.id}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - db.get(`${user.id}.Timeouts.Preso`)) > 0) {
-            TPreso = `\`${TempoPreso.minutes}m e ${TempoPreso.seconds}s\``
+            TPreso = `${e.Loading} \`${TempoPreso.minutes}m e ${TempoPreso.seconds}s\``
         } else { TPreso = Dpn }
 
         // Timeout Daily
         let TimeDaily = ms(86400000 - (Date.now() - db.get(`${user.id}.Timeouts.Daily`)))
         if (db.get(`${user.id}.Timeouts.Daily`) !== null && 86400000 - (Date.now() - db.get(`${user.id}.Timeouts.Daily`)) > 0) {
-            TDaily = `\`${TimeDaily.hours}h, ${TimeDaily.minutes}m, e ${TimeDaily.seconds}s\``
+            TDaily = `${e.Loading} \`${TimeDaily.hours}h, ${TimeDaily.minutes}m, e ${TimeDaily.seconds}s\``
         } else { TDaily = Dpn }
 
         // Timeout Pig
         let TimePig = ms(30000 - (Date.now() - db.get(`${user.id}.Timeouts.Porquinho`)))
         if (db.get(`${user.id}.Timeouts.Porquinho`) !== null && 30000 - (Date.now() - db.get(`${user.id}.Timeouts.Porquinho`)) > 0) {
-            TPig = `\`${TimePig.seconds}s\``
+            TPig = `${e.Loading} \`${TimePig.seconds}s\``
         } else { TPig = Dpn }
 
         // Timeout Work
         let TimeWork = ms(66400000 - (Date.now() - db.get(`${user.id}.Timeouts.Work`)))
         if (db.get(`${user.id}.Timeouts.Work`) !== null && 66400000 - (Date.now() - db.get(`${user.id}.Timeouts.Work`)) > 0) {
-            TWork = `\`${TimeWork.hours}h, ${TimeWork.minutes}m, e ${TimeWork.seconds}s\``
+            TWork = `${e.Loading} \`${TimeWork.hours}h, ${TimeWork.minutes}m, e ${TimeWork.seconds}s\``
         } else { TWork = Dpn }
 
         // Timeout RestoreDividas
         let TimeRestoreDividas = ms(86400000 - (Date.now() - db.get(`Client.Timeouts.RestoreDividas`)))
         if (db.get(`Client.Timeouts.RestoreDividas`) !== null && 86400000 - (Date.now() - db.get(`Client.Timeouts.RestoreDividas`)) > 0) {
-            TRestoreDividas = `\`${TimeRestoreDividas.hours}h, ${TimeRestoreDividas.minutes}m, e ${TimeRestoreDividas.seconds}s\``
+            TRestoreDividas = `${e.Loading} \`${TimeRestoreDividas.hours}h, ${TimeRestoreDividas.minutes}m, e ${TimeRestoreDividas.seconds}s\``
         } else { TRestoreDividas = Dpn }
 
         // Timeout Cu
         let TimeCu = ms(600000 - (Date.now() - db.get(`${user.id}.Timeouts.Cu`)))
         if (db.get(`${user.id}.Timeouts.Cu`) !== null && 600000 - (Date.now() - db.get(`${user.id}.Timeouts.Cu`)) > 0) {
-            TCu = `\`${TimeCu.minutes}m e ${TimeCu.seconds}s\``
+            TCu = `${e.Loading} \`${TimeCu.minutes}m e ${TimeCu.seconds}s\``
         } else { TCu = Dpn }
 
         const Embed = new MessageEmbed()
