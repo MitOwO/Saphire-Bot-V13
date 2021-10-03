@@ -7,7 +7,7 @@ const { e } = require('../emojis.json')
 
 function ServerBlocked(message) {
     message.channel.send(`${e.Deny} | Este servidor está na blacklist.`).then(msg => {
-        setTimeout(() => { msg.delete().catch(err => { }) }, 4000)
+        setTimeout(() => { msg.delete().catch(() => { }) }, 4000)
     }).catch(err => { })
 }
 
