@@ -1,6 +1,7 @@
 const { Permissions } = require('discord.js')
 const client = require('../../index')
 const { e } = require('../../Routes/emojis.json')
+const db = require('quick.db')
 
 client.on('channelCreate', async (channel) => {
 

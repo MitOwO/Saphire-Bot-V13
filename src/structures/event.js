@@ -1,4 +1,5 @@
 const { readdirSync } = require('fs')
+const db = require('quick.db')
 
 module.exports = (client) => {
   readdirSync("./src/events/").forEach((file) => {
@@ -11,4 +12,5 @@ module.exports = (client) => {
     }
   })
   console.log("Events Handler | OK!")
+  db.set('Client.Status.Event', true)
 }

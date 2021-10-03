@@ -1,5 +1,6 @@
 const { readdirSync } = require('fs')
 require("dotenv").config()
+const db = require('quick.db')
 
 module.exports = (client) => {
     readdirSync('./src/commands/').forEach(dir => {
@@ -14,4 +15,7 @@ module.exports = (client) => {
         }
     })
     console.log('Command Handler | ON')
+    db.set('Client.Status.Command', true)
+    db.set('Client.Status.Shard', true)
+    db.set('Client.Status.Index', true)
 }

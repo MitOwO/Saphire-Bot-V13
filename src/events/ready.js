@@ -10,9 +10,6 @@ client.on("ready", () => {
     db.delete('Rebooting'); db.delete(`Request`);
     db.delete('Lotery.Close')
 
-    let Options = [e.Pikachu, e.NezukoDance, e.Deidara, e.NezukoJump, e.CoolDoge, e.Nagatoro, e.PatBear, 'Tô online.', 'Online', 'Login successfully']
-    let Emoji = Options[Math.floor(Math.random() * Options.length)]
-
     let Array2 = ['Procurando Nemo', 'Vingadores', 'Bob Esponja', 'Barbie Girl']
     let ActivityRandom = Array2[Math.floor(Math.random() * Array2.length)]
 
@@ -23,6 +20,12 @@ client.on("ready", () => {
     client.user.setActivity(`${Activity}`, { type: `${Action}` })
     client.user.setStatus(`${Status}`)
 
+    var Shard, Index, Event, Command
+    db.get('Client.Status.Shard') ? Shard = e.Check : Shard = e.Deny
+    db.get('Client.Status.Index') ? Index = e.Check : Index = e.Deny
+    db.get('Client.Status.Event') ? Event = e.Check : Event = e.Deny
+    db.get('Client.Status.Command') ? Command = e.Check : Command = e.Deny
+
     const channel = client.channels.cache.get(config.LoginChannelId)
-    channel ? channel.send(`Client Login: ${e.Check}\nEvents: ${e.Check}\nDate and Hours: \`${Data}\`\nErrors: 0`) : ''
+    channel ? channel.send(`Client Login: ${e.Check}\nEvents: ${Event}\nCommands: ${Command}\nShard: ${Shard}\nIndex: ${Index}\nGlobal System Notification: ${e.Check}\nGlobal System Secutiry: ${e.Check}\nD/H: \`${Data}\`\nErrors Found: \`0\`\nInital Latency: \`${client.ws.ping}ms\``) : ''
 })

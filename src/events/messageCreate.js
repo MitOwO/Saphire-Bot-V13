@@ -94,14 +94,11 @@ client.on('messageCreate', async message => {
                 if (!command) command = client.commands.get(client.aliases.get(cmd))
                 if (command) {
                     db.add('ComandosUsados', 1)
+                    let time = ms(1500000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Preso`)))
                     if (!message.member.permissions.has(command.UserPermissions || [])) return message.reply(`${e.Hmmm} | Você não tem permissão para usar este comando.\nPermissão necessária: \`${command.UserPermissions || []}\``)
                     if (!message.guild.me.permissions.has(command.ClientPermissions || [])) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`${command.ClientPermissions || []}\` para continuar com este comando.`)
                     if (command.category === 'owner' && message.author.id !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
-                    if (command.category === 'economy') {
-                        let time = ms(1500000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Preso`)))
-                        if (db.get(`${message.author.id}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Preso`)) > 0)
-                            return message.reply(`${e.Cadeia} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``)
-                    }
+                    if (command.category === 'economy') { if (db.get(`${message.author.id}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Preso`)) > 0) return message.reply(`${e.Cadeia} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``) }
                 }
 
                 if (db.get(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)

@@ -28,7 +28,7 @@ client.on('guildMemberRemove', async (member) => {
         if (ModAuthor === client.user.tag) return
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`🛰️ | Global System Notification | Kick`)
             .addFields(
                 { name: '👤 Usuário', value: `${member.user.tag} - *\`${member.user.id}\`*` },

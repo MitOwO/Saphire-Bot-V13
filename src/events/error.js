@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js')
 const client = require('../../index')
 const { config } = require('../../Routes/config.json')
 const { e } = require('../../Routes/emojis.json')
+const db = require('quick.db')
 
 client.on('error', (error) => {
     const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro - CLIENT ERROR`).addField('Aviso', `${error}`)
