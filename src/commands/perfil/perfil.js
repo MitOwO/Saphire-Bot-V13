@@ -1,4 +1,5 @@
 const { e } = require('../../../Routes/emojis.json')
+const { config } = require('../../../Routes/config.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 
@@ -6,8 +7,6 @@ module.exports = {
     name: 'perfil',
     aliases: ['profile'],
     category: 'perfil',
-    UserPermissions: '',
-    ClientPermissions: '',
     emoji: '👤',
     usage: '<perfil> [@user]',
     description: 'Veja o perfil, seu ou o de alguém',
@@ -139,7 +138,7 @@ module.exports = {
         if (user.id === client.user.id) {
             const perfil = new MessageEmbed()
                 .setDescription(`${e.VipStar} **Perfil Pessoal de ${client.user.username}**\n${e.SaphireTimida} **Envergonhada**\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`)
-                .setColor('#FDFF00')
+                .setColor('#246FE0')
                 .addFields(
                     {
                         name: `👤 Pessoal`,
