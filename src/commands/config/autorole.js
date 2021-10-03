@@ -22,7 +22,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         const AutoroleArgs0 = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Verify} Autorole System`)
             .setDescription(`O Sistema ${client.user.username} garante 2 autoroles simuntâneas.`)
             .addField(`${e.QuestionMark} **O que é Autorole?**`, `Autorole é um sistema automático em que todo membro que entrar no servidor, receberá um cargo (dado por mim) pré definido pela staff do servidor.`)
@@ -35,7 +35,7 @@ module.exports = {
         if (!args[0]) return message.reply({ embeds: [AutoroleArgs0] })
 
         if (['status', 'stats', 'info'].includes(args[0]?.toLowerCase())) {
-            const AutoroleEmbed = new MessageEmbed().setColor('BLUE').setTitle(':satellite: | Autorole System Status')
+            const AutoroleEmbed = new MessageEmbed().setColor('#246FE0').setTitle(':satellite: | Autorole System Status')
             if (!Autorole2 && Autorole1) { AutoroleEmbed.setDescription(`Autorole 1: <@&${Autorole1}>\nAutorole 2: Desativado`) }
             if (!Autorole1 && Autorole2) { AutoroleEmbed.setDescription(`Autorole 1: Desativado\nAutorole 2: <@&${Autorole2}>`) }
             if (!Autorole1 && !Autorole2) { AutoroleEmbed.setDescription(`Autorole 1: Desativado\nAutorole 2: Desativado`) }

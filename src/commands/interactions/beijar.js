@@ -30,7 +30,7 @@ module.exports = {
         if (user.id === message.author.id) { return message.reply(`${e.SaphireQ} | Beijar você mesmo é meio impossível, não?`) }
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`${e.BlueHeart} | ${message.author} está beijando ${user}`)
             .setImage(rand)
             .setFooter('🔁 retribuir')

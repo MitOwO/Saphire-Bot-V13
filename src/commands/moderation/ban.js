@@ -5,7 +5,7 @@ const Data = require('../../../Routes/functions/data')
 
 module.exports = {
     name: 'ban',
-    aliases: ['banir', 'bn'],
+    aliases: ['banir'],
     category: 'moderation',
     UserPermissions: 'BAN_MEMBERS',
     ClientPermissions: 'BAN_MEMBERS',
@@ -30,7 +30,7 @@ module.exports = {
                 if (banned.size === null) { banned.size = '0' }
 
                 const embed = new MessageEmbed()
-                    .setColor('BLUE')
+                    .setColor('#246FE0')
                     .setTitle(`${e.ModShield} Lista de Banidos`)
                     .setDescription(`${e.Info} | **0 usuários banidos**`)
 

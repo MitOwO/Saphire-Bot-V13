@@ -23,7 +23,7 @@ module.exports = {
         let atual = db.get(`Servers.${message.guild.id}.LogChannel`)
 
         const SetLogHelpEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`🛰️ | Global System Notification`)
             .setDescription('Recentemente implementado, este sistema abrange todos os meus servidores em uma checagem continua, verificando se está tudo bem com todos os servidores. Quaisquer alteração que resulta na quebra de segurança do servidor, eu avisarei no canal pré-definido neste comando.')
             .addField(`${e.QuestionMark} O que é isso?`, `Este sistema é responsável por notificar as atividades do servidor em uma escala geral. Os dados fornecido de cada ação é processado pelo meu sistema e enviado de uma forma clara e objetiva ao canal pré-definido em uma forma de histórico de acontecimentos disponível ou não para todos do servidor perante o desejo da staff.`)

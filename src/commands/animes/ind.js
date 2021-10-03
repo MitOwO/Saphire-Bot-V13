@@ -354,7 +354,7 @@ module.exports = {
         ]
 
         const IndEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`:tv: ${client.user.username} Indica: Animes`)
             .setDescription('Receba indicações clicando nos emojis a baixo.')
 

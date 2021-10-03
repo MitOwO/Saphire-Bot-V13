@@ -14,6 +14,8 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
+        return message.reply(`${e.Loading} | O crime está passando por uma nova reforma`)
+
         if (['info', 'help', 'ajuda', 'status'].includes(args[0])) return CrimeHelp()
 
         // 1200000 - 20 Minutos

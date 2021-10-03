@@ -11,7 +11,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const RequestEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Info} | ${client.user.username} Requests`)
             .setDescription(`O sistema de Request foi implementado pelo ${N.Rody} no dia 10/09/2021, visando o flood de requests envolvendo reações(emojis) e spamms de mensagem que acessam diretamente as configurações do Discord.`)
             .addField(`${e.QuestionMark} O que é Request?`, `Requests são chamados que os Bots fazem diretamente ao Discord para executar alguma atividade, por exemplo, adicionar reações nas mensagens ou adicionar cargos.`)

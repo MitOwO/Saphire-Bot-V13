@@ -26,7 +26,7 @@ module.exports = {
             return message.reply({
                 embeds: [
                     new MessageEmbed()
-                        .setColor('BLUE')
+                        .setColor('#246FE0')
                         .setDescription(`🫂 | Meu abraço é o melhor do mundo`)
                         .setImage(rand)
                 ]
@@ -36,7 +36,7 @@ module.exports = {
             return message.reply({
                 embeds: [
                     new MessageEmbed()
-                        .setColor('BLUE')
+                        .setColor('#246FE0')
                         .setDescription(`🫂 | ${message.author} se abraçando`)
                         .setImage(rand)
                 ]
@@ -47,7 +47,7 @@ module.exports = {
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`🫂 | ${message.author} está abraçando você ${user}`)
             .setImage(rand)
             .setFooter('🔁 retribuir')

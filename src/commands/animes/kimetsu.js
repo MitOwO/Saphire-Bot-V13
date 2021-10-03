@@ -19,7 +19,7 @@ module.exports = {
         let gif = g.KimetsuNoYaiba[Math.floor(Math.random() * g.KimetsuNoYaiba.length)]
 
         const KimetsuEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(':tv: Anime: Demon Slayer: Kimetsu no Yaiba')
             .setImage(gif)
 

@@ -19,7 +19,7 @@ module.exports = {
         if (!args[0]) return message.reply({
             embeds: [
                 new MessageEmbed()
-                    .setColor('BLUE')
+                    .setColor('#246FE0')
                     .setTitle(`${e.Info} Edite a moeda do servidor`)
                     .setDescription(`${e.SaphireObs} Com este comando você pode editar o Emoji e o nome da Moeda no servidor.`)
                     .addFields(

@@ -17,7 +17,7 @@ module.exports = {
         let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
 
         const cobre = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('💸 Sistema de cobrança')
             .setDescription('Cobre as pessoas que te devem ou apenas peça dinheiro, você que sabe.')
             .addField('Comando', `\`${prefix}cobrar @user quantia\``)

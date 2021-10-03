@@ -30,7 +30,7 @@ module.exports = {
         if (user.id === message.author.id) return message.reply({
             embeds: [
                 new MessageEmbed()
-                    .setColor('BLUE')
+                    .setColor('#246FE0')
                     .setDescription('🤝 Opa')
                     .setImage(rand)
             ]

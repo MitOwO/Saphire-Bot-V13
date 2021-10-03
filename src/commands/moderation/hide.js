@@ -16,7 +16,7 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.mentions.repliedUser
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja esconder.`) }
 

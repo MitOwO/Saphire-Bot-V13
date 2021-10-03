@@ -19,7 +19,7 @@ module.exports = {
     let saophotos = g.SwordArtOnline[Math.floor(Math.random() * g.SwordArtOnline.length)]
 
     const SAOEmbed = new MessageEmbed()
-      .setColor('BLUE')
+      .setColor('#246FE0')
       .setTitle('📺 Anime: SAO - Sword Art Online')
       .setImage(saophotos)
 

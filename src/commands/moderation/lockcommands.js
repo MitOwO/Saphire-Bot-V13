@@ -17,7 +17,7 @@ module.exports = {
         let channel = message.mentions.channels.first() || message.channel
 
         const InfoEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Deny} Bloqueio de Comandos`)
             .setDescription('Com este comando, torna-se possível o bloqueio dos meus comandos ou comandos de outros bots em canais específicos.')
             .addField(`${e.On} Bloqueie meus comandos`, `\`${prefix}lockcommands\``)

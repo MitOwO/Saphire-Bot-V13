@@ -34,7 +34,7 @@ module.exports = {
     }
 
     const embed = new MessageEmbed()
-      .setColor('BLUE')
+      .setColor('#246FE0')
       .setAuthor(`${message.author.username} chamou ${user.user.username} de baka`, avatar)
       .setImage(rand)
     return message.reply({ embeds: [embed] })

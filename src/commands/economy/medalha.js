@@ -23,7 +23,7 @@ module.exports = {
         let MedalhaAcess = db.get(`${message.author.id}.Slot.MedalhaAcess`)
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('🏅 Medalha Cammum')
             .setDescription('Por seus esforços, o Rei Vouwer Heslow te nomeará Cavaleiro(a) Pessoal da Princesa Kaya! Por este mérito, você ganhará uma medalha!')
             .addField('Comando de Ativação', '`' + prefix + 'medalha Código Pessoal 1`\n' + '`' + prefix + 'medalha Código Pessoal 2`')

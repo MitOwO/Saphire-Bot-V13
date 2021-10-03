@@ -30,7 +30,7 @@ module.exports = {
         let link = args[1]
 
         const noargs = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('📢 Envie Gifs')
             .setDescription(`Por causa de tantos comandos e centenas de gifs, ficou ruim para apenas uma pessoa pegar todos os gifs, então, este comando foi feito.\n \nEnvie gifs pra ${client.user.username}! Só seguir os requisitos.`)
             .addField('Requisitos', '1. **NADA** pornográfico ou de cunho criminoso.\n2. Fale para qual tema você quer que eu coloque seu gif')
@@ -54,7 +54,7 @@ module.exports = {
             if (args[2]) { return message.reply(`${e.Deny} | Formato incorreto.\n\`${prefix}gif Naruto LINK\`, tipo assim -> https://imgur.com/F1nJKHZ`) }
 
             const newgif = new MessageEmbed()
-                .setColor('BLUE')
+                .setColor('#246FE0')
                 .setTitle('📢 Novo Gif')
                 .addField('Enviado por', `${message.author.tag} *\`${message.author.id}\`*`, true)
                 .addField('Servidor', message.guild.name, true)

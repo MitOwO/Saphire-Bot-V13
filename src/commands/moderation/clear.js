@@ -9,14 +9,12 @@ module.exports = {
   ClientPermissions: 'MANAGE_MESSAGES',
   emoji: '🧹',
   usage: '<clear> [@user/bots/images/all] [quantidade]',
-  description: 'Comando em produção',
+  description: 'Limpezinha básica',
 
   run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-    // return message.reply(`${e.Loading} | O comando clear está com vida própria, então está fechado para uma reforminha`)
-
     const clearembed = new MessageEmbed()
-      .setColor("BLUE")
+      .setColor('#246FE0')
       .setTitle("🧹 Comando Clear")
       .setDescription("Use o comando para fazer aquela limpa nas mensagens")
       .addField('Comandos do Clear', '`clear 1~99` Apague até 99 mensagens\n`clear images` Apague imagens\n`clear bots` Apague mensagens de bots\n`clear @user` Apague mensagens de alguém')
@@ -37,7 +35,14 @@ module.exports = {
         let userFilter = userMessages.filter(obj => obj.author.id === user.id)
         message.channel.bulkDelete(userFilter).then(Mensagens => {
           return message.channel.send(`${e.Check} | Nas últimas ${MsgsPraDeletar} mensagens, eu achei ${Mensagens.size} mensagens de ${user} e apaguei elas sob as ordens de ${message.author}`)
-        }).catch(err => { return message.channel.send(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+        }).catch(err => {
+          if (err.code === 10008) (() => { })
+          if (err.code === 50034)
+            return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
+
+          Error(message, err)
+          return message.channel.send(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
+        })
       }).catch(err => { return message.reply(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
     } else if (['bot', "bots"].includes(args[0]?.toLowerCase())) {
@@ -53,7 +58,14 @@ module.exports = {
 
         message.channel.bulkDelete(botFilter).then(MsgApagada => {
           return message.channel.send(`${e.Check} | Eu apaguei ${MsgApagada.size} mensagens de Bots das últimas ${MsgsPraDeletar} mensagens do chat sob as ordens de ${message.author}`)
-        }).catch(err => { return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
+        }).catch(err => {
+          if (err.code === 10008) (() => { })
+          if (err.code === 50034)
+            return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
+
+          Error(message, err)
+          return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``)
+        })
       }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
     } else if (['images', "imagens", "fotos", "foto", "imagem", "midia"].includes(args[0]?.toLowerCase())) {
@@ -68,8 +80,16 @@ module.exports = {
         let imageFilter = awaitImageMessages.filter(obj => obj.attachments.size > 0)
         message.channel.bulkDelete(imageFilter).then(MsgApagada => {
           return message.channel.send(`${e.Check} | Encontrei ${MsgApagada.size} midias nas últimas ${MsgsPraDeletar} mensagens do chat e apaguei sob as ordens de ${message}`)
-        }).catch(err => { return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``) })
-      }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+        }).catch(err => {
+          if (err.code === 10008) (() => { })
+          if (err.code === 50034)
+            return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
+
+          return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``)
+        })
+      }).catch(err => {
+        return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
+      })
 
     } else if (typeof parseInt(args[0]) === "number") {
 
@@ -77,21 +97,29 @@ module.exports = {
 
         if (isNaN(args[0])) return message.channel.send(`${e.Deny} | Hey! Me fala números para que eu possa contar, ok?`)
         if (args[1]) return message.reply(`${e.Deny} | Nada além do ${args[0]}! Use \`${prefix}clear\` para mais informações.`)
-        if (parseInt(args[0]) > 100 || parseInt(args[0]) < 1) return message.reply(`${e.Deny} | Me fala um número de 0 a 100, ok?`)
+        if (parseInt(args[0]) > 100 || parseInt(args[0]) < 1) return message.reply(`${e.Deny} | Me fala um número de 1 a 100, ok?`)
 
         await message.channel.messages.fetch({ limit: parseInt(args[0]) }).then(messages => {
           message.channel.bulkDelete(messages).then(msg => {
             message.channel.send(`${e.Check} | Deletei um total ${msg.size} mensagens sob as ordens de ${message.author}`)
           }).catch(err => {
+            if (err.code === 10008) (() => { })
+            if (err.code === 50034)
+              return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
+
             Error(message, err)
             return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
+
           })
         }).catch(err => {
+          if (err.code === 10008) (() => { })
+          if (err.code === 50034)
+            return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
+
           Error(message, err)
           return message.reply(`${e.Deny} | Opa!"\n\`${err}\``)
         })
       }).catch(err => {
-        Error(message, err)
         return message.reply(`${e.Deny} | Estou sem a permissão "Gerenciar Mensagens".`)
       })
     } else {

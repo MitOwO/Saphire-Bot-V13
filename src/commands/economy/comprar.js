@@ -5,6 +5,7 @@ const { MessageSelectMenu, MessageActionRow } = require("discord.js")
 const BuyingAway = require('../../../Routes/functions/BuyingAway')
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'comprar',
@@ -234,7 +235,7 @@ module.exports = {
 
         function NewColor() {
             db.get(`${message.author.id}.Color.Perm`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) > 2000000 ? BuyNewColor() : NoMoney(2000000))
-        
+
             function BuyNewColor() {
                 db.subtract(`Balance_${message.author.id}`, 2000000); AddLoteria(1000000)
                 db.set(`${message.author.id}.Color.Perm`, true)
@@ -353,21 +354,65 @@ module.exports = {
             db.set(`${message.author.id}.Tickets`, true)
             db.subtract(`Balance_${message.author.id}`, 500); AddLoteria(500);
             await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
+                let Array = 'Loteria.Users' || []
+                if (db.get('Loteria.Users').length >= 500) Array = 'Loteria.Users1'
+                if (db.get('Loteria.Users1')?.length >= 500) Array = 'Loteria.Users2'
+                if (db.get('Loteria.Users2')?.length >= 500) Array = 'Loteria.Users3'
+                if (db.get('Loteria.Users3')?.length >= 500) Array = 'Loteria.Users4'
+                if (db.get('Loteria.Users4')?.length >= 500) Array = 'Loteria.Users5'
+                if (db.get('Loteria.Users5')?.length >= 500) Array = 'Loteria.Users6'
+                if (db.get('Loteria.Users6')?.length >= 500) Array = 'Loteria.Users7'
+                if (db.get('Loteria.Users7')?.length >= 500) Array = 'Loteria.Users8'
+                if (db.get('Loteria.Users8')?.length >= 500) Array = 'Loteria.Users9'
+                if (db.get('Loteria.Users9')?.length >= 500) Array = 'Loteria.Users10'
+                if (db.get('Loteria.Users10')?.length >= 500) Array = 'Loteria.Users11'
+                if (db.get('Loteria.Users11')?.length >= 500) Array = 'Loteria.Users12'
+                if (db.get('Loteria.Users12')?.length >= 500) Array = 'Loteria.Users13'
+                if (db.get('Loteria.Users13')?.length >= 500) Array = 'Loteria.Users14'
+                if (db.get('Loteria.Users14')?.length >= 500) Array = 'Loteria.Users15'
+                if (db.get('Loteria.Users15')?.length >= 500) Array = 'Loteria.Users16'
+                if (db.get('Loteria.Users16')?.length >= 500) Array = 'Loteria.Users17'
+                if (db.get('Loteria.Users17')?.length >= 500) Array = 'Loteria.Users18'
+                if (db.get('Loteria.Users18')?.length >= 500) Array = 'Loteria.Users19'
+                if (db.get('Loteria.Users19')?.length >= 500) Array = 'Loteria.Users20'
                 let i = 0; do {
                     i++
-                    db.push('Loteria.Users', `${message.author.id}`)
+                    db.push(`${Array}`, `${message.author.id}`)
                 } while (i <= 49)
                 msg.edit(`${e.Check} | ${message.author} comprou ${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(err => { })
                 setTimeout(() => { db.delete(`${message.author.id}.Tickets`) }, 1000)
-                if (db.get('Loteria.Users').length >= 10000) {
+                let LoteriaUsers = db.get('Loteria.Users').concat(db.get('Loteria.Users1'), db.get('Loteria.Users2'), db.get('Loteria.Users3'), db.get('Loteria.Users4'), db.get('Loteria.Users5'))
+                if (LoteriaUsers.length >= 10000) {
                     db.set('Lotery.Close', true)
-                    return NewLoteryGiveaway()
+                    return NewLoteryGiveaway(LoteriaUsers)
                 }
             }).catch(err => {
+                Error(message, err)
                 db.delete(`${message.author.id}.Tickets`)
                 message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
             })
         }
+
+        // async function BuyTicket() {
+        //     if (db.get(`${message.author.id}.Tickets`)) return
+        //     db.set(`${message.author.id}.Tickets`, true)
+        //     db.subtract(`Balance_${message.author.id}`, 500); AddLoteria(500);
+        //     await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
+        //         let i = 0; do {
+        //             i++
+        //             db.push('Loteria.Users', `${message.author.id}`)
+        //         } while (i <= 49)
+        //         msg.edit(`${e.Check} | ${message.author} comprou ${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(err => { })
+        //         setTimeout(() => { db.delete(`${message.author.id}.Tickets`) }, 1000)
+        //         if (db.get('Loteria.Users').length >= 10000) {
+        //             db.set('Lotery.Close', true)
+        //             return NewLoteryGiveaway()
+        //         }
+        //     }).catch(err => {
+        //         db.delete(`${message.author.id}.Tickets`)
+        //         message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
+        //     })
+        // }
 
         function Roleta() {
             let x = db.get(`${message.author.id}.Slot.Fichas`) || 0
@@ -424,12 +469,12 @@ module.exports = {
             }
         }
 
-        function AddLoteria(x) { db.add('Loteria.Prize', x) }
+        function AddLoteria(value) { db.add('Loteria.Prize', value) }
 
-        function NewLoteryGiveaway() {
+        function NewLoteryGiveaway(LoteriaUsers) {
 
-            let Tickets = db.get('Loteria.Users') || false
-            let TicketsCompradosAoTodo = Tickets.length || false
+            let Tickets = LoteriaUsers || []
+            let TicketsCompradosAoTodo = Tickets.length || 0
             let TicketPremiado = Tickets[Math.floor(Math.random() * Tickets.length)]
 
             let i = 0
@@ -507,6 +552,9 @@ module.exports = {
                         db.delete('Lotery.Close')
                         db.delete('Loteria.Prize')
                         db.set('Loteria.Users', [])
+                        for (i = 0; i <= 19; i++) {
+                            db.set(`Loteria.Users${i+1}`, [])
+                        }
                         msg.edit(`${e.Check} | Uma nova loteria foi iniciada com sucesso!`)
                     }, 4000)
                 })

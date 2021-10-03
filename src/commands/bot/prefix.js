@@ -17,7 +17,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         const prefixembed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Info} Informações sobre Prefixo`)
             .setDescription('Prefixo é o simbolo que você utiliza para executar comandos em bots no Discord.\nExemplo: `' + prefix + 'prefix` ou `' + prefix + 'help`')
             .addFields(

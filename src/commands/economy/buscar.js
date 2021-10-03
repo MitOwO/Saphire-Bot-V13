@@ -8,7 +8,7 @@ module.exports = {
     category: 'economy',
     emoji: '🔦',
     usage: '<buscar>',
-    description: 'Busque a Princesa Kaya',
+    description: 'Ajude a Princesa Kaya',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
@@ -128,7 +128,7 @@ module.exports = {
                         if (!cachorro) {
 
                             const embed = new MessageEmbed()
-                                .setColor('BLUE')
+                                .setColor('#246FE0')
                                 .setTitle('🐶 Você achou o Brown!!!')
                                 .setDescription('Ele está com medo! Dê 5 🦴 `Ossos` para ele se acalmar!')
                                 .setFooter('Você tem 20 segundos até as reações sumirem!')
@@ -145,7 +145,6 @@ module.exports = {
 
                                     if (reaction.emoji.name === '✅') {
                                         db.delete(`Request.${message.author.id}`)
-                                        msg.delete().catch(err => { })
 
                                         if (ossos < 5) {
                                             return message.reply(`${e.Deny} | Você não tem ossos suficiente! Brown se assustou e saiu correndo.`)
@@ -186,7 +185,7 @@ module.exports = {
                         if (!remedio) {
                             db.set(`${message.author.id}.Slot.Remedio`, true)
                             const embed = new MessageEmbed()
-                                .setColor('BLUE')
+                                .setColor('#246FE0')
                                 .setTitle('💊 Remédio!!')
                                 .setDescription('Você achou o Remédio do Velho Welter!')
                             return message.reply({ embeds: [embed] })
@@ -198,7 +197,7 @@ module.exports = {
 
                     if (randa >= 11 && randa <= 15) {
                         const PegadasEmbed = new MessageEmbed()
-                            .setColor('BLUE')
+                            .setColor('#246FE0')
                             .setTitle('🐾 Você encontrou pegadas do Brown.')
                         return message.reply({ embeds: [PegadasEmbed] })
                     }

@@ -18,7 +18,7 @@ module.exports = {
         let canal = db.get(`Servers.${message.guild.id}.ReportChannel`)
 
         const noargs = new MessageEmbed()
-            .setColor('BLUE') // red
+            .setColor('#246FE0') // red
             .setTitle(':loudspeaker: Sistema de Report')
             .setDescription('Com este comando, você ativará o meu sistema de report. Isso é bastante útil.')
             .addField(`${e.QuestionMark} O que é o sistema de report?`, 'Com o meu sistema de report, os membros poderão reportar coisas ou outros membros de qualquer canal do servidor, não precisa está indo chamar mod/adm no privado para reportar.')

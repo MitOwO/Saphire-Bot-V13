@@ -15,7 +15,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const RankingEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('🏆 | Global Ranking')
             .setDescription('Aqui você pode ver os top 10 em cada clase')
             .addField('Ranking XP', '`' + prefix + 'rank xp`')

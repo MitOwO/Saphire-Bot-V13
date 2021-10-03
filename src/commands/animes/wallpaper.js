@@ -48,7 +48,7 @@ module.exports = {
        `
 
         const categorias = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .addField(`${e.Warn} | Atenção!`, `\`\`\`txt\n1. Alguns wallpapers contém spoilers, tome cuidado!\n2. Não use espaços no nome do anime\`\`\``)
             .addField(`${e.Download} | Quer algum anime na lista?`, `\`\`\`${prefix}sugest Coloca wallpaper do anime XXX\`\`\``)
             .addField(`${e.Check} | Animes Disponíveis`, `\`\`\`txt\n${WallPapersIndents}\`\`\``)
@@ -56,7 +56,7 @@ module.exports = {
 
         if (['créditos', 'credits', 'creditos'].includes(args[0])) {
             const CreditsEmbed = new MessageEmbed()
-                .setColor('BLUE')
+                .setColor('#246FE0')
                 .setDescription(`${e.Info} | Abaixo, estão os créditos de todas as pessoas e o que elas fizeram na construção do comando \`${prefix}wallpaper\``)
                 .addField('🤝 Créditos', `\`${N.Rody}\` - Idealizador, implementação dos Wallpapers ao banco de dados e código fonte da ${client.user.username}\n \n\`${N.Gowther}\` - Fornecedor de 100% dos Wallpapers, Organização de Links, dados e review técnico\n \n\`${N.Makol}\` - Review adição de Links e sequência de ordem`)
             return message.reply({ embeds: [CreditsEmbed] })
@@ -69,7 +69,7 @@ module.exports = {
 
             let wallpaper = Category[Math.floor(Math.random() * Category.length)]
             const WallPaperEmbed = new MessageEmbed()
-                .setColor('BLUE')
+                .setColor('#246FE0')
                 .setDescription(`${e.Download} | [Baixar](${wallpaper}) wallpaper em qualidade original`)
                 .setImage(wallpaper)
 

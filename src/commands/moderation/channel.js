@@ -16,7 +16,7 @@ module.exports = {
         if (!message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`GERENCIAR CANAIS\` para executar este comando.`)
 
         const noargs = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('🛠️ Gerenciamento de Canais')
             .setDescription('Com este comando você pode gerenciar os canais rapidamente.\n<opicional>')
             .addField('Mude o Nome', `\`${prefix}channel name <#canal> NomeDoCanal\``)

@@ -18,7 +18,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const PrincipalEmbed = new MessageEmbed()
-            .setColor("BLUE")
+            .setColor('#246FE0')
             .setTitle(`${e.BlueHeart} Centralzinha de Ajuda da ${client.user.username}`)
             .setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=applications.commands%20bot`)
             .setDescription(`${e.SaphireFeliz} Oi oooi, este é o meu painel de ajuda, seja bem-vindo(a)!`)
@@ -219,7 +219,7 @@ module.exports = {
 
                 function Afk() {
                     const AfkInfoEmbed = new MessageEmbed()
-                        .setColor('BLUE')
+                        .setColor('#246FE0')
                         .setTitle(`${e.Planet} Afk Global System`)
                         .setDescription('Utilize este comando para avisar que você está offline.')
                         .addField(`${e.On} Comando`, `\`${prefix}afk Estou ocupado...\` Frase de sua escolha`)
@@ -265,7 +265,7 @@ module.exports = {
 
                     if (cots.includes(x.toLowerCase())) {
                         const combed = new MessageEmbed()
-                            .setColor('BLUE')
+                            .setColor('#246FE0')
                             .setTitle(`Classe: ${x.charAt(0).toUpperCase() + x.slice(1)}`)
                             .setDescription(`Use \`${prefix}help [comando]\` para obter mais informações.`)
                             .addFields(catts)
@@ -278,7 +278,9 @@ module.exports = {
 
         }).catch(err => {
             Error(message, err)
-            return message.reply(`${e.SaphireQ} | COMO ASSIM O HELP BUGOU????\nUsa \`${prefix}bug\` e reporta isso pelo amor de Deus ${e.SaphireCry}`)
+            return message.reply(`${e.SaphireQ} | COMO ASSIM O HELP BUGOU????\nUsa \`${prefix}bug\` e reporta isso pelo amor de Deus ${e.SaphireCry}`).catch(err => {
+                message.author.send(`${e.SaphireCry} | Aparentemente eu não tenho permissão pra enviar o help no canal ou algo está me impedindo.`).catch(() => { })
+            })
         })
 
         function HelpWithArgs(x) {
@@ -286,7 +288,7 @@ module.exports = {
             if (!command) { return message.reply(`${e.Deny} | Comando inválido! Use \`${prefix}help\` para todos os comandos.`) }
 
             const embed = new MessageEmbed()
-                .setColor('BLUE')
+                .setColor('#246FE0')
                 .setTitle(`Detalhes do Comando: ${command.name ? `${command.name}` : "Sem nome definido."}`)
                 .addField("Comando:", command.name ? `\`${prefix}${command.name}\`` : "Sem nome definido.", true)
                 .addField("Atalhos:", command.aliases ? `\`${prefix}${command.aliases.join(`\` \`${prefix}`)}\`` : "Sem atalhos definido.", true)

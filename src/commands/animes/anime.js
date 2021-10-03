@@ -17,7 +17,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const EmbedApresetation = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('🔍 Pesquise Animes')
             .setDescription('Eu posso buscar informações sobre qualquer anime, quer tentar?')
             .addField('Comando', '`' + prefix + 'anime Nome Do Anime`')

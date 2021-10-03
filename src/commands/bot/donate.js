@@ -23,7 +23,7 @@ module.exports = {
             .setDescription(`Aqui você pode efetuar doações e adquirir seu VIP.`)
             .addField(`${e.QuestionMark} | O que eu ganho doando dinheiro além do Vip?`, `Um grande obrigado e me ajuda a ficar online ${e.SaphireTimida}`)
             .addField(`${e.Info} Meios de Doações`, `${e.Pix} **Pix**\nEmail: ${PixEmail}\n${e.Picpay} ${LinkPicPay}\n${e.Mercadopago} **Mercado Pago 1 Real**\nLink: ${Link1RMercadoPago}`)
-            .addField(`${e.Check} Comprove o pagamente`, `${LinkServidor}`)
+            .addField(`${e.Check} Comprove o pagamento`, `${LinkServidor}`)
 
         return message.reply({ embeds: [DonateEmbed] })
     }

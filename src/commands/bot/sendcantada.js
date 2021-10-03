@@ -22,7 +22,7 @@ module.exports = {
         const channel = config.CantadasChannelId
 
         const noargs = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(':heart_on_fire: Envie suas cantadas!')
             .setDescription('Com este comando, você envia cantadas para serem adicionadas ao meu pack de cantadas!')
             .addField('Comando', `\`${prefix}sendcantada\` Sua cantada em diante`)
@@ -42,7 +42,7 @@ module.exports = {
             const cantada = args.join(" ")
 
             const NovaCantadaEmbed = new MessageEmbed()
-                .setColor('BLUE')
+                .setColor('#246FE0')
                 .setTitle('📢 Nova Cantada Recebida')
                 .setDescription(`**Enviado por:** ${message.author.tag} *\`(${message.author.id})\`*`)
                 .addField('Cantada', cantada)

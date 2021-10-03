@@ -15,7 +15,7 @@ module.exports = {
 
         let canal = message.mentions.channels.first() || message.channel
 
-        const noargs = new MessageEmbed().setColor('BLUE')
+        const noargs = new MessageEmbed().setColor('#246FE0')
             .setTitle(`${e.QuestionMark} | Slowmode Command`).setDescription('Com o slowmode, você dita um intervalo em que os membros podem mandar mensagens nos canais.')
             .addFields(
                 {

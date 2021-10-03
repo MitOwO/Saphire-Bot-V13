@@ -34,7 +34,7 @@ module.exports = {
             return message.reply({
                 embeds: [
                     new MessageEmbed()
-                        .setColor('BLUE')
+                        .setColor('#246FE0')
                         .setTitle(`${e.Join} Sistema de Boas-vindas`)
                         .setDescription(`${e.SaphireObs} Com este sistema eu aviso sobre todas as pessoas que entrarem no servidor. Mando uma mensagem simples(customizada) no canal definido.`)
                         .addFields(
@@ -81,7 +81,7 @@ module.exports = {
         function MsgEdit() {
             if (!canal) return message.reply(`${e.Deny} | O sistema de boas-vindas deve estar ativado para usar esta função.`)
 
-            let mensagem = args[1].join(' ')
+            let mensagem = args.slice(1).join(' ')
             if (!mensagem) return message.channel.send(`${e.Info} | Mensagem de boas-vindas padrão: **${WelcomeMsg}**\n${e.SaphireObs} | Caso queira personalizar, use \`${prefix}welcome mensagem A mensagem de boas vindas\``)
             if (mensagem.length > 1400) return message.reply(`${e.Deny} | A mensagem de boas-vindas não pode ultrapassar **1400 caracteres**.`)
 

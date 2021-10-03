@@ -15,7 +15,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.mentions.repliedUser
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
         let Role = channel.guild.roles.cache.get(message.mentions.roles.first()?.id)
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja bloquear.`) }
@@ -32,7 +32,7 @@ module.exports = {
         function LockUser() {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.SaphireQ} | Por qual motivo você bloquearia esse canal de um Administrador?`)
             message.channel.permissionOverwrites.create(user, { SEND_MESSAGES: false })
-            return message.channel.send(`🔒 | ${message.author} proibiu ${user} de falar neste canal. -> \`${prefix}unlock @${user.displayName}\``)
+            return message.channel.send(`🔒 | ${message.author} proibiu ${user.user.username} de falar neste canal. -> \`${prefix}unlock @${user.displayName}\``)
         }
 
         function LockChannel() {

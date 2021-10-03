@@ -14,7 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.mentions.repliedUser
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
         let Role = channel.guild.roles.cache.get(message.mentions.roles.first()?.id)
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja desbloquear.`) }

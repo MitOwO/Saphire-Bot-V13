@@ -30,7 +30,7 @@ module.exports = {
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`❤️ | ${message.author} te ama ${user}`)
             .setImage(rand)
             .setFooter('❤️ retribuir')

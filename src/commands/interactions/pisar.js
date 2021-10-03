@@ -26,7 +26,7 @@ module.exports = {
             content: 'Baka, baka, baka!',
             embeds: [
                 new MessageEmbed()
-                    .setColor('BLUE')
+                    .setColor('#246FE0')
                     .setDescription(`${user} está pisando em ${message.author}`)
                     .setImage(rand)
             ]
@@ -38,7 +38,7 @@ module.exports = {
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`👞 ${message.author} pisou em você ${user}`)
             .setImage(rand)
 

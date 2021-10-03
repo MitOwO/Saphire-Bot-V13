@@ -30,7 +30,7 @@ module.exports = {
         if (user.id === message.author.id) return message.reply(`${e.SadPanda} | Se bate não... Que triste.`)
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`🖐️ | ${message.author} está te dando tapa ${user}`)
             .setImage(rand)
             .setFooter('🔁 retribuir')
