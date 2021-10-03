@@ -26,11 +26,8 @@ module.exports = {
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, digite apenas \`${prefix}pig\` ou \`${prefix}pig status\``) }
 
-        let timeout1 = 30000 // 30 Segundos
-        let author1 = db.get(`${message.author.id}.Timeouts.Porquinho`)
-
-        if (author1 !== null && timeout1 - (Date.now() - author1) > 0) {
-            let time = ms(timeout1 - (Date.now() - author1))
+        let time = ms(30000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Porquinho`)))
+        if (db.get(`${message.author.id}.Timeouts.Porquinho`) !== null && 30000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Porquinho`)) > 0) {
             return message.reply(`${e.Deny} | Tente quebrar o ${e.Pig} novamente em: \`${time.seconds}s\``)
         } else {
 

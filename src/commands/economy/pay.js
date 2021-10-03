@@ -17,7 +17,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const noargs = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('💸 Sistema de Pagamento')
             .setDescription(`Pague a galera, é simples e rápido!\n \n${e.Warn} *Dinheiro perdido não serão recuperados. Cuidado para não ser enganado*`)
             .addField(`${e.On} Comando`, `\`${prefix}pay <@user/id> <quantia/all>\``)

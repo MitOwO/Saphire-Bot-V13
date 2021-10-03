@@ -77,7 +77,7 @@ module.exports = {
             }
         }
 
-        function Pegadas() { return message.reply({ embeds: [Embed.setColor('BLUE').setTitle('Há um mamute por perto').setDescription(`🦣 *Sons de mamute*`).setFooter(`R:${rand}`)] }) }
+        function Pegadas() { return message.reply({ embeds: [Embed.setColor('#246FE0').setTitle('Há um mamute por perto').setDescription(`🦣 *Sons de mamute*`).setFooter(`R:${rand}`)] }) }
 
 
         function NormalFarm(minerios) {

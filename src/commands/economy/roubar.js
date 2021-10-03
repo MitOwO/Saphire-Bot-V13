@@ -15,7 +15,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const RouboInfo = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Info} | Informações do comando Roubo`)
             .setDescription(`O sistema de roubo da ${client.user.username} é um pouco diferente.\nVocê rouba uma quantia aleatória do valor que o seu alvo possui na **carteira**. E você só tem duas possibilidades.`)
             .addField(`${e.Sirene} | Falha`, `Se a tentativa do roubo falhar, você vai preso e pagará uma fiança. Esta fiança tem o valor de **4x a quantia que você iria roubar**. Sendo assim, quanto maior a quantia, maior o dinheiro que você irá perder.\nMetade do dinheiro irá para o banco do seu alvo e a outra metade irá para a Loteria.\n~~ O dinheiro será retirado de seu banco.`)

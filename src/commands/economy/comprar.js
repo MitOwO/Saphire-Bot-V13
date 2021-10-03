@@ -267,10 +267,8 @@ module.exports = {
 
         function Divida() {
 
-            let timeout = 86400000 // 24hrs
-            let Tempo = db.get(`Client.Timeouts.RestoreDividas`)
-            if (Tempo !== null && timeout - (Date.now() - Tempo) > 0) {
-                let time = ms(timeout - (Date.now() - Tempo))
+            let time = ms(86400000 - (Date.now() - db.get(`Client.Timeouts.RestoreDividas`)))
+            if (db.get(`Client.Timeouts.RestoreDividas`) !== null && 86400000 - (Date.now() - db.get(`Client.Timeouts.RestoreDividas`)) > 0) {
                 return message.reply(`${e.MoneyWings} | Próxima restauração em: \`${time.hours}h, ${time.minutes}m, e ${time.seconds}s\`\n${e.PandaProfit} ~ Se você for o primeiro(a) a conseguir o claim logo após o tempo zerar, eu pagarei toda sua dívida.`)
             } else {
                 db.get(`Balance_${message.author.id}`) >= 0 ? message.channel.send(`${e.Deny} | ${message.author}, você não possui dívida.`) : Restore()
@@ -553,7 +551,7 @@ module.exports = {
                         db.delete('Loteria.Prize')
                         db.set('Loteria.Users', [])
                         for (i = 0; i <= 19; i++) {
-                            db.set(`Loteria.Users${i+1}`, [])
+                            db.set(`Loteria.Users${i + 1}`, [])
                         }
                         msg.edit(`${e.Check} | Uma nova loteria foi iniciada com sucesso!`)
                     }, 4000)

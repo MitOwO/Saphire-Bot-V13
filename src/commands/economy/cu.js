@@ -15,11 +15,8 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let timeout = 600000
-        let author = db.get(`${message.author.id}.Timeouts.Cu`)
-
-        if (author !== null && timeout - (Date.now() - author) > 0) {
-            let time = ms(timeout - (Date.now() - author))
+        let time = ms(600000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Cu`)))
+        if (db.get(`${message.author.id}.Timeouts.Cu`) !== null && 600000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Cu`)) > 0) {
             return message.reply(`${e.Deny} | Pelo bem do seu querido anûs, espere mais \`${time.minutes}m e ${time.seconds}s\``)
         } else {
 
