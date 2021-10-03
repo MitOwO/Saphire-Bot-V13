@@ -16,7 +16,7 @@ module.exports = {
         let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || message.member
         if (!user) return message.reply(`${e.Deny} | Eu não achei, o que será que aconteceu?`)
 
-        let TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu, TRoleta, TCrime
+        let TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu, TRoleta, TCrime, TLikes
         let Dpn = `${e.Check} \`Disponível\``
 
         // Timeout Preso
@@ -62,11 +62,17 @@ module.exports = {
         } else { TRoleta = Dpn }
 
         // Timeout Crime
-        let TimeCrime = ms(1200000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Crime`)))
-        if (db.get(`${message.author.id}.Timeouts.Crime`) !== null && 1200000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Crime`)) > 0) {
+        let TimeCrime = ms(1200000 - (Date.now() - db.get(`${user.id}.Timeouts.Crime`)))
+        if (db.get(`${user.id}.Timeouts.Crime`) !== null && 1200000 - (Date.now() - db.get(`${user.id}.Timeouts.Crime`)) > 0) {
             TCrime = `${e.Loading} \`${TimeCrime.minutes}m e ${TimeCrime.seconds}s\``
         } else { TCrime = Dpn }
 
+        // Timeout Likes
+        let TimeLikes = ms(1800000 - (Date.now() - db.get(`${user.id}.Timeouts.Likes`)))
+        if (db.get(`${user.id}.Timeouts.Rep`) !== null && 1800000 - (Date.now() - db.get(`${user.id}.Timeouts.Rep`)) > 0) {
+            TCrime = `${e.Loading} \`${TimeLikes.minutes}m e ${TimeLikes.seconds}s\``
+        } else { TLikes = Dpn }
+        
         const Embed = new MessageEmbed()
             .setColor(Colors(user))
             .setTitle(`⏱️ ${client.user.username} Timeouts | ${user.user.username}`)
@@ -99,6 +105,10 @@ module.exports = {
                 {
                     name: `${prefix}crime`,
                     value: TCrime
+                },
+                {
+                    name: `${prefix}like`,
+                    value: TLikes
                 },
                 {
                     name: `Restaurar Dívida`,
