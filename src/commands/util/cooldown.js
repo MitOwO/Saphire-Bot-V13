@@ -13,10 +13,10 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || client.users.cache.get(args[0]) || message.member
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || message.member
         if (!user) return message.reply(`${e.Deny} | Eu não achei, o que será que aconteceu?`)
 
-        let TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu
+        let TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu, TRoleta, TCrime
         let Dpn = `${e.Check} \`Disponível\``
 
         // Timeout Preso
@@ -55,9 +55,21 @@ module.exports = {
             TCu = `${e.Loading} \`${TimeCu.minutes}m e ${TimeCu.seconds}s\``
         } else { TCu = Dpn }
 
+        // Timeout Roleta
+        let TimeRoleta = ms(2400000 - (Date.now() - db.get(`${user.id}.Timeouts.Roleta`)))
+        if (db.get(`${user.id}.Timeouts.Roleta`) !== null && 2400000 - (Date.now() - db.get(`${user.id}.Timeouts.Roleta`)) > 0) {
+            TRoleta = `${e.Loading} \`${TimeRoleta.minutes}m e ${TimeRoleta.seconds}s\``
+        } else { TRoleta = Dpn }
+
+        // Timeout Crime
+        let TimeCrime = ms(1200000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Crime`)))
+        if (db.get(`${message.author.id}.Timeouts.Crime`) !== null && 1200000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Crime`)) > 0) {
+            TCrime = `${e.Loading} \`${TimeCrime.minutes}m e ${TimeCrime.seconds}s\``
+        } else { TCrime = Dpn }
+
         const Embed = new MessageEmbed()
             .setColor(Colors(user))
-            .setTitle(`⏱️ ${client.user.username} Timeouts`)
+            .setTitle(`⏱️ ${client.user.username} Timeouts | ${user.user.username}`)
             .setDescription('Aqui você pode conferir todos os timeouts.')
             .addFields(
                 {
@@ -79,6 +91,14 @@ module.exports = {
                 {
                     name: `${prefix}cu`,
                     value: TCu
+                },
+                {
+                    name: `${prefix}roleta`,
+                    value: TRoleta
+                },
+                {
+                    name: `${prefix}crime`,
+                    value: TCrime
                 },
                 {
                     name: `Restaurar Dívida`,
