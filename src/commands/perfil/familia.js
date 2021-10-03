@@ -1,91 +1,162 @@
 const { e } = require('../../../Routes/emojis.json')
+const Colors = require('../../../Routes/functions/colors')
+const Error = require('../../../Routes/functions/errors')
+const Data = require('../../../Routes/functions/data')
 
 module.exports = {
     name: 'familia',
     aliases: ['family', 'família'],
     category: 'perfil',
-    UserPermissions: '',
-    ClientPermissions: '',
+    ClientPermissions: 'ADD_REACTIONS',
     emoji: '👩‍👩‍👧‍👧',
-    usage: '<family>',
+    usage: '<family> <1/2/3> <@user/id>',
     description: 'Entre pra uma família',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        return message.channel.send(`${e.Loading} | Código ainda está sendo escrito... Espere mais um pouco, ok?`)
+        // return message.channel.send(`${e.Loading} | Código ainda está sendo escrito... Espere mais um pouco, ok?`)
 
-        let user = message.mentions.members.first() || message.member || message.guild.members.cache.get(args[0])
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[1])
+        const Embed = new MessageEmbed().setColor(Colors(message.member))
 
-        if (args[1]) return message.reply(`${e.Deny} | Hey ${message.author}! Nada além do @user, por favor.`)
+        if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return SendInfo()
+        if (['separar', 'delete', 'deletar', 'excluir'].includes(args[0]?.toLowerCase())) return DeleteFamilyPosition()
 
-        if (!member) return message.reply('Ei, me fala quem você quer convidar para sua familia.')
-        if (user.bot) return message.reply(`${e.Deny} | Nada de bots, ok?`)
+        if (!args[0] || isNaN(args[0]) || parseInt(args[0]) >= 4 || parseInt(args[0]) <= 0)
+            return message.reply(`${e.Deny} | Você tem que dizer qual é a posição! Se tiver dúvidas, use \`${prefix}family info\``)
 
-        if (db.get(`${message.author.id}.Perfil.Family.1`)) { return message.reply(`Nesta posição, <@${db.get(`family1_${message.author.id}`)}> é seu familiar.`) }
-        if (db.get(`${user.id}.Perfil.Family.1`)) { return message.reply(user.username + ' já tem um familiar nesta posição.') }
+        let number = args[0]
+        user ? CheckAndSetFamily() : message.reply(`${e.Deny} | Você tem que dizer qual é o @membro! Se tiver dúvidas, use \`${prefix}family info\``)
 
-        if (user.id === db.get(`marry_${message.author.id}`)) { return message.reply(`✅ ${member} já está na sua familia`) }
-        if (user.id === db.get(`family1_${message.author.id}`)) { return message.reply(`✅ ${member} já está na sua familia`) }
-        if (user.id === db.get(`family2_${message.author.id}`)) { return message.reply(`✅ ${member} já está na sua familia`) }
-        if (user.id === db.get(`family3_${message.author.id}`)) { return message.reply(`✅ ${member} já está na sua familia`) }
+        // (NumFamilia, user)
+        function CheckAndSetFamily() {
 
-        switch (user.id) {
-            case message.author.id:
-                message.reply(`${e.BlueHeart} Convide alguém para usa familia! Pode até 3 pessoas. \`${prefix}family 1/2/3 @user\``)
-                break;
-            case client.user.id:
-                message.reply(`${e.Deny} | É... Foi mal, mas eu já tenho uma família.`)
-                break;
-            case db.get(`marry_${message.author.id}`):
-            case db.get(`family1_${message.author.id}`):
-            case db.get(`family2_${message.author.id}`):
-            case db.get(`family3_${message.author.id}`):
-                message.reply(`✅ ${member} já está na sua familia`)
-                break;
-            case value:
+            if (db.get(`${message.author.id}.Perfil.Marry`) === user.id) return message.reply(`${e.Info} | ${user.user.username} é seu parceiro*(a)*`)
+            if ((db.get(`${message.author.id}.Perfil.Family.1`) || db.get(`${message.author.id}.Perfil.Family.2`) || db.get(`${message.author.id}.Perfil.Family.3`)) === user.id) return message.reply(`${e.Info} | Você já é familiar de ${user.user.username}`)
+            if (db.get(`${user.id}.Perfil.Family.${number}`)) return message.reply(`${e.Info} | ${user.user.username} já tem um familiar na posição ${number}.`)
+            if (db.get(`${message.author.id}.Perfil.Family.${number}`)) return message.reply(`${e.Info} | ${GetFamilyUser(db.get(`${message.author.id}.Perfil.Family.${number}`))} é seu familiar na posição ${number}`)
+            if (user.id === message.author.id) return message.reply(`${e.Deny} | Você não pode chamar você mesmo para a sua família.`)
+            if (user.id === client.user.id) return message.reply(`${e.Deny} | Sorry... Já tenho uma família.`)
+            if (user.user.bot) return message.reply(`${e.Deny} | Sorry... Nada de bots.`)
+            NewFamilySet()
 
-                break;
-            case value:
-
-                break;
-        
-            default:
-                break;
         }
 
-        let family = await db.get(`family1_${message.author.id}`)
-        let family2 = await db.get(`family1_${user.id}`)
+        function NewFamilySet() {
 
-        if (family === null && family2 === null) {
-            const familyembed = new MessageEmbed()
-                .setColor('BLUE')
-                .setTitle('❤️ Novo Pedido de Family')
-                .setDescription(`${message.author} está pedindo para ${member} entrar em sua familia.\n \nClique no coração para aceitar o pedido.`)
-                .setFooter('40 segundos para aceitar o pedido.')
+            return message.reply(`${e.QuestionMark} | ${user}, você está sendo convidado*(a)* para formar uma família com ${message.author}, você aceita?`).then(msg => {
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
 
-            message.reply(familyembed).then(msg => {
-                msg.react('❤️').catch(err => { })
+                const filter = (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === user.id }
 
-                let reactions = (reaction, user) =>
-                    reaction.emoji.name === '❤️' && user.id === user.id
+                msg.awaitReactions({ filter, max: 1, time: 60000, errors: ['time'] }).then(collected => {
+                    const reaction = collected.first()
 
-                let coletor = msg.createReactionCollector(reactions)
-
-                coletor.on('collect', cp => {
-                    msg.delete().catch(err => { })
-
-                    db.set(`family1_${message.author.id}`, user.id)
-                    db.set(`family1_${user.id}`, message.author.id)
-
-                    let familyembed = new MessageEmbed()
-                        .setColor('GREEN')
-                        .setDescription(`✅ ${member} aceitou o pedido de ${message.author} e agora são uma familia!`)
-                    setTimeout(function () { message.reply(familyembed) }, 4650)
-                    return message.channel.send('🔄 Autenticando mudanças no banco de dados...').then(msg => msg.delete({ timeout: 4500 }).catch(err => { }))
+                    if (reaction.emoji.name === '✅') {
+                        db.delete(`Request.${message.author.id}`)
+                        db.set(`${message.author.id}.Perfil.Family.${number}`, user.id)
+                        db.set(`${user.id}.Perfil.Family.${number}`, message.author.id)
+                        msg.edit(`${e.Check} | ${user} & ${message.author} agora são da mesma família!`).catch(() => { })
+                    } else {
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Pedido recusado.`).catch(() => { })
+                    }
+                }).catch(err => {
+                    Error(message, err)
+                    db.delete(`Request.${message.author.id}`)
+                    msg.edit(`${e.Deny} | Pedido recusado por tempo expirado.`).catch(() => { })
                 })
+
+            }).catch(err => {
+                Error(message, err)
+                message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
             })
-        } else {
-            return message.reply(`❗ Tem algo errado. Parece que algúm dos dois tem algo no Family 1.`)
+
+        }
+
+        function GetFamilyUser(id) {
+            let Familiar = ''
+            id ? Familiar = client.user.cache.get(id).tag : Familiar = 'Familiar não encontrado.'
+            return Familiar
+        }
+
+        function SendInfo() {
+            return message.reply({
+                embeds: [
+                    Embed.setTitle(`💞 ${client.user.username} Family System`)
+                        .setDescription(`Você pode escolher até 3 membros para a sua família! Eles ficaram visíveis no seu perfil e seu nome no perfil deles.`)
+                        .addFields(
+                            {
+                                name: '- Posições',
+                                value: 'Este sistema tem 3 posições. Você e a pessoa que vão se tornarem familiar, devem ter a mesma posição livre.\nExemplo: Se você convidar a @Saphire para a posição 1 e ela já estiver com a posição 1 ocupada, não será possível a junção.'
+                            },
+                            {
+                                name: `${e.Gear} Comando`,
+                                value: `\`${prefix}familia <1/2/3> <@user/id>\`\nExemplo: \`${prefix}familia 2 @Saphire\` *(Posição 2)*`
+                            },
+                            {
+                                name: '💔 Separação',
+                                value: `\`${prefix}familia <separar> <1/2/3>\` *(Necessita de confirmação)*`
+                            }
+                        )
+                ]
+            })
+        }
+
+        function DeleteFamilyPosition() {
+            if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
+            if (!args[1] || isNaN(args[1]) || parseInt(args[1]) >= 4 || parseInt(args[1]) <= 0)
+                return message.reply(`${e.Deny} | Você tem que dizer qual é a posição que deseja deletar! Se tiver dúvidas, use \`${prefix}family info\``)
+
+            let position = args[1]
+            if (!db.get(`${message.author.id}.Perfil.Family.${position}`))
+                return message.reply(`${e.Deny} | Você não tem nenhum familiar na posição ${position}`)
+
+            let Fam = client.users.cache.get(db.get(`${message.author.id}.Perfil.Family.${position}`))
+            if (!client.users.cache.get(db.get(`${message.author.id}.Perfil.Family.${position}`))) {
+                return message.reply(`${e.Warn} | Usuário desconhecido... Apagando dados...`).then(msg => {
+                    setTimeout(() => {
+                        db.delete(`${db.get(`${message.author.id}.Perfil.Family.${position}`)}.Perfil.Family.${position}`)
+                        db.delete(`${message.author.id}.Perfil.Family.${position}`)
+                        msg.edit(`${e.Check} | Padrão restaurado!`)
+                    }, 4000)
+                })
+            }
+
+            return message.reply(`${e.QuestionMark} | Você confirma a separação familiar de \`${message.author.tag} & ${Fam.tag}\`?`).then(msg => {
+                db.set(`Request.${message.author.id}`, `${msg.url}`)
+                msg.react('✅').catch(err => { }) // Check
+                msg.react('❌').catch(err => { }) // X
+
+                const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
+
+                msg.awaitReactions({ filter, max: 1, time: 20000 }).then(collected => {
+                    const reaction = collected.first()
+
+                    if (reaction.emoji.name === '✅') {
+                        db.delete(`Request.${message.author.id}`)
+                        db.delete(`${db.get(`${message.author.id}.Perfil.Family.${position}`)}.Perfil.Family.${position}`)
+                        db.delete(`${message.author.id}.Perfil.Family.${position}`)
+
+                        Fam ? Fam.send(`${e.Info} | ${message.author} > ${message.author.tag} \`${message.author.id}\` < pôs um fim no seu laço familiar.\nSeparação pedida em: \`${Data}\``).catch(() => { }) : ''
+                        return msg.edit(`${e.Check} | Separação concluída! Você não é mais familiar de ${Fam.tag}.\nSeparação pedida em: \`${Data}\``).catch(() => { })
+                    } else {
+                        db.delete(`Request.${message.author.id}`)
+                        msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    }
+                }).catch(err => {
+                    Error(message, err)
+                    db.delete(`Request.${message.author.id}`)
+                    msg.edit(`${e.Deny} | Comando cancelado por tempo expirado.`).catch(() => { })
+                })
+
+            }).catch(err => {
+                Error(message, err)
+                message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
+            })
+
         }
     }
 }

@@ -17,7 +17,7 @@ module.exports = {
     const Cantadas = f.Cantadas[Math.floor(Math.random() * f.Cantadas.length)]
 
     const CantadasEmbed = new MessageEmbed()
-      .setColor('BLUE')
+      .setColor('#246FE0')
       .setTitle(`❤️ Cantadas da Turma`)
       .addField('----------', `${Cantadas}`)
 
@@ -33,7 +33,7 @@ module.exports = {
       let CancelCollector = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 20000, errors: ['max', 'time'] })
 
       collector.on('collect', (reaction, user) => {
-        CantadasEmbed.setColor('BLUE').addField('----------', `${f.Cantadas[Math.floor(Math.random() * f.Cantadas.length)]}`)
+        CantadasEmbed.setColor('#246FE0').addField('----------', `${f.Cantadas[Math.floor(Math.random() * f.Cantadas.length)]}`)
         msg.edit({ embeds: [CantadasEmbed] }).catch(err => { })
       });
 

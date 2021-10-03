@@ -15,7 +15,7 @@ module.exports = {
         message.delete().then(() => {
 
             const help = new MessageEmbed()
-                .setColor('BLUE') // red
+                .setColor('#246FE0') // red
                 .setTitle(`${e.Report} Sistema de e.Report`)
                 .setDescription(`Com o Sistema de Reports da ${client.user.username} habilitado, você torna seu servidor um lugar mais "regrado".`)
                 .addField(`${e.QuestionMark} O que é o sistema de report?`, 'Com o meu sistema de report, os membros poderão reportar coisas ou outros membros de qualquer canal do servidor, não precisa estar indo chamar mod/adm no privado para reportar.')
@@ -26,7 +26,7 @@ module.exports = {
                 .setFooter(`A ${client.user.username} não se responsabiliza pelo conteúdo enviado atráves deste sistema.`)
 
             const nochannel1 = new MessageEmbed()
-                .setColor('BLUE')
+                .setColor('#246FE0')
                 .setTitle(`${e.Report} Nenhum canal de report definido.`)
                 .setDescription('Ooopa, parece que não definiram o canal de reports. Fale para alguém da Staff criar ou definir o canal, o comando é simples.\n \nCom está função, os membros são capazes de reportar coisas de qualquer canal para um canal especifico, geralmente exclusivo apenas para a moderação do servidor. As mensagens são apagadas, tornando anônimo o report, para evitar brigas e discussões.\n \nTem mais, não é necessário reportar só pessoas, você também pode reportar coisas do servidor sem precisar ficar marcando @alguém.')
                 .addField('Comando de Ativação', '`' + prefix + 'reportchannel #canal`')
@@ -42,7 +42,7 @@ module.exports = {
             if (!client.channels.cache.get(channel)) { return message.channel.send(`${e.Info} Parece que o canal de report foi excluido.`) }
             if (!args[0]) { return message.channel.send(`${e.Report} | Reporte usuários ou alguma coisa no servidor diretamente para a Staff.\n\`${prefix}report <@user(opicional)> O conteúdo do seu report\``) }
 
-            const ReportEmbed = new MessageEmbed().setColor("BLUE").setTitle(`${e.Report} Novo Reporte Recebido`).addField('Autor do Reporte', `${message.author} | *\`${message.author.id}\`*`).setThumbnail(message.author.displayAvatarURL({ dynamic: true })).setTimestamp()
+            const ReportEmbed = new MessageEmbed().setColor('#246FE0').setTitle(`${e.Report} Novo Reporte Recebido`).addField('Autor do Reporte', `${message.author} | *\`${message.author.id}\`*`).setThumbnail(message.author.displayAvatarURL({ dynamic: true })).setTimestamp()
 
             if (!user) {
                 ReportEmbed.addField('Razão do Reporte', `${args.join(" ")}`)

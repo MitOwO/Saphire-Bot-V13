@@ -19,7 +19,7 @@ module.exports = {
         let color = message.member.roles.highest.hexColor
 
         const VoteEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(Conteudo)
 
         if (avatar) { VoteEmbed.setAuthor(`${message.author.username} abriu uma votação`, message.author.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })) } else { VoteEmbed.SetAuthor(`${message.author.username} abriu uma votação`) }

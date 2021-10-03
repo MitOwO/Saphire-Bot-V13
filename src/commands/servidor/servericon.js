@@ -10,8 +10,15 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let url = message.guild.iconURL({ dynamic: true })
-        url ? message.channel.send(url) : message.reply(`${e.Deny} | Este servidor não possui um icone.`)
+        let icon = message.guild.iconURL({ dynamic: true })
+
+        const IconEmbed = new MessageEmbed()
+            .setColor('#246FE0')
+            .setDescription(`
+             [Baixar](${icon}) icone do servidor`)
+            .setImage(`${icon}`)
+
+        icon ? message.channel.send({ embeds: [IconEmbed] }) : message.reply(`${e.Deny} | Este servidor não possui um icone.`)
 
     }
 }

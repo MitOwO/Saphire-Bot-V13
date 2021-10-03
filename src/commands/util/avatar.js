@@ -4,7 +4,7 @@ const ms = require('parse-ms')
 
 module.exports = {
     name: 'avatar',
-    aliases: ['foto', 'pfp', 'pic'],
+    aliases: ['foto', 'pfp', 'pic', 'icon', 'icone'],
     category: 'util',
     UserPermissions: '',
     ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS', 'MANAGE_MESSAGES'],
@@ -28,12 +28,12 @@ module.exports = {
         }
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`[Clique aqui](${linkavatar}) para baixar o avatar de ${user}`)
             .setImage(avatar)
 
         const EmbedPV = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`[Clique aqui](${linkavatar}) para baixar o avatar de ${user.tag}`)
             .setImage(avatar)
             .setFooter(`Foto enviada de: ${message.guild.name}`)

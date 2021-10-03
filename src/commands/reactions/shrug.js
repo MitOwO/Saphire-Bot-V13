@@ -19,7 +19,7 @@ module.exports = {
         let texto = args.join(" ")
         if (texto.length > 1000) return message.reply(`${e.Deny} | Não diga coisas acima de 1000 caracteres, pelo bem do meu coração de códigos :(`)
 
-        const embed = new MessageEmbed().setColor('BLUE').setImage(rand)
+        const embed = new MessageEmbed().setColor('#246FE0').setImage(rand)
         if (texto)
             embed.setDescription(`${texto}`)
 

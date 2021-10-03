@@ -16,7 +16,7 @@ module.exports = {
         if (!bugs.length) return message.reply(`${e.Check} | Nenhum bug na lista.`)
 
         const Embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Gear} Lista de Bugs`)
             .setDescription(`${bugs.map(([a, b]) => `**${a}**\n\`${b}\``).join('\n')}`)
         return message.channel.send({ embeds: [Embed] })

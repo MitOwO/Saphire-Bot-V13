@@ -4,68 +4,84 @@ const { config } = require('../../../Routes/config.json')
 module.exports = {
     name: 'blacklist',
     aliases: ['listanegra', 'bloqueados', 'bl'],
-    category: ['owner'],
     emoji: `${e.OwnerCrow}`,
-    usage: ['(owner) <add/remove> [@user] | <deleteall>'],
+    usage: ['[Staff Private] <add/remove> [server/@user/id]'],
     description: 'Membros/Servidores bloqueados do meu sistema',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first() || message.mentions.repliedUser
+        if (!args[0]) return BlacklistRanking()
+        if (message.author.id !== config.ownerId) {
+            if (!db.get(`Moderadores.${message.author.id}`)) return message.reply(`${e.Deny} | Este é um comando da classe Moderador.`)
+        }
+
+        let u = message.mentions.members.first() || message.mentions.repliedUser || client.users.cache.get(args[1]) || client.guilds.cache.get(args[1])
+        if (args[1] && !u) return message.reply(`${e.Deny} | Membro/Servidor não encontrado.`)
+        if (!u) return message.reply(`${e.SaphireObs} | Opções: \`add\` | \`remover\` | \`addserver\` | \`removeserver\``)
+        let target = client.users.cache.get(u.id) || client.guilds.cache.get(u.id)
+        if (!target) return message.reply(`${e.Deny} | Alvo não encontrado.`)
+        if (db.get(`Moderadores.${target.id}`)) return message.reply(`${e.Deny} | Este usuário é um Moderador.`)
+
         let razao = args.slice(2).join(" ")
         if (!razao) razao = 'Nenhum motivo especificado.'
-       
-        if (!args[0]) return BlacklistRanking()
-        if (message.author.id !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
+
         if (['adicionar', 'add', 'colocar'].includes(args[0]?.toLowerCase())) return BlacklistAdd()
-        if (['addid', 'adicionarid'].includes(args[0]?.toLowerCase())) return BlacklistAddById()
         if (['remover', 'remove', 're', 'tirar'].includes(args[0]?.toLowerCase())) return BlacklistRemove()
-        if (['delid', 'removerid', 'removeid', 'reid', 'tirarid'].includes(args[0]?.toLowerCase())) return BlacklistRemoveById()
+        if (['addserver', 'addservidor'].includes(args[0]?.toLowerCase())) return ServerBlacklistAdd()
+        if (['removeserver', 'removerservidor'].includes(args[0]?.toLowerCase())) return ServerBlacklistRemove()
 
-        return message.reply(`${e.SaphireObs} | Opções: add | addid | remover | removerid | addserver | addserverid | removeserver | removerserverid`)
+        return message.reply(`${e.SaphireObs} | Opções: add | remover | addserver | removeserver`)
 
-        function BlacklistRemoveById() {
+        function ServerBlacklistAdd() {
 
-            let id = args[1]
-            if (!id) return message.reply(`${e.Deny} | \`${prefix}bl removeid id\``)
-            if (id.length < 17) { return message.reply(`${e.Deny} | Isso não é um ID`) }
-            if (isNaN(id)) { return message.reply(`${e.Deny} | Isso não é um número.`) }
+            if (!target) return message.reply(`${e.Deny} | \`${prefix}bl addserver ServerId razão\``)
+            if (client.users.cache.get(args[1])) return message.reply(`${e.Info} | Este ID é de um membro.`)
+            if (db.get(`BlacklistServers_${client.guilds.cache.get(args[1]).id})`)) return message.reply(`${e.Info} | Este servidor já está bloqueado.`)
 
-            db.delete(`Blacklist_${id}`)
-            db.delete(`Blacklist.${id}`)
-            return message.reply(`${e.Check} O usuário "<@${id}> *\`${id}\`*" foi removido da Blacklist.`)
+            db.set(`BlacklistServers_${client.guilds.cache.get(args[1]).id})`, true)
+            db.set(`BlacklistServer.${client.guilds.cache.get(args[1]).id}`, razao)
+            return message.reply(`O servidor "${target.name || 'Nome não encontrado'} *\`${target.id}\`*" foi adicionado a Blacklist.`)
         }
 
-        function BlacklistAddById() {
+        function ServerBlacklistRemove() {
 
-            let id = args[1]
-            if (!id) return message.reply(`${e.Deny} | \`${prefix}bl addid id Razão\``)
-            if (id.length < 17) { return message.reply(`${e.Deny} | Isso não é um ID`) }
-            if (isNaN(id)) { return message.reply(`${e.Deny} | Isso não é um número.`) }
-            let razao = args.slice(2).join(' ') || 'Sem razão definida'
+            if (!target) return message.reply(`${e.Deny} | \`${prefix}bl remove ServerId\``)
+            if (client.users.cache.get(args[1])) return message.reply(`${e.Info} | Este ID é de um membro.`)
+            if (!db.get(`BlacklistServers_${client.guilds.cache.get(args[1]).id})`)) return message.reply(`${e.Info} | Este servidor não está bloqueado.`)
 
-            db.set(`Blacklist_${id}`, true)
-            db.set(`Blacklist.${id}`, razao)
-            return message.reply(`${e.Check} O usuário "<@${id}> *\`${id}\`*" foi adicionado a Blacklist.`)
-        }
-
-        function BlacklistRemove() {
-
-            if (!user) return message.reply(`${e.Deny} | \`${prefix}bl remove @user\``)
-
-            db.delete(`Blacklist_${user.id}`)
-            db.delete(`Blacklist.${user.id}`)
-            return message.reply(`O usuário "${user} *\`${user.id}\`*" foi removido da Blacklist.`)
+            db.delete(`BlacklistServers_${client.guilds.cache.get(args[1]).id}`)
+            db.delete(`BlacklistServer.${client.guilds.cache.get(args[1]).id}`)
+            return message.reply(`O servidor "${target.name || 'Nome não encontrado'} *\`${target.id}\`*" foi removido da Blacklist.`)
         }
 
         function BlacklistAdd() {
 
-            if (!user) return message.reply(`${e.Deny} | \`${prefix}bl add @user razão\``)
+            if (!target) return message.reply(`${e.Deny} | \`${prefix}bl add @user razão\``)
+            if (client.guilds.cache.get(args[1])) return message.reply(`${e.Info} | Este ID é de um servidor.`)
+            if (db.get(`Blacklist_${target.id}`)) return message.reply(`${e.Info} | Este usuário já está bloqueado.`)
 
-            db.set(`Blacklist_${user.id}`, true)
-            db.set(`Blacklist.${user.id}`, razao)
-            return message.reply(`O usuário "${user} *\`${user.id}\`*" foi adicionado a Blacklist.`)
+            if (target.id === config.ownerId) {
+                db.delete(`Moderadores.${message.author.id}`, true)
+                db.delete(`Moderadores.${message.author.id}`, razao)
+                return message.reply(`${e.SaphireRaivaFogo} | Por tentar bloquear meu criador, você perdeu seu cargo de Moderador!`)
+            }
+
+            db.set(`Blacklist_${target.id}`, true)
+            db.set(`Blacklist.${target.id}`, razao)
+            return message.reply(`O usuário "${target.username} *\`${target.id}\`*" foi adicionado a Blacklist.`)
         }
+
+        function BlacklistRemove() {
+
+            if (!target) return message.reply(`${e.Deny} | \`${prefix}bl removeserver @user\``)
+            if (client.guilds.cache.get(args[1])) return message.reply(`${e.Info} | Este ID é de um servidor.`)
+            if (!db.get(`Blacklist_${target.id}`)) return message.reply(`${e.Info} | Este usuário não está bloqueado.`)
+
+            db.delete(`Blacklist_${target.id}`)
+            db.delete(`Blacklist.${target.id}`)
+            return message.reply(`O usuário "${target.username} *\`${target.id}\`*" foi removido da Blacklist.`)
+        }
+
 
         async function BlacklistRanking() {
             let data = db.all().filter(i => i.ID.startsWith("Blacklist_")).sort((a, b) => b.data - a.data)
@@ -75,7 +91,7 @@ module.exports = {
             let lb = []
             for (let i in data) {
                 let id = data[i].ID.split("_")[1]
-                let user = await client.users.fetch(id)
+                let user = await client.users.cache.get(id) || `${id}`
                 user = user ? user.tag : "Usuário não encontrado"
                 let Blacklist_ = data[i].data
                 let razao = db.get(`Blacklist.${id}`)

@@ -19,7 +19,7 @@ module.exports = {
     let texto = `${message.author}, curte um pézinho?`
 
 
-    const embed = new MessageEmbed().setColor('BLUE').setDescription(`${texto}`).setImage(rand)
+    const embed = new MessageEmbed().setColor('#246FE0').setDescription(`${texto}`).setImage(rand)
 
     return message.reply({ embeds: [embed] }).then(msg => {
       db.set(`Request.${message.author.id}`, `${msg.url}`)

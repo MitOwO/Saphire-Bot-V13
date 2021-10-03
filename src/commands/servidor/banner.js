@@ -11,7 +11,13 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let banner = message.guild.bannerURL({ format: 'jpeg', size: 1024 })
-        banner ? message.channel.send(banner) : message.reply(`${e.Deny} | Este servidor não possui um banner.`)
+
+        const BannerEmbed = new MessageEmbed()
+            .setColor('#246FE0')
+            .setDescription(`${e.Download} [Baixar](${banner}) banner do servidor`  )
+            .setImage(`${banner}`)
+
+        banner ? message.channel.send({ embeds: [BannerEmbed] }) : message.reply(`${e.SaphireObs} | Este servidor não possui um banner.`)
 
     }
 }

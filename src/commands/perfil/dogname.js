@@ -15,7 +15,7 @@ module.exports = {
         if (!medalha) return message.reply(`${e.Deny} | Você ainda não obteve sua medalha! \`${prefix}floresta\``)
 
         const args0 = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Doguinho} Nome pro cachorrinho`)
             .setDescription('Use este comando para dar um nome para seu cachorrinho/a!')
             .addField('Comando', `\`${prefix}dogname NomeDoCachorro\``)

@@ -15,7 +15,7 @@ module.exports = {
         if (['tudo', 'all'].includes(args[0]?.toLowerCase())) {
 
             db.delete('ComandoBloqueado')
-            return message.reply(`${e.Check} Todos os comandos foram liberados.`)
+            return message.reply(`${e.Check} | Todos os comandos foram liberados.`)
 
         } else if (db.get(`ComandoBloqueado.${args[0]?.toLowerCase()}`)) {
 

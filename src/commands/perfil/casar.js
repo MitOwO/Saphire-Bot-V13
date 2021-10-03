@@ -16,8 +16,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
-        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
-        let bot = user.bot
+        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.mentions.repliedUser
         let color = Colors(message.member)
         let anel = db.get(`${message.author.id}.Slot.Anel`)
 
@@ -27,7 +26,7 @@ module.exports = {
             .setDescription(`Você pode se casar no Sistema Saphire.`)
             .addField(`${e.On} Comando`, `\`${prefix}casar @user\``)
 
-        if (!args[0] || user.id === message.author.id) { return message.reply({ embeds: [noargs] }) }
+        if (!args[0]) return message.reply({ embeds: [noargs] })
 
         let level = db.get(`level_${user.id}`) || 0
         let levelauthor = db.get(`level_${message.author.id}`) || 0
@@ -37,7 +36,7 @@ module.exports = {
         if (db.get(`${message.author.id}.Perfil.Marry`)) return message.reply(`${e.Deny} | Você já está em um relacionamento, o que você quer por aqui?`)
         if (db.get(`${user.id}.Perfil.Marry`)) return message.reply(`${e.Deny} | ${user} está em um relacionamento.`)
         if (user.id === client.user.id) return message.reply(`${e.Deny} | Já sou casada com o Itachi Uchiha, sai daqui. ${e.Itachi}`)
-        if (bot) return message.reply(`${e.Deny} | Você não pode se casar com bots`)
+        if (user.bot) return message.reply(`${e.Deny} | Você não pode se casar com bots`)
 
         const gif = 'https://imgur.com/Ush7ZDy.gif'
 
@@ -91,10 +90,9 @@ module.exports = {
                         db.delete(`${message.author.id}.Slot.Anel`)
                         db.set(`${message.author.id}.Perfil.Marry`, user.id)
                         db.set(`${user.id}.Perfil.Marry`, message.author.id)
-                        return message.channel.send({ embeds: [casados] })
+                        return msg.edit({ embeds: [casados] }).catch(() => { })
                     } else {
-                        casar.setColor('RED').setFooter('Pedido recusado')
-                        msg.edit({ embeds: [casar] }).catch(err => { })
+                        msg.delete().catch(err => { })
                         return message.channel.send(`${e.Deny} | Não foi dessa vez, ${message.author}. ${user} recusou seu pedido de casamento.`)
                     }
                 }).catch(() => {

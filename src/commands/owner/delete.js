@@ -15,7 +15,7 @@ module.exports = {
         if (message.author.id !== config.ownerId) return message.reply(`${e.Deny} | Este é um comando privado.`)
 
         const commands = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('📋 Comandos Exclusivos de Delete (OWNER)')
             .setDescription('Com este comando, o meu criador torna possivel a opção de Deletar qualquer item de qualquer pessoa.')
             .addField('Comando', '`' + prefix + 'del Item @user`')

@@ -11,7 +11,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let Tickets = db.get('Loteria.Users') || false
+        let Tickets = db.get('Loteria.Users').concat(db.get('Loteria.Users1'), db.get('Loteria.Users2'), db.get('Loteria.Users3'), db.get('Loteria.Users4'), db.get('Loteria.Users5'))
         if (!Tickets) return message.reply(`${e.Deny} | Não há ninguém participando da loteria.`)
 
         let TicketsCompradosAoTodo = Tickets.length || false
@@ -75,7 +75,6 @@ module.exports = {
             msg.delete().catch(() => { })
             message.channel.send({ embeds: [WinEmbed] })
             db.add(`${winner.id}.Cache.Resgate`, (db.get('Loteria.Prize') || 0))
-            db.set('Loteria.Users', [])
             try {
                 winner.send(`${e.PandaProfit} | Oi oi, estou passando aqui para te falar que você foi o ganhador*(a)* da Loteria.\n${e.MoneyWings} | Você ganhou o prêmio de ${Prize} ${e.Coin} Moedas.\n${e.SaphireObs} | Você pode resgatar ele a qualquer momento usando \`-resgate\``)
             } catch (err) {
@@ -84,12 +83,16 @@ module.exports = {
             message.channel.send(`${e.Loading} | Alocando prêmio ao vencedor*(a)* e deletando todos os dados da Loteria...`).then(msg => {
                 setTimeout(() => { msg.edit(`${e.Check} | Prêmio entregue com sucesso ao cache do vencedor*(a)* e todos os dados da Loteria foram apagados!`).catch(() => { }); NewLotery() }, 3500)
             })
-            db.delete('Loteria.Prize')
         }
 
         function NewLotery() {
             message.channel.send(`${e.Loading} | Iniciando uma nova loteria...`).then(msg => {
                 setTimeout(() => {
+                    db.delete('Loteria.Prize')
+                    db.set('Loteria.Users', [])
+                    for (i = 0; i <= 19; i++) {
+                        db.set(`Loteria.Users${i + 1}`, [])
+                    }
                     db.delete('Lotery.Close')
                     msg.edit(`${e.Check} | Uma nova loteria foi iniciada com sucesso!`)
                 }, 4000)

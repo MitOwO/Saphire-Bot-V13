@@ -13,7 +13,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const ConfigEmbed = new MessageEmbed()
-            .setColor("BLUE")
+            .setColor('#246FE0')
             .setTitle(`${e.ModShield} Configurações ${message.guild.name}`)
             .setDescription(`Dica: Você pode ver todos os comandos de ativação no painel \`configuração\` no comando \`${prefix}help\``)
             .addFields(

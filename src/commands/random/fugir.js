@@ -17,7 +17,7 @@ module.exports = {
         if (['info', 'help'].includes(args[0]?.toLowerCase())) return message.reply({
             embeds: [
                 new MessageEmbed()
-                    .setColor('BLUE')
+                    .setColor('#246FE0')
                     .setTitle(`${e.PandaBag} Comando Fugir`)
                     .setDescription('Tente fugir da cadeia, mas tome cuidado!')
                     .addField(`${e.Info} Informações`, `Você tem **30% de chance de fuga**. Caso fuja com sucesso, você será liberto(a) da prisão, caso seja pego na tentativa da fuga, você perderá entre \`1~20000\` ${Moeda(message)}`)

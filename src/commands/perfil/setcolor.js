@@ -3,7 +3,7 @@ const Colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'setcolor',
-    aliases: ['hex', 'sethex'],
+    aliases: ['hex', 'sethex', 'setcor'],
     category: 'perfil',
     emoji: '🎨',
     usage: '<setcolor> <#CódigoHex>',

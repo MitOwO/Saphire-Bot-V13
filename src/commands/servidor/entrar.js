@@ -34,7 +34,7 @@ module.exports = {
         } while (Random !== false)
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('Receba um cargo aleatório')
             .setDescription(`${e.Info} | Receba um cargo aleatório configurado pela Staff do servidor`)
             .addField(`Comando`, `\`${prefix}entrar\``, true)

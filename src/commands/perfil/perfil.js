@@ -14,12 +14,8 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let user = message.mentions.members.first() || message.member
-
-        if (!isNaN(args[0])) {
-            user = message.guild.members.cache.get(args[0])
-            if (!user) return message.reply(`${e.Deny} | Não achei ninguém com esse ID.`)
-        }
+        let u = message.mentions.members.first() || message.mentions.repliedUser || client.users.cache.get(args[0]) || message.author
+        let user = client.users.cache.get(u.id) || message.author
 
         let color = Colors(user)
 
@@ -31,15 +27,33 @@ module.exports = {
             } else { money = '||Oculto||' }
         }
 
-        let family = db.get(`${user.id}.Perfil.Family.1`) || false
-        let family2 = db.get(`${user.id}.Perfil.Family.2`) || false
-        let family3 = db.get(`${user.id}.Perfil.Family.3`) || false
+        let family, family2, family3
 
-        family ? family = `⠀\n1. <@${db.get(`${user.id}.Perfil.Family.1`)}>` : family = ''
-        family2 ? family2 = `⠀\n2. <@${db.get(`${user.id}.Perfil.Family.2`)}>` : family2 = ''
-        family3 ? family3 = `⠀\n3. <@${db.get(`${user.id}.Perfil.Family.3`)}>` : family3 = ''
+        if (db.get(`${user.id}.Perfil.Family.1`) && !client.users.cache.get(db.get(`${user.id}.Perfil.Family.1`))) {
+            db.delete(`${user.id}.Perfil.Family.1`)
+            db.delete(`${db.get(`${user.id}.Perfil.Family.1`)}.Perfil.Family.1`)
+        }
+
+        if (db.get(`${user.id}.Perfil.Family.2`) && !client.users.cache.get(db.get(`${user.id}.Perfil.Family.2`))) {
+            db.delete(`${user.id}.Perfil.Family.2`)
+            db.delete(`${db.get(`${user.id}.Perfil.Family.2`)}.Perfil.Family.2`)
+        }
+
+        if (db.get(`${user.id}.Perfil.Family.3`) && !client.users.cache.get(db.get(`${user.id}.Perfil.Family.3`))) {
+            db.delete(`${user.id}.Perfil.Family.3`)
+            db.delete(`${db.get(`${user.id}.Perfil.Family.3`)}.Perfil.Family.3`)
+        }
+
+        client.users.cache.get(db.get(`${user.id}.Perfil.Family.1`)) ? family = `⠀\n1. ${client.users.cache.get(db.get(`${user.id}.Perfil.Family.1`)).tag}` : family = ''
+        client.users.cache.get(db.get(`${user.id}.Perfil.Family.2`)) ? family2 = `⠀\n2. ${client.users.cache.get(db.get(`${user.id}.Perfil.Family.2`)).tag}` : family2 = ''
+        client.users.cache.get(db.get(`${user.id}.Perfil.Family.3`)) ? family3 = `⠀\n3. ${client.users.cache.get(db.get(`${user.id}.Perfil.Family.3`)).tag}` : family3 = ''
 
         let marry = client.users.cache.get(db.get(`${user.id}.Perfil.Marry`))
+        if (db.get(`${user.id}.Perfil.Marry`) && !client.users.cache.get(db.get(`${user.id}.Perfil.Marry`))) {
+            db.delete(`${user.id}.Perfil.Marry`)
+            db.delete(`${db.get(`${user.id}.Perfil.Marry`)}.Perfil.Marry`)
+            message.channel.send(`${e.Info} | Eu não achei o perceiro*(a)* deste perfil em nenhum dos meus servidores. Então, eu forcei o divórcio entre o casal.`)
+        }
         marry ? marry = `💍 ${marry.tag}` : marry = "💍 Solteiro(a)"
 
         let level = db.get(`level_${user.id}`) + 1
@@ -50,7 +64,7 @@ module.exports = {
         titleloja ? titulo = `🔰 ${Title}` : titulo = `${e.Deny} Não possui título`
 
         let status = db.get(`${user.id}.Perfil.Status`) || false
-        status ? status = db.get(`${user.id}.Perfil.Status`) : status = `${user.user.username} não conhece o comando \`${prefix}setstatus\``
+        status ? status = db.get(`${user.id}.Perfil.Status`) : status = `${user.username} não conhece o comando \`${prefix}setstatus\``
 
         let signo = db.get(`${user.id}.Perfil.Signo`) || false
         signo ? signo = `⠀\n${db.get(`${user.id}.Perfil.Signo`)}` : signo = `⠀\n${e.Deny} Sem signo definido`
@@ -81,13 +95,11 @@ module.exports = {
         if (star5) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
         if (!star1 && !star2 && !star3 && !star4 && !star5) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
 
-        let TopGlobalMoney = 0
-        let TopGlobalLevel = 0
-        let TopGlobalLikes = 0
+        let TopGlobalMoney, TopGlobalLevel, TopGlobalLikes
 
         let LevelData = db.all().filter(i => i.ID.startsWith("Xp_")).sort((a, b) => b.data - a.data)
         if (LevelData.length < 1) {
-            TopGlobalLevel = 0
+            TopGlobalLevel = ''
         } else {
             TopGlobalLevel = LevelData.map(m => m.ID).indexOf(`Xp_${user.id}`) + 1 || 0
             TopGlobalLevel === 1 ? TopGlobalLevel = `\n${e.RedStar} **Top Global Level**` : TopGlobalLevel = ''
@@ -95,7 +107,7 @@ module.exports = {
 
         let LikesData = db.all().filter(i => i.ID.startsWith("Likes_")).sort((a, b) => b.data - a.data)
         if (LikesData.length < 1) {
-            TopGlobalLikes = 0
+            TopGlobalLikes = ''
         } else {
             TopGlobalLikes = LikesData.map(m => m.ID).indexOf(`Likes_${user.id}`) + 1 || 0
             TopGlobalLikes === 1 ? TopGlobalLikes = `\n${e.Like} **Top Global Likes**` : TopGlobalLikes = ''
@@ -103,7 +115,7 @@ module.exports = {
 
         let MoneyData = db.all().filter(i => i.ID.startsWith("Bank_")).sort((a, b) => b.data - a.data)
         if (MoneyData.length < 1) {
-            TopGlobalMoney = 0
+            TopGlobalMoney = ''
         } else {
             TopGlobalMoney = MoneyData.map(m => m.ID).indexOf(`Bank_${user.id}`) + 1 || 0
             TopGlobalMoney === 1 ? TopGlobalMoney = `\n${e.MoneyWings} **Top Global Money**` : TopGlobalMoney = ''
@@ -112,9 +124,21 @@ module.exports = {
         let OfficialTitle = db.get(`${user.id}.Perfil.OfficialTitles`) || false
         OfficialTitle ? OfficialTitle = `\n${db.get(`${user.id}.Perfil.OfficialTitles`)}` : OfficialTitle = ''
 
+        let Moderator = db.get(`Moderadores.${user.id}`) || false
+        Moderator ? Moderator = `\n${e.ModShield} **Official Moderator**` : Moderator = ''
+
+        let Developer = db.get(`Developer.${user.id}`) || false
+        Developer ? Developer = `\n${e.OwnerCrow} **Official Developer**` : Developer = ''
+
+        let BugHunter = db.get(`BugHunter.${user.id}`) || false
+        BugHunter ? BugHunter = `\n${e.Gear} **Bug Hunter**` : BugHunter = ''
+
+        let OfficialDesigner = db.get(`OfficialDesigner.${user.id}`) || false
+        OfficialDesigner ? OfficialDesigner = `\n${e.SaphireFeliz} **Designer Official & Emojis Productor**` : OfficialDesigner = ''
+
         if (user.id === client.user.id) {
             const perfil = new MessageEmbed()
-                .setDescription(`${e.VipStar} **Perfil Pessoal de ${user.user.username}**\n${e.SaphireTimida} **Envergonhada**\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`)
+                .setDescription(`${e.VipStar} **Perfil Pessoal de ${client.user.username}**\n${e.SaphireTimida} **Envergonhada**\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`)
                 .setColor('#FDFF00')
                 .addFields(
                     {
@@ -132,15 +156,19 @@ module.exports = {
                     {
                         name: '📝 Status',
                         value: 'Um dia eu quero ir pra lua'
+                    },
+                    {
+                        name: '🛡️ Clan',
+                        value: 'Machine Saphire'
                     }
                 )
-                .setThumbnail(user.user.displayAvatarURL({ dynamic: true }))
+                .setThumbnail(user.displayAvatarURL({ dynamic: true }))
             return message.reply({ embeds: [perfil] })
         }
 
         const perfilembed = new MessageEmbed()
             .setColor(color)
-            .setDescription(`${vip} **Perfil de ${user.user.username}**${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`)
+            .setDescription(`${vip} **Perfil de ${user.username}**${Developer}${OfficialDesigner}${Moderator}${BugHunter}${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`)
             .addFields(
                 {
                     name: '👤 Pessoal',
@@ -157,16 +185,13 @@ module.exports = {
                 {
                     name: '📝 Status',
                     value: status
+                },
+                {
+                    name: '🛡️ Clan',
+                    value: 'Sessão em produção'
                 }
             )
-            .setThumbnail(user.user.displayAvatarURL({ dynamic: true }))
-
-        // Makol
-        if (user.id === '351903530161799178') { perfilembed.setDescription(`${vip} **Perfil de ${user.user.username}**\n${e.ModShield} **Moderator Official**\n${e.Gear} **Bug Hunter**${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`) }
-        // Felipe
-        if (user.id === '830226550116057149') { perfilembed.setDescription(`${vip} **Perfil de ${user.user.username}**\n${e.SaphireFeliz} **Designer Official & Emojis Productor**${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`) }
-        // Rody
-        if (user.id === '451619591320371213') { perfilembed.setDescription(`${e.VipStar} **Perfil de ${user.user.username}**\n${e.OwnerCrow} **Desenvolvedor**${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`) }
+            .setThumbnail(user.displayAvatarURL({ dynamic: true }))
 
         message.reply({ embeds: [perfilembed] })
     }

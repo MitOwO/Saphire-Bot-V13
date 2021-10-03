@@ -15,7 +15,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
 
         const NiverEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle('🎉 Data de Aniversário')
             .setDescription(`Defina sua data de aniversário no seu perfil atráves deste comando.\n \n${e.SaphireObs} | É obrigatório seguir o formato. Ok?\nCom **espaçamento** e no **formato DD MM AAAA**`)
             .addField(`${e.On} Ative`, `\`${prefix}setniver 15 03 2007\``)

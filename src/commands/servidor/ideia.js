@@ -13,7 +13,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const NoChannelEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setDescription(`${e.Info} | Graças ao meu sistema de organização, este é um dos comandos que requer um canal especifico para funcionamento.\n \nAs ideias e sugestões dos membros ficará em um canal para serem votadas pelos os outros membros. Bem... Se a administração do servidor assim quiser, é claro.`)
             .addFields({ name: 'Comando de Ativação', value: `\`${prefix}ideiachannel\``, inline: true})
             .addFields({ name: 'Comando de Desativação', value: `\`${prefix}ideiachannel off\``, inline: true})
@@ -29,7 +29,7 @@ module.exports = {
             if (content.length > 500 || content.length < 10) { return message.reply(`${e.Deny} | Tente colocar suas ideias dentro de **10~700 caracteres**.`) }
 
             const IdeiaEmbed = new MessageEmbed()
-                .setColor("BLUE")
+                .setColor('#246FE0')
                 .setAuthor(`${message.author.tag} enviou uma ideia`, avatar)
                 .setDescription(content)
                 .setFooter(`${prefix}ideia`)

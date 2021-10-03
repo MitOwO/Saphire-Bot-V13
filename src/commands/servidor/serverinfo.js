@@ -74,7 +74,7 @@ module.exports = {
         if (Verificado === true) Verificado = 'Sim'
 
         const embed = new MessageEmbed()
-            .setColor("BLUE")
+            .setColor('#246FE0')
             .setTitle(`${e.Info} Servidor: ${message.guild.name}`)
             .addFields(
                 {

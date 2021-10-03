@@ -44,7 +44,7 @@ module.exports = {
         let piiiinto = array[Math.floor(Math.random() * array.length)]
 
         const Piiinto = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`🍆 | Tamanho do brinquedo de ${user.username}`)
             .setDescription(piiiinto)
         return message.reply({ embeds: [Piiinto] })

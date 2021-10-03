@@ -16,7 +16,7 @@ module.exports = {
 
         const embed = new MessageEmbed().setFooter(`${prefix}cor #hex`)
 
-        const NoArgsEmbed = new MessageEmbed().setColor('BLUE').setTitle(`${e.Info} Tabelinha de Cores #HEX`).addField('🎨 Cores Disponiveis', 'Preto\n Azul\n Ciano\n Verde\n Vermelho\n Rosa\n Roxo\n Laranja\n Amarelo\n Branco').addField('Comando', `\`${prefix}cor <cor>\` Códigos #hex\n\`${prefix}cor <#hex>\` A cor da #hex`).setFooter(`Ideia do comando: ${N.Makol}`)
+        const NoArgsEmbed = new MessageEmbed().setColor('#246FE0').setTitle(`${e.Info} Tabelinha de Cores #HEX`).addField('🎨 Cores Disponiveis', 'Preto\n Azul\n Ciano\n Verde\n Vermelho\n Rosa\n Roxo\n Laranja\n Amarelo\n Branco').addField('Comando', `\`${prefix}cor <cor>\` Códigos #hex\n\`${prefix}cor <#hex>\` A cor da #hex`).setFooter(`Ideia do comando: ${N.Makol}`)
 
         let HexColors = ''
 

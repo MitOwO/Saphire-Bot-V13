@@ -20,7 +20,7 @@ module.exports = {
     if (!texto) texto = `${message.author} está batendo palmas`
     if (texto.length > 1000) return message.reply(`${e.Deny} | Não diga coisas acima de 1000 caracteres, pelo bem do meu coração de códigos :(`)
 
-    const embed = new MessageEmbed().setColor('BLUE').setDescription(`${texto}`).setImage(rand)
+    const embed = new MessageEmbed().setColor('#246FE0').setDescription(`${texto}`).setImage(rand)
 
     return message.reply({ embeds: [embed] }).then(msg => {
       db.set(`Request.${message.author.id}`, `${msg.url}`)

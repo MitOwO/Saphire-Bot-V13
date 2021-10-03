@@ -14,7 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         const noargs = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`🌥️ Estação de Tempo da ${client.user.username}`)
             .setDescription('• Aqui você pode ver o clima de qualquer lugar do mundo, explore o clima dos paises e cidades.')
             .addField("Comando", `\`${prefix}clima SP/RJ/MG ou o nome da Cidade/Estado\``)
@@ -34,7 +34,7 @@ module.exports = {
             let location = result[0].location
 
             const embed = new MessageEmbed()
-                .setColor('BLUE')
+                .setColor('#246FE0')
                 .setAuthor(current.observationpoint)
                 .setDescription(`> ${current.skytext}`)
                 .setThumbnail(current.imageUrl)

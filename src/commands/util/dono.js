@@ -16,7 +16,7 @@ module.exports = {
         let avatar = message.guild.iconURL({ dynamic: true })
 
         const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setAuthor(`${message.guild.name}`)
             .setDescription(`${e.OwnerCrow} Dono/a: <@${owner}>\n:id: \`${owner}\``)
 
