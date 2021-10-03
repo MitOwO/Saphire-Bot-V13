@@ -85,8 +85,7 @@ module.exports = {
         db.get(`${user.id}.Perfil.Estrela.3`) ? star = `${e.Star}${e.Star}${e.Star}${e.GrayStar}${e.GrayStar}` : star = star
         db.get(`${user.id}.Perfil.Estrela.4`) ? star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.GrayStar}` : star = star
         db.get(`${user.id}.Perfil.Estrela.5`) ? star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}` : star = star
-        if (user.id === '351903530161799178') star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
-        if (user.id === '451619591320371213') star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
+        db.get(`${user.id}.Perfil.Estrela.6`) ? star = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}` : star = star
 
         const VipEmbed = new MessageEmbed()
         .setColor(color)
