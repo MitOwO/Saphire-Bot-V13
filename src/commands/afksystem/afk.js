@@ -20,7 +20,7 @@ module.exports = {
         if (!Motivo) Motivo = 'Sem recado definido.'
         
         const AfkInfoEmbed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor('#246FE0')
             .setTitle(`${e.Planet} Afk Global System`)
             .setDescription('Utilize este comando para avisar que você está offline.')
             .addField(`${e.Info} | Emojis de Ativação`, `✅ | Ative o AFK somente no servidor\n🌎 | Ative o AFK em todos os servidores\n❓ | Esta paginazinha de Ajuda\n❌ | Cancele o comando`)
