@@ -10,7 +10,7 @@ function Colors(user) {
 
     try {
         let RoleColor = user.displayHexColor
-        if (RoleColor === '#000000' || !RoleColor) RoleColor = '#2f3136'
+        if (RoleColor === '#000000' || !RoleColor) RoleColor = '#246FE0'
         let color = db.get(`${user.id}.Color.Set`) || RoleColor
 
         return color
