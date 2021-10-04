@@ -4,7 +4,6 @@ module.exports = {
     name: 'ideia',
     aliases: ['sugerir', 'sugestão'],
     category: 'servidor',
-    UserPermissions: '',
     ClientPermissions: ['ADD_REACTIONS', 'EMBED_LINKS'],
     emoji: '💭',
     usage: '<ideia> <sua ideia em diante>',

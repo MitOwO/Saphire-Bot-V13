@@ -34,7 +34,7 @@ module.exports = {
         if (['mod', 'moderador'].includes(args[0]?.toLowerCase())) return SetNewSystemModerator()
         if (['bughunter'].includes(args[0]?.toLowerCase())) return SetNewBugHunter()
         if (['designer'].includes(args[0]?.toLowerCase()?.toLowerCase())) return SetNewDesigner().toLowerCase()
-        if (['estrela6', 'star6'].includes([0]?.toLowerCase())) return AddNewSixthStar()
+        if (['estrela6', 'star6'].includes(args[0]?.toLowerCase())) return AddNewSixthStar()
         if (['developer', 'dev'].includes(args[0]?.toLowerCase())) return SetNewDeveloper()
         return message.reply(`${e.Deny} | **${args[0]?.toLowerCase()}** | Não é um argumento válido.`)
 
@@ -97,7 +97,7 @@ module.exports = {
                 return message.channel.send(`${e.Info} | ${user.username} já é um Designer Official & Emojis Productor.`)
 
             db.set(`OfficialDesigner.${user.id}`, true)
-            user.send(`Parabéns! Você adquiriu o título **${e.SaphireFeliz} **Designer Official & Emojis Productor****.`).catch(() => { })
+            user.send(`Parabéns! Você adquiriu o título **${e.SaphireFeliz} Designer Official & Emojis Productor**.`).catch(() => { })
             return message.channel.send(`${e.Check} | ${user.username} agora é um Designer Official & Emojis Productor`)
         }
 
@@ -106,14 +106,14 @@ module.exports = {
                 return message.channel.send(`${e.Info} | ${user.username} já é um Developer.`)
 
             db.set(`Developer.${user.id}`, true)
-            user.send(`Parabéns! Você adquiriu o título **${e.OwnerCrow} **Official Developer****.`).catch(() => { })
+            user.send(`Parabéns! Você adquiriu o título **${e.OwnerCrow} Official Developer**.`).catch(() => { })
             return message.channel.send(`${e.Check} | ${user.username} agora é um Developer!`)
         }
-        
+
         function AddNewSixthStar() {
             if (db.get(`${user.id}.Perfil.Estrela.6`))
                 return message.reply(`${e.Info} | ${user.username} já tem a 6º Estrela.`)
-            
+
             db.set(`${user.id}.Perfil.Estrela.6`, true)
             user.send(`Parabéns! Você adquiriu um item de Classe Especial: **6º Estrela**`)
             return message.reply(`${e.Check} | ${user.username} agora possui a **6º Estrela**!`)

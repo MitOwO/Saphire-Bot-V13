@@ -1,4 +1,5 @@
 const { e } = require('../../../Routes/emojis.json')
+const { f } = require('../../../Routes/frases.json')
 const Colors = require('../../../Routes/functions/colors')
 const Error = require('../../../Routes/functions/errors')
 const Data = require('../../../Routes/functions/data')
@@ -63,8 +64,7 @@ module.exports = {
                         db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Deny} | Pedido recusado.`).catch(() => { })
                     }
-                }).catch(err => {
-                    Error(message, err)
+                }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Pedido recusado por tempo expirado.`).catch(() => { })
                 })

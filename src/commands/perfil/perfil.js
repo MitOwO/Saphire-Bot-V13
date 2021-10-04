@@ -1,12 +1,13 @@
 const { e } = require('../../../Routes/emojis.json')
-const { config } = require('../../../Routes/config.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'perfil',
-    aliases: ['profile'],
+    aliases: ['profile', 'p'],
     category: 'perfil',
+    UserPermissions: '',
+    ClientPermissions: '',
     emoji: '👤',
     usage: '<perfil> [@user]',
     description: 'Veja o perfil, seu ou o de alguém',
@@ -92,7 +93,7 @@ module.exports = {
         if (star4) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.GrayStar}`
         let star5 = db.get(`${user.id}.Perfil.Estrela.5`) || false
         if (star5) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
-        let star6 = gb.get(`${user.id}.Perfil.Estrela.6`) || false
+        let star6 = db.get(`${user.id}.Perfil.Estrela.6`) || false
         if (star6) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
         if (!star1 && !star2 && !star3 && !star4 && !star5 && !star6) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
 

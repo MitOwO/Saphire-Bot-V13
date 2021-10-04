@@ -6,7 +6,7 @@ module.exports = {
     category: 'random',
     emoji: '😏',
     usage: '<safado(a)> [@user]',
-    description: 'Quando gado(a) @user é?',
+    description: 'Quantos % @user é safado(a)?',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
@@ -15,11 +15,6 @@ module.exports = {
 
         if (user.id === client.user.id) { return message.reply(`${e.SaphireTimida} | Eu não sou gada, sai pra lá.`) }
 
-        return message.reply({
-            embeds: [new MessageEmbed()
-                .setColor('PURPLE')
-                .setTitle(`😏 ${client.user.username} Safadometro`)
-                .setDescription(`Passo falar com certeza, que ${user} é ${num}% safado*(a)*.`)]
-        })
+        return message.reply(`😏 | Passo falar com certeza, que ${user} é ${num}% safado*(a)*.`)
     }
 }

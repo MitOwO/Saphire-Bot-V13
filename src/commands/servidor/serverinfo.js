@@ -17,7 +17,7 @@ module.exports = {
         if (AfkChannel === `<#null>` || AfkChannel === undefined) AfkChannel = "Não possui"
 
         let data = message.guild.createdAt
-        let DataFormatada = ((data.getDate())) + "/" + ((data.getMonth() + 1)) + "/" + data.getFullYear() + " as " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's'
+        let DataFormatada = ((data.getDate())) + "/" + ((data.getMonth() + 1)) + "/" + data.getFullYear() + " ás " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's'
 
         let DataDoBot = message.guild.joinedAt
         let BotEntrou = ((DataDoBot.getDate())) + "/" + ((DataDoBot.getMonth() + 1)) + "/" + DataDoBot.getFullYear() + " as " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's'

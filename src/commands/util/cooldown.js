@@ -16,7 +16,7 @@ module.exports = {
         let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || message.member
         if (!user) return message.reply(`${e.Deny} | Eu não achei, o que será que aconteceu?`)
 
-        let TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu, TRoleta, TCrime, TLikes
+        let TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu, TRoleta, TCrime, TBit, TLikes
         let Dpn = `${e.Check} \`Disponível\``
 
         // Timeout Preso
@@ -67,12 +67,18 @@ module.exports = {
             TCrime = `${e.Loading} \`${TimeCrime.minutes}m e ${TimeCrime.seconds}s\``
         } else { TCrime = Dpn }
 
+        // Timeout Bitcoin
+        let TimeBitcoin = ms(7200000 - (Date.now() - db.get(`${user.id}.Timeouts.Bitcoin`)))
+        if (db.get(`${user.id}.Timeouts.Bitcoin`) !== null && 7200000 - (Date.now() - db.get(`${user.id}.Timeouts.Bitcoin`)) > 0) {
+            TBit = `${e.Loading} \`${TimeBitcoin.hours}h ${TimeBitcoin.minutes}m e ${TimeBitcoin.seconds}s\``
+        } else { TBit = Dpn }
+
         // Timeout Likes
-        let TimeLikes = ms(1800000 - (Date.now() - db.get(`${user.id}.Timeouts.Likes`)))
+        let TimeLikes = ms(1800000 - (Date.now() - db.get(`${user.id}.Timeouts.Rep`)))
         if (db.get(`${user.id}.Timeouts.Rep`) !== null && 1800000 - (Date.now() - db.get(`${user.id}.Timeouts.Rep`)) > 0) {
-            TCrime = `${e.Loading} \`${TimeLikes.minutes}m e ${TimeLikes.seconds}s\``
+            TLikes = `${e.Loading} \`${TimeLikes.minutes}m e ${TimeLikes.seconds}s\``
         } else { TLikes = Dpn }
-        
+
         const Embed = new MessageEmbed()
             .setColor(Colors(user))
             .setTitle(`⏱️ ${client.user.username} Timeouts | ${user.user.username}`)
@@ -80,39 +86,43 @@ module.exports = {
             .addFields(
                 {
                     name: 'Preso',
-                    value: TPreso
+                    value: TPreso || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `${prefix}daily`,
-                    value: TDaily
+                    value: TDaily || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `${prefix}pig`,
-                    value: TPig
+                    value: TPig || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `${prefix}work`,
-                    value: TWork
+                    value: TWork || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `${prefix}cu`,
-                    value: TCu
+                    value: TCu || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `${prefix}roleta`,
-                    value: TRoleta
+                    value: TRoleta || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `${prefix}crime`,
-                    value: TCrime
+                    value: TCrime || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
+                },
+                {
+                    name: `${prefix}bitcoin`,
+                    value: TBit || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `${prefix}like`,
-                    value: TLikes
+                    value: TLikes || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
                     name: `Restaurar Dívida`,
-                    value: TRestoreDividas
+                    value: TRestoreDividas || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
             )
         return message.reply({ embeds: [Embed] })

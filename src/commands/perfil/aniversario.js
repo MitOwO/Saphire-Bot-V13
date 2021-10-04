@@ -4,8 +4,8 @@ const { f } = require('../../../Routes/frases.json')
 module.exports = {
     name: 'anivesario',
     aliases: ['aniversário', 'setniver', 'niver', 'setaniversario'],
-    category: 'perifl',
-    ClientPermissions: 'MANAGE_MESSAGES',
+    category: 'perfil',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: '🎉',
     usage: '<niver> <dia> <mes> <ano>',
     description: 'Configure seu aniversário no seu perfil',

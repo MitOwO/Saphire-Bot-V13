@@ -6,7 +6,6 @@ module.exports = {
     name: 'divorcio',
     aliases: ['divórcio', 'divorce'],
     category: 'perfil',
-    UserPermissions: '',
     ClientPermissions: 'ADD_REACTIONS',
     emoji: '💔',
     usage: '<divorce>',

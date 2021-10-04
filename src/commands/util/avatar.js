@@ -6,7 +6,6 @@ module.exports = {
     name: 'avatar',
     aliases: ['foto', 'pfp', 'pic', 'icon', 'icone'],
     category: 'util',
-    UserPermissions: '',
     ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS', 'MANAGE_MESSAGES'],
     emoji: '📷',
     description: "Veja a foto de perfil, sua ou de alguém",

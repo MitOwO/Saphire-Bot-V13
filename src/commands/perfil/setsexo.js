@@ -4,9 +4,8 @@ const Colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'setsexo',
-    aliases: ['sexo'],
+    aliases: ['sexo', 'gênero',  'genero', 'setgenero', 'setgênero'],
     category: 'perfil',
-    UserPermissions: '',
     ClientPermissions: 'ADD_REACTIONS',
     emoji: '🌛',
     usage: '<setsexo>',

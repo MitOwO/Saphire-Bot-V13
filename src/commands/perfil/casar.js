@@ -6,9 +6,8 @@ const { f } = require('../../../Routes/frases.json')
 module.exports = {
     name: 'casar',
     aliases: ['marry'],
-    category: '',
-    UserPermissions: '',
-    ClientPermissions: 'ADD_REACTIONS',
+    category: 'perfil',
+    ClientPermissions: ['ADD_REACTIONS', 'ADD_REACTIONS'],
     emoji: '💍',
     usage: '<casar> <@user>',
     description: 'Casamentos são importantes. Para alguns',
