@@ -6,7 +6,7 @@ const { config } = require('../../../Routes/config.json')
 module.exports = {
     name: 'comprovante',
     category: 'bot',
-    ClientPermissions: 'MANAGE_CHANNELS',
+    ClientPermissions: ['MANAGE_CHANNELS', 'ADD_REACTIONS'],
     emoji: `${e.Pix}`,
     usage: '<comprovante>',
     description: 'Comprove doações e adquira seu VIP mais bônus',
