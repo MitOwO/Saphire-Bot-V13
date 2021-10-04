@@ -7,10 +7,10 @@ const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'roleta',
-    aliases: ['rol', 'roletar'],
+    aliases: ['rol', 'roletar', 'r'],
     category: 'economy',
     UserPermissions: '',
-    ClientPermissions: 'MANAGE_MESSAGES',
+    ClientPermissions: ['MANAGE_MESSAGES', 'ADD_REACTIONS'],
     emoji: '🎟️',
     usage: '<rol> [quantia/all]',
     description: 'Roleta é um jogo que te faz enlouquecer',
@@ -77,7 +77,7 @@ module.exports = {
 
             let winprize = Math.floor(Math.random() * (db.get(`${message.author.id}.Cache.ValueAll`) || 0))
 
-            return message.reply(`${e.QuestionMark} | Você confirma apostar o valor de **${db.get(`${message.author.id}.Cache.ValueAll`) || 0} ${Moeda(message)}**?\n${e.SaphireObs} | No \`-roll all\` você aposta o dinheiro da sua carteira mais o dinheiro em cache.`).then(msg => {
+            return message.reply(`${e.QuestionMark} | Você confirma apostar o valor de **${db.get(`${message.author.id}.Cache.ValueAll`) || 0} ${Moeda(message)}**?\n${e.SaphireObs} | No \`-rol all\` você aposta o dinheiro da sua carteira mais o dinheiro em cache.`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(err => { }) // Check
                 msg.react('❌').catch(err => { }) // X

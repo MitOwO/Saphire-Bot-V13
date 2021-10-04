@@ -8,7 +8,7 @@ module.exports = {
     aliases: ['setwelcome', 'setwelcomechannel'],
     category: 'config',
     UserPermissions: 'MANAGE_CHANNELS',
-    ClientPermissions: 'SEND_MESSAGES',
+    ClientPermissions: ['SEND_MESSAGES', 'ADD_REACTIONS'],
     emoji: `${e.Loud}`,
     usage: '<welcomechannel> [#channel] | [off]',
     description: 'Selecione um canal para eu avisar todos que chegarem no servidor',

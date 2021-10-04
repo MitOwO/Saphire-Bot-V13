@@ -89,7 +89,7 @@ module.exports = {
                             db.add(`Balance_${target.id}`, (cache + Amount))
                             db.subtract(`Balance_${message.author.id}`, Amount)
                             Timeout()
-                            msg.edit(`${e.Deny} | ${target} estava armado e assaltou ${message.author} devolta.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} -${Amount} ${Moeda(message)}\n${target.user.tag} +${cache + Amount} ${Moeda(message)}`).catch(err => { })
+                            msg.edit(`${e.Deny} | ${target} estava armado e assaltou ${message.author} devolta.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} -${Amount} ${Moeda(message)}\n${target.user.tag} +${Amount} ${Moeda(message)}`).catch(err => { })
                             db.delete(`${message.author.id}.Cache.Assalto`)
                         }, 4500)
                     }).catch(err => {

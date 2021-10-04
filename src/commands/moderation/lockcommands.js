@@ -6,7 +6,7 @@ module.exports = {
     aliases: ['nocommands', 'blockcommands'],
     category: 'moderation',
     UserPermissions: 'MANAGE_CHANNELS',
-    ClientPermissions: 'MANAGE_MESSAGES',
+    ClientPermissions: ['MANAGE_MESSAGES', 'ADD_REACTIONS'],
     emoji: '🔒',
     usage: '<lockcommands> <channel>',
     description: 'Tranque meus comandos em canais específicos para que não seja usados. (ADM\'s são imunes)',

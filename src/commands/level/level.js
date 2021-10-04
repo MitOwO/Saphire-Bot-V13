@@ -4,7 +4,7 @@ const canvacord = require("canvacord")
 
 module.exports = {
     name: 'level',
-    aliases: ['xp', 'nivel', 'lvl'],
+    aliases: ['xp', 'nivel', 'lvl', 'l'],
     category: 'level',
     UserPermissions: '',
     ClientPermissions: 'ATTACH_FILES',

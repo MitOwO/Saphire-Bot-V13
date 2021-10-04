@@ -5,6 +5,7 @@ const { f } = require('../../../Routes/frases.json')
 module.exports = {
     name: 'pix',
     category: 'economy',
+    ClientPermissions: 'ADD_REACTIONS',
     emoji: `${e.Pix}`,
     usage: '<pix> <user/id> <quantia>',
     description: 'Faça um Pix direto pro banco de alguém.',

@@ -8,7 +8,7 @@ module.exports = {
     aliases: ['autorolestats'],
     category: 'config',
     UserPermissions: 'MANAGE_ROLES',
-    ClientPermissions: 'MANAGE_ROLES',
+    ClientPermissions: ['MANAGE_ROLES', 'ADD_REACTIONS'],
     emoji: `${e.Verify}`,
     usage: '<autorole> <1/2> <role> | <status> | <1/2> <off>',
     description: 'Selecione um cargo para todos que entrem no servidor.',

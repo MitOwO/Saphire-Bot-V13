@@ -6,7 +6,7 @@ module.exports = {
     aliases: ['unblockcommands'],
     category: 'moderation',
     UserPermissions: 'MANAGE_CHANNELS',
-    ClientPermissions: 'MANAGE_MESSAGES',
+    ClientPermissions: ['MANAGE_MESSAGES', 'ADD_REACTIONS'],
     emoji: '🔓',
     usage: '<unlockcommands> <channel>',
     description: 'Destranque meus comandos em canais que foram bloqueados.',

@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['setleave', 'setleavechannel'],
     category: 'config',
     UserPermissions: 'MANAGE_CHANNELS',
-    ClientPermissions: 'SEND_MESSAGES',
+    ClientPermissions: ['SEND_MESSAGES', 'ADD_REACTIONS'],
     emoji: `${e.Loud}`,
     usage: '<leavechannel> [#channel] | [off]',
     description: 'Selecione um canal para eu avisar quem sai do servidor',

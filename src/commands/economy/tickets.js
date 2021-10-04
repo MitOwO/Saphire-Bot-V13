@@ -32,7 +32,7 @@ module.exports = {
             });
         }
 
-        message.channel.send(`${e.PandaProfit} | ${user.username} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(2)}% de chance de ganhar.\n🌐 | ${db.get('Loteria.Users').length}/10000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${db.get('Loteria.Prize')?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${db.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`)
+        message.channel.send(`${e.PandaProfit} | ${user.username} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(2)}% de chance de ganhar.\n🌐 | ${tickets?.length}/10000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${db.get('Loteria.Prize')?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${db.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`)
 
         function LockLotery() {
             if (db.get('Lotery.Close')) {

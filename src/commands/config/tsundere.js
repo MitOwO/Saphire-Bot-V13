@@ -5,6 +5,7 @@ module.exports = {
     name: 'tsundere',
     aliases: ['bipolar'],
     category: 'config',
+    ClientPermissions: ['SEND_MESSAGES', 'ADD_REACTIONS'],
     emoji: `${e.Hmmm}`,
     usage: '<tsundere>',
     description: 'Ative meu lado bipolar se tiver coragem',

@@ -379,7 +379,7 @@ module.exports = {
                 } while (i <= 49)
                 msg.edit(`${e.Check} | ${message.author} comprou ${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(err => { })
                 setTimeout(() => { db.delete(`${message.author.id}.Tickets`) }, 1000)
-                let LoteriaUsers = db.get('Loteria.Users').concat(db.get('Loteria.Users1'), db.get('Loteria.Users2'), db.get('Loteria.Users3'), db.get('Loteria.Users4'), db.get('Loteria.Users5'))
+                let LoteriaUsers = db.get('Loteria.Users').concat(db.get('Loteria.Users1') || [], db.get('Loteria.Users2') || [], db.get('Loteria.Users3') || [], db.get('Loteria.Users4') || [], db.get('Loteria.Users5') || [], db.get('Loteria.Users6') || [], db.get('Loteria.Users7') || [], db.get('Loteria.Users8') || [], db.get('Loteria.Users9') || [], db.get('Loteria.Users10') || [], db.get('Loteria.Users11') || [], db.get('Loteria.Users12') || [], db.get('Loteria.Users13') || [], db.get('Loteria.Users14') || [], db.get('Loteria.Users15') || [], db.get('Loteria.Users16') || [], db.get('Loteria.Users17') || [], db.get('Loteria.Users18') || [], db.get('Loteria.Users19') || [], db.get('Loteria.Users20') || [])
                 if (LoteriaUsers.length >= 10000) {
                     db.set('Lotery.Close', true)
                     return NewLoteryGiveaway(LoteriaUsers)

@@ -30,10 +30,8 @@ module.exports = {
             return message.reply({ embeds: [BitEmbed] })
         } else {
 
-            let timeout = 7200000
-            let author = db.get(`${message.author.id}.Timeouts.Bitcoin`)
-            if (author !== null && timeout - (Date.now() - author) > 0) {
-                let time = ms(timeout - (Date.now() - author))
+            if (db.get(`${message.author.id}.Timeouts.Bitcoin`) !== null && 7200000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Bitcoin`)) > 0) {
+                let time = ms(7200000 - (Date.now() - db.get(`${message.author.id}.Timeouts.Bitcoin`)))
                 return message.reply(`${e.BitCoin} | Status: \`${Bits}/1000\` | Reset em \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
 
             } else {

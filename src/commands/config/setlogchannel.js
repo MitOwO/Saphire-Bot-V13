@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['logs', 'setlogs', 'logchannel', 'log', 'gsn', 'notification'],
     category: 'config',
     UserPermissions: 'MANAGE_GUILD',
-    ClientPermissions: '',
+    ClientPermissions: 'ADD_REACTIONS',
     emoji: `${e.ModShield}`,
     usage: '<logs> [on/off] <#channel>',
     description: 'Canal de referência para o sistema 🛰️ | **Global System Notification**',
