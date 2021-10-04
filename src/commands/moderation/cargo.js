@@ -387,7 +387,7 @@ module.exports = {
                                     },
                                     {
                                         name: `${e.ModShield} Crie cargos de Mod/Adm`,
-                                        value: `\`\`${prefix}role <create> [Mod/Adm]\`\n**Permissões Ativadas**: \`Expulsar membros\` \`Banir membros\` \`Gerenciar mensagens\` \`Gerenciar apelidos\` | Adm -> \`Administrador\`\n*(Para criar mods/adm, é necessário ser um Administrador)*\nSub-atalhos**: \`mod\` \`moderador\` \`moderator\` | \`adm\` \`administrador\` \`administrator\``
+                                        value: `\`${prefix}role <create> [Mod/Adm]\`\n**Permissões Ativadas**: \`Expulsar membros\` \`Banir membros\` \`Gerenciar mensagens\` \`Gerenciar apelidos\` | Adm -> \`Administrador\`\n*(Para criar mods/adm, é necessário ser um Administrador)*\nSub-atalhos**: \`mod\` \`moderador\` \`moderator\` | \`adm\` \`administrador\` \`administrator\``
                                     },
                                     {
                                         name: '🚽 Jogue na Descarga',
