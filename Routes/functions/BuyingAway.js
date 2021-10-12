@@ -11,26 +11,27 @@ function BuyingAway(message, prefix, args, args1) {
 
     let vip = db.get(`Vip_${message.author.id}`)
     let money = db.get(`Balance_${message.author.id}`) || 0
-    const BuyColorEmbed = new MessageEmbed()
 
     function NoMoney(x) { message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`) }
     function JaPossui() { message.reply(`${e.Info} | Você já possui este item.`) }
     function AddLoteria(x) { db.add(`Loteria.Prize`, x) }
 
     // Itens - BuyItem(NameDB, ItemName, Price)
-    if (['vara de pesca', 'vara', 'pesca'].includes(args[0]?.toLowerCase())) return BuyItem('Vara', 'Vara de Pesca', 180) // VaraDePesca()
-    if (['anel', 'ring'].includes(args[0]?.toLowerCase())) return BuyItem('Anel', 'Anel de Casamento', 350000) // VaraDePesca()
-    if (['machado', 'axe'].includes(args[0]?.toLowerCase())) return BuyItem('Machado', 'Machado', 120) // Machado()
-    if (['arma', 'gun'].includes(args[0]?.toLowerCase())) return BuyItem('Arma', 'Arma', 4700) // Arma()
-    if (['picareta'].includes(args[0]?.toLowerCase())) return BuyItem('Picareta', 'Picareta', 120) // Picareta()
-    if (['título', 'title', 'titulo'].includes(args[0]?.toLowerCase())) return BuyPerfil('TitlePerm', 'Título', 10000) // Titulo()
-    if (['cor', 'cores', 'color', 'colors'].includes(args[0]?.toLowerCase())) return ColorPerm() // Color()
+    if (['vara de pesca', 'vara', 'pesca'].includes(args[0]?.toLowerCase())) return BuyItem('Vara', 'Vara de Pesca', 180)
+    if (['anel', 'ring'].includes(args[0]?.toLowerCase())) return BuyItem('Anel', 'Anel de Casamento', 350000)
+    if (['machado', 'axe'].includes(args[0]?.toLowerCase())) return BuyItem('Machado', 'Machado', 120)
+    if (['arma', 'gun'].includes(args[0]?.toLowerCase())) return BuyItem('Arma', 'Arma', 4700)
+    if (['picareta'].includes(args[0]?.toLowerCase())) return BuyItem('Picareta', 'Picareta', 120)
+    if (['título', 'title', 'titulo'].includes(args[0]?.toLowerCase())) return BuyPerfil('TitlePerm', 'Título', 10000)
+    if (['balaclava', 'mask', 'mascara', 'máscara'].includes(args[0]?.toLowerCase())) return BuyItem('Balaclava', 'Balaclava', 60000)
+    if (['cor', 'cores', 'color', 'colors'].includes(args[0]?.toLowerCase())) return ColorPerm()
 
     // Consumiveis - Consumivel(NomeDB, NomeAwnsers, quantia, Limit, Price)
     if (['ficha', 'fichas'].includes(args[0]?.toLowerCase())) return Consumivel('Fichas', 'fichas', parseInt(args1), 50, 5) // FichasDaRoleta()
     if (['agua', 'água', 'water', 'águas', 'aguas', 'copo', 'd\'água'].includes(args[0]?.toLowerCase())) return Consumivel('Aguas', 'águas', parseInt(args1), 80, 2) // Aguas()
     if (['isca', 'minhoca', 'iscas', 'minhocas', 'Isca', 'Iscas'].includes(args[0]?.toLowerCase())) return Consumivel('Iscas', 'iscas', parseInt(args1), 70, 1)
     if (['comida', 'food', 'comidas'].includes(args[0]?.toLowerCase())) return Consumivel('Comidas', 'comidas', parseInt(args1), 70, 2)
+    if (['sapo', 'sapos', 'frog', 'frogs'].includes(args[0]?.toLowerCase())) return Consumivel('Sapos', 'sapos', parseInt(args1), 50, 2)
     if (['Carta', 'carta', 'cartas', 'Cartas', 'letter', 'Letter'].includes(args[0]?.toLowerCase())) return Consumivel('Cartas', 'cartas', parseInt(args1), 20, 100)
 
     if (['estrela1'].includes(args[0]?.toLowerCase())) return Estrela1()
@@ -39,7 +40,7 @@ function BuyingAway(message, prefix, args, args1) {
     if (['estrela4'].includes(args[0]?.toLowerCase())) return Estrela4()
     if (['estrela5'].includes(args[0]?.toLowerCase())) return Estrela5()
 
-    return message.reply(`Eu não achei nenhum item com o nome **${args[0]?.toLowerCase()}** na minha loja, tente digitar um único nome, tipo "vara" ou "água".`)
+    return message.reply(`${e.Deny} | Eu não achei nenhum item com o nome **${args[0]?.toLowerCase()}** na minha loja, tente digitar um único nome, tipo "vara" ou "água".`)
 
     // Ok!
     function Estrela1() {

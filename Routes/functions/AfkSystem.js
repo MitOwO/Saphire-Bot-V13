@@ -7,18 +7,18 @@ function AfkSystem(message) {
     if (db.get(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`)) {
         db.delete(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`)
         if (message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
-            message.react(`${e.Planet}`).catch(err => { })
+            message.react(`${e.Planet}`).catch(() => { })
         } else {
-            message.reply(`${e.Check} O modo AFK foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(err => { }) }, 3000))
+            message.reply(`${e.Check} O modo AFK foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(() => { }) }, 3000))
         }
     }
 
     if (db.get(`Client.AfkSystem.${message.author.id}`)) {
         db.delete(`Client.AfkSystem.${message.author.id}`)
         if (message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS)) {
-            message.react(`${e.Planet}`).catch(err => { })
+            message.react(`${e.Planet}`).catch(() => { })
         } else {
-            message.reply(`${e.Check} O modo AFK Global foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(err => { }) }, 3000))
+            message.reply(`${e.Check} O modo AFK Global foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(() => { }) }, 3000))
         }
     }
 

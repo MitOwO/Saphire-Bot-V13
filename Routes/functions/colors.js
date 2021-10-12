@@ -9,9 +9,10 @@ const Error = require('./errors')
 function Colors(user) {
 
     try {
-        let RoleColor = user.displayHexColor
-        if (RoleColor === '#000000' || !RoleColor) RoleColor = '#246FE0'
-        let color = db.get(`${user.id}.Color.Set`) || RoleColor
+        // let RoleColor = user.displayHexColor
+        // if (RoleColor === '#000000' || !RoleColor) RoleColor = '#246FE0'
+        // let color = db.get(`${user.id}.Color.Set`) || RoleColor
+        let color = '#F4900C'
 
         return color
     } catch (err) { Error(message, err) }
