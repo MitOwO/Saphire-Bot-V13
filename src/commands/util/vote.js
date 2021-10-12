@@ -26,8 +26,8 @@ module.exports = {
 
         setTimeout(() => {
             return message.channel.send({ embeds: [VoteEmbed] }).then(msg => {
-                msg.react(`${e.Upvote}`).catch(err => { })
-                msg.react(`${e.DownVote}`).catch(err => { })
+                msg.react(`${e.Upvote}`).catch(() => { })
+                msg.react(`${e.DownVote}`).catch(() => { })
             }).catch(err => { return message.reply(`${e.Warn} | Ocorreu um erro ao executar este comando.\n\`${err}\``) })
         }, 1400)
     }

@@ -23,38 +23,38 @@ module.exports = {
 
         return message.reply({ embeds: [embed] }).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('❌').catch(err => { }) // Cancel
+            msg.react('❌').catch(() => { }) // Cancel
             if (sexo == "♂️ Homem") {
-                msg.react('♀️').catch(err => { }) // Mulher
-                msg.react('🏳️‍🌈').catch(err => { }) // LGBTQIA+
-                msg.react('*️⃣').catch(err => { }) // Indefinido
-                msg.react('🚁').catch(err => { }) // Helicóptero
+                msg.react('♀️').catch(() => { }) // Mulher
+                msg.react('🏳️‍🌈').catch(() => { }) // LGBTQIA+
+                msg.react('*️⃣').catch(() => { }) // Indefinido
+                msg.react('🚁').catch(() => { }) // Helicóptero
             } else if (sexo == "♀️ Mulher") {
-                msg.react('♂️').catch(err => { }) // Homem
-                msg.react('🏳️‍🌈').catch(err => { }) // LGBTQIA+
-                msg.react('*️⃣').catch(err => { }) // Indefinido
-                msg.react('🚁').catch(err => { }) // Helicóptero
+                msg.react('♂️').catch(() => { }) // Homem
+                msg.react('🏳️‍🌈').catch(() => { }) // LGBTQIA+
+                msg.react('*️⃣').catch(() => { }) // Indefinido
+                msg.react('🚁').catch(() => { }) // Helicóptero
             } else if (sexo == "🏳️‍🌈 LGBTQIA+") {
-                msg.react('♂️').catch(err => { }) // Homem
-                msg.react('♀️').catch(err => { }) // Mulher
-                msg.react('*️⃣').catch(err => { }) // Indefinido
-                msg.react('🚁').catch(err => { }) // Helicóptero
+                msg.react('♂️').catch(() => { }) // Homem
+                msg.react('♀️').catch(() => { }) // Mulher
+                msg.react('*️⃣').catch(() => { }) // Indefinido
+                msg.react('🚁').catch(() => { }) // Helicóptero
             } else if (sexo == "*️⃣ Indefinido") {
-                msg.react('♂️').catch(err => { }) // Homem
-                msg.react('♀️').catch(err => { }) // Mulher
-                msg.react('🏳️‍🌈').catch(err => { }) // LGBTQIA+
-                msg.react('🚁').catch(err => { }) // Helicóptero
+                msg.react('♂️').catch(() => { }) // Homem
+                msg.react('♀️').catch(() => { }) // Mulher
+                msg.react('🏳️‍🌈').catch(() => { }) // LGBTQIA+
+                msg.react('🚁').catch(() => { }) // Helicóptero
             } else if (sexo == "🚁 Helicóptero de Guerra") {
-                msg.react('♂️').catch(err => { }) // Homem
-                msg.react('♀️').catch(err => { }) // Mulher
-                msg.react('🏳️‍🌈').catch(err => { }) // LGBTQIA+
-                msg.react('*️⃣').catch(err => { }) // Indefinido
+                msg.react('♂️').catch(() => { }) // Homem
+                msg.react('♀️').catch(() => { }) // Mulher
+                msg.react('🏳️‍🌈').catch(() => { }) // LGBTQIA+
+                msg.react('*️⃣').catch(() => { }) // Indefinido
             } else if (sexo == null) {
-                msg.react('♂️').catch(err => { }) // Homem
-                msg.react('♀️').catch(err => { }) // Mulher
-                msg.react('🏳️‍🌈').catch(err => { }) // LGBTQIA+
-                msg.react('*️⃣').catch(err => { }) // Indefinido
-                msg.react('🚁').catch(err => { }) // Helicóptero
+                msg.react('♂️').catch(() => { }) // Homem
+                msg.react('♀️').catch(() => { }) // Mulher
+                msg.react('🏳️‍🌈').catch(() => { }) // LGBTQIA+
+                msg.react('*️⃣').catch(() => { }) // Indefinido
+                msg.react('🚁').catch(() => { }) // Helicóptero
             }
 
             const filter = (reaction, user) => { return ['❌', '♂️', '♀️', '🏳️‍🌈', '*️⃣', '🚁'].includes(reaction.emoji.name) && user.id === message.author.id }
@@ -73,48 +73,48 @@ module.exports = {
 
             }).catch(() => {
                 db.delete(`Request.${message.author.id}`);
-                msg.edit({ embeds: [embed.setColor('RED').setDescription(`${e.Deny} | Tempo expirado`)] }).catch(err => { })
+                msg.edit({ embeds: [embed.setColor('RED').setDescription(`${e.Deny} | Tempo expirado`)] }).catch(() => { })
             })
 
             function Homem() {
                 db.delete(`Request.${message.author.id}`)
                 embed.setColor('GREEN').setTitle(`${e.Check} Sexo definido com sucesso!`).setDescription('♂️ Homem')
                 db.set(`${message.author.id}.Perfil.Sexo`, "♂️ Homem")
-                msg.edit({ embeds: [embed] }).catch(err => { })
+                msg.edit({ embeds: [embed] }).catch(() => { })
             }
 
             function Mulher() {
                 db.delete(`Request.${message.author.id}`)
                 embed.setColor('GREEN').setTitle(`${e.Check} Sexo definido com sucesso!`).setDescription('♀️ Mulher')
                 db.set(`${message.author.id}.Perfil.Sexo`, "♀️ Mulher")
-                msg.edit({ embeds: [embed] }).catch(err => { })
+                msg.edit({ embeds: [embed] }).catch(() => { })
             }
 
             function LGBT() {
                 db.delete(`Request.${message.author.id}`)
                 embed.setColor('GREEN').setColor('GREEN').setTitle(`${e.Check} Sexo definido com sucesso!`).setDescription('🏳️‍🌈 LGBTQIA+')
                 db.set(`${message.author.id}.Perfil.Sexo`, "🏳️‍🌈 LGBTQIA+")
-                msg.edit({ embeds: [embed] }).catch(err => { })
+                msg.edit({ embeds: [embed] }).catch(() => { })
             }
 
             function Indefinido() {
                 db.delete(`Request.${message.author.id}`)
                 embed.setColor('GREEN').setTitle(`${e.Check} Sexo definido com sucesso!`).setDescription('*️⃣ Indefinido')
                 db.set(`${message.author.id}.Perfil.Sexo`, "*️⃣ Indefinido")
-                msg.edit({ embeds: [embed] }).catch(err => { })
+                msg.edit({ embeds: [embed] }).catch(() => { })
             }
 
             function Helicoptero() {
                 db.delete(`Request.${message.author.id}`)
                 embed.setColor('GREEN').setTitle(`${e.Check} Sexo definido com sucesso!`).setDescription('🚁 Helicóptero de Guerra')
                 db.set(`${message.author.id}.Perfil.Sexo`, "🚁 Helicóptero de Guerra")
-                msg.edit({ embeds: [embed] }).catch(err => { })
+                msg.edit({ embeds: [embed] }).catch(() => { })
             }
 
             function Cancel() {
                 db.delete(`Request.${message.author.id}`)
                 embed.setColor('RED').setTitle(`${e.Deny} Request Cancelada!`).setDescription('O sexo não foi alterado')
-                msg.edit({ embeds: [embed] }).catch(err => { })
+                msg.edit({ embeds: [embed] }).catch(() => { })
             }
         })
     }

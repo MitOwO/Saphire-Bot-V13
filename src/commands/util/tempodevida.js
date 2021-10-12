@@ -46,7 +46,7 @@ module.exports = {
 
         let text = fromNow(`${mes}/${dia + 1}/${ano}`)
         translate(text, { to: 'pt' }).then(res => {
-            return message.reply(`${e.SaphireFeliz} | Você tem ${res.text} de vida.`).catch(err => { })
+            return message.reply(`${e.SaphireFeliz} | Você tem ${res.text} de vida.`).catch(() => { })
         }).catch(err => {
             message.reply(`${err}`)
         })

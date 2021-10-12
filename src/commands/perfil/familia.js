@@ -47,8 +47,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | ${user}, você está sendo convidado*(a)* para formar uma família com ${message.author}, você aceita?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === user.id }
 
@@ -127,8 +127,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você confirma a separação familiar de \`${message.author.tag} & ${Fam.tag}\`?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 

@@ -10,7 +10,9 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (!args[0]) return BlacklistRanking()
+        if (!args[0]) return BlacklistRanking();
+        if (['servers', 'server', 'servidores', 'servidor'].includes(args[0]?.toLowerCase())) return BlacklistRankingServer()
+
         if (message.author.id !== config.ownerId) {
             if (!db.get(`Moderadores.${message.author.id}`)) return message.reply(`${e.Deny} | Este é um comando da classe Moderador.`)
         }
@@ -36,9 +38,10 @@ module.exports = {
 
             if (!target) return message.reply(`${e.Deny} | \`${prefix}bl addserver ServerId razão\``)
             if (client.users.cache.get(args[1])) return message.reply(`${e.Info} | Este ID é de um membro.`)
-            if (db.get(`BlacklistServers_${client.guilds.cache.get(args[1]).id})`)) return message.reply(`${e.Info} | Este servidor já está bloqueado.`)
+            if (db.get(`BlacklistServers_${args[1]}`)) return message.reply(`${e.Info} | Este servidor já está bloqueado.`)
+            if (!client.guilds.cache.get(args[1])) return message.reply(`${e.Info} | Este servidor não existe ou eu não estou nele.`)
 
-            db.set(`BlacklistServers_${client.guilds.cache.get(args[1]).id})`, true)
+            db.set(`BlacklistServers_${client.guilds.cache.get(args[1]).id}`, true)
             db.set(`BlacklistServer.${client.guilds.cache.get(args[1]).id}`, razao)
             return message.reply(`O servidor "${target.name || 'Nome não encontrado'} *\`${target.id}\`*" foi adicionado a Blacklist.`)
         }
@@ -47,7 +50,7 @@ module.exports = {
 
             if (!target) return message.reply(`${e.Deny} | \`${prefix}bl remove ServerId\``)
             if (client.users.cache.get(args[1])) return message.reply(`${e.Info} | Este ID é de um membro.`)
-            if (!db.get(`BlacklistServers_${client.guilds.cache.get(args[1]).id})`)) return message.reply(`${e.Info} | Este servidor não está bloqueado.`)
+            if (!db.get(`BlacklistServers_${client.guilds.cache.get(args[1]).id}`)) return message.reply(`${e.Info} | Este servidor não está bloqueado.`)
 
             db.delete(`BlacklistServers_${client.guilds.cache.get(args[1]).id}`)
             db.delete(`BlacklistServer.${client.guilds.cache.get(args[1]).id}`)
@@ -94,7 +97,7 @@ module.exports = {
                 let user = await client.users.cache.get(id) || `${id}`
                 user = user ? user.tag : "Usuário não encontrado"
                 let Blacklist_ = data[i].data
-                let razao = db.get(`Blacklist.${id}`)
+                let razao = db.get(`Blacklist.${id}`) || 'Sem razão definida'
                 lb.push({ user: { id, tag: user }, Blacklist_, razao })
             }
 
@@ -104,7 +107,31 @@ module.exports = {
             lb.forEach(d => {
                 embed.addField(`🆔 ${d.user.tag} \`${d.user.id}\``, `📝 ${d.razao}`)
             })
-            return message.reply({ embeds: [embed] })
+            message.reply({ embeds: [embed] })
+        }
+
+        async function BlacklistRankingServer() {
+            let data = db.all().filter(i => i.ID.startsWith("BlacklistServers_")).sort((a, b) => b.data - a.data)
+            if (data.length < 1) return message.reply("Não há nenhum servidor na blacklist por enquanto")
+
+            data.length = 20
+            let lb = []
+            for (let i in data) {
+                let id = data[i].ID.split("_")[1]
+                let server = await client.guilds.cache.get(id) || `${id}`
+                server = server ? server.name : "Servidor não encontrado"
+                let BlacklistServers_ = data[i].data
+                let razao = db.get(`BlacklistServers.${id}`) || 'Sem razão definida'
+                lb.push({ server: { id, name: server }, BlacklistServers_, razao })
+            }
+
+            const embed = new MessageEmbed()
+                .setColor("#8B0000")
+                .setTitle("🚫 Blacklist System Servidores")
+            lb.forEach(d => {
+                embed.addField(`🆔 ${d.server.name} \`${d.server.id}\``, `📝 ${d.razao}`)
+            })
+            message.reply({ embeds: [embed] })
         }
 
     }

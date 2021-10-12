@@ -44,13 +44,11 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             msg.edit(`${e.Loading} | Autenticando o bloqueio do usuário: *\`${id}\`\*`)
-                            message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
                                     db.set(`Client.BlockUsers.${id}`, true)
                                     msg.edit(`${e.Check} | Autenticação concluida.`)
                                     message.reply(`${e.Check} | Bloqueio do usuário *\`${id}\`* efetuado sucesso!`)
                                 }, 4000)
-                            })
                         } else {
                             msg.edit(`${e.Deny} | Request abortada.`)
                         }
@@ -73,13 +71,11 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             msg.edit(`${e.Loading} | Autenticando o bloqueio do usuário: *\`${id}\`\*`)
-                            message.channel.sendTyping().then(() => {
                                 setTimeout(function () {
                                     db.set(`Client.BlockUsers.${id}`, true)
                                     msg.edit(`${e.Check} | Autenticação concluida.`)
                                     message.reply(`${e.Check} | Bloqueio do usuário *\`${id}\`* efetuado sucesso!`)
                                 }, 4000)
-                            })
                         } else {
                             msg.edit(`${e.Deny} | Request abortada.`)
                         }

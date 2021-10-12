@@ -59,7 +59,7 @@ module.exports = {
                 }
             )
 
-        message.channel.send({ embeds: [ConfigEmbed] }).catch(err => { })
+        message.channel.send({ embeds: [ConfigEmbed] }).catch(() => { })
 
         function GetAutorole() {
             let Autorole1 = db.get(`Servers.${message.guild.id}.Autorole1`)

@@ -22,8 +22,8 @@ module.exports = {
 
     return message.reply({ embeds: [CantadasEmbed] }).then(msg => {
       db.set(`Request.${message.author.id}`, `${msg.url}`)
-      msg.react('🔄').catch(err => { }) // 1º Embed
-      msg.react('❌').catch(err => { }) // Cancel
+      msg.react('🔄').catch(() => { }) // 1º Embed
+      msg.react('❌').catch(() => { }) // Cancel
 
       const FilterTrade = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id; };
       const collector = msg.createReactionCollector({ filter: FilterTrade, max: 15, time: 20000, errors: ['time'] })
@@ -33,20 +33,20 @@ module.exports = {
 
       collector.on('collect', (reaction, user) => {
         CantadasEmbed.setColor('#246FE0').addField('----------', `${f.Cantadas[Math.floor(Math.random() * f.Cantadas.length)]}`)
-        msg.edit({ embeds: [CantadasEmbed] }).catch(err => { })
+        msg.edit({ embeds: [CantadasEmbed] }).catch(() => { })
       });
 
       collector.on('end', collected => {
         db.delete(`Request.${message.author.id}`)
         CantadasEmbed.setColor('RED').setFooter(`Tempo expirado | ${message.author.id} | ${prefix}sendcantada`)
-        msg.edit({ embeds: [CantadasEmbed] }).catch(err => { })
+        msg.edit({ embeds: [CantadasEmbed] }).catch(() => { })
       })
 
       CancelCollector.on('collect', (reaction, user) => {
         db.delete(`Request.${message.author.id}`)
         CantadasEmbed.setColor('RED').setFooter(`Comando cancelado | ${message.author.id} | ${prefix}sendcantada`)
-        msg.edit({ embeds: [CantadasEmbed] }).catch(err => { })
-        msg.reactions.removeAll().catch(err => { })
+        msg.edit({ embeds: [CantadasEmbed] }).catch(() => { })
+        msg.reactions.removeAll().catch(() => { })
       });
     })
   }

@@ -27,6 +27,7 @@ module.exports = {
 
         if (!args[0]) return message.reply({ embeds: [noargs] })
 
+        if (!user) return message.reply(`${e.Info} | @marca, responda a mensagem ou me fala o ID da pessoa que você quer se casar.`)
         let level = db.get(`level_${user.id}`) || 0
         let levelauthor = db.get(`level_${message.author.id}`) || 0
         if (level < 7 || levelauthor < 7) { return message.reply(`${e.Deny} | O casal deve estar acima do level 7 para se casar.`) }
@@ -53,8 +54,8 @@ module.exports = {
 
         message.reply(`${e.QuestionMark} | ${message.author}, você irá gastar seu 💍 \`Anel de Casamento\` caso ${user} aceite o pedido. Deseja continuar?`).then(msg1 => {
             db.set(`Request.${message.author.id}`, `${msg1.url}`)
-            msg1.react('✅').catch(err => { }) // Check
-            msg1.react('❌').catch(err => { }) // X
+            msg1.react('✅').catch(() => { }) // Check
+            msg1.react('❌').catch(() => { }) // X
 
             const filter = (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === message.author.id }
 
@@ -77,8 +78,8 @@ module.exports = {
 
         function CasarAsk() {
             message.reply({ embeds: [casar] }).then(msg => {
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === user.id }
 
@@ -91,12 +92,12 @@ module.exports = {
                         db.set(`${user.id}.Perfil.Marry`, message.author.id)
                         return msg.edit({ embeds: [casados] }).catch(() => { })
                     } else {
-                        msg.delete().catch(err => { })
+                        msg.delete().catch(() => { })
                         return message.channel.send(`${e.Deny} | Não foi dessa vez, ${message.author}. ${user} recusou seu pedido de casamento.`)
                     }
                 }).catch(() => {
                     casar.setColor('RED').setFooter('Tempo expirado')
-                    msg.edit({ embeds: [casar] }).catch(err => { })
+                    msg.edit({ embeds: [casar] }).catch(() => { })
                     return message.channel.send(`${e.Deny} | Pedido de casamento expirado.`)
                 })
             })

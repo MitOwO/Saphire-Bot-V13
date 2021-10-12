@@ -15,10 +15,9 @@ module.exports = {
         if (NewName.length > 32 || NewName.length < 3) { return message.reply('O meu novo nome deve estar entre **3~32 caracteres**.') }
 
         const SucessEmbed = new MessageEmbed().setColor('GREEN').setDescription(`${e.Check} Nome alterado com sucesso!`)
-        const LoadingEmbed = new MessageEmbed().setColor('#246FE0').setDescription(`${e.Loading} Alterando meu nome...`)
+        const LoadingEmbed = new MessageEmbed().setColor('BLUE').setDescription(`${e.Loading} Alterando meu nome...`)
 
         return message.reply({ embeds: [LoadingEmbed] }).then(msg => {
-            message.channel.sendTyping().then(() => {
                 setTimeout(() => {
                     client.user.setUsername(NewName).then(data => {
                         msg.edit({ content: data, embeds: [SucessEmbed] }).catch(err => { return message.reply(`${e.Deny} | ${err}`) })
@@ -28,7 +27,5 @@ module.exports = {
                     })
                 }, 5000)
             })
-        })
-
     }
 }

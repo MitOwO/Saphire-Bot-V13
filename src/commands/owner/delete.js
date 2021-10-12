@@ -17,7 +17,7 @@ module.exports = {
         const commands = new MessageEmbed()
             .setColor('#246FE0')
             .setTitle('📋 Comandos Exclusivos de Delete (OWNER)')
-            .setDescription('Com este comando, o meu criador torna possivel a opção de Deletar qualquer item de qualquer pessoa.')
+            .setDescription('Com este comando, o meu criador torna possível a opção de Deletar qualquer item de qualquer pessoa.')
             .addField('Comando', '`' + prefix + 'del Item @user`')
             .setFooter(`${prefix}itens`)
 
@@ -52,6 +52,7 @@ module.exports = {
 
         if (['request', 'requests'].includes(args[0])) {
             db.delete(`Request`)
+            db.delete('BetRequest')
             return message.reply('Todas as request de todos os servidores foram apagadas.')
         }
 

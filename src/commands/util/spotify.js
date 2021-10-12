@@ -1,5 +1,6 @@
 const convert = require("parse-ms")
 const { e } = require('../../../Routes/emojis.json')
+const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'spotify',
@@ -60,7 +61,7 @@ module.exports = {
                 .setFooter('Spotify e Discord fazendo seu dia melhor', fotospot)
 
             await message.reply({ embeds: [embed] }).then(msg => {
-                msg.react('📨').catch(err => { }) // Troca
+                msg.react('📨').catch(() => { }) // Troca
 
                 const SendDMFilter = (reaction, user) => { return reaction.emoji.name === '📨' && user.id === user.id }
                 let Collector = msg.createReactionCollector({ filter: SendDMFilter, time: 40000, erros: ['time'] })
@@ -69,14 +70,17 @@ module.exports = {
                     if (user.id === client.user.id) return
                     user.send({ embeds: [embed2] }).then(() => {
                         message.channel.send(`${e.Check} | Envio concluido, ${user}.`)
-                    }).catch(() => {
-                        message.channel.send(`${e.Deny} | Envio interrompido. ${user}, a sua DM está trancada. Verifique suas configurações de privacidade e tente novamente.`)
+                    }).catch(err => {
+                        if (err.code === 50007)
+                            return message.channel.send(`${e.Deny} | ${user}, a sua DM está trancada. Verifique suas configurações de privacidade e tente novamente.`)
+
+                        Error(message, err)
                     })
                 })
 
                 Collector.on('end', () => {
                     embed.setColor('RED').setFooter('Sessao expirada por: Tempo de interação execido')
-                    msg.edit({ embeds: [embed] }).catch(err => { })
+                    msg.edit({ embeds: [embed] }).catch(() => { })
                 })
             }).catch(err => {
                 return message.reply(`${Attention} | Houve um erro ao executar este comando\n\`${err}\``)

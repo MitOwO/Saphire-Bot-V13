@@ -1,4 +1,3 @@
-
 const { e } = require('../../../Routes/emojis.json')
 
 // #246FE0 - Azul Saphire

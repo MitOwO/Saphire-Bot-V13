@@ -99,11 +99,11 @@ module.exports = {
 
         let TopGlobalMoney, TopGlobalLevel, TopGlobalLikes
 
-        let LevelData = db.all().filter(i => i.ID.startsWith("Xp_")).sort((a, b) => b.data - a.data)
+        let LevelData = db.all().filter(i => i.ID.startsWith("level_")).sort((a, b) => b.data - a.data)
         if (LevelData.length < 1) {
             TopGlobalLevel = ''
         } else {
-            TopGlobalLevel = LevelData.map(m => m.ID).indexOf(`Xp_${user.id}`) + 1 || 0
+            TopGlobalLevel = LevelData.map(m => m.ID).indexOf(`level_${user.id}`) + 1 || 0
             TopGlobalLevel === 1 ? TopGlobalLevel = `\n${e.RedStar} **Top Global Level**` : TopGlobalLevel = ''
         }
 
@@ -138,9 +138,12 @@ module.exports = {
         let OfficialDesigner = db.get(`OfficialDesigner.${user.id}`) || false
         OfficialDesigner ? OfficialDesigner = `\n${e.SaphireFeliz} **Designer Official & Emojis Productor**` : OfficialDesigner = ''
 
+        let Mage = db.get(`Titulos.${user.id}.Halloween`) || false
+        Mage ? Mage = `\n🎃 **Halloween 2021**` : Mage = ''
+
         if (user.id === client.user.id) {
             const perfil = new MessageEmbed()
-                .setDescription(`${e.VipStar} **Perfil Pessoal de ${client.user.username}**\n${e.SaphireTimida} **Envergonhada**\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`)
+                .setDescription(`${e.VipStar} **Perfil Pessoal de ${client.user.username}**\n${e.SaphireTimida} **Envergonhada**\n🎃 **Halloween 2021**\n${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`)
                 .setColor('#246FE0')
                 .addFields(
                     {
@@ -149,7 +152,7 @@ module.exports = {
                     },
                     {
                         name: '❤️ Familia',
-                        value: `💍 Itachi Uchira\nO Discord é minha familia`
+                        value: `💍 Itachi Uchiha\nO Discord é minha familia`
                     },
                     {
                         name: '🌐 Global',
@@ -170,7 +173,7 @@ module.exports = {
 
         const perfilembed = new MessageEmbed()
             .setColor(color)
-            .setDescription(`${vip} **Perfil de ${user.username}**${Developer}${OfficialDesigner}${Moderator}${BugHunter}${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`)
+            .setDescription(`${vip} **Perfil de ${user.username}**${Developer}${OfficialDesigner}${Moderator}${Mage}${BugHunter}${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`)
             .addFields(
                 {
                     name: '👤 Pessoal',
