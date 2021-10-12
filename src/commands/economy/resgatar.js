@@ -15,7 +15,7 @@ module.exports = {
         if (cache <= 0) return message.reply(`${e.PandaProfit} | Você não possui dinheiro no cache.`)
 
         db.add(`Balance_${message.author.id}`, cache)
-        message.channel.send(`${e.PandaProfit} | ${message.author} resgatou ${cache} ${Moeda(message)}`)
+        message.channel.send(`${e.PandaProfit} | ${message.author} resgatou ${cache.toFixed(0)} ${Moeda(message)}`)
         db.delete(`${message.author.id}.Cache.Resgate`)
     }
 }

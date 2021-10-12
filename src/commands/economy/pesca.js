@@ -40,16 +40,32 @@ module.exports = {
         let Iscas = Math.floor(Math.random() * 3) + 1
         let camarao = Math.floor(Math.random() * 2) + 1
 
+        if (db.get(`Halloween.${message.author.id}.Slot.Sapos`) >= 1)
+            db.subtract(`Halloween.${message.author.id}.Slot.Sapos`, 1)
+
         db.subtract(`${message.author.id}.Slot.Iscas`, 1)
         let luck = Math.floor(Math.random() * 100)
-        luck === 2 ? WinPrize() : NoPrize()
+        luck <= 5 ? WinPrize() : NoPrize()
 
         function WinPrize() {
 
-            let randa = Math.floor(Math.random() * 30)
-            if (randa < 5) return GetKnife()
-            if (randa > 5 || randa <= 10) return GetLoli()
-            if (randa > 10) return NormalPrize()
+            let randa = Math.floor(Math.random() * 100)
+
+            // TAG: HALLOWEEN EVENT
+            if (db.get(`Halloween.${message.author.id}.Slot.Sapos`) && !db.get(`Halloween.${message.author.id}.Slot.PeixeMortal`) && randa <= 3)
+                return GetPeixeMoral()
+            // ----------------
+
+            if (randa <= 5) return GetKnife()
+            if (randa <= 15) return GetLoli()
+            if (randa >= 16) return NormalPrize()
+
+            // TAG: HALLOWEEN EVENT
+            function GetPeixeMoral() {
+                db.set(`Halloween.${message.author.id}.Slot.PeixeMortal`, true)
+                return message.reply({ embeds: [new MessageEmbed().setColor(Colors(message.member)).setTitle('🎃 Halloween Event').setDescription(`Você obteve o ${e.Peixe} Peixe Mortal`)] })
+            }
+            // ----------------
 
             function GetKnife() {
                 if (!db.get(`${message.author.id}.Slot.Faca`)) {

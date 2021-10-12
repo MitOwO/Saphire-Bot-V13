@@ -14,7 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
         let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
+        let user = message.mentions.members.first() || message.mentions.roles.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja esconder.`) }
 
@@ -27,13 +27,11 @@ module.exports = {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
                 return message.reply(`${e.SaphireQ} | Um administrador pode ver este canal mesmo bloqueado, sabia? Mas vou liberar mesmo assim.`).then(() => {
 
-                    message.channel.sendTyping().then(() => {
                         setTimeout(() => {
                             channel.permissionOverwrites.create(user, { VIEW_CHANNEL: true }).then(() => {
                                 message.channel.send(`🔓 | ${message.author} liberou ${user}(adm kkk) para falar neste canal.`)
                             }).catch(err => { return message.reply(`${e.Warn} | Houve um erro nesse comando. Use \`${prefix}bug\` e reporte ao meu criador.\n\`${err}\``) })
                         }, 2000)
-                    })
                 })
             } else {
                 channel.permissionOverwrites.create(user, { VIEW_CHANNEL: true })

@@ -38,7 +38,7 @@ module.exports = {
 
         return message.reply(`${user}, toca aí?`).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('✅').catch(err => { }) // Check
+            msg.react('✅').catch(() => { }) // Check
 
             const filter = (reaction, u) => { return ['✅'].includes(reaction.emoji.name) && u.id === user.id }
 
@@ -48,12 +48,12 @@ module.exports = {
                 if (reaction.emoji.name === '✅') {
                     db.delete(`Request.${message.author.id}`)
                     const TradeEmbed = new MessageEmbed().setColor('RED').setFooter(`${message.author.id}/${user.id}`).setImage(g.Tocaai[Math.floor(Math.random() * g.Tocaai.length)])
-                    msg.edit({ content: `${user} 🤝 ${message.author}`, embeds: [TradeEmbed] }).catch(err => { })
+                    msg.edit({ content: `${user} 🤝 ${message.author}`, embeds: [TradeEmbed] }).catch(() => { })
                 }
 
             }).catch(() => {
                 db.delete(`Request.${message.author.id}`)
-                msg.edit('Ish... Ficou no vácuo').catch(err => { })
+                msg.edit('Ish... Ficou no vácuo').catch(() => { })
             })
         })
     }

@@ -31,8 +31,8 @@ module.exports = {
 
         return message.reply(`${e.QuestionMark} | Você deseja bloquear todos os meus comandos no canal ${channel}?`).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('✅').catch(err => { }) // e.Check
-            msg.react('❌').catch(err => { }) // X
+            msg.react('✅').catch(() => { }) // e.Check
+            msg.react('❌').catch(() => { }) // X
 
             const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -44,12 +44,12 @@ module.exports = {
                     db.set(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`, true)
                     return msg.edit(`✅ | ${message.author} bloqueou todos os meus comandos no canal ${channel}.`).then(msg => {
                         db.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`) ? '' : BloquearBots()
-                    }).catch(err => { })
+                    }).catch(() => { })
                 } else {
                     db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Request cancelada por: ${message.author}`).then(msg => {
                         db.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`) ? '' : BloquearBots()
-                    }).catch(err => { })
+                    }).catch(() => { })
                 }
             }).catch(err => {
                 db.delete(`Request.${message.author.id}`)
@@ -59,12 +59,12 @@ module.exports = {
 
         function BloquearBots() {
             if (db.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`)) { return message.reply(`${e.Check} | ${channel} já está bloqueado. \`${prefix}lockcommands info\``) }
-            message.channel.sendTyping()
+            
             setTimeout(() => {
                 message.channel.send(`${e.QuestionMark} | ${message.author}, você quer bloquear todos os comandos de todos os bots neste canal?\n${e.SaphireObs} | Vale lembrar que Administradores **NÃO** são imunes a esse bloqueio.`).then(msg => {
                     db.set(`Request.${message.author.id}`, `${msg.url}`)
-                    msg.react('✅').catch(err => { }) // e.Check
-                    msg.react('❌').catch(err => { }) // X
+                    msg.react('✅').catch(() => { }) // e.Check
+                    msg.react('❌').catch(() => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 

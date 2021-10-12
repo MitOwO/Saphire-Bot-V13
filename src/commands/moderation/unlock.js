@@ -31,12 +31,10 @@ module.exports = {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
                 return message.reply(`${e.SaphireQ} | Um administrador pode falar neste canal mesmo bloqueado, sabia? Mas vou liberar mesmo assim.`).then(() => {
 
-                    message.channel.sendTyping().then(() => {
                         setTimeout(() => {
                             message.channel.permissionOverwrites.create(user, { SEND_MESSAGES: true })
                             message.channel.send(`🔓 | ${message.author} liberou ${user}(adm kkk) para falar neste canal.`)
                         }, 2000)
-                    })
                 })
             } else {
                 message.channel.permissionOverwrites.create(user, { SEND_MESSAGES: true })

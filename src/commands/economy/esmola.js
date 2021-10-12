@@ -28,7 +28,7 @@ module.exports = {
       return message.reply(`${e.SadPepe} | ${message.author.username} está pedindo um pouco de dinheiro`).then(msg => {
         db.set(`esmolatimeout_${message.author.id}`, Date.now())
         db.set(`Request.${message.author.id}`, `${msg.url}`)
-        msg.react('🪙').catch(err => { }) // Coin
+        msg.react('🪙').catch(() => { }) // Coin
 
         const filter = (reaction, user) => { return reaction.emoji.name === '🪙' && user.id === user.id; };
 

@@ -16,7 +16,7 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
+        let user = message.mentions.members.first() || message.mentions.roles.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja esconder.`) }
 
@@ -29,8 +29,8 @@ module.exports = {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.SaphireQ} | Por qual motivo você esconderia esse canal de um Administrador?`)
             message.channel.send(`${e.QuestionMark} | ${message.author}, ao esconder o canal de ${user}, você precisará entrar nas configurações do canal para reverter o ato ou responder qualquer mensagem do usuário e digitar o comando \`${prefix}unhide\``).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -39,7 +39,7 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.edit(`${e.Loading} | Retirando ${user} do chat...`).catch(err => { })
+                            msg.edit(`${e.Loading} | Retirando ${user} do chat...`).catch(() => { })
                                 setTimeout(function () {
                                     db.delete(`Request.${message.author.id}`)
                                     message.channel.permissionOverwrites.create(user, { VIEW_CHANNEL: false })
@@ -48,7 +48,7 @@ module.exports = {
                         } else {
                             db.delete(`Request.${message.author.id}`)
                             msg.edit(`${e.NezukoDance} | Comando cancelado.`)
-                            msg.reactions.removeAll().catch(err => { })
+                            msg.reactions.removeAll().catch(() => { })
                         }
                     }).catch(() => {
                         db.delete(`Request.${message.author.id}`)

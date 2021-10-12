@@ -1,6 +1,7 @@
 const { e } = require('../../../Routes/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const { Permissions } = require('discord.js')
+const colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'minerar',
@@ -53,12 +54,24 @@ module.exports = {
         rand === 1 ? SomePrizes() : NormalFarm(minerios)
 
         function SomePrizes() {
-            let randa = Math.floor(Math.random() * 25) + 1
+            let randa = Math.floor(Math.random() * 25)
+
+            // TAG: HALLOWEEN EVENT
+            if (!db.get(`Halloween.${message.author.id}.Slot.OssoDourado`) && randa === 1) return NewBoneSet()
+            // ----------------------
+            
             if (randa <= 18) return Loose(ossos, minerios, diamantes, dinh)
             if (randa === 19) return Mamute()
             if (randa === 20) return Fossil(ossos, minerios, diamantes, dinh, fossil)
             if (randa > 20) return Pegadas()
         }
+
+        // TAG: HALLOWEEN EVENT
+        function NewBoneSet() {
+            db.set(`Halloween.${message.author.id}.Slot.OssoDourado`, true)
+            return message.reply({ embeds: [new MessageEmbed().setColor(colors(message.member)).setTitle('🎃 Halloween Event').setDescription(`Você obteve o ${e.OssoDourado} Osso Dourado`)] })
+        }
+        // ----------------------
 
         function Loose(ossos, minerios, diamantes, dinh) {
             db.add(`${message.author.id}.Slot.Minerios`, minerios)

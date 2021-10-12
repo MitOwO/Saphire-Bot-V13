@@ -28,8 +28,8 @@ module.exports = {
         await message.guild.bans.fetch(ID).then(() => {
             return message.channel.send(`${e.QuestionMark} | Deseja desbanir o ID \`${ID}\` ?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // e.Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // e.Check
+                msg.react('❌').catch(() => { }) // X
 
                 let reason = `${message.author.tag} diz: ${args.slice(1).join(" ")}`
                 if (!reason) { reason = `${message.author.tag} não especificou nenhuma razão.` }

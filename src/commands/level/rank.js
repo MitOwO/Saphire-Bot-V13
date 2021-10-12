@@ -18,7 +18,7 @@ module.exports = {
             .setColor('#246FE0')
             .setTitle('🏆 | Global Ranking')
             .setDescription('Aqui você pode ver os top 10 em cada clase')
-            .addField('Ranking XP', '`' + prefix + 'rank xp`')
+            .addField('Ranking XP', `\`${prefix}rank money\`\n\`${prefix}rank carteira\``)
             .addField('Ranking Money', '`' + prefix + 'rank money`')
             .addField('Ranking Reputação', '`' + prefix + 'rank likes`')
 
@@ -26,9 +26,9 @@ module.exports = {
 
         if (['xp', 'level', 'nivel'].includes(args[0]?.toLowerCase())) {
 
-            let data = db.all().filter(i => i.ID.startsWith("Xp_")).sort((a, b) => b.data - a.data)
+            let data = db.all().filter(i => i.ID.startsWith("level_")).sort((a, b) => b.data - a.data)
             if (data.length < 1) return message.reply(`${e.Deny} | Sem ranking por enquanto`)
-            let myrank = data.map(m => m.ID).indexOf(`Xp_${message.author.id}`) + 1 || "N/A"
+            let myrank = data.map(m => m.ID).indexOf(`level_${message.author.id}`) + 1 || "N/A"
             data.length = 10
             let lb = []
             for (let i in data) {
@@ -64,15 +64,16 @@ module.exports = {
                 user = user ? user.tag : "Usuário não encontrado"
                 let rank = data.indexOf(data[i]) + 1
                 let balance = db.get(`Balance_${id}`) || '0'
+                let cache = db.get(`${id}.Cache.Resgate`) || '0'
                 let bank = data[i].data
-                lb.push({ user: { id, tag: user }, rank, balance, bank, })
+                lb.push({ user: { id, tag: user }, rank, cache, balance, bank, })
             }
 
             let loteria = db.get('Loteria.Prize') || '0'
             const embedxp = new MessageEmbed()
                 .setColor('YELLOW')
                 .setTitle(`👑 Ranking - Global Money`)
-            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}\n🏦 ${d.bank} ${Moeda(message)}`) })
+            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}\n🏦 ${d.bank} ${Moeda(message)}\n📦 ${d.cache} ${Moeda(message)}`) })
             embedxp.setFooter(`Seu ranking: ${myrank} | Rank Base: Banco`)
             embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
             return message.reply({ embeds: [embedxp] })
@@ -98,7 +99,7 @@ module.exports = {
             const embedxp = new MessageEmbed()
                 .setColor('YELLOW')
                 .setTitle(`👑 Ranking - Global Money`)
-            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}\n🏦 ${d.bank} ${Moeda(message)}`) })
+            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}`) })
             embedxp.setFooter(`Seu ranking: ${myrank} | Rank Base: Carteira`)
             embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
             return message.reply({ embeds: [embedxp] })

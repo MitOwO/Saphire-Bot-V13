@@ -109,7 +109,7 @@ module.exports = {
                         let winner = db.get(`Bet.${message.author.id}`)[Math.floor(Math.random() * db.get(`Bet.${message.author.id}`).length)]
                         db.add(`${winner}.Cache.Resgate`, prize)
                         db.get(`${message.author.id}.BetPrize`) ? db.delete(`${message.author.id}.BetPrize`) : ''
-                        message.channel.send(`${e.MoneyWings} | <@${winner}> ganhou a aposta no valor de ${prize} ${Moeda(message)} iniciada por ${message.author}\n${e.PandaProfit} | <@${winner}>, você possui ${(db.get(`${winner}.Cache.Resgate`) || 0)} ${Moeda(message)} no cache. Use \`${prefix}resgate\` para resgatar o dinheiro.`).catch(err => { })
+                        message.channel.send(`${e.MoneyWings} | <@${winner}> ganhou a aposta no valor de ${prize} ${Moeda(message)} iniciada por ${message.author}\n${e.PandaProfit} | <@${winner}>, você possui ${(db.get(`${winner}.Cache.Resgate`) || 0)} ${Moeda(message)} no cache. Use \`${prefix}resgate\` para resgatar o dinheiro.`).catch(() => { })
                         db.delete(`Bet.${message.author.id}`)
                         const NewWinner = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description} \n🏆 <@${winner}> ganhou a aposta`)
                         msg.edit({ embeds: [NewWinner] }).catch(() => { })

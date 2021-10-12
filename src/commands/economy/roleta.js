@@ -57,7 +57,7 @@ module.exports = {
         if (valor <= 0)
             return message.reply(`${e.Deny} | Você tem que apostar algúm valor maior que 1 ${Moeda(message)}, baaaka!`)
 
-        let winprize = Math.floor(Math.random() * valor).toFixed(0)
+        let winprize = Math.floor(Math.random() * (valor / 2)).toFixed(0)
 
         StartNewRol(valor, winprize)
 
@@ -79,8 +79,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você confirma apostar o valor de **${db.get(`${message.author.id}.Cache.ValueAll`) || 0} ${Moeda(message)}**?\n${e.SaphireObs} | No \`-rol all\` você aposta o dinheiro da sua carteira mais o dinheiro em cache.`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -100,7 +100,9 @@ module.exports = {
                 }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Comando cancelado por tempo expirado.`).catch(() => { })
-                    db.add(`${message.author.id}.Cache.Resgate`, (valor || 0))
+                    db.add(`${message.author.id}.Cache.Resgate`, db.get(`${message.author.id}.Cache.ValueAll`) || 0)
+                    db.delete(`${message.author.id}.Cache.ValueAll`)
+                    db.delete(`${message.author.id}.Timeouts.Roleta`)
                 })
 
             }).catch(err => {

@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
+        let member = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || message.member
 
         const cobre = new MessageEmbed()
             .setColor('#246FE0')
@@ -24,7 +24,7 @@ module.exports = {
             .setFooter(`A ${client.user.username} não se responsabiliza por dinheiro perdido ou mal usado.`)
 
         let Quantia = args[1]
-        if (args[0] && !args[1]) return message.reply(`${e.Deny} | Tenta assim: \`${prefix}cobrar @user quantia\``)
+        if (!args[1]) Quantia = args[0]
         if (member.id === message.author.id) return message.reply({ embeds: [cobre] })
         if (member.id === client.user.id) return message.reply('Sai pra lá, eu não to devendo ninguém.')
         if (!Quantia) return message.reply(`${e.Deny} | E a quantia? Tenta assim: \`${prefix}cobrar @user quantia\``)
@@ -84,8 +84,8 @@ module.exports = {
         function BankSubtract(x) {
             x.delete().catch(() => { })
             message.channel.send(`${e.QuestionMark} | ${member}, o dinheiro que você possui na carteira não é o suficiente. Deseja retirar **${(Quantia - db.get(`Balance_${member.id}`))} ${Moeda(message)}** do banco para efetuar o pagamento?`).then(msg => {
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === member.id }
 

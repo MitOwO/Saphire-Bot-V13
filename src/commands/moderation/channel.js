@@ -101,6 +101,8 @@ module.exports = {
                 }).then(channel => {
                     return message.reply(`${e.Check} | Canal de texto criado com sucesso. | ${channel}`)
                 }).catch(err => {
+                    if (err.code === 30013)
+                        return message.reply(`${e.Info} | O servidor atingiu o limite de **500 canais**.`)
                     return message.channel.send(`${e.Deny} | Ocorreu um erro ao criar um novo canal.\n\`${err}\``)
                 })
 
@@ -135,12 +137,12 @@ module.exports = {
 
         function ChannelDelete() {
             if (request) return message.reply(`${e.Deny} | ${f.Request}${db.get(`Request.${message.author.id}`)}`)
-            if (args[2]) { return message.reply(`${e.Deny} | Tenta usar assim.\n\`${prefix}channel delete [#Canal(opcional)]\``) }
+            if (args[2]) return message.reply(`${e.Deny} | Tenta usar assim.\n\`${prefix}channel delete [#Canal(opcional)]\``)
 
             return message.reply(`${e.QuestionMark} | Este comando vai literalmente deletar este canal, deseja prosseguir?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -150,7 +152,10 @@ module.exports = {
                     if (reaction.emoji.name === '✅') {
                         db.delete(`Request.${message.author.id}`)
                         canal.delete().catch(err => {
-                            return message.reply('Ocorreu um erro na exclusão do canal.\n \n ' + err)
+                            if (err.code === 50074)
+                                return message.channel.send(`${e.Info} | Não é possível deletar um canal do tipo **Comunidade.**`)
+
+                            return message.reply(`${e.Warn} | Ocorreu um erro na exclusão do canal.\n \n\`${err}\``)
                         })
                     } else {
                         db.delete(`Request.${message.author.id}`)
@@ -209,7 +214,7 @@ module.exports = {
                 message.guild.channels.create('floresta-cammum', { type: 'GUILD_TEXT' }).then(channel => {
                     db.set(`Servers.${message.guild.id}.BuscaChannel`, channel.id)
                     let canal = message.guild.channels.cache.get(channel.id)
-                    canal.setTopic(`Use "${prefix}busca" para farmar`).catch(err => { })
+                    canal.setTopic(`Use "${prefix}busca" para farmar`).catch(() => { })
                     canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
                         canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}busca\`. Boa sorte!`).catch(() => { })
                     }).catch(() => { })
@@ -224,7 +229,7 @@ module.exports = {
                 message.guild.channels.create('farm-pesca', { type: 'GUILD_TEXT' }).then(channel => {
                     db.set(`Servers.${message.guild.id}.PescaChannel`, channel.id)
                     let canal = message.guild.channels.cache.get(channel.id)
-                    canal.setTopic(`Use "${prefix}pesca" para farmar`).catch(err => { })
+                    canal.setTopic(`Use "${prefix}pesca" para farmar`).catch(() => { })
                     canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
                         canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}pesca\`. Boa sorte!`).catch(() => { })
                     }).catch(() => { })
@@ -239,7 +244,7 @@ module.exports = {
                 message.guild.channels.create('mineração', { type: 'GUILD_TEXT' }).then(channel => {
                     db.set(`Servers.${message.guild.id}.MineChannel`, channel.id)
                     let canal = message.guild.channels.cache.get(channel.id)
-                    canal.setTopic(`Use "${prefix}mine" para farmar`).catch(err => { })
+                    canal.setTopic(`Use "${prefix}mine" para farmar`).catch(() => { })
                     canal.setRateLimitPerUser(1, ['Cooldown é necessário.']).then(() => {
                         canal.send(`${e.Nagatoro} | Neste canal está liberado a farming \`${prefix}mine\`. Boa sorte!`).catch(() => { })
                     }).catch(() => { })

@@ -1,6 +1,7 @@
 const { Permissions } = require('discord.js')
 const { e } = require('../../../Routes/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
+const colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'buscar',
@@ -30,7 +31,8 @@ module.exports = {
             let dima = db.get(`${message.author.id}.Slot.DiamanteNegro`) || false
             let cachorro = db.get(`${message.author.id}.Slot.Cachorro`) || false
             let ossos = db.get(`${message.author.id}.Slot.Ossos`) || 0
-            let remedio = db.get(`${message.author.id}.Slot.Remedio`) || false
+            let DarkApple = db.get(`Halloween.${message.author.id}.Slot.DarkApple`) || false
+            let PenaCorvo = db.get(`Halloween.${message.author.id}.Slot.Pena`) || false
 
             if (!canal)
                 return message.reply(`${e.Deny} | Este comando requer um canal específico.\n${e.SaphireObs} | Você pode usar \`${prefix}channel farm buscar\` que eu faço tudo pra você!`)
@@ -56,6 +58,26 @@ module.exports = {
                 db.set(`${message.author.id}.Timeouts.Buscar`, Date.now())
                 db.subtract(`${message.author.id}.Slot.Comidas`, 1)
                 db.subtract(`${message.author.id}.Slot.Machado.Usos`, 1)
+
+                // TAG: HALLOWEEN EVENT
+                if (!PenaCorvo && rand === 3)
+                    return GetNewPena()
+
+                if (!DarkApple && rand <= 2)
+                    return GetNewDarkApple()
+
+                function GetNewDarkApple() {
+                    db.set(`Halloween.${message.author.id}.Slot.DarkApple`, true)
+                    const DarkAppleEmbed = new MessageEmbed().setColor(colors(message.member)).setTitle(`🎃 ${client.user.username} Halloween Event`).setDescription(`Você obteve a ${e.DarkApple} Maça Negra`)
+                    return message.reply({ embeds: [DarkAppleEmbed] })
+                }
+
+                function GetNewPena() {
+                    db.set(`Halloween.${message.author.id}.Slot.Pena`, true)
+                    const DarkAppleEmbed = new MessageEmbed().setColor(colors(message.member)).setTitle(`🎃 ${client.user.username} Halloween Event`).setDescription(`Você obteve a ${e.Pena} Pena de Corvo`)
+                    return message.reply({ embeds: [DarkAppleEmbed] })
+                }
+                // ------------
 
                 if (rand > 15) {
                     Lose()
@@ -108,8 +130,8 @@ module.exports = {
                                 .addField('🪙 🪙 Baú perdido! 🪙 🪙', `Você obteve: ${dinh} ${Moeda(message)}, ${apple} 🍎 Maças, ${comidas} 🥘 Comidas e ${rosas} 🌹 Rosas`)
                             return message.reply({ embeds: [FlorestaEmbed] })
                         }
-                    
-                    }else if (randa > 15) {
+
+                    } else if (randa > 15) {
 
                         let apple = Math.floor(Math.random() * 4) + 1
                         let comidas = Math.floor(Math.random() * 2) + 1
@@ -136,8 +158,8 @@ module.exports = {
 
                             await message.reply({ embeds: [embed] }).then(msg => {
                                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                                msg.react('✅').catch(err => { }) // Check
-                                msg.react('❌').catch(err => { }) // X
+                                msg.react('✅').catch(() => { }) // Check
+                                msg.react('❌').catch(() => { }) // X
 
                                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -156,12 +178,12 @@ module.exports = {
                                                 .setColor('GREEN')
                                                 .setTitle('🌲 Você adquiriu um item de Clase Especial')
                                                 .setDescription(`${e.Doguinho} Au au au!`)
-                                            return msg.edit({ embeds: [FlorestaEmbed] }).catch(err => { })
+                                            return msg.edit({ embeds: [FlorestaEmbed] }).catch(() => { })
                                         }
 
                                     } else {
                                         db.delete(`Request.${message.author.id}`)
-                                        msg.delete().catch(err => { })
+                                        msg.delete().catch(() => { })
                                         message.reply(`${e.Deny} | Você se recusou a resgatar o Brown!`)
                                     }
                                 }).catch(() => {
@@ -170,7 +192,7 @@ module.exports = {
                                         .setColor('RED')
                                         .setTitle(`${e.Deny} Time Over!`)
                                         .setDescription(`Tempo expirado.`)
-                                    return msg.edit({ embeds: [FlorestaEmbed] }).catch(err => { })
+                                    return msg.edit({ embeds: [FlorestaEmbed] }).catch(() => { })
 
                                 })
 
@@ -209,7 +231,6 @@ module.exports = {
                     db.add(`${message.author.id}.Slot.Apple`, apple)
                     return message.reply(`🍎 Você encontrou ${apple} maças!`)
                 }
-
             } else {
                 message.reply(`❌ | ${message.author}, você não possui comidas para buscar o Brown. Compre algumas na \`${prefix}loja\``)
             }

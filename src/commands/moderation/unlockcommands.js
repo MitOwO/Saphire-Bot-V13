@@ -20,8 +20,8 @@ module.exports = {
 
         return message.reply(`${e.QuestionMark} | Você deseja desbloquear todos os comandos no canal ${channel}?`).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('✅').catch(err => { }) // e.Check
-            msg.react('❌').catch(err => { }) // X
+            msg.react('✅').catch(() => { }) // e.Check
+            msg.react('❌').catch(() => { }) // X
 
             const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -30,7 +30,6 @@ module.exports = {
 
                 if (reaction.emoji.name === '✅') {
                     msg.edit(`${e.Loading} | Autenticando...`)
-                    message.channel.sendTyping()
                     setTimeout(() => {
                         db.delete(`Request.${message.author.id}`)
                         db.delete(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`)

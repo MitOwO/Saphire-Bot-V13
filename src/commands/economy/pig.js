@@ -59,8 +59,8 @@ module.exports = {
             function Question() {
                 message.reply(`${e.QuestionMark} | Você não tem dinheiro na carteira, deseja retirar -10 ${Moeda(message)} do banco? `).then(msg => {
                     db.set(`Request.${message.author.id}`, `${msg.url}`)
-                    msg.react('✅').catch(err => { }) // Check
-                    msg.react('❌').catch(err => { }) // X
+                    msg.react('✅').catch(() => { }) // Check
+                    msg.react('❌').catch(() => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 

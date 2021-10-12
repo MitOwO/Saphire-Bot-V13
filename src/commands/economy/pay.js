@@ -50,8 +50,8 @@ module.exports = {
         db.subtract(`Balance_${message.author.id}`, parseInt(quantia))
 
         return message.reply(`${e.QuestionMark} | ${message.author} e ${user}, vocês confirmam a transferência?\n${db.get(`${message.author.id}.EmojiAuthor`) || `${e.Loading}`} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${db.get(`${message.author.id}.EmojiUser`) || `${e.Loading}`} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**`).then(msg => {
-            msg.react('✅').catch(err => { }) // Check
-            msg.react('❌').catch(err => { }) // X
+            msg.react('✅').catch(() => { }) // Check
+            msg.react('❌').catch(() => { }) // X
 
             const PaymentFilter = (reaction, u) => { return reaction.emoji.name === '✅' && u.id === u.id; };
             const PaymentCollector = msg.createReactionCollector({ filter: PaymentFilter, time: 60000 });
@@ -75,9 +75,13 @@ module.exports = {
                 }
 
                 if (db.get(`${message.author.id}.Pay`).includes(`${user.id}`) && db.get(`${message.author.id}.Pay`).includes(`${message.author.id}`)) {
-                    NewPaymentStart(msg)
+                    db.set(`${message.author.id}.Allowed`, true)
+                    PaymentCollector.stop()
                 }
+            })
 
+            PaymentCollector.on('end', () => {
+                db.get(`${message.author.id}.Allowed`) ? NewPaymentStart(msg) : CancelPayment(msg)
             })
 
             DeniedPaymentCollector.on('collect', (r, u) => {
@@ -88,7 +92,8 @@ module.exports = {
 
                 if (u.id === message.author.id)
                     db.set(`${message.author.id}.EmojiAuthor`, e.Deny)
-                CancelPayment(msg)
+                PaymentCollector.stop()
+                DeniedPaymentCollector.stop()
             })
 
         }).catch(err => {
@@ -101,6 +106,7 @@ module.exports = {
             msg.edit(`${e.Check} | Transferência realizada com sucesso!\n${(db.get(`${message.author.id}.EmojiAuthor`) ? db.get(`${message.author.id}.EmojiAuthor`) : e.Check)} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${(db.get(`${message.author.id}.EmojiUser`) ? db.get(`${message.author.id}.EmojiUser`) : e.Check)} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**\n⏱️ | \`${Data}\``).catch(() => { })
             db.delete(`Request.${message.author.id}`)
             db.add(`Balance_${user.id}`, (db.get(`${message.author.id}.Cache.Pay`) || 0))
+            db.delete(`${message.author.id}.Allowed`)
             db.delete(`${message.author.id}.Cache.Pay`)
             db.delete(`${message.author.id}.Pay`)
             db.delete(`${message.author.id}.EmojiUser`)
@@ -109,11 +115,10 @@ module.exports = {
 
         function CancelPayment(msg) {
             msg.reactions.removeAll().catch(() => { })
-            msg.edit(`${e.Deny} | Transferência cancelada!\n${(db.get(`${message.author.id}.EmojiAuthor`) ? db.get(`${message.author.id}.EmojiAuthor`) : '❔')} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${(db.get(`${message.author.id}.EmojiUser`) ? db.get(`${message.author.id}.EmojiUser`) : '❔')} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**`).catch(() => { })
-            db.set(`${message.author.id}.EmojiUser`, `${e.Deny}`)
-            db.set(`${message.author.id}.EmojiAuthor`, `${e.Deny}`)
-            db.delete(`Request.${message.author.id}`)
+            msg.edit(`${e.Deny} | Transferência cancelada!\n${(db.get(`${message.author.id}.EmojiAuthor`) ? db.get(`${message.author.id}.EmojiAuthor`) : '❔')} | \`${message.author.tag}\` **+0 ${Moeda(message)}**\n${(db.get(`${message.author.id}.EmojiUser`) ? db.get(`${message.author.id}.EmojiUser`) : '❔')} | \`${user.user.tag}\` **+0 ${Moeda(message)}**`).catch(() => { })
             db.add(`Balance_${message.author.id}`, (db.get(`${message.author.id}.Cache.Pay`) || 0))
+            db.delete(`Request.${message.author.id}`)
+            db.delete(`${message.author.id}.Allowed`)
             db.delete(`${message.author.id}.Cache.Pay`)
             db.delete(`${message.author.id}.Pay`)
             db.delete(`${message.author.id}.EmojiUser`)

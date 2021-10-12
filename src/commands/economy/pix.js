@@ -27,8 +27,7 @@ module.exports = {
 
         let quantia = args[1]
         !isNaN(quantia) ? (quantia = args[1]) : (quantia = args[0])
-        if (client.users.cache.get(args[0])) { quantia = args[1] || 0 }
-        if (client.users.cache.get(args[1])) { quantia = args[0] || 0 }
+        
         if (['all', 'tudo'].includes(args[0]?.toLowerCase()) || ['all', 'tudo'].includes(args[1]?.toLowerCase())) quantia = money || 0
         if (!quantia) return message.reply(`${e.Deny} | Só faltou dizer o valor do pix`)
         if (isNaN(quantia)) return message.reply(`${e.Deny} | **${quantia}** | A quantia deve ser um número.`)
@@ -39,8 +38,8 @@ module.exports = {
 
         return message.reply(`${e.Pix} | Você confirma a Transação PIX no valor de **${db.get(`${message.author.id}.Cache.Pix`)} ${Moeda(message)}** para ${user.username}?`).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('✅').catch(err => { }) // Check
-            msg.react('❌').catch(err => { }) // X
+            msg.react('✅').catch(() => { }) // Check
+            msg.react('❌').catch(() => { }) // X
 
             const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
             msg.awaitReactions({ filter, max: 1, time: 20000, errors: ['time'] }).then(collected => {

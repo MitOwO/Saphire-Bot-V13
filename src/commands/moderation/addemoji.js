@@ -15,7 +15,8 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        if (!args.length) return message.reply(`${e.Info} | Adicione emojis no servidor. Posso adicionar vários de uma vez, só mandar seperados com espaços. <EMOJI> <EMOJI> <EMOJI> `)
+        if (!args[0]) return message.reply(`${e.Info} | Adicione emojis no servidor. Posso adicionar vários de uma vez, só mandar seperados com espaços. <EMOJI> <EMOJI> <EMOJI> `)
+        if (args[10]) return message.reply(`${e.Deny} | Eu só posso adicionar 10 emojis por vez`)
 
         for (const rawEmoji of args) {
             const parsedEmoji = Util.parseEmoji(rawEmoji)
@@ -25,9 +26,9 @@ module.exports = {
                 const url = `https://cdn.discordapp.com/emojis/${parsedEmoji.id + extension}`
                 message.guild.emojis.create(url, parsedEmoji.name)
                     .then((emoji) => message.channel.send(`${e.Check} | Prontinho!\n${emoji.url}`))
-                    .catch(err => { message.reply(`${e.Deny} | Não foi possivel adicionar não... Isso é mesmo um emoji?`) })
+                    .catch(err => { message.reply(`${e.Deny} | Não foi possível adicionar **${rawEmoji}*. Isso é mesmo um emoji? O servidor não atigiu o limite de espaços?`) })
             } else {
-                message.reply(`${e.Deny} | Este emoji não é um emoji customizado ou não há mais espaços disponíveis.`)
+                message.reply(`${e.Deny} | ${parsedEmoji} não é um emoji customizado ou não há mais espaços disponíveis.`)
             }
         }
     }

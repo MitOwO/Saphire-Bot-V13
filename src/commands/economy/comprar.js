@@ -1,7 +1,8 @@
 const { e } = require('../../../Routes/emojis.json')
 const { f } = require('../../../Routes/frases.json')
-const ms = require('parse-ms')
+const { config } = require('../../../Routes/config.json')
 const { MessageSelectMenu, MessageActionRow } = require("discord.js")
+const ms = require('parse-ms')
 const BuyingAway = require('../../../Routes/functions/BuyingAway')
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
@@ -30,7 +31,7 @@ module.exports = {
             .addFields(
                 {
                     name: 'Disponíveis',
-                    value: `🎣 \`Vara de Pesca\` 180 ${Moeda(message)}\n🔫 \`Arma\` 4.800 ${Moeda(message)}\n⛏️ \`Picareta\` 120 ${Moeda(message)}\n🪓 \`Machado\` 120 ${Moeda(message)}\n🎟️ \`Fichas\` 5 ${Moeda(message)}\n💌 \`Carta de Amor\` 100 ${Moeda(message)}\n🥘 \`Comida\` 2 ${Moeda(message)}\n🪱 \`Isca\` 1 ${Moeda(message)}\n🥤 \`Água\` 1 ${Moeda(message)}`
+                    value: `🎣 \`Vara de Pesca\` 180 ${Moeda(message)}\n🔫 \`Arma\` 4.800 ${Moeda(message)}\n⛏️ \`Picareta\` 120 ${Moeda(message)}\n${e.Balaclava} \`Balaclava\` 60000 ${Moeda(message)}\n${e.Helpier} \`Ajudante\` 200000 ${Moeda(message)}\n🪓 \`Machado\` 120 ${Moeda(message)}\n🎟️ \`Fichas\` 5 ${Moeda(message)}\n💌 \`Carta de Amor\` 100 ${Moeda(message)}\n🥘 \`Comida\` 2 ${Moeda(message)}\n🪱 \`Isca\` 1 ${Moeda(message)}\n🥤 \`Água\` 1 ${Moeda(message)}`
                 },
                 {
                     name: 'Loteria',
@@ -43,6 +44,10 @@ module.exports = {
                 {
                     name: 'Permissões',
                     value: `🎨 \`Cores\` 2.000.000 ${Moeda(message)}\n🔰 \`Título\` 10.000 ${Moeda(message)}`
+                },
+                {
+                    name: '🎃 Halloween Event',
+                    value: `${e.Sapo} \`Sapo\` 10 ${Moeda(message)}`
                 }
             )
             .setFooter(`${prefix}buy | ${prefix}vender | ${prefix}slot | ${prefix}loja vip`)
@@ -51,7 +56,7 @@ module.exports = {
             .setColor(color)
             .setTitle('📋 Itens e suas funções')
             .setDescription('Todos os dados de todos os itens aqui em baixo')
-            .addField('Itens Únicos', 'Itens únicos são aqueles que você consegue comprar apenas um.\n \n🎣 `Vara de Pesca` Use para pescar `' + prefix + 'pescar`\n🔫 `Arma` Use para assaltar e se proteger `' + prefix + 'assaltar @user`\n🪓 `Machado` Use na floresta `' + prefix + 'floresta`\n')
+            .addField('Itens Únicos', `Itens únicos são aqueles que você consegue comprar apenas um.\n \n🎣 \`Vara de Pesca\` Use para pescar \`${prefix}pescar\`\n🔫 \`Arma\` Use para assaltar e se proteger \`${prefix}assaltar @user\`\n🪓 \`Machado\` Use na floresta \`${prefix}floresta\`\n${e.Balaclava} \`Balaclava\` Use no comando \`${prefix}crime\`\n${e.Helpier} \`Ajudante\` Te dá +5% de chance de sucesso no \`${prefix}crime\` por 7 dias.`)
             .addField('Itens Consumiveis', 'Itens consumiveis são aqueles que são gastos a cada vez que é usado\n \n⛏️ `Picareta` Use para minerar `' + prefix + 'cavar`\n🎫 `Ticket` Aposte na loteria `' + prefix + 'buy ticket`\n🎟️ `Fichas` Use na roleta `' + prefix + 'roleta`\n💌 `Cartas` Use para conquistar alguém `' + prefix + 'carta`\n🥘 `Comida` Use na floresta`' + prefix + 'buscar`\n🪱 `Iscas` Use para pescar `' + prefix + 'pescar`\n🥤 `Água` Use para minerar `' + prefix + 'minerar`')
             .addField('Itens Especiais', `Itens especiais são aqueles que são pegos na sorte nos mini-games\n \n${e.Star} \`Vip\` Mais informações no comando \`${prefix}vip\`\n${e.Loli} \`Loli\` Adquira na pesca \`${prefix}pescar\`\n🔪 \`Faca\` Adquira na pesca \`${prefix}pescar\`\n${e.Fossil} \`Fossil\` Adquira na mineração \`${prefix}minerar\`\n🦣 \`Mamute\` Adquira na mineração \`${prefix}minerar\`\n🐶 \`Brown\` Adquira na Floresta Cammum \`${prefix}floresta\`\n🥎 \`Bola do Brown\` Adquira na Floresta Cammum \`${prefix}floresta\`\n💊 \`Remédio do Velho Welter\` Adquira na Floresta Cammum \`${prefix}floresta\`\n${e.Doguinho} \`Cachorrinho/a\` Adquira no Castelo Heslow \`${prefix}medalha\`\n🏅 \`Medalha\` Adquira no Castelo Heslow \`${prefix}medalha\``)
             .addField('Perfil', 'Itens de perfil são aqueles que melhora seu perfil\n \n⭐ `Estrela` Estrelas no perfil')
@@ -64,7 +69,7 @@ module.exports = {
         const PainelLoja = new MessageActionRow()
             .addComponents(new MessageSelectMenu()
                 .setCustomId('menu')
-                .setPlaceholder('Compra rápida') // Mensagem estampada
+                .setPlaceholder('Menu de compras') // Mensagem estampada
                 .addOptions([
                     {
                         label: 'Lojinha Saphire',
@@ -127,6 +132,18 @@ module.exports = {
                         value: 'Ticket',
                     },
                     {
+                        label: 'Balaclava',
+                        description: `Libere o comando > ${prefix}crime`,
+                        emoji: `${e.Balaclava}`,
+                        value: 'Balaclava',
+                    },
+                    {
+                        label: 'Ajudante',
+                        description: `Ganhe mais 5% de chances no > ${prefix}crime`,
+                        emoji: `${e.Helpier}`,
+                        value: 'Helpier',
+                    },
+                    {
                         label: 'Fichas da Roleta Saphire',
                         description: `Completar limite de 50 Fichas > ${prefix}roleta`,
                         emoji: '🎟️',
@@ -143,6 +160,12 @@ module.exports = {
                         description: `Completar limite de 50 comidas > ${prefix}floresta`,
                         emoji: '🥘',
                         value: 'Comida',
+                    },
+                    {
+                        label: 'Sapo',
+                        description: `Complete limite de 50 sapos`,
+                        emoji: `${e.Sapo}`,
+                        value: 'Sapo',
                     },
                     {
                         label: 'Iscas/Minhocas',
@@ -187,19 +210,19 @@ module.exports = {
 
                 const coletor = msg.createMessageComponentCollector({ filtro, idle: 60000 });
 
-                coletor.on('end', async (collected) => {
+                coletor.on('end', async () => {
                     LojaEmbed.setColor('RED').setFooter(`Sessão encerrada | ${message.author.id}`)
                     db.delete(`Request.${message.author.id}`)
-                    msg.edit({ components: [] }).catch(err => { })
+                    msg.edit({ components: [] }).catch(() => { })
                 })
 
                 coletor.on('collect', async (collected) => {
                     if (collected.user.id !== message.author.id) return
 
                     let item = collected.values[0]
-                    collected.deferUpdate().catch(err => { })
+                    collected.deferUpdate().catch(() => { })
 
-                    msg.edit({ components: [PainelLoja] }).catch(err => { })
+                    msg.edit({ components: [PainelLoja] }).catch(() => { })
                     switch (item) {
                         case 'Embed': Embed(); break;
                         case 'Itens': Itens(); break;
@@ -218,23 +241,26 @@ module.exports = {
                         case 'Copo': Copos(); break;
                         case 'Cores': NewColor(); break;
                         case 'Titulo': Titulo(); break;
-                        case 'Close': db.delete(`Request.${message.author.id}`); msg.edit({ components: [] }).catch(err => { }); break;
-                        default: msg.edit({ components: [PainelLoja] }).catch(err => { }); break;
+                        case 'Helpier': Helpier(); break;
+                        case 'Sapo': Sapo(); break;
+                        case 'Balaclava': Balaclava(); break;
+                        case 'Close': db.delete(`Request.${message.author.id}`); msg.edit({ components: [] }).catch(() => { }); break;
+                        default: msg.edit({ components: [PainelLoja] }).catch(() => { }); break;
                     }
                 })
-                function Itens() { msg.edit({ embeds: [itens] }).catch(err => { }) }
-                function Embed() { msg.edit({ embeds: [LojaEmbed] }).catch(err => { }) }
+                function Itens() { msg.edit({ embeds: [itens] }).catch(() => { }) }
+                function Embed() { msg.edit({ embeds: [LojaEmbed] }).catch(() => { }) }
                 function Return() { return }
             })
         }
 
-        function NoMoney(x) {
+        function NoMoney(value) {
             db.delete(`${message.author.id}.Tickets`)
-            message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`)
+            message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${value} ${Moeda(message)} na carteira para comprar este item.`)
         }
 
         function NewColor() {
-            db.get(`${message.author.id}.Color.Perm`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) > 2000000 ? BuyNewColor() : NoMoney(2000000))
+            db.get(`${message.author.id}.Color.Perm`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 2000000 ? BuyNewColor() : NoMoney(2000000))
 
             function BuyNewColor() {
                 db.subtract(`Balance_${message.author.id}`, 2000000); AddLoteria(1000000)
@@ -243,8 +269,18 @@ module.exports = {
             }
         }
 
+        function Helpier() {
+            db.get(`${message.author.id}.Slot.Helpier`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 50000 ? BuyHelpier() : NoMoney(50000))
+
+            function BuyHelpier() {
+                db.subtract(`Balance_${message.author.id}`, 50000); AddLoteria(25000)
+                db.set(`${message.author.id}.Slot.Helpier`, Date.now())
+                return message.channel.send(`${e.Check} | ${message.author} contratou um ${e.Helpier} \`Ajudante\` e ganhou +5% de chance de sucesso no \`${prefix}crime\` por 7 dias.\n${e.PandaProfit} | -50000 ${Moeda(message)}`)
+            }
+        }
+
         function VaraDePesca() {
-            db.get(`${message.author.id}.Slot.Vara`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) > 180 ? BuyVara() : NoMoney(180))
+            db.get(`${message.author.id}.Slot.Vara`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 180 ? BuyVara() : NoMoney(180))
 
             function BuyVara() {
                 db.subtract(`Balance_${message.author.id}`, 180); AddLoteria(60)
@@ -278,8 +314,18 @@ module.exports = {
                 db.set(`Client.Timeouts.RestoreDividas`, Date.now())
                 let Divida = db.get(`Balance_${message.author.id}`)
                 let profit = (Divida - Divida) - Divida
-                message.channel.send(`${e.Check} | ${message.author} restaurou sua dívida com sucesso!\n${e.PandaProfit} | +${profit} ${Moeda(message)}`).catch(err => { })
+                message.channel.send(`${e.Check} | ${message.author} restaurou sua dívida com sucesso!\n${e.PandaProfit} | +${profit} ${Moeda(message)}`).catch(() => { })
                 db.delete(`Balance_${message.author.id}`)
+            }
+        }
+
+        function Balaclava() {
+            db.get(`${message.author.id}.Slot.Balaclava`) ? message.reply(`${e.Info} | Você já possui este item.`) : (db.get(`Balance_${message.author.id}`) >= 60000 ? BuyBalaclava() : NoMoney(60000))
+
+            function BuyBalaclava() {
+                db.subtract(`Balance_${message.author.id}`, 60000); AddLoteria(30000)
+                db.set(`${message.author.id}.Slot.Balaclava`, true)
+                return message.channel.send(`${e.Check} | ${message.author} comprou uma ${e.Balaclava} \`Balaclava\` e liberou o comando \`${prefix}assaltar\`.\n${e.PandaProfit} | -60000 ${Moeda(message)}`)
             }
         }
 
@@ -344,10 +390,10 @@ module.exports = {
             if (db.get('Lotery.Close'))
                 return message.reply(`${e.Deny} | A loteria não está aberta.`)
 
-            db.get(`Balance_${message.author.id}`) >= 500 ? BuyTicket() : NoMoney(500)
+            db.get(`Balance_${message.author.id}`) >= 500 ? AddNewTickets() : NoMoney(500)
         }
 
-        async function BuyTicket() {
+        async function AddNewTickets() {
             if (db.get(`${message.author.id}.Tickets`)) return
             db.set(`${message.author.id}.Tickets`, true)
             db.subtract(`Balance_${message.author.id}`, 500); AddLoteria(500);
@@ -373,11 +419,13 @@ module.exports = {
                 if (db.get('Loteria.Users17')?.length >= 500) Array = 'Loteria.Users18'
                 if (db.get('Loteria.Users18')?.length >= 500) Array = 'Loteria.Users19'
                 if (db.get('Loteria.Users19')?.length >= 500) Array = 'Loteria.Users20'
-                let i = 0; do {
+                let i = 0
+                do {
                     i++
                     db.push(`${Array}`, `${message.author.id}`)
                 } while (i <= 49)
-                msg.edit(`${e.Check} | ${message.author} comprou ${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(err => { })
+
+                msg.edit(`${e.Check} | ${message.author} comprou ${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize').toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(() => { })
                 setTimeout(() => { db.delete(`${message.author.id}.Tickets`) }, 1000)
                 let LoteriaUsers = db.get('Loteria.Users').concat(db.get('Loteria.Users1') || [], db.get('Loteria.Users2') || [], db.get('Loteria.Users3') || [], db.get('Loteria.Users4') || [], db.get('Loteria.Users5') || [], db.get('Loteria.Users6') || [], db.get('Loteria.Users7') || [], db.get('Loteria.Users8') || [], db.get('Loteria.Users9') || [], db.get('Loteria.Users10') || [], db.get('Loteria.Users11') || [], db.get('Loteria.Users12') || [], db.get('Loteria.Users13') || [], db.get('Loteria.Users14') || [], db.get('Loteria.Users15') || [], db.get('Loteria.Users16') || [], db.get('Loteria.Users17') || [], db.get('Loteria.Users18') || [], db.get('Loteria.Users19') || [], db.get('Loteria.Users20') || [])
                 if (LoteriaUsers.length >= 10000) {
@@ -390,27 +438,6 @@ module.exports = {
                 message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
             })
         }
-
-        // async function BuyTicket() {
-        //     if (db.get(`${message.author.id}.Tickets`)) return
-        //     db.set(`${message.author.id}.Tickets`, true)
-        //     db.subtract(`Balance_${message.author.id}`, 500); AddLoteria(500);
-        //     await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
-        //         let i = 0; do {
-        //             i++
-        //             db.push('Loteria.Users', `${message.author.id}`)
-        //         } while (i <= 49)
-        //         msg.edit(`${e.Check} | ${message.author} comprou ${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${db.get('Loteria.Prize')} ${Moeda(message)}.\n${e.PandaProfit} | -500 ${Moeda(message)}`).catch(err => { })
-        //         setTimeout(() => { db.delete(`${message.author.id}.Tickets`) }, 1000)
-        //         if (db.get('Loteria.Users').length >= 10000) {
-        //             db.set('Lotery.Close', true)
-        //             return NewLoteryGiveaway()
-        //         }
-        //     }).catch(err => {
-        //         db.delete(`${message.author.id}.Tickets`)
-        //         message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
-        //     })
-        // }
 
         function Roleta() {
             let x = db.get(`${message.author.id}.Slot.Fichas`) || 0
@@ -442,6 +469,21 @@ module.exports = {
                 AddLoteria(((50 - x) * 2) / 2)
                 db.add(`${message.author.id}.Slot.Comidas`, 50 - x)
                 message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Comidas\` comprando +${50 - x} comidas.\n${e.PandaProfit} | -${(50 - x) * 2} ${Moeda(message)}`)
+            }
+        }
+
+        function Sapo() {
+
+            if (message.guild.id !== config.guildId)
+                return message.reply(`${e.Deny} | Para comprar os sapos, você tem que estar no meu servidor oficial.\n${config.ServerLink}`)
+
+            let x = db.get(`Halloween.${message.author.id}.Slot.Sapos`) || 0
+            x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de sapos.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 2 ? BuyComidas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 2} ${Moeda(message)} para comprar mais ${50 - x} sapos.`)
+            function BuyComidas() {
+                db.subtract(`Balance_${message.author.id}`, (50 - x) * 2)
+                AddLoteria(((50 - x) * 2) / 2)
+                db.add(`Halloween.${message.author.id}.Slot.Sapos`, 50 - x)
+                message.channel.send(`${e.Check} | ${message.author} completou o limite de ${e.Sapo} \`Sapos\` comprando +${50 - x} Sapos.\n${e.PandaProfit} | -${(50 - x) * 2} ${Moeda(message)}`)
             }
         }
 
@@ -488,7 +530,7 @@ module.exports = {
             const WinEmbed = new MessageEmbed()
                 .setColor('GREEN')
                 .setTitle(`💸 | Loteria ${client.user.username}`)
-                .setDescription(`🎉 Vencedor*(a)*: ${tag.tag}\n:id: *\`${TicketPremiado}\`*\n💸 Prêmio: ${Prize} ${Moeda(message)}\n${tag.username} comprou 🎫 ${TicketsComprados} Tickets`)
+                .setDescription(`🎉 Vencedor*(a)*: ${tag.tag}\n:id: *\`${TicketPremiado}\`*\n💸 Prêmio: ${Prize.toFixed()} ${Moeda(message)}\n${tag.username} comprou 🎫 ${TicketsComprados} Tickets`)
                 .setFooter(`${TicketsCompradosAoTodo} Tickets foram comprados nesta loteria.`)
 
             NewSorteio()
@@ -529,12 +571,17 @@ module.exports = {
             function NewTicketAwarded(msg, winner) {
                 msg.delete().catch(() => { })
                 message.channel.send({ embeds: [WinEmbed] })
+                let LoteriaChannel = client.channels.cache.get(config.LoteriaChannel)
+                LoteriaChannel ? LoteriaChannel.send({ embeds: [WinEmbed] }) : ''
                 db.add(`${winner.id}.Cache.Resgate`, (db.get('Loteria.Prize') || 0))
                 db.set('Loteria.LastWinner', `${winner.tag} *\`${winner.id}\`* | ${parseInt(db.get('Loteria.Prize'))?.toFixed(0) || 'Buguinho de Valores'}`)
                 try {
                     winner.send(`${e.PandaProfit} | Oi oi, estou passando aqui para te falar que você foi o ganhador*(a)* da Loteria.\n${e.MoneyWings} | Você ganhou o prêmio de ${Prize} ${e.Coin} Moedas.\n${e.SaphireObs} | Você pode resgatar ele a qualquer momento usando \`-resgate\``)
                 } catch (err) {
-                    message.channel.send(`${e.Deny} | Não foi possível contactar o vencedor(a).`)
+                    if (err.code === 50007)
+                        return `${e.Deny} | Não foi possível contactar o vencedor(a).`
+
+                    Error(message, err)
                 }
                 message.channel.send(`${e.Loading} | Alocando prêmio ao vencedor*(a)* e deletando todos os dados da Loteria...`).then(msg => {
                     setTimeout(() => {

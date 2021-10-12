@@ -1,5 +1,6 @@
 const { e } = require('../../../Routes/emojis.json')
 const Error = require('../../../Routes/functions/errors')
+const { config } = require('../../../Routes/config.json')
 
 module.exports = {
   name: 'clear',
@@ -17,12 +18,20 @@ module.exports = {
       .setColor('#246FE0')
       .setTitle("🧹 Comando Clear")
       .setDescription("Use o comando para fazer aquela limpa nas mensagens")
-      .addField('Comandos do Clear', '`clear 1~99` Apague até 99 mensagens\n`clear images` Apague imagens\n`clear bots` Apague mensagens de bots\n`clear @user` Apague mensagens de alguém')
+      .addField('Comandos do Clear', `\`${prefix}clear 1~100\` Apague até 100 mensagens\n\`${prefix}clear images\` Apague imagens\n\`${prefix}clear bots\` Apague mensagens de bots\n\`${prefix}clear @user\` Apague mensagens de alguém\n\`${prefix}clear nuke\` Apague as últimas 1 mil mensagens`)
 
     if (!args[0]) { return message.reply({ embeds: [clearembed] }) }
 
-    let user = message.mentions.members.first() || message.mentions.repliedUser
-    if (user) {
+    let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
+
+    if (user) return BulkDeleteUser()
+    if (['bot', "bots"].includes(args[0]?.toLowerCase())) return BulkDeleteBots()
+    if (['images', "imagens", "fotos", "foto", "imagem", "midia"].includes(args[0]?.toLowerCase())) return BulkDeleteMidias()
+    if (['nuke'].includes(args[0]?.toLowerCase())) return NewClearNuke()
+    if (!isNaN(args[0]) && typeof parseInt(args[0]) === "number" && (args[0] >= 1 || args[0] <= 100)) return BulkDelete()
+    return message.reply(`${e.Deny} | O argumento "**${args.join(' ')}**" não é válido no comando \`${prefix}clear\`. Use \`${prefix}clear\` sem argumentos que eu te mando tudo o que esse comando é capaz de fazer.`)
+
+    async function BulkDeleteUser() {
 
       let MsgsPraDeletar = args[1]
       if (!MsgsPraDeletar) { return message.reply(`${e.Deny} | Tenta usar deste jeito: \`${prefix}clear @user 0~100\``) }
@@ -36,16 +45,20 @@ module.exports = {
         message.channel.bulkDelete(userFilter).then(Mensagens => {
           return message.channel.send(`${e.Check} | Nas últimas ${MsgsPraDeletar} mensagens, eu achei ${Mensagens.size} mensagens de ${user} e apaguei elas sob as ordens de ${message.author}`)
         }).catch(err => {
-          if (err.code === 10008) (() => { })
+          if (err.code === 10008)
+            return message.channel.send(`${e.Warn} | Alguma das ${args[0]} mensagens acima é desconhecida ou o Discord está com lag.`)
+
           if (err.code === 50034)
             return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
 
+          message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no [meu servidor](${config.ServerLink}).\n\`${err}\``)
           Error(message, err)
-          return message.channel.send(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
         })
       }).catch(err => { return message.reply(`${e.Warn} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
 
-    } else if (['bot', "bots"].includes(args[0]?.toLowerCase())) {
+    }
+
+    async function BulkDeleteBots() {
 
       let MsgsPraDeletar = args[1]
       if (!MsgsPraDeletar) { return message.reply(`${e.Deny} | Tenta usar deste jeito: \`${prefix}clear bots 0~100\``) }
@@ -59,16 +72,22 @@ module.exports = {
         message.channel.bulkDelete(botFilter).then(MsgApagada => {
           return message.channel.send(`${e.Check} | Eu apaguei ${MsgApagada.size} mensagens de Bots das últimas ${MsgsPraDeletar} mensagens do chat sob as ordens de ${message.author}`)
         }).catch(err => {
-          if (err.code === 10008) (() => { })
+          if (err.code === 10008)
+            return message.channel.send(`${e.Warn} | Alguma das ${args[0]} mensagens acima é desconhecida ou o Discord está com lag.`)
+
           if (err.code === 50034)
             return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
 
+          message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no [meu servidor](${config.ServerLink}).\n\`${err}\``)
           Error(message, err)
-          return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``)
         })
-      }).catch(err => { return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``) })
+      }).catch(err => {
+        message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no [meu servidor](${config.ServerLink}).\n\`${err}\``)
+      })
 
-    } else if (['images', "imagens", "fotos", "foto", "imagem", "midia"].includes(args[0]?.toLowerCase())) {
+    }
+
+    async function BulkDeleteMidias() {
 
       let MsgsPraDeletar = args[1]
       if (!MsgsPraDeletar) { return message.reply(`${e.Deny} | Tenta usar deste jeito: \`${prefix}clear imagens 0~100\``) }
@@ -81,49 +100,90 @@ module.exports = {
         message.channel.bulkDelete(imageFilter).then(MsgApagada => {
           return message.channel.send(`${e.Check} | Encontrei ${MsgApagada.size} midias nas últimas ${MsgsPraDeletar} mensagens do chat e apaguei sob as ordens de ${message}`)
         }).catch(err => {
-          if (err.code === 10008) (() => { })
+          if (err.code === 10008)
+            return message.channel.send(`${e.Warn} | Alguma das ${args[0]} mensagens acima é desconhecida ou o Discord está com lag.`)
+
           if (err.code === 50034)
             return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
 
           return message.channel.send(`${e.Warn} | Houve algum tipo de "erro" na execução:\n\`${err}\``)
         })
       }).catch(err => {
-        return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
+        message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no [meu servidor](${config.ServerLink}).\n\`${err}\``)
+        Error(message, err)
       })
 
-    } else if (typeof parseInt(args[0]) === "number") {
+    }
 
+    async function NewClearNuke() {
+      if (db.get(`${message.guild.id}.ClearNuke`))
+        return message.reply(`${e.Info} | Já tem um \`${prefix}clear nuke\` rolando neste servidor.`)
+
+      if (args[1])
+        return message.reply(`${e.Deny} | Nada além do primeiro argumento! Use \`${prefix}clear\` para mais informações.`)
+
+      let messages = 0
+      let i = true
+      while (i) {
+        if (!message.channel) {
+          i = false
+          db.delete(`${message.guild.id}.ClearNuke`)
+          return
+        }
+
+        db.set(`${message.guild.id}.ClearNuke`, true)
+        let deleteAble = await message.channel.messages.fetch({ limit: 100 }).catch(err => { return })
+        if (deleteAble.size < 100 || messages >= 900) {
+          await message.channel.bulkDelete(deleteAble).catch(() => { })
+          db.add('GlobalClearNuke', deleteAble.size)
+          messages += deleteAble.size
+          i = false
+          message.channel.send(`${e.Check} | Deletei um total de ${messages} mensagens sob as ordens de ${message.author}.\n${e.SaphireObs} | Mensagens acima de 14 dias não podem ser apagadas.`)
+          db.delete(`${message.guild.id}.ClearNuke`)
+          messages = 0
+          return
+        }
+        if (db.get('GlobalClearNuke') >= 2500) { setTimeout(() => { db.delete('GlobalClearNull') }, 3000) }
+        await message.channel.bulkDelete(deleteAble).catch(() => { })
+        messages += deleteAble.size
+        db.add('GlobalClearNuke', deleteAble.size)
+      }
+    }
+
+    async function BulkDelete() {
       message.delete().then(async () => {
 
-        if (isNaN(args[0])) return message.channel.send(`${e.Deny} | Hey! Me fala números para que eu possa contar, ok?`)
-        if (args[1]) return message.reply(`${e.Deny} | Nada além do ${args[0]}! Use \`${prefix}clear\` para mais informações.`)
-        if (parseInt(args[0]) > 100 || parseInt(args[0]) < 1) return message.reply(`${e.Deny} | Me fala um número de 1 a 100, ok?`)
+        if (args[1]) return message.reply(`${e.Deny} | Nada além do **${args[0]}**! Use \`${prefix}clear\` para mais informações.`)
 
         await message.channel.messages.fetch({ limit: parseInt(args[0]) }).then(messages => {
-          message.channel.bulkDelete(messages).then(msg => {
-            message.channel.send(`${e.Check} | Deletei um total ${msg.size} mensagens sob as ordens de ${message.author}`)
+
+          message.channel.bulkDelete(messages, true).then(msg => {
+            message.channel.send(`${e.Check} | Deletei um total de ${msg.size} mensagens sob as ordens de ${message.author}.\n${e.SaphireObs} | ${(args[0] - msg.size) || 0} mensagens não foram deletadas por serem mais velhas que 14 dias ou por não existirem.`)
           }).catch(err => {
-            if (err.code === 10008) (() => { })
+            if (err.code === 10008)
+              return message.channel.send(`${e.Warn} | Alguma das ${args[0]} mensagens acima é desconhecida ou o Discord está com lag.`)
+
             if (err.code === 50034)
               return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
 
             Error(message, err)
-            return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no meu servidor, link no perfil.\n\`${err}\``)
+            return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no [meu servidor](${config.ServerLink}).\n\`${err}\``)
 
           })
+
         }).catch(err => {
-          if (err.code === 10008) (() => { })
+          if (err.code === 10008)
+            return message.channel.send(`${e.Warn} | Alguma das ${args[0]} mensagens acima é desconhecida ou o Discord está com lag.`)
+
           if (err.code === 50034)
             return message.channel.send(`${e.Warn} | As mensagens acima são velhas demais para eu apagar.`)
 
-          Error(message, err)
-          return message.reply(`${e.Deny} | Opa!"\n\`${err}\``)
+          message.reply(`${e.Deny} | Opa!\n\`${err}\``)
+          return Error(message, err)
         })
       }).catch(err => {
         return message.reply(`${e.Deny} | Estou sem a permissão "Gerenciar Mensagens".`)
       })
-    } else {
-      message.reply(`${e.Info} | O argumento X \`${prefix}clear "X"\` precisa ser um número para deletar as mensagens fora da clase \`mídas/bots/@users\`.`)
     }
   }
 }

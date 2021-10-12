@@ -9,14 +9,13 @@ module.exports = {
     name: 'cargo',
     aliases: ['cargos', 'role', 'roles'],
     category: 'moderation',
-    UserPermissions: 'MANAGE_ROLES',
     emoji: `${e.ModShield}`,
     usage: '<role> <add/remove/edit>... Usa role info aí vai...',
     description: 'Gerencie os cargos do servidor',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request) => {
 
-        let Role = message.mentions.roles.first() || message.guild.roles.cache.get(args[2]) || message.guild.roles.cache.get(args[1]) || message.guild.roles.cache.find(r => r.name == args[1])
+        let Role = message.mentions.roles.first() || message.guild.roles.cache.get(args[2]) || message.guild.roles.cache.get(args[1]) || message.guild.roles.cache.find(r => r.name == args[1]) || message.guild.roles.cache.find(r => r.name == args[2])
         if (['info', 'help', 'ajuda', 'informações'].includes(args[0]?.toLowerCase()))
             return Role ? RoleInfo() : RoleInfoEmbed()
 
@@ -52,6 +51,9 @@ module.exports = {
                 }).then(NewRole => {
                     message.reply(`${e.Check} | O cargo ${NewRole} foi criado com sucesso!\n*As permissões padrões foram concedidas a este cargo. Caso queira limpar as permissões, use \`${prefix}cargo edit @${NewRole.name} perms delete\`*`)
                 }).catch(err => {
+                    if (err.code === 30005)
+                        return message.reply(`${e.Info} | O servidor atingiu o limite de **250 cargos**.`)
+
                     message.reply(`${e.Deny} | Aconteceu algum erro na criação do cargo.\n\`${err}\``)
                 })
             }
@@ -100,8 +102,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Confirme a exclusão do cargo: ${Role}`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -112,7 +114,15 @@ module.exports = {
                         db.delete(`Request.${message.author.id}`)
                         Role.delete(`${message.author.tag} solicitou a exclusão deste cargo.`)
                             .then(DeletedRole => { msg.edit(`${e.Check} | O cargo **${DeletedRole.name}** foi deletado com sucesso!`).catch(() => { }) })
-                            .catch(err => { message.channel.send(`${e.Warn} | Houve um erro ao deletar este cargo.\n\`${err}\``) });
+                            .catch(err => {
+                                if (err.code === 10011)
+                                    return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                                if (err.code === 50028)
+                                    return message.reply(`${e.Deny} | Cargo Inválido`)
+
+                                message.channel.send(`${e.Warn} | Houve um erro ao deletar este cargo.\n\`${err}\``)
+                            });
                     } else {
                         db.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
@@ -154,8 +164,8 @@ module.exports = {
 
                 return message.reply(`${e.Check} | Você confirma trocar o nome do cargo de **${Role.name}** para **${NovoNome}**?`).then(msg => {
                     db.set(`Request.${message.author.id}`, `${msg.url}`)
-                    msg.react('✅').catch(err => { }) // Check
-                    msg.react('❌').catch(err => { }) // X
+                    msg.react('✅').catch(() => { }) // Check
+                    msg.react('❌').catch(() => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -166,7 +176,14 @@ module.exports = {
                             db.delete(`Request.${message.author.id}`)
                             Role.setName(NovoNome, `${message.author.tag} alterou o nome deste cargo.`)
                                 .then(updated => msg.edit(`${e.Check} | O nome do cargo foi alterado para: ${updated.name}`).catch(() => { }))
-                                .catch(err => { message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``) });
+                                .catch(err => {
+                                    if (err.code === 10011)
+                                        return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                                    if (err.code === 50028)
+                                        return message.reply(`${e.Deny} | Cargo Inválido`)
+                                    message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``)
+                                });
                         } else {
                             db.delete(`Request.${message.author.id}`)
                             msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
@@ -177,6 +194,12 @@ module.exports = {
                     })
 
                 }).catch(err => {
+                    if (err.code === 10011)
+                        return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                    if (err.code === 50028)
+                        return message.reply(`${e.Deny} | Cargo Inválido`)
+
                     Error(message, err)
                     message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
                 })
@@ -198,8 +221,8 @@ module.exports = {
 
                     return message.reply(`${e.QuestionMark} | Confirma trocar a cor do cargo **${Role.name}** para \`${NovaCor}\``).then(msg => {
                         db.set(`Request.${message.author.id}`, `${msg.url}`)
-                        msg.react('✅').catch(err => { }) // Check
-                        msg.react('❌').catch(err => { }) // X
+                        msg.react('✅').catch(() => { }) // Check
+                        msg.react('❌').catch(() => { }) // X
 
                         const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -210,7 +233,15 @@ module.exports = {
                                 db.delete(`Request.${message.author.id}`)
                                 Role.setColor(value, `${message.author.tag} alterou a cor deste cargo.`)
                                     .then(() => msg.edit(`${e.Check} | A cor do cargo foi atualizada com sucesso!`).catch(() => { }))
-                                    .catch(err => { message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``) })
+                                    .catch(err => {
+                                        if (err.code === 10011)
+                                            return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                                        if (err.code === 50028)
+                                            return message.reply(`${e.Deny} | Cargo Inválido`)
+
+                                        message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``)
+                                    })
                             } else {
                                 db.delete(`Request.${message.author.id}`)
                                 msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
@@ -221,6 +252,12 @@ module.exports = {
                         })
 
                     }).catch(err => {
+                        if (err.code === 10011)
+                            return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                        if (err.code === 50028)
+                            return message.reply(`${e.Deny} | Cargo Inválido`)
+
                         Error(message, err)
                         message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
                     })
@@ -234,7 +271,14 @@ module.exports = {
 
                 Role.setHoist(value)
                     .then(() => message.reply(`${e.Check} | Cargo atualizado com sucesso!`))
-                    .catch(err => { message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``) })
+                    .catch(err => {
+                        if (err.code === 10011)
+                            return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                        if (err.code === 50028)
+                            return message.reply(`${e.Deny} | Cargo Inválido`)
+                        message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``)
+                    })
             }
 
             function EditRolePermissions() {
@@ -243,7 +287,14 @@ module.exports = {
 
                 Role.setPermissions(0n)
                     .then(() => message.reply(`${e.Check} | Todas as permissões do cargo ${Role} foram apagadas.`))
-                    .catch(err => { message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``) })
+                    .catch(err => {
+                        if (err.code === 10011)
+                            return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                        if (err.code === 50028)
+                            return message.reply(`${e.Deny} | Cargo Inválido`)
+                        message.channel.send(`${e.Warn} | Houve um erro ao editar este cargo.\n\`${err}\``)
+                    })
             }
         }
 
@@ -303,7 +354,7 @@ module.exports = {
 
         function AddRole() {
 
-            if (!Role) return message.channel.send(`${e.Info} | @Marque, diga o ID ou o nome do cargo para que eu possa adiciona - lo.`)
+            if (!Role) return message.channel.send(`${e.Info} | @Marque, diga o ID ou o nome do cargo para que eu possa adiciona-lo.`)
             if (Role.deleted) return message.reply(`${e.Info} | Este cargo foi deletado.`)
             if (!Role.editable) return message.reply(`${e.Deny} | Eu não tenho permissão para gerenciar este cargo.`)
 
@@ -317,6 +368,12 @@ module.exports = {
                     return message.channel.send(`${e.Check} | Cargo adicionado com sucesso!`)
                 })
                 .catch(err => {
+                    if (err.code === 10011)
+                        return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                    if (err.code === 50028)
+                        return message.reply(`${e.Deny} | Cargo Inválido`)
+
                     message.channel.send(`${e.Warn} | Houve um erro ao adicionar este cargo.\n\`${err}\``)
                 })
         }
@@ -340,7 +397,15 @@ module.exports = {
                 .then(() => {
                     return message.channel.send(`${e.Check} | Cargo removido com sucesso!`)
                 })
-                .catch(err => { message.channel.send(`${e.Warn} | Houve um erro ao remover este cargo.\n\`${err}\``) })
+                .catch(err => {
+                    if (err.code === 10011)
+                        return message.reply(`${e.Deny} | Cargo Desconhecido.`)
+
+                    if (err.code === 50028)
+                        return message.reply(`${e.Deny} | Cargo Inválido`)
+
+                        message.channel.send(`${e.Warn} | Houve um erro ao remover este cargo.\n\`${err}\``)
+                })
         }
 
         function InvalidArgument() {
@@ -371,11 +436,11 @@ module.exports = {
                                     },
                                     {
                                         name: '🚫 Bloqueios de Segurança',
-                                        value: `Não é possível \`editar/deletar/adicionar/remover\` cargos acima ou iguais o seu.\n*(Isso também se aplica a ${client.user.username}.)*`
+                                        value: `Não é possível \`editar/deletar/adicionar/remover\` cargos acima ou iguais aos seus.\n*Isso também se aplica a ${client.user.username}*`
                                     },
                                     {
                                         name: '🔍 Suporte de Pesquisa aos Cargos',
-                                        value: '\`[@menção]\` Mencione o cargo\n\`[132659...]\` Forneça o ID do cargo\n\`[cargo]\` Escreva o nome do cargo\n*(Meu sistema irá diferenciar as letras **maiúsculas** e **minúsculas**)*'
+                                        value: '\`[@menção]\` Mencione o cargo\n\`[132659...]\` Forneça o ID do cargo\n\`[cargo]\` Escreva o nome do cargo\n*(Meu sistema irá diferenciar as letras **maiúsculas** e **minúsculas** e não é capaz de achar cargos com mais de 1 palavra quando escrito sem @menção ou id)*'
                                     },
                                     {
                                         name: `${e.Info} Informações`,
@@ -387,7 +452,7 @@ module.exports = {
                                     },
                                     {
                                         name: `${e.ModShield} Crie cargos de Mod/Adm`,
-                                        value: `\`${prefix}role <create> [Mod/Adm]\`\n**Permissões Ativadas**: \`Expulsar membros\` \`Banir membros\` \`Gerenciar mensagens\` \`Gerenciar apelidos\` | Adm -> \`Administrador\`\n*(Para criar mods/adm, é necessário ser um Administrador)*\nSub-atalhos**: \`mod\` \`moderador\` \`moderator\` | \`adm\` \`administrador\` \`administrator\``
+                                        value: `\`${prefix}role <create> [Mod/Adm]\`\n**Permissões Ativadas**: \`Expulsar membros\` \`Banir membros\` \`Gerenciar mensagens\` \`Gerenciar apelidos\` | Adm -> \`Administrador\`\n*(Para criar cargos Mod/Adm, é necessário ser um Administrador)*\n**Sub-atalhos**: \`mod\` \`moderador\` \`moderator\` | \`adm\` \`administrador\` \`administrator\``
                                     },
                                     {
                                         name: '🚽 Jogue na Descarga',

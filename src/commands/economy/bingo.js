@@ -54,7 +54,7 @@ module.exports = {
                 msg.edit({ embeds: [Bingo] }).catch(() => { })
                 db.add(`${WinnerMsg.author.id}.Cache.Resgate`, prize)
                 db.get(`${message.author.id}.BingoPrize`) ? db.delete(`${message.author.id}.BingoPrize`) : ''
-                WinnerMsg.reply(`${e.MoneyWings} | ${WinnerMsg.author} acertou o número do bingo! **${Number}**\n${e.PandaProfit} | ${(db.get(`${WinnerMsg.author.id}.Cache.Resgate`) || 0)} ${Moeda(message)} estão no seu cache. Use \`${prefix}resgate\` para resgatar seu cache.\nBingo link: ${db.get(`Request.${message.channel.id}.BingoCommand`)}`).catch(err => { })
+                WinnerMsg.reply(`${e.MoneyWings} | ${WinnerMsg.author} acertou o número do bingo! **${Number}**\n${e.PandaProfit} | ${(db.get(`${WinnerMsg.author.id}.Cache.Resgate`) || 0)} ${Moeda(message)} estão no seu cache. Use \`${prefix}resgate\` para resgatar seu cache.\nBingo link: ${db.get(`Request.${message.channel.id}.BingoCommand`)}`).catch(() => { })
                 db.delete(`Request.${message.channel.id}.BingoCommand`)
             })
 

@@ -67,13 +67,13 @@ module.exports = {
         componentsArray[0].components[1].disabled = true;
 
         if (button.customId === 'shoot1' && button.user.id == message.author.id) {
-            return msg.edit({ content: positions.ended2 });
+            return msg.edit({ content: positions.ended2, components: [] }).catch(() => { })
         } else if (button.customId === 'shoot2' && button.user.id == opponent.id) {
-            return msg.edit({ content: positions.ended1 });
+            return msg.edit({ content: positions.ended1, components: [] }).catch(() => { })
         } else if (button.customId === 'shoot1' && button.user.id == opponent.id) {
-            return msg.edit({ content: `${e.Deny} | ${opponent} clicou errado!` })
+            return msg.edit({ content: `${e.Deny} | ${opponent} clicou errado!`, components: [] }).catch(() => { })
         } else if (button.customId === 'shoot2' && button.user.id == message.author.id) {
-            return msg.edit({ content: `${e.Deny} | ${message.author} clicou errado!` })
+            return msg.edit({ content: `${e.Deny} | ${message.author} clicou errado!`, components: [] }).catch(() => { })
         }
     },
 };
