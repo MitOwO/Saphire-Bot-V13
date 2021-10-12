@@ -34,8 +34,8 @@ module.exports = {
             .setTitle('📢 Envie Gifs')
             .setDescription(`Por causa de tantos comandos e centenas de gifs, ficou ruim para apenas uma pessoa pegar todos os gifs, então, este comando foi feito.\n \nEnvie gifs pra ${client.user.username}! Só seguir os requisitos.`)
             .addField('Requisitos', '1. **NADA** pornográfico ou de cunho criminoso.\n2. Fale para qual tema você quer que eu coloque seu gif')
-            .addField('Comando exemplo', `\`${prefix}gif Naruto https://imgur.com/F1nJKHZ\``)
-            .setImage('https://imgur.com/F1nJKHZ.gif')
+            .addField('Comando exemplo', `\`${prefix}gif Mirai https://imgur.com/F1nJKHZ\``)
+            .setImage('https://imgur.com/F1nJKHZ')
             .setFooter('O Gif será enviado diretamente para o meu criador.')
 
         if (!tema) { return message.reply({ embeds: [noargs] }) }
@@ -46,7 +46,7 @@ module.exports = {
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
 
-            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
+            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(() => { })
         } else {
 
             if (!link) { return message.reply(`${e.Deny} | Formato incorreto.\n\`${prefix}gif Naruto LINK\`, tipo assim -> https://imgur.com/F1nJKHZ`) }
@@ -65,7 +65,6 @@ module.exports = {
             if (!canal) return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`)
             canal.send({ embeds: [newgif] }).then(() => {
                 db.set(`${message.author.id}.Timeouts.Gif`, Date.now())
-                message.channel.sendTyping()
                 setTimeout(() => { message.reply(`${e.Check} | Sua sugestão foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
             }).catch(err => {
                 Error(message, err)

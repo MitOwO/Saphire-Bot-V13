@@ -36,7 +36,7 @@ module.exports = {
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
 
-            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
+            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(() => { })
         } else {
 
             const cantada = args.join(" ")
@@ -53,12 +53,11 @@ module.exports = {
             if (!canal) return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`)
             canal.send({ embeds: [NovaCantadaEmbed] }).then(() => {
                 db.set(`${message.author.id}.Timeouts.Cantada`, Date.now())
-                message.channel.sendTyping()
-                setTimeout(() => { message.reply(`${e.Check} | Sua cantada foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
-
+                message.reply(`${e.Check} | Sua cantada foi enviada com sucesso!\nVocê vai receber uma recompensa no banco em breve.`)
             }).catch(err => {
                 Error(message, err)
-                return message.channel.send(`${e.Deny} | Ocorreu um erro no envio.\n\`${err}\``) })
+                return message.channel.send(`${e.Deny} | Ocorreu um erro no envio.\n\`${err}\``)
+            })
         }
     }
 }

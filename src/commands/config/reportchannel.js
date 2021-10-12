@@ -35,14 +35,14 @@ module.exports = {
                 return message.reply(`${e.Info} | O Report System já está desativado.`)
             } else if (canal) {
                 return message.channel.send(`${e.Loading} | Ok, espera um pouquinho... | ${canal}/${message.author.id}`).then(msg => {
-                    message.channel.sendTyping().then(() => {
+                    try {
                         setTimeout(function () {
                             db.delete(`Request.${message.author.id}`)
                             db.delete(`Servers.${message.guild.id}.ReportChannel`)
-                            msg.edit(`${e.Check} | Request Autenticada | ${message.author.id}`).catch(err => { })
+                            msg.edit(`${e.Check} | Request Autenticada | ${message.author.id}`).catch(() => { })
                             message.channel.send(`${e.BrilanceBlob} | Nice, nice! Desativei o sistema de reports.`)
                         }, 3500)
-                    }).catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
+                    } catch (err) { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``) }
                 }).catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
             }
         }
@@ -51,17 +51,17 @@ module.exports = {
             return message.reply(`${e.Info} | Este canal já foi definido como Report Channel.`)
         } else if (channel !== canal) {
             return message.reply(`${e.Loading} | Ooopa, entendido! Pera só um pouco. | ${channel.id}/${message.author.id}`).then(msg => {
-                message.channel.sendTyping().then(() => {
+                try {
                     setTimeout(function () {
                         db.delete(`Request.${message.author.id}`)
                         db.set(`Servers.${message.guild.id}.ReportChannel`, channel.id)
-                        msg.edit(`${e.Check} | Request Autenticada | ${channel.id}/${message.guild.id}`).catch(err => { })
+                        msg.edit(`${e.Check} | Request Autenticada | ${channel.id}/${message.guild.id}`).catch(() => { })
                         return message.channel.send(`${e.NezukoJump} | Aeeee, sistema de report está ativadoooo!!\n\`${prefix}report [@user(opicional)] o seu reporte em diante\``)
                     }, 4000)
-                }).catch(err => {
+                } catch (err) {
                     db.delete(`Request.${message.author.id}`)
                     return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)
-                })
+                }
             }).catch(err => {
                 db.delete(`Request.${message.author.id}`)
                 return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``)

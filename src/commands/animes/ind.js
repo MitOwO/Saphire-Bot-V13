@@ -360,9 +360,9 @@ module.exports = {
 
         return message.reply({ embeds: [IndEmbed] }).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('🔄').catch(err => { }) // Trocar
-            msg.react('📨').catch(err => { }) // Carta
-            msg.react('❌').catch(err => { }) // Cancel
+            msg.react('🔄').catch(() => { }) // Trocar
+            msg.react('📨').catch(() => { }) // Carta
+            msg.react('❌').catch(() => { }) // Cancel
 
             let TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }
             let TradeCollector = msg.createReactionCollector({ filter: TradeFilter, max: 15, time: 30000, errors: ['time', 'max'] })
@@ -376,21 +376,23 @@ module.exports = {
             let i = 0
             TradeCollector.on('collect', (reaction, user) => {
                 if (user.id === client.user.id) return
-                reaction.users.remove(user.id).catch(err => { })
+                reaction.users.remove(user.id).catch(() => { })
                 i++
                 IndEmbed.addField('---------', `**Nome:** ${list[Math.floor(Math.random() * list.length)]}`)
-                msg.edit({ embeds: [IndEmbed] }).catch(err => { })
+                msg.edit({ embeds: [IndEmbed] }).catch(() => { })
             })
 
             SendCollector.on('collect', (reaction, user) => {
                 if (user.id === client.user.id) return
-                reaction.users.remove(user.id).catch(err => { })
+                reaction.users.remove(user.id).catch(() => { })
                 i++
                 user.send({ embeds: [IndEmbed.setDescription(`From: ${message.guild.name}`)] }).then(() => {
                     return message.channel.send(`${e.Check} | Envio concluido, ${user}!`)
-                }).catch(() => {
+                }).catch(err => {
+                    if (err.code === 50007)
+                        return message.channel.send(`${e.Deny} | Seu privado está bloqueado, ${user}. Verifique suas configurações e tente novamente`)
+
                     Error(message, err)
-                    return message.channel.send(`${e.Deny} | Seu privado está bloqueado, ${user}. Verifique suas configurações e tente novamente`)
                 })
             })
 
@@ -398,14 +400,14 @@ module.exports = {
                 db.delete(`Request.${message.author.id}`)
                 msg.reactions.removeAll().catch(() => { })
                 IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).catch(err => { })
+                msg.edit({ embeds: [IndEmbed] }).catch(() => { })
             })
 
             CancelCollector.on('end', (reaction, user) => {
                 db.delete(`Request.${message.author.id}`)
                 msg.reactions.removeAll().catch(() => { })
                 IndEmbed.setColor('RED').setTitle(`${e.Deny} ${client.user.username} Indica: Animes`).setFooter(`Sessão Cancelada | ${i} Indicações solicitadas.`)
-                msg.edit({ embeds: [IndEmbed] }).catch(err => { })
+                msg.edit({ embeds: [IndEmbed] }).catch(() => { })
             })
 
         }).catch(err => {

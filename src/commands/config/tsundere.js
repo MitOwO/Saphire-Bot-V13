@@ -26,8 +26,8 @@ module.exports = {
 
             return message.reply(`${e.Hmmm} | Quer desativar meu lado Tsundere`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -37,14 +37,14 @@ module.exports = {
                     if (reaction.emoji.name === '✅') {
                         db.delete(`Request.${message.author.id}`)
                         db.delete(`Server.${message.guild.id}.Tsundere`)
-                        return msg.edit(`${e.Loli} Wooah, desativaduu`).catch(err => { })
+                        return msg.edit(`${e.Loli} Wooah, desativaduu`).catch(() => { })
                     } else {
                         db.delete(`Request.${message.author.id}`)
-                        return msg.edit(`${e.Deny} Comando cancelado.`).catch(err => { })
+                        return msg.edit(`${e.Deny} Comando cancelado.`).catch(() => { })
                     }
                 }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
-                    return msg.edit(`${e.Deny} Comando cancelado por tempo expirado.`).catch(err => { })
+                    return msg.edit(`${e.Deny} Comando cancelado por tempo expirado.`).catch(() => { })
                 })
 
             })
@@ -55,8 +55,8 @@ module.exports = {
             
             return message.reply(`${e.Hmmm} | Certeza que quer ativar meu lado tsundere? Eu vou recusar uns comandos de vez em quando... ${e.SaphireFeliz}`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -66,14 +66,14 @@ module.exports = {
                     if (reaction.emoji.name === '✅') {
                         db.delete(`Request.${message.author.id}`)
                         db.set(`Server.${message.guild.id}.Tsundere`, true)
-                        return msg.edit(`${e.Loli} Wooah.`).catch(err => { })
+                        return msg.edit(`${e.Loli} Wooah.`).catch(() => { })
                     } else {
                         db.delete(`Request.${message.author.id}`)
-                        return msg.edit(`${e.Deny} Comando cancelado.`).catch(err => { })
+                        return msg.edit(`${e.Deny} Comando cancelado.`).catch(() => { })
                     }
                 }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
-                    return msg.edit(`${e.Deny} Comando cancelado por tempo expirado.`).catch(err => { })
+                    return msg.edit(`${e.Deny} Comando cancelado por tempo expirado.`).catch(() => { })
                 })
 
             })

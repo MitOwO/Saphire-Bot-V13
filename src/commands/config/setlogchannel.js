@@ -44,8 +44,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você deseja desativar o Sistema GSN?\nCanal atual: <#${atual}> ?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // e.Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // e.Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -54,22 +54,22 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`${e.Loading} | Autenticando request...`).catch(err => { })
+                            msg.reactions.removeAll().catch(() => { })
+                            msg.edit(`${e.Loading} | Autenticando request...`).catch(() => { })
                             setTimeout(function () {
                                 db.delete(`Request.${message.author.id}`)
                                 db.delete(`Servers.${message.guild.id}.LogChannel`)
-                                msg.edit(`${e.Check} | Sistema GSN Desativado!`).catch(err => { })
+                                msg.edit(`${e.Check} | Sistema GSN Desativado!`).catch(() => { })
                             }, 4000)
                         } else {
                             db.delete(`Request.${message.author.id}`)
-                            msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`Comando cancelado por: ${message.author}`).catch(err => { })
+                            msg.reactions.removeAll().catch(() => { })
+                            msg.edit(`Comando cancelado por: ${message.author}`).catch(() => { })
                         }
                     }).catch(() => {
                         db.delete(`Request.${message.author.id}`)
-                        msg.reactions.removeAll().catch(err => { })
-                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { })
+                        msg.reactions.removeAll().catch(() => { })
+                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(() => { })
                     })
             })
         }
@@ -81,8 +81,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você deseja ativar o Sistema GSN no canal: ${channel} ?\nCanal atual: ${atual}`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // e.Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // e.Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -91,22 +91,22 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`${e.Loading} | Autenticando "${channel}" como Canal do Sistema GSN...`).catch(err => { })
+                            msg.reactions.removeAll().catch(() => { })
+                            msg.edit(`${e.Loading} | Autenticando "${channel}" como Canal do Sistema GSN...`).catch(() => { })
                             setTimeout(function () {
                                 db.delete(`Request.${message.author.id}`)
                                 db.set(`Servers.${message.guild.id}.LogChannel`, channel.id)
-                                msg.edit(`${e.Check} | Sistema GSN Ativado!\nCanal: ${channel}`).catch(err => { })
+                                msg.edit(`${e.Check} | Sistema GSN Ativado!\nCanal: ${channel}`).catch(() => { })
                             }, 4000)
                         } else {
                             db.delete(`Request.${message.author.id}`)
-                            msg.reactions.removeAll().catch(err => { })
-                            msg.edit(`Comando cancelado por: ${message.author}`).catch(err => { })
+                            msg.reactions.removeAll().catch(() => { })
+                            msg.edit(`Comando cancelado por: ${message.author}`).catch(() => { })
                         }
                     }).catch(() => {
                         db.delete(`Request.${message.author.id}`)
-                        msg.reactions.removeAll().catch(err => { })
-                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(err => { })
+                        msg.reactions.removeAll().catch(() => { })
+                        msg.edit(`${e.Deny} | Comando cancelado por: Tempo Expirado.`).catch(() => { })
                     })
             })
         }
@@ -117,8 +117,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você permite que eu crie um canal novo e ative o Sistema GSN?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -143,11 +143,11 @@ module.exports = {
                         }).catch(err => { message.reply(`${e.Deny} | Ocorreu um erro ao criar o novo canal.\n\`${err}\``) })
                     } else {
                         db.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}/${messge.guild.id}`).catch(err => { })
+                        msg.edit(`${e.Deny} | Request cancelada | ${message.author.id}/${messge.guild.id}`).catch(() => { })
                     }
                 }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request cancelada: Tempo expirado`).catch(err => { })
+                    msg.edit(`${e.Deny} | Request cancelada: Tempo expirado`).catch(() => { })
                 })
 
             })

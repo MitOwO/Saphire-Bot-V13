@@ -25,8 +25,8 @@ module.exports = {
 
     return message.reply({ embeds: [SAOEmbed] }).then(msg => {
       db.set(`Request.${message.author.id}`, `${msg.url}`)
-      msg.react('🔄').catch(err => { }) // 1º Embed
-      msg.react('❌').catch(err => { })
+      msg.react('🔄').catch(() => { }) // 1º Embed
+      msg.react('❌').catch(() => { })
 
       let filter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }
       let Collector = msg.createReactionCollector({ filter: filter, time: 40000, errors: ['time'] })
@@ -38,18 +38,18 @@ module.exports = {
       Collector.on('collect', (reaction, user) => {
         i++
         SAOEmbed.setImage(g.SwordArtOnline[Math.floor(Math.random() * g.SwordArtOnline.length)])
-        msg.edit({ embeds: [SAOEmbed] }).catch(err => { })
+        msg.edit({ embeds: [SAOEmbed] }).catch(() => { })
       })
 
       Collector.on('end', (reaction, user) => {
         db.delete(`Request.${message.author.id}`)
         SAOEmbed.setColor('RED').setTitle(`${e.Deny} Anime: SAO - Sword Art Online`).setFooter(`Sessão Expirada | ${i} Requests solicitadas.`)
-        msg.edit({ embeds: [SAOEmbed] }).then(() => { i = 0 }).catch(err => { })
+        msg.edit({ embeds: [SAOEmbed] }).then(() => { i = 0 }).catch(() => { })
       })
 
       Collector2.on('end', (reaction, user) => {
         db.delete(`Request.${message.author.id}`)
-        msg.delete().then(() => { i = 0 }).catch(err => { })
+        msg.delete().then(() => { i = 0 }).catch(() => { })
       })
     }).catch(err => {
       Error(message, err)

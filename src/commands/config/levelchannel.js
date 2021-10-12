@@ -22,26 +22,26 @@ module.exports = {
 
         return message.reply(`${e.QuestionMark} | Você deseja autenticar o canal ${channel} como Canal de Notificações de Level Up? `).then(msg => {
             db.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('✅').catch(err => { }) // 1º Embed
-            msg.react('❌').catch(err => { })
+            msg.react('✅').catch(() => { }) // 1º Embed
+            msg.react('❌').catch(() => { })
 
             let RequestFilter = (reaction, user) => { return reaction.emoji.name === '✅' && user.id === message.author.id }
             let ConfirmRequest = msg.createReactionCollector({ filter: RequestFilter, max: 1, time: 15000, errors: ['time', 'max'] })
 
             ConfirmRequest.on('collect', (reaction, user) => {
                 msg.edit(`${e.Loading} | Entendido, espera um pouco enquanto eu arrumo umas coisas no meu banco de dados...`).catch(() => { })
-                message.channel.sendTyping().then(() => {
+                try {
                     setTimeout(() => {
                         db.delete(`Request.${message.author.id}`)
                         db.set(`Servers.${message.guild.id}.XPChannel`, channel.id)
                         msg.edit(`${e.Check} | Request autenticada | ${message.channel.id}/${message.guild.id}/${message.author.id}`).catch(() => { })
                         message.channel.send(`${e.CatJump} | Pode deixar comigo! Eu vou avisar no canal ${channel} sempre que alguém passar de level.`).catch(() => { })
                     }, 5400)
-                }).catch(err => {
+                } catch (err) {
                     Error(message, err)
                     db.delete(`Request.${message.author.id}`)
                     return message.channel.send(`${e.Warn} | Ocorreu um erro no processo deste comando.\n\`${err}\``).catch(() => { })
-                })
+                }
             })
 
             let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }

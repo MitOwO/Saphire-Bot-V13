@@ -36,7 +36,7 @@ module.exports = {
         if (author !== null && timeout - (Date.now() - author) > 0) {
             let time = ms(timeout - (Date.now() - author))
 
-            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(err => { })
+            return message.reply(`⏱️ | Global Cooldown | \`${time.hours}h ${time.minutes}m e ${time.seconds}s\``).catch(() => { })
         } else {
 
             let mensagem = args.join(" ")
@@ -52,7 +52,7 @@ module.exports = {
                     if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                         const channel = client.channels.cache.get(ChannelId); if (!channel) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                             channel.send({ embeds: [ReportBugEmbed] }).then(() => {
-                                message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                                    setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
                             }).catch(err => {
                                 Error(message, err)
                                 return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``)
@@ -66,7 +66,7 @@ module.exports = {
                     if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                         const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
                             channel.send({ embeds: [ReportBugEmbed] }).then(() => {
-                                message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                                    setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
                             }).catch(err => {
                                 Error(message, err)
                                 return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``)
@@ -82,7 +82,7 @@ module.exports = {
                 if (!ChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                     const channel = client.channels.cache.get(ChannelId); if (!channel) { return } else {
                         channel.send({ embeds: [ReportBugEmbed] }).then(() => {
-                            message.channel.sendTyping().then(() => { setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000) })
+                            setTimeout(() => { message.reply(`${e.Check} | Seu reporte foi enviado com sucesso!\nVocê vai receber uma recompensa no banco em breve.`) }, 2000)
                         }).catch(err => {
                             Error(message, err)
                             return message.reply(`${e.Deny} | Ocorreu um erro no envio da mensagem... Contacte meu criador, por favor. --> ${N.Rody} <--\n\`${err}\``)

@@ -1,7 +1,7 @@
 const moment = require('moment')
-const { mem, cpu, os } = require('node-os-utils')
 const { stripIndent } = require('common-tags')
 const { e } = require('../../../Routes/emojis.json')
+const discloud = require("discloud-status")
 
 module.exports = {
   name: "botinfo",
@@ -33,16 +33,13 @@ module.exports = {
           Criada em      : ${DataFormatada}
           Prefixo Server : ${prefix}
        `
-      const { totalMemMb, usedMemMb } = await mem.info()
+
+    let Ram = discloud.ram();
       const serverStats = stripIndent`
-          OS             : ${await os.oos()}
-          Cores          : ${cpu.count()}
-          CPU Usage      : ${await cpu.usage()} %
-          RAM            : ${totalMemMb} MB
-          RAM Usage      : ${usedMemMb} MB
+          RAM Usage      : ${Ram}
         `
       const CommandStats = stripIndent`
-          Comandos       :  ${message.client.commands.size}/412
+          Comandos       :  ${message.client.commands.size}
           Atalhos        :  ${message.client.aliases.size}
           Comandos Usados:  ${ComandosUsados}
         `

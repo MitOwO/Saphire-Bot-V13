@@ -58,8 +58,8 @@ module.exports = {
             if (!AutoroleDois) AutoroleDois = 'Desativado'
 
             return message.reply(`${e.QuestionMark} | Você deseja desativar o sistema de autorole?\nAutorole 1: ${AutoroleUm}\nAutorole 2: ${AutoroleDois}`).then(msg => {
-                msg.react('✅').catch(err => { }) // e.Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // e.Check
+                msg.react('❌').catch(() => { }) // X
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
@@ -69,27 +69,26 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
 
-                        msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
-                        message.channel.sendTyping().then(() => {
+                        msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
+                        try {
                             setTimeout(function () {
                                 db.delete(`Servers.${message.guild.id}.Autorole1`)
                                 db.delete(`Servers.${message.guild.id}.Autorole2`)
                                 db.delete(`Request.${message.author.id}`)
-                                msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`).catch(err => { })
-                                return message.reply(`${e.Menhera} | Prontinho! Eu desativei o Autorole System.`)
+                                return msg.edit(`${e.Menhera} | Prontinho! Eu desativei o Autorole System.`).catch(() => { })
                             }, 2400)
-                        }).catch(err => {
+                        } catch (err) {
                             Error(message, err)
                             db.delete(`Request.${message.author.id}`)
                             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
-                        })
+                        }
 
                     } else {
-                        msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
+                        msg.edit(`${e.Deny} | Request Cancelada`).catch(() => { })
                         db.delete(`Request.${message.author.id}`)
                     }
                 }).catch(() => {
-                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
+                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(() => { })
                     db.delete(`Request.${message.author.id}`)
                 })
             }).catch(err => {
@@ -108,8 +107,8 @@ module.exports = {
                 if (Autorole1 === Autorole1) {
 
                     return message.reply(`${e.QuestionMark} | Você deseja desativar o Autorole 1? --> <@&${Autorole1}>`).then(msg => {
-                        msg.react('✅').catch(err => { }) // e.Check
-                        msg.react('❌').catch(err => { }) // X
+                        msg.react('✅').catch(() => { }) // e.Check
+                        msg.react('❌').catch(() => { }) // X
                         db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                         const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
@@ -118,25 +117,20 @@ module.exports = {
                             const reaction = collected.first()
 
                             if (reaction.emoji.name === '✅') {
-                                msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
-                                message.channel.sendTyping().then(() => {
-                                    setTimeout(function () {
-                                        db.delete(`Servers.${message.guild.id}.Autorole1`)
-                                        db.delete(`Request.${message.author.id}`)
-                                        msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`).catch(err => { })
-                                        return message.reply(`${e.SadPanda} | Adeeeus cargo... Foi bom enquanto durou.`)
-                                    }, 2400)
-                                }).catch(err => {
+                                msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
+                                setTimeout(function () {
+                                    db.delete(`Servers.${message.guild.id}.Autorole1`)
                                     db.delete(`Request.${message.author.id}`)
-                                    message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
-                                })
+                                    msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`).catch(() => { })
+                                    return message.reply(`${e.SadPanda} | Adeeeus cargo... Foi bom enquanto durou.`)
+                                }, 2400)
                             } else {
-                                msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
+                                msg.edit(`${e.Deny} | Request Cancelada`).catch(() => { })
                                 db.delete(`Request.${message.author.id}`)
                             }
 
                         }).catch(err => {
-                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
+                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(() => { })
                             db.delete(`Request.${message.author.id}`)
                         })
                     }).catch(err => {
@@ -149,8 +143,8 @@ module.exports = {
                 }
             }
 
-            if (args[1] === '@everyone') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`).catch(err => { }) }, 1900) }) }).catch(err => { return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``) }) }
-            if (args[1] === '@here') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Está de brincation with me?`).catch(err => { }) }, 1900) }) }) }
+            if (args[1] === '@everyone') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`).catch(() => { }) }) }
+            if (args[1] === '@here') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.send(`Está de brincation with me?`).catch(() => { }) }) }
             if (!role) { return message.reply(`${e.Deny} | Mencione um cargo que deseja como Autorole 1.`) }
             if (role.botRole) { return message.reply(`${e.Deny} | Sério que você quer configurar um cargo de bot como autorole? ${e.SaphireWhat}`) }
             if (!role.editable) { return message.reply(`${e.Deny} | Eu não tenho permissão para gerenciar o cargo selecionado.`) }
@@ -160,8 +154,8 @@ module.exports = {
             if (role.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) { return message.reply(`${e.Deny} | Você não pode configurar um cargo com permissão de "ADMINISTRADOR" ativada como Autorole.`) }
 
             return message.reply(`${e.QuestionMark} | Você deseja configurar o cargo "${role}" como Autorole 1?`).then(msg => {
-                msg.react('✅').catch(err => { }) // e.Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // e.Check
+                msg.react('❌').catch(() => { }) // X
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
@@ -171,23 +165,20 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
 
-                        msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
-                        message.channel.sendTyping().then(() => {
-                            setTimeout(function () {
-                                db.set(`Servers.${message.guild.id}.Autorole1`, role.id)
-                                db.delete(`Request.${message.author.id}`)
-                                msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}/${role.id}`).catch(err => { })
-                                return message.reply(`${e.CatJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
-                            }, 2400)
-                        })
-
+                        msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
+                        setTimeout(function () {
+                            db.set(`Servers.${message.guild.id}.Autorole1`, role.id)
+                            db.delete(`Request.${message.author.id}`)
+                            msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}/${role.id}`).catch(() => { })
+                            return message.reply(`${e.CatJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
+                        }, 2400)
                     } else {
                         db.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
+                        msg.edit(`${e.Deny} | Request Cancelada`).catch(() => { })
                     }
                 }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
+                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(() => { })
                 })
             })
         }
@@ -201,8 +192,8 @@ module.exports = {
                 if (Autorole2 === Autorole2) {
 
                     return message.reply(`${e.QuestionMark} | Você deseja desativar o Autorole 2? --> <@&${Autorole2}>`).then(msg => {
-                        msg.react('✅').catch(err => { }) // e.Check
-                        msg.react('❌').catch(err => { }) // X
+                        msg.react('✅').catch(() => { }) // e.Check
+                        msg.react('❌').catch(() => { }) // X
                         db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                         const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
@@ -211,23 +202,21 @@ module.exports = {
                             const reaction = collected.first()
 
                             if (reaction.emoji.name === '✅') {
-                                msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
-                                message.channel.sendTyping().then(() => {
-                                    setTimeout(function () {
-                                        db.delete(`Request.${message.author.id}`)
-                                        db.delete(`Servers.${message.guild.id}.Autorole2`)
-                                        msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`)
-                                        return message.reply(`${e.SadPanda} | Adeeeus carguinho... Vou sentir saudades.`)
-                                    }, 2400)
-                                })
+                                msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
+                                setTimeout(function () {
+                                    db.delete(`Request.${message.author.id}`)
+                                    db.delete(`Servers.${message.guild.id}.Autorole2`)
+                                    msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}`)
+                                    return message.reply(`${e.SadPanda} | Adeeeus carguinho... Vou sentir saudades.`)
+                                }, 2400)
                             } else {
                                 db.delete(`Request.${message.author.id}`)
-                                msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
+                                msg.edit(`${e.Deny} | Request Cancelada`).catch(() => { })
                             }
 
                         }).catch(err => {
                             db.delete(`Request.${message.author.id}`)
-                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
+                            msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(() => { })
                         })
                     })
 
@@ -236,8 +225,16 @@ module.exports = {
                 }
             }
 
-            if (args[1] === '@everyone') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`) }, 1900) }) }).catch(err => { }) }
-            if (args[1] === '@here') { return message.reply(`${e.Hmmm}`).then(() => { message.channel.sendTyping().then(() => { setTimeout(() => { message.channel.send(`Está de brincation with me?`) }, 1900) }) }).catch(err => { }) }
+            if (args[1] === '@everyone') {
+                return message.reply(`${e.Hmmm}`).then(() => {
+                    setTimeout(() => { message.channel.send(`Eu não vou nem comentar sob tal atrocidade.`) }, 1900)
+                }).catch(() => { })
+            }
+            if (args[1] === '@here') {
+                return message.reply(`${e.Hmmm}`).then(() => {
+                    setTimeout(() => { message.channel.send(`Está de brincation with me?`) }, 1900)
+                }).catch(() => { })
+            }
             if (!role) { return message.reply(`${e.Deny} | Mencione um cargo que deseja como Autorole 2.`) }
             if (role.botRole) { return message.reply(`${e.Deny} | Sério que você quer configurar um cargo de bot como autorole? ${e.SaphireWhat}`) }
             if (!role.editable) { return message.reply(`${e.Deny} | Eu não tenho permissão para gerenciar o cargo selecionado.`) }
@@ -247,8 +244,8 @@ module.exports = {
             if (role.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) { return message.reply(`${e.Deny} | Você não pode configurar um cargo com permissão de "ADMINISTRADOR" ativada como Autorole.`) }
 
             return message.reply(`${e.QuestionMark} | Você deseja configurar o cargo "${role}" como Autorole 2?`).then(msg => {
-                msg.react('✅').catch(err => { }) // e.Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // e.Check
+                msg.react('❌').catch(() => { }) // X
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
@@ -258,27 +255,25 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
 
-                        msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
-                        message.channel.sendTyping().then(() => {
-                            setTimeout(function () {
+                        msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
+                        try {
                                 db.set(`Servers.${message.guild.id}.Autorole2`, role.id)
                                 db.delete(`Request.${message.author.id}`)
-                                msg.edit(`${e.Check} | Request autenticada | ${message.guild.id}/${role.id}`)
-                                return message.reply(`${e.NezukoJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
-                            }, 2400)
-                        }).catch(err => {
+                                return msg.edit(`${e.NezukoJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
+                          
+                        } catch(err) {
                             Error(message, err)
                             db.delete(`Request.${message.author.id}`)
                             return message.reply(`${e.Warn} | Houve um erro ao executar este comando\n\`${err}\``)
-                        })
+                        }
 
                     } else {
                         db.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request Cancelada`).catch(err => { })
+                        msg.edit(`${e.Deny} | Request Cancelada`).catch(() => { })
                     }
                 }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(err => { })
+                    msg.edit(`${e.Deny} | Request Cancelada: Tempo expirado`).catch(() => { })
                 })
             }).catch(err => {
                 Error(message, err)

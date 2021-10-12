@@ -37,8 +37,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Você deseja resetar meu prefix para \`-\`?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -47,23 +47,21 @@ module.exports = {
                         const reaction = collected.first()
 
                         if (reaction.emoji.name === '✅') {
-                            msg.delete().catch(err => { })
-                            message.channel.sendTyping().then(() => {
+                            msg.delete().catch(() => { })
                                 setTimeout(function () {
                                     db.delete(`Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.Prefix`)
                                     message.reply(`${e.Check} | ${message.author.username} resetou meu prefixo para \`-\``)
                                 }, 4000)
-                            })
                         } else {
                             db.delete(`Request.${message.author.id}`)
-                            msg.edit(`${e.NezukoDance} | Comando cancelado.`).catch(err => { })
-                            msg.reactions.removeAll().catch(err => { })
+                            msg.edit(`${e.NezukoDance} | Comando cancelado.`).catch(() => { })
+                            msg.reactions.removeAll().catch(() => { })
                         }
                     }).catch(() => {
                         db.delete(`Request.${message.author.id}`)
-                        msg.edit('⏱️ | Comando cancelado por: Tempo Expirado.').catch(err => { })
-                        msg.reactions.removeAll().catch(err => { })
+                        msg.edit('⏱️ | Comando cancelado por: Tempo Expirado.').catch(() => { })
+                        msg.reactions.removeAll().catch(() => { })
                     })
             })
         }
@@ -76,8 +74,8 @@ module.exports = {
 
             return message.reply(`${e.QuestionMark} | Deseja alterar meu prefixo para: \`${args[0]}\` ?`).then(msg => {
                 db.set(`Request.${message.author.id}`, `${msg.url}`)
-                msg.react('✅').catch(err => { }) // Check
-                msg.react('❌').catch(err => { }) // X
+                msg.react('✅').catch(() => { }) // Check
+                msg.react('❌').catch(() => { }) // X
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -85,29 +83,25 @@ module.exports = {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        msg.reactions.removeAll().catch(err => { })
+                        msg.reactions.removeAll().catch(() => { })
 
                         if (args[0] === "-") {
 
-                            msg.edit(`${e.Loading} | Este é o meu prefixo padrão... Resetando prefixo deste servidor...`).catch(err => { })
-                            message.channel.sendTyping().then(() => {
+                            msg.edit(`${e.Loading} | Este é o meu prefixo padrão... Resetando prefixo deste servidor...`).catch(() => { })
                                 setTimeout(function () {
                                     db.delete(`Request.${message.author.id}`)
                                     db.delete(`Servers.${message.guild.id}.Prefix`)
-                                    msg.delete().catch(err => { })
-                                    message.reply(`${e.Check} | ${message.author}, o prefixo foi resetado. Prefixo atual: \`-\``).catch(err => { })
+                                    msg.delete().catch(() => { })
+                                    message.reply(`${e.Check} | ${message.author}, o prefixo foi resetado. Prefixo atual: \`-\``).catch(() => { })
                                 }, 3000)
-                            })
                         } if (args[0] === "<") {
                             return message.reply(`${e.Deny} Opa opa, você achou um prefixo proibido`)
                         } else {
-                            msg.delete().catch(err => { })
-                            message.channel.sendTyping().then(() => {
+                            msg.delete().catch(() => { })
                                 setTimeout(function () {
                                     db.delete(`Request.${message.author.id}`)
                                     db.set(`Servers.${message.guild.id}.Prefix`, args[0])
                                 }, 3000)
-                            })
                             setTimeout(() => {
                                 db.delete(`Request.${message.author.id}`)
                                 message.reply(`Prefixo \`${args[0]}\` novinho em folha! Só não esquece, ok? ${e.SaphireFeliz}`)
@@ -115,12 +109,12 @@ module.exports = {
                         }
                     } else {
                         db.delete(`Request.${message.author.id}`)
-                        msg.reactions.removeAll().catch(err => { })
-                        msg.edit(`${e.Check} | Comando cancelado por: ${message.author}`).catch(err => { })
+                        msg.reactions.removeAll().catch(() => { })
+                        msg.edit(`${e.Check} | Comando cancelado por: ${message.author}`).catch(() => { })
                     }
                 }).catch(() => {
                     db.delete(`Request.${message.author.id}`)
-                    msg.edit(`${e.Check} | Comando cancelado por: Tempo expirado`).catch(err => { })
+                    msg.edit(`${e.Check} | Comando cancelado por: Tempo expirado`).catch(() => { })
                 })
             })
         }

@@ -110,8 +110,8 @@ module.exports = {
             function SetOff() {
                 message.reply(`${e.QuestionMark} | Você deseja desativar o Sistema de Boas-Vindas?`).then(msg => {
                     db.set(`Request.${message.author.id}`, `${msg.url}`)
-                    msg.react('✅').catch(err => { }) // e.Check
-                    msg.react('❌').catch(err => { }) // X
+                    msg.react('✅').catch(() => { }) // e.Check
+                    msg.react('❌').catch(() => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -121,20 +121,18 @@ module.exports = {
 
                             if (reaction.emoji.name === '✅') {
                                 db.delete(`Request.${message.author.id}`)
-                                msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
-                                message.channel.sendTyping().then(() => {
+                                msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
                                     setTimeout(function () {
                                         db.delete(`Servers.${message.guild.id}.WelcomeChannel.Canal`)
-                                        msg.edit(`${e.Nagatoro} | Prontinho, agora eu não vou dizer mais nada quando alguém entrar no servidor.`).catch(err => { })
+                                        msg.edit(`${e.Nagatoro} | Prontinho, agora eu não vou dizer mais nada quando alguém entrar no servidor.`).catch(() => { })
                                     }, 4000)
-                                })
                             } else {
                                 db.delete(`Request.${message.author.id}`)
-                                msg.edit(`${e.Deny} | Request abortada`).catch(err => { })
+                                msg.edit(`${e.Deny} | Request abortada`).catch(() => { })
                             }
                         }).catch(() => {
                             db.delete(`Request.${message.author.id}`)
-                            msg.edit(`${e.Deny} | Request abortada | Tempo excedido`).catch(err => { })
+                            msg.edit(`${e.Deny} | Request abortada | Tempo excedido`).catch(() => { })
                         })
                 })
             }
@@ -148,8 +146,8 @@ module.exports = {
 
                 return message.reply(`${e.QuestionMark} | Deseja configurar "${channel}" como canal de boas-vindas?`).then(msg => {
                     db.set(`Request.${message.author.id}`, `${msg.url}`)
-                    msg.react('✅').catch(err => { }) // e.Check
-                    msg.react('❌').catch(err => { }) // X
+                    msg.react('✅').catch(() => { }) // e.Check
+                    msg.react('❌').catch(() => { }) // X
 
                     const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -158,8 +156,7 @@ module.exports = {
                             const reaction = collected.first()
 
                             if (reaction.emoji.name === '✅') {
-                                msg.edit(`${e.Loading} | Autenticando...`).catch(err => { })
-                                message.channel.sendTyping().then(() => {
+                                msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
                                     setTimeout(function () {
                                         db.delete(`Request.${message.author.id}`)
                                         db.set(`Servers.${message.guild.id}.WelcomeChannel.Canal`, channel.id)
@@ -169,12 +166,12 @@ module.exports = {
                                             if (db.get(`Servers.${message.guild.id}.LeaveChannel`))
                                                 return
 
-                                            message.channel.sendTyping().then(() => {
+                                            try {
                                                 setTimeout(() => {
                                                     message.channel.send(`${e.QuestionMark} | ${message.author}, posso ativar o sistema de saídas no "${channel}" também?`).then(msg => {
                                                         db.set(`Request.${message.author.id}`, `${msg.url}`)
-                                                        msg.react('✅').catch(err => { }) // e.Check
-                                                        msg.react('❌').catch(err => { }) // X
+                                                        msg.react('✅').catch(() => { }) // e.Check
+                                                        msg.react('❌').catch(() => { }) // X
 
                                                         const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
@@ -183,7 +180,7 @@ module.exports = {
                                                                 const reaction = collected.first()
 
                                                                 if (reaction.emoji.name === '✅') {
-                                                                    msg.edit(`${e.Loading} |  Autenticando... `).catch(err => { })
+                                                                    msg.edit(`${e.Loading} |  Autenticando... `).catch(() => { })
 
                                                                     setTimeout(function () {
                                                                         db.delete(`Request.${message.author.id}`)
@@ -192,28 +189,27 @@ module.exports = {
                                                                     }, 3100)
                                                                 } else {
                                                                     db.delete(`Request.${message.author.id}`)
-                                                                    msg.edit(`${e.Deny} | Indicação abortada | ${client.user.id}`).catch(err => { })
+                                                                    msg.edit(`${e.Deny} | Indicação abortada | ${client.user.id}`).catch(() => { })
                                                                 }
                                                             }).catch(() => {
                                                                 db.delete(`Request.${message.author.id}`)
-                                                                msg.edit(`${e.Deny} | Indicação abortada | Tempo expirado`).catch(err => { })
+                                                                msg.edit(`${e.Deny} | Indicação abortada | Tempo expirado`).catch(() => { })
                                                             })
                                                     })
                                                 }, 1900)
-                                            }).catch(err => {
+                                            } catch (err) {
                                                 db.delete(`Request.${message.author.id}`)
                                                 return message.channel.send(`${e.Warn} | Houve um erro na execução deste comando.\n\`${err}\``)
-                                            })
+                                            }
                                         })
                                     }, 4000)
-                                })
                             } else {
                                 db.delete(`Request.${message.author.id}`)
-                                msg.edit(`${e.Deny} | Request abortada`).catch(err => { })
+                                msg.edit(`${e.Deny} | Request abortada`).catch(() => { })
                             }
                         }).catch(() => {
                             db.delete(`Request.${message.author.id}`)
-                            msg.edit(`${e.Deny} | Request abortada | Tempo excedido`).catch(err => { })
+                            msg.edit(`${e.Deny} | Request abortada | Tempo excedido`).catch(() => { })
                         })
                 })
             }
