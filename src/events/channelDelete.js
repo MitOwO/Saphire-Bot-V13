@@ -1,10 +1,14 @@
 const client = require('../../index')
 const db = require('quick.db')
+const { config } = require('../../Routes/config.json')
 
 client.on('channelDelete', async (channel) => {
 
     if (client.users.cache.get(channel.topic))
         db.delete(`${channel.topic}.Cache.ComprovanteOpen`)
+
+    if (channel.id === config.LoteriaChannel)
+        Notify(`🛰️ | **Global System Notification** | Recurso Desabilitado\n \nO canal **${channel.name}** configurado como **Lotery Result At Principal Server** foi deletado.`)
 
     switch (channel.id) {
         case db.get(`Servers.${channel.guild.id}.IdeiaChannel`): DeletedChannel('IdeiaChannel', 'Canal de Ideias/Sugestões'); break;

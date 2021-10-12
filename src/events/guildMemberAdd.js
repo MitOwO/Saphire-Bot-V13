@@ -52,7 +52,19 @@ client.on('guildMemberAdd', async (member) => {
             case 'MANAGE_NICKNAMES': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **GERENCIAR APELIDOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
             case 'MANAGE_ROLES': DisableAutorole1(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role1}** possui a permissão **GERENCIAR CARGOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 1** foi desabilitado.`); break;
 
-            default: member.roles.add(role1).catch(err => { return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nHouve um erro na adição de cargo referente ao **Autorole 1**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n~~ \`${err}\` ~~`) }); break;
+            default: member.roles.add(role1).catch(err => {
+                if (err.code === 10011) {
+                    db.delete(`Servers.${member.guild.id}.Autorole1`)
+                    return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo configurado como **Autorole 1** é desconhecido. As configurações desde cargo foram deletadas do meu banco de dados.`)
+                }
+
+                if (err.code === 50028) {
+                    db.delete(`Servers.${member.guild.id}.Autorole1`)
+                    return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo configurado como **Autorole 1** é inválido. As configurações desde cargo foram deletadas do meu banco de dados.`)
+                }
+
+                return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nHouve um erro na adição de cargo referente ao **Autorole 1**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n~~ \`${err}\` ~~`)
+            }); break;
         }
     }
 
@@ -83,7 +95,19 @@ client.on('guildMemberAdd', async (member) => {
             case 'MANAGE_NICKNAMES': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **GERENCIAR APELIDOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
             case 'MANAGE_ROLES': DisableAutorole2(); Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo **${role2}** possui a permissão **GERENCIAR CARGOS** ativada.\nVisando a segurança e o bem-estar do servidor, o **Autorole 2** foi desabilitado.`); break;
 
-            default: member.roles.add(role2).catch(err => { return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nHouve um erro na adição de cargo referente ao **Autorole 2**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n~~ \`${err}\` ~~`) }); break;
+            default: member.roles.add(role2).catch(err => {
+                if (err.code === 10011) {
+                    db.delete(`Servers.${member.guild.id}.Autorole2`)
+                    return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo configurado como **Autorole 2** é desconhecido. As configurações desde cargo foram deletadas do meu banco de dados.`)
+                }
+
+                if (err.code === 50028) {
+                    db.delete(`Servers.${member.guild.id}.Autorole2`)
+                    return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nO cargo configurado como **Autorole 2** é inválido. As configurações desde cargo foram deletadas do meu banco de dados.`)
+                }
+
+                return Notify(`🛰️ | **Global System Notification** | Autorole System\n \nHouve um erro na adição de cargo referente ao **Autorole 2**. Caso não saiba resolver o problema, utilize o comando \`${prefix}bug\` e relate o probrema.\n~~ \`${err}\` ~~`)
+            }); break;
         }
     }
 
@@ -102,6 +126,6 @@ client.on('guildMemberAdd', async (member) => {
         let Emoji = WS.Emoji || `${e.Join}`
         let Canal = WS.Canal || false
         const canal = await member.guild.channels.cache.get(Canal)
-        canal ? canal.send(`${Emoji} | ${member} ${MessageMsg}`).catch(err => { member.guild.channels.cache.get(config.ownerId).send(`${e.Warn} | Erro no evento "guildMemberAdd" (Linha Emit: 104)\n\`${err}\``) }) : ''
+        canal ? canal.send(`${Emoji} | ${member} ${MessageMsg}`).catch(err => { member.guild.channels.cache.get(config.ownerId).send(`${e.Warn} | Erro no evento "guildMemberAdd" (Linha Emit: 105)\n\`${err}\``) }) : ''
     }
 })

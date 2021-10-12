@@ -20,6 +20,7 @@ client.on('guildMemberRemove', async (member) => {
 
         const fetchedLogs = await member.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_KICK' })
         const banLog = fetchedLogs.entries.first()
+        if (!banLog) return
         const { executor, target, reason } = banLog
         if (!banLog || !executor) return
 
@@ -38,13 +39,13 @@ client.on('guildMemberRemove', async (member) => {
             )
             .setFooter(`${member.guild.name}`, member.guild.iconURL({ dynamic: true }))
 
-        channel ? channel.send({ embeds: [embed] }).catch(err => { }) : ''
+        channel ? channel.send({ embeds: [embed] }).catch(() => { }) : ''
     }
 
     async function LeaveMember() {
         let LeaveChannel = db.get(`Servers.${member.guild.id}.LeaveChannel`)
         const canal = await member.guild.channels.cache.get(LeaveChannel)
         if (!canal) return
-        canal.send(`${e.Leave} | ${member.user.username} saiu do servidor.`).catch(err => { })
+        canal.send(`${e.Leave} | ${member.user.username} saiu do servidor.`).catch(() => { })
     }
 })

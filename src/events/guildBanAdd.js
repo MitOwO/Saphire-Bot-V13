@@ -32,5 +32,5 @@ client.on('guildBanAdd', async ban => {
         )
         .setThumbnail(ban.user.displayAvatarURL({ dynamic: true }))
         .setFooter(`${ban.guild.name}`, ban.guild.iconURL({ dynamic: true }))
-    channel ? channel.send({ embeds: [embed] }).catch(err => { }) : ''
+    channel ? channel.send({ embeds: [embed] }).catch(() => { }) : ''
 })

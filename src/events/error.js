@@ -6,5 +6,5 @@ const db = require('quick.db')
 
 client.on('error', (error) => {
     const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro - CLIENT ERROR`).addField('Aviso', `${error}`)
-    client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(err => { })
+    client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(() => { })
 })

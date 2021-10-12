@@ -8,6 +8,6 @@ client.on('channelCreate', async (channel) => {
     if (!channel.guild || !channel.guild.available || !channel.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return
 
     if (channel && channel.isText() && channel.viewable && channel.viewable && !channel.isVoice())
-        channel.send(`First! ${e.NezukoJump}`).catch(err => { })
+        channel.send(`First! ${e.NezukoJump}`).catch(() => { })
     return
 })

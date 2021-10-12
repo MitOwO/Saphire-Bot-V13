@@ -7,8 +7,13 @@ const Data = require('../../Routes/functions/data')
 client.on("ready", () => {
 
     console.log('Event Ready | OK!')
-    db.delete('Rebooting'); db.delete(`Request`);
+    db.delete('Rebooting')
+    db.delete('Request')
+    db.delete('BetRequest')
     db.delete('Lotery.Close')
+    db.delete(`TimeoutXP`)
+
+    setInterval(() => { db.delete('RateLimit') }, 4000)
 
     let Array2 = ['Procurando Nemo', 'Vingadores', 'Bob Esponja', 'Barbie Girl']
     let ActivityRandom = Array2[Math.floor(Math.random() * Array2.length)]
@@ -20,7 +25,7 @@ client.on("ready", () => {
     client.user.setActivity(`${Activity}`, { type: `${Action}` })
     client.user.setStatus(`${Status}`)
 
-    var Shard, Index, Event, Command
+    let Shard, Index, Event, Command
     db.get('Client.Status.Shard') ? Shard = e.Check : Shard = e.Deny
     db.get('Client.Status.Index') ? Index = e.Check : Index = e.Deny
     db.get('Client.Status.Event') ? Event = e.Check : Event = e.Deny

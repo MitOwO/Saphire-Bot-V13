@@ -19,5 +19,5 @@ client.on("guildDelete", async (guild) => {
     if (!config.guildDeleteChannelId) return
 
     const channel = client.channels.cache.get(config.guildDeleteChannelId)
-    channel ? channel.send({ embeds: [Embed] }).catch(err => { }) : ''
+    channel ? channel.send({ embeds: [Embed] }).catch(() => { }) : ''
 })
