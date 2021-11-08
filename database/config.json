@@ -1,0 +1,20 @@
+{
+    "config": {
+        "prefix": "-",
+        "ownerId": "451619591320371213",
+        "designerId": "830226550116057149",
+        "contentManagerId": "315297741406339083",
+        "clientId": "837147659898191902",
+        "guildId": "892427309187989566",
+        "guildCreateChannelId": "893366213667864666",
+        "guildDeleteChannelId": "893366252263833640",
+        "LoteriaChannel": "895050590068043897",
+        "BugsChannelId": "893366388482269214",
+        "LogChannelId": "893366497479630888",
+        "PackageInvite": "https://discord.gg/UArp6eyvwu",
+        "CloudInvite": "https://discord.gg/J6Rr4CepDt",
+        "ServerLink": "https://discord.gg/3g8Sa4dUc9",
+        "GoogleForm": "https://forms.gle/4sQ1mgRdP4b1fUnx7",
+        "TopGGLink": "https://top.gg/bot/837147659898191902"
+    }
+}
