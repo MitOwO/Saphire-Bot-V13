@@ -55,7 +55,7 @@ module.exports = {
 
         function SetNewData(data) {
 
-            return message.reply(`${e.QuestionMark} | Você confirma a sua data de aniversário? \`${data()}\``).then(msg => {
+            return message.reply(`${e.QuestionMark} | Você confirma a sua data de aniversário? \`${data}\``).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(() => { }) // Check
                 msg.react('❌').catch(() => { }) // X
@@ -67,7 +67,7 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.set(`Users.${message.author.id}.Perfil.Aniversario`, `${data()}`)
+                        sdb.set(`Users.${message.author.id}.Perfil.Aniversario`, `${data}`)
                         return msg.edit(`${e.Check} | Data de aniversário atualizada com sucesso!`)
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
@@ -85,7 +85,7 @@ module.exports = {
             niver ? Delete() : message.reply(`${e.Info} | O sua data de aniversário já está resetada.`)
 
             function Delete() {
-                sdb.set(`Users.${message.author.id}.Perfil.Aniversario`, false)
+                sdb.delete(`Users.${message.author.id}.Perfil.Aniversario`)
                 message.reply(`${e.Check} | ${message.author} resetou sua data de aniversário.`)
             }
         }

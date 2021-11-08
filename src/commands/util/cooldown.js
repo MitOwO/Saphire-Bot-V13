@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || message.member
+        let user = message.mentions.members.first() || message.mentions.repliedUser || client.users.cache.get(args[0]) || message.member
         if (!user) return message.reply(`${e.Deny} | Eu não achei, o que será que aconteceu?`)
 
         let Dpn, TPreso, TDaily, TPig, TWork, TRestoreDividas, TCu, TRoleta, TCrime, TBit, TLikes, THelpier, TWeek, TMonth, TReact, TAssalto, TRob, TBolsa, TVip
