@@ -70,29 +70,29 @@ module.exports = {
 
         let cartas, picareta, arma, anel, machado, title, balaclava, remedio, vara, faca, loli, cachorro, dogname, medalha, cores, bola, fossil, diamante, mamute, nada, nada2, star
 
-        Helpier = Helpier !== null && 604800000 - (Date.now() - Helpier) > 0 ? `\n${e.Helpier} Ajudante` : null
-        title = TitlePerm ? "\n🔰 Título" : null
-        cartas = Cartas ? `\n💌 Cartas: ${Cartas}` : null
-        picareta = Picareta.Picareta ? `\n⛏️ Picareta | ${Picareta.Usos || 0} usos restantes` : null
-        arma = Arma ? "\n🔫 Arma" : null
-        anel = Anel ? "\n💍 Anel de Casamento" : null
-        machado = Machado.Machado ? `\n🪓 Machado | ${Machado.Usos || 0} usos restantes` : null
-        balaclava = Balaclava ? `\n${e.Balaclava} Balaclava` : null
-        remedio = Remedio ? "\n💊 Remédio do Velho Welter" : null
-        vara = Vara ? "\n🎣 Vara de pesca" : null
-        faca = Faca ? "\n🔪 Faca" : null
-        loli = Loli ? `\n${e.Loli} Loli` : null
-        cachorro = Cachorro ? "\n🐶 Cachorro Brown" : null
+        Helpier = Helpier !== null && 604800000 - (Date.now() - Helpier) > 0 ? `\n${e.Helpier} Ajudante` : ''
+        title = TitlePerm ? "\n🔰 Título" : ''
+        cartas = Cartas ? `\n💌 Cartas: ${Cartas}` : ''
+        picareta = Picareta.Picareta ? `\n⛏️ Picareta | ${Picareta.Usos || 0} usos restantes` : ''
+        arma = Arma ? "\n🔫 Arma" : ''
+        anel = Anel ? "\n💍 Anel de Casamento" : ''
+        machado = Machado.Machado ? `\n🪓 Machado | ${Machado.Usos || 0} usos restantes` : ''
+        balaclava = Balaclava ? `\n${e.Balaclava} Balaclava` : ''
+        remedio = Remedio ? "\n💊 Remédio do Velho Welter" : ''
+        vara = Vara ? "\n🎣 Vara de pesca" : ''
+        faca = Faca ? "\n🔪 Faca" : ''
+        loli = Loli ? `\n${e.Loli} Loli` : ''
+        cachorro = Cachorro ? "\n🐶 Cachorro Brown" : ''
         dogname = Dogname ? `\n${e.Doguinho} ${sdb.get(`Users.${user.id}.Slot.Dogname`)}` : `\n${e.Doguinho} Doguinho sem nome`
-        medalha = Medalha.Medalha ? "\n🏅 Medalha Cammum" : null
-        cores = Cores ? '\n🎨 Cores' : null
-        bola = Bola ? "\n🥎 Bola" : null
-        fossil = Fossil ? `\n${e.Fossil} Fossil` : null
-        diamante = DiamanteNegro ? `\n${e.DarkDiamond} Diamante Negro` : null
-        mamute = Mamute ? "\n🦣 Mamute" : null
-        if (Medalha.Acess) cachorro = null, bola = null, remedio = null
-        nada = !Helpier && !balaclava && !arma && !picareta && !vara && !machado && cartas <= 0 ? 'Não há nada aqui' : null
-        nada2 = !sdb.get(`Users.${user.id}.Color.Perm`) && !title && !faca && !loli && !fossil && !mamute && !diamante && !Medalha.Medalha && !bola && !cachorro && !remedio ? 'Não há nada aqui' : null
+        medalha = Medalha.Medalha ? "\n🏅 Medalha Cammum" : ''
+        cores = Cores ? '\n🎨 Cores' : ''
+        bola = Bola ? "\n🥎 Bola" : ''
+        fossil = Fossil ? `\n${e.Fossil} Fossil` : ''
+        diamante = DiamanteNegro ? `\n${e.DarkDiamond} Diamante Negro` : ''
+        mamute = Mamute ? "\n🦣 Mamute" : ''
+        if (Medalha.Acess) cachorro = '', bola = '', remedio = ''
+        nada = !Helpier && !balaclava && !arma && !picareta && !vara && !machado && cartas <= 0 ? 'Não há nada aqui' : ''
+        nada2 = !sdb.get(`Users.${user.id}.Color.Perm`) && !title && !faca && !loli && !fossil && !mamute && !diamante && !Medalha.Medalha && !bola && !cachorro && !remedio ? 'Não há nada aqui' : ''
         
         LevelBgAtual = !sdb.get(`Users.${user.id}.Slot.Walls.Set`) ? 'Padrão: bg0' : 'Indefinido'
 
