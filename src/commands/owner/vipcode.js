@@ -35,7 +35,7 @@ module.exports = {
             let parse = parsems(Time)
             sdb.set(`Client.VipCodes.${Code}`, Time)
 
-            return message.reply(`⏱${e.Check} | Código VIP criado com sucesso!\nCódigo de Resgate: \`${Code}\`\nTempo do Vip: \`${parse.days} Dias, ${parse.hours} Horas, ${parse.minutes} Minutos, ${parse.seconds} Segundos e ${parse.milliseconds} Milisegundos.\`\nComando de Resgate: \`${prefix}resgatar code ${Code}\``)
+            return message.reply(`⏱${e.Check} | Código VIP criado com sucesso!\nCódigo de Resgate: \`${Code}\`\nTempo do Vip: \`${parse.days} Dias, ${parse.hours} Horas, ${parse.minutes} Minutos, ${parse.seconds} Segundos e ${parse.milliseconds} Milisegundos.\`\nComando de Resgate: \`${prefix}resgatar ${Code}\``)
 
         }
 

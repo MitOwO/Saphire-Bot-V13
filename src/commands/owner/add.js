@@ -18,7 +18,7 @@ module.exports = {
 
         const User = new UserManager(message, user)
 
-        let amount = args[2]?.replace(/k/g, '000')
+        let amount = args[2]?.replace(/k/g, '000') || args[1]?.replace(/k/g, '000')
 
         // NO USERS
         if (['commands', 'comandos', 'comando'].includes(args[0]?.toLowerCase())) return AddCommands()
