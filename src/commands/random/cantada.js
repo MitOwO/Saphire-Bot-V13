@@ -1,0 +1,53 @@
+const { e } = require('../../../database/emojis.json')
+const { f } = require('../../../database/frases.json')
+
+module.exports = {
+  name: 'cantadas',
+  aliases: ['cantada'],
+  category: 'random',
+  ClientPermissions: 'ADD_REACTIONS',
+  emoji: '💌',
+  usage: '<cantada>',
+  description: 'Veja cantadas muito "boas"',
+
+  run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
+    if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
+
+    const Cantadas = f.Cantadas[Math.floor(Math.random() * f.Cantadas.length)]
+
+    const CantadasEmbed = new MessageEmbed()
+      .setColor('#246FE0')
+      .setTitle(`❤️ Cantadas da Turma`)
+      .addField('----------', `${Cantadas}`)
+
+    return message.reply({ embeds: [CantadasEmbed] }).then(msg => {
+      sdb.set(`Request.${message.author.id}`, `${msg.url}`)
+      msg.react('🔄').catch(() => { }) // 1º Embed
+      msg.react('❌').catch(() => { }) // Cancel
+
+      const FilterTrade = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id; };
+      const collector = msg.createReactionCollector({ filter: FilterTrade, max: 15, time: 20000, errors: ['time'] })
+
+      let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }
+      let CancelCollector = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 20000, errors: ['max', 'time'] })
+
+      collector.on('collect', (reaction, user) => {
+        CantadasEmbed.setColor('#246FE0').addField('----------', `${f.Cantadas[Math.floor(Math.random() * f.Cantadas.length)]}`)
+        msg.edit({ embeds: [CantadasEmbed] }).catch(() => { })
+      });
+
+      collector.on('end', collected => {
+        sdb.delete(`Request.${message.author.id}`)
+        CantadasEmbed.setColor('RED').setFooter(`Tempo expirado | ${message.author.id} | ${prefix}sendcantada`)
+        msg.edit({ embeds: [CantadasEmbed] }).catch(() => { })
+      })
+
+      CancelCollector.on('collect', (reaction, user) => {
+        sdb.delete(`Request.${message.author.id}`)
+        CantadasEmbed.setColor('RED').setFooter(`Comando cancelado | ${message.author.id} | ${prefix}sendcantada`)
+        msg.edit({ embeds: [CantadasEmbed] }).catch(() => { })
+        msg.reactions.removeAll().catch(() => { })
+      });
+    })
+  }
+}
