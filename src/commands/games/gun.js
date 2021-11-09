@@ -10,6 +10,9 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
+        if (db.get(`Gun${message.author.id}`))
+            return message.reply(`${e.Info} | Calminha aí! Você tem um gun aberto ainda.`)
+
         const opponent = message.mentions.members.first() || message.member
         if (opponent.id === message.author.id) return message.reply(`${e.Deny} | Mencione um oponente ou use o comando respondendo a mensagem do seu oponente.`)
         if (opponent.user.bot) return message.reply(`${e.Deny} | Bots não podem brincar.`)
@@ -49,6 +52,7 @@ module.exports = {
             content: positions.three,
             components: componentsArray,
         });
+        db.set(`Gun${message.author.id}`, true)
 
         function countdown() {
             setTimeout(() => { msg.edit({ content: positions.two, components: componentsArray, }); }, 1000);
@@ -64,13 +68,27 @@ module.exports = {
         componentsArray[0].components[0].disabled = true;
         componentsArray[0].components[1].disabled = true;
 
+        function DelTimeout() {
+            setTimeout(() => {
+                db.delete(`Gun${message.author.id}`)
+            }, 5000)
+        }
+        DelTimeout()
+        
         if (button.customId === 'shoot1' && button.user.id == message.author.id) {
+            db.delete(`Gun${message.author.id}`)
             return msg.edit({ content: positions.ended2, components: [] }).catch(() => { })
+
         } else if (button.customId === 'shoot2' && button.user.id == opponent.id) {
+            db.delete(`Gun${message.author.id}`)
             return msg.edit({ content: positions.ended1, components: [] }).catch(() => { })
+
         } else if (button.customId === 'shoot1' && button.user.id == opponent.id) {
+            db.delete(`Gun${message.author.id}`)
             return msg.edit({ content: `${e.Deny} | ${opponent} clicou errado!`, components: [] }).catch(() => { })
+
         } else if (button.customId === 'shoot2' && button.user.id == message.author.id) {
+            db.delete(`Gun${message.author.id}`)
             return msg.edit({ content: `${e.Deny} | ${message.author} clicou errado!`, components: [] }).catch(() => { })
         }
     },
