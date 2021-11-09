@@ -18,7 +18,7 @@ module.exports = {
 
         let canal = message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.Farm.MineChannel`)) || false
 
-        const MinerarObj = {
+        let { Picareta, Aguas, Mamute, Fossil, ossos, minerios, diamantes, dinh } = {
             Picareta: {
                 Picareta: sdb.get(`Users.${message.author.id}.Slot.Picareta.Picareta`),
                 Usos: sdb.get(`Users.${message.author.id}.Slot.Picareta.Usos`)
@@ -26,15 +26,13 @@ module.exports = {
             Aguas: sdb.get(`Users.${message.author.id}.Slot.Aguas`),
             Mamute: sdb.get(`Users.${message.author.id}.Slot.Mamute`),
             Fossil: sdb.get(`Users.${message.author.id}.Slot.Fossil`),
+            ossos: Math.floor(Math.random() * 3),
+            minerios: Math.floor(Math.random() * 3),
+            diamantes: Math.floor(Math.random() * 2),
+            dinh: Math.floor(Math.random() * 40) + 1
         }
 
-        let { Picareta, Aguas, Mamute, Fossil } = MinerarObj
-        let ossos, minerios, diamantes, dinh, rand, randa
-
-        ossos, minerios = Math.floor(Math.random() * 2) + 1
-        minerios = Math.floor(Math.random() * 2) + 1
-        diamantes = Math.floor(Math.random() * 1) + 1
-        dinh = Math.floor(Math.random() * 40) + 1
+        let randa
         const Embed = new MessageEmbed()
 
         if (!canal)
