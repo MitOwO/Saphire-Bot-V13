@@ -1,4 +1,4 @@
-const { DatabaseObj, sdb, db, lotery } = require('../../Routes/functions/database')
+const { DatabaseObj, sdb, db, lotery, CommandsLog } = require('../../Routes/functions/database')
 const { e, config } = DatabaseObj
 const client = require('../../index')
 const Data = require('../../Routes/functions/data')
@@ -12,6 +12,7 @@ client.once("ready", async () => {
 
     sdb.delete('Request')
     sdb.delete('BetRequest')
+    CommandsLog.clear()
 
     let Array2 = ['Procurando Nemo', 'Vingadores', 'Bob Esponja', 'Barbie Girl']
     let ActivityRandom = Array2[Math.floor(Math.random() * Array2.length)]

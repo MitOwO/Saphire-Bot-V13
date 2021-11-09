@@ -1,32 +1,39 @@
 const Super = require('../../Routes/classes/SupremacyClass')
+const client = require('../../index')
+const data = require('../../Routes/functions/data')
+
+// const {
+//     MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, BlockCommandsBot, rateLimiter, client, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, N, e, config
+// } = {
+//     MessageEmbed: Super.MessageEmbed,
+//     Permissions: Super.Permissions,
+//     f: Super.f,
+//     RegisterUser: Super.RegisterUser,
+//     RegisterServer: Super.RegisterServer,
+//     UpdateUserName: Super.UpdateUserName,
+//     sdb: Super.sdb,
+//     db: Super.db,
+//     BlockCommandsBot: Super.BlockCommandsBot,
+//     rateLimiter: Super.rateLimiter,
+//     client: require('../../index'),
+//     ServerManager: Super.ServerManager,
+//     UserManager: Super.UserManager,
+//     AfkSystem: Super.AfkSystem,
+//     xp: Super.xp,
+//     React: Super.React,
+//     parsems: Super.parsems,
+//     RequestAutoDelete: Super.RequestAutoDelete,
+//     Blacklisted: Super.Blacklisted,
+//     ServerBlocked: Super.ServerBlocked,
+//     Error: Super.Error,
+//     N: Super.DatabaseObj.N,
+//     e: Super.DatabaseObj.e,
+//     config: Super.DatabaseObj.config
+// }
+
 const {
-    MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, BlockCommandsBot, rateLimiter, client, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, N, e, config
-} = {
-    MessageEmbed: Super.MessageEmbed,
-    Permissions: Super.Permissions,
-    f: Super.f,
-    RegisterUser: Super.RegisterUser,
-    RegisterServer: Super.RegisterServer,
-    UpdateUserName: Super.UpdateUserName,
-    sdb: Super.sdb,
-    db: Super.db,
-    BlockCommandsBot: Super.BlockCommandsBot,
-    rateLimiter: Super.rateLimiter,
-    client: Super.client,
-    ServerManager: Super.ServerManager,
-    UserManager: Super.UserManager,
-    AfkSystem: Super.AfkSystem,
-    xp: Super.xp,
-    React: Super.React,
-    parsems: Super.parsems,
-    RequestAutoDelete: Super.RequestAutoDelete,
-    Blacklisted: Super.Blacklisted,
-    ServerBlocked: Super.ServerBlocked,
-    Error: Super.Error,
-    N: Super.DatabaseObj.N,
-    e: Super.DatabaseObj.e,
-    config: Super.DatabaseObj.config
-}
+    MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, CommandsLog, BlockCommandsBot, rateLimiter, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, DatabaseObj: { N, e, config }
+} = Super
 
 client.on('messageCreate', async message => {
 
@@ -38,8 +45,8 @@ client.on('messageCreate', async message => {
 
     const { prefix, request, baka, blacklist, blacklistServers, Tsundere, frases, Result, AuthorId } = {
         prefix: Server.prefix,
-        // request: User.request,
-        request: false,
+        request: User.request,
+        // request: false,
         baka: User.baka,
         blacklist: User.blacklist,
         blacklistServers: Server.Blacklisted,
@@ -98,7 +105,16 @@ client.on('messageCreate', async message => {
 
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd))
         if (command) {
+
             sdb.add('Client.ComandosUsados', 1)
+
+            CommandsLog.set(`${sdb.get('Client.ComandosUsados')}`, {
+                Author: `${message.author.tag} - ${message.author.id}` || 'Indefinido',
+                Server: `${message.guild.name} - ${message.guild.id}` || 'Indefinido',
+                Command: cmd || 'Indefinido',
+                Time: data() || 'Indefinido'
+            })
+
             let time = parsems(1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`)))
             let timeImage = parsems(10000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`)))
             if (!message.member.permissions.has(command.UserPermissions || [])) return message.reply(`${e.Hmmm} | Você não tem permissão para usar este comando.\nPermissão necessária: \`${command.UserPermissions || []}\``)
