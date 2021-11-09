@@ -32,8 +32,8 @@ class SaphireClient extends Client {
         this.blue = '#246FE0'
     }
 
-    async start(token = process.env.DISCORD_CLIENT_BOT_TOKEN) {
-        await super.login(token)
+    async start() {
+        await super.login(process.env.DISCORD_CLIENT_BOT_TOKEN)
     }
 
     async off() {

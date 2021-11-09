@@ -6,7 +6,7 @@ const Error = require('../functions/errors')
 const { Message, MessageEmbed, Permissions, Collection } = require('discord.js')
 const { f } = require('../../database/frases.json')
 const { RegisterUser, RegisterServer, UpdateUserName } = require('../functions/register')
-const { sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery } = require('../functions/database')
+const { sdb, db, CommandsLog, BgLevel, BgWall, conf, emojis, nomes, lotery } = require('../functions/database')
 const { BlockCommandsBot } = require('../functions/blockcommands')
 const { RateLimiter } = require('discord.js-rate-limiter')
 const AfkSystem = require('../functions/AfkSystem')
@@ -31,9 +31,7 @@ const DatabaseObj = {
 
 const SaphireClientConfiguration = {
     intents: 1815,
-    disableMentions: {
-        parse: ['everyone']
-    },
+    disableMentions: { parse: ['everyone'] },
     partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 }
 
@@ -55,6 +53,7 @@ class RodyBrozy {
         this.DatabaseObj = DatabaseObj
         this.sdb = sdb
         this.db = db
+        this.CommandsLog = CommandsLog
         this.Discord = require('discord.js')
     }
 

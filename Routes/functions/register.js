@@ -213,7 +213,7 @@ async function RegisterServer(guild) {
 
     const ServerObj = {
         Name: guild.name,
-        Owner: guild.members.cache.get(guild.ownerId).user.tag || undefined,
+        Owner: guild.members.cache.get(guild.ownerId)?.user.tag || undefined,
         OwnerId: guild.ownerId || undefined,
         Prefix: db.get(`Servers.${guild.id}.Prefix`) || undefined,
         Tsundere: db.get(`Server.${guild.id}.Tsundere`) || undefined,

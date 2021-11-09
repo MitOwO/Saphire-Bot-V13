@@ -13,6 +13,7 @@ const lotery = new Ark.Database("../../database/loteria.json")
 const conf = new Ark.Database("../../database/config.json")
 const emojis = new Ark.Database("../../database/emojis.json")
 const nomes = new Ark.Database("../../database/nomes.json")
+const CommandsLog = new Ark.Database("../../database/logcommands.json")
 
 const DatabaseObj = {
     LevelWallpapers: BgLevel.get('LevelWallpapers'),
@@ -25,6 +26,6 @@ const DatabaseObj = {
     sdb: sdb,
 }
 
-module.exports = { sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery, DatabaseObj }
+module.exports = { sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery, CommandsLog, DatabaseObj }
 
 
