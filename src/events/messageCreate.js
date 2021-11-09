@@ -146,7 +146,7 @@ client.on('messageCreate', async message => {
             CommandsLog.set(`${sdb.get('Client.ComandosUsados')}`, {
                 Author: `${message.author.tag} - ${message.author.id}` || 'Indefinido',
                 Server: `${message.guild.name} - ${message.guild.id}` || 'Indefinido',
-                Command: cmd || 'Indefinido',
+                Command: message.content || 'Indefinido',
                 Time: data() || 'Indefinido'
             })
 
@@ -155,7 +155,7 @@ client.on('messageCreate', async message => {
             if (!message.member.permissions.has(command.UserPermissions || [])) return message.reply(`${e.Hmmm} | Você não tem permissão para usar este comando.\nPermissão necessária: \`${command.UserPermissions || []}\``)
             if (!message.guild.me.permissions.has(command.ClientPermissions || [])) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`${command.ClientPermissions || []}\` para continuar com este comando.`)
             if (command.category === 'owner' && AuthorId !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
-            if (command.category === 'economy') { if (sdb.get(`Users.${AuthorId}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`)) > 0) return message.reply(`${e.Cadeia} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``) }
+            if (command.category === 'economy' && sdb.get(`Users.${AuthorId}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`)) > 0) { return message.reply(`${e.Cadeia} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``) }
             if (command.category === 'images') {
                 if (sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`) !== null && 10000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`)) > 0)
                     return message.reply(`⏱️ | Os comandos de imagens são diferenciados, vai com calma! \`${timeImage.seconds} segundos\``)
@@ -168,7 +168,6 @@ client.on('messageCreate', async message => {
             let resposta = frases[Math.floor(Math.random() * frases.length)]
             return message.reply(`${e.Deny} | ${resposta}`)
         }
-
 
         try {
 
