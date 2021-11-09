@@ -145,7 +145,7 @@ module.exports = {
             if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
             if (args[2]) return message.reply(`${e.Deny} | Tenta usar assim.\n\`${prefix}channel delete [#Canal(opcional)]\``)
 
-            return message.reply(`${e.QuestionMark} | Este comando vai literalmente deletar este canal, deseja prosseguir?`).then(msg => {
+            return message.reply(`${e.QuestionMark} | Este comando vai literalmente deletar o canal ${canal}, deseja prosseguir?`).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(() => { }) // Check
                 msg.react('❌').catch(() => { }) // X

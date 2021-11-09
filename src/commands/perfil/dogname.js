@@ -24,7 +24,7 @@ module.exports = {
         if (!args[0]) return message.reply({ embeds: [args0] })
         if (args[1]) return message.reply(`${e.Deny} | O nome deve ser único. Nada de dois ou mais nomes.`)
         if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].includes(args[0].content)) return message.reply(`${e.Deny} | O nome do seu cachorrinho/a não pode ter números no nome.`)
-        if (args[0].length > 12 || args[0].length < 3) return message.reply(`${e.Deny} | O nome do seu cachorrinho/a não pode conter mais de **12 caracteres.**`)
+        if (args[0].length > 12 || args[0].length < 3) return message.reply(`${e.Deny} | O nome do seu cachorrinho/a deve estar entre **3~12 caracteres.**`)
 
         sdb.set(`Users.${message.author.id}.Slot.Dogname`, `${args[0]}`)
         message.reply(`${e.Check} | ${message.author}, o nome do seu cachorro/a agora é **${args[0]}**`)

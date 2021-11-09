@@ -81,7 +81,7 @@ module.exports = {
         }
 
         function AddCommands() {
-            const amount = args[1]
+            const amount = parseInt(args[1])
             if (!amount) return message.channel.send(`-> \`${prefix}add commands <quantia>\``)
             if (isNaN(amount)) return message.channel.send(`${e.Deny} | **${amount}** | Não é um número.`)
             sdb.add('Client.ComandosUsados', amount)
