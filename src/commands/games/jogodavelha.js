@@ -13,22 +13,24 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.mentions.repliedUser
-        if (!user) return message.reply(`${e.Deny} | Você precisa @marcar, dizer o ID ou mencionar a mensagem da pessoa que você quer jogar o jogo da velha`)
+        return message.reply(`${e.Info} | Comando indisponível.`)
 
-        if (user.user.bot)
-            return message.reply(`${e.Deny} | Nada de bots.`)
+        // let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.mentions.repliedUser
+        // if (!user) return message.reply(`${e.Deny} | Você precisa @marcar, dizer o ID ou mencionar a mensagem da pessoa que você quer jogar o jogo da velha`)
 
-        try {
-            simplydjs.tictactoe(client, message, {
-                xEmoji: '❌',
-                oEmoji: '⭕',
-                idleEmoji: '◼️',
-                embedColor: '#246FE0',
-                embedFoot: `${client.user.username} - Jogo da Velha`,
-                credit: false
-            })
-        } catch (err) { Error(message, err) }
+        // if (user.user.bot)
+        //     return message.reply(`${e.Deny} | Nada de bots.`)
+
+        // try {
+        //     simplydjs.tictactoe(client, message, {
+        //         xEmoji: '❌',
+        //         oEmoji: '⭕',
+        //         idleEmoji: '◼️',
+        //         embedColor: '#246FE0',
+        //         embedFoot: `${client.user.username} - Jogo da Velha`,
+        //         credit: false
+        //     })
+        // } catch (err) { Error(message, err) }
 
     }
 }
