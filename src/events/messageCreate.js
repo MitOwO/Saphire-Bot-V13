@@ -1,6 +1,32 @@
-const Super = require('../../Routes/classes/SupremacyClass')
-const client = require('../../index')
+// const Super = require('../../Routes/classes/SupremacyClass')
+// const client = require('../../index')
 const data = require('../../Routes/functions/data')
+
+// -----------------------------------------------------------------
+
+const { MessageEmbed, Permissions } = require('discord.js')
+const client = require('../../index')
+const { N } = require('../../database/nomes.json')
+const { config } = require('../../database/config.json')
+const { e } = require('../../database/emojis.json')
+const { f } = require('../../database/frases.json')
+const { RateLimiter } = require('discord.js-rate-limiter')
+const rateLimiter = new RateLimiter(1, 1500)
+const { sdb, db, CommandsLog } = require('../../Routes/functions/database')
+const BlockCommandsBot = require('../../Routes/functions/blockcommands')
+const { RegisterUser, RegisterServer, UpdateUserName } = require("../../Routes/functions/register")
+const React = require('../../Routes/functions/reacts')
+const xp = require('../../Routes/functions/experience')
+const AfkSystem = require('../../Routes/functions/AfkSystem')
+const RequestAutoDelete = require('../../Routes/functions/Request')
+const Blacklisted = require('../../Routes/functions/blacklist')
+const ServerBlocked = require('../../Routes/functions/blacklistserver')
+const Error = require('../../Routes/functions/errors')
+const ServerManager = require('../../Routes/classes/ServerManager')
+const UserManager = require('../../Routes/classes/UserManager')
+const parsems = require('parse-ms')
+
+// -----------------------------------------------------------------
 
 // const {
 //     MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, BlockCommandsBot, rateLimiter, client, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, N, e, config
@@ -31,9 +57,13 @@ const data = require('../../Routes/functions/data')
 //     config: Super.DatabaseObj.config
 // }
 
-const {
-    MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, CommandsLog, BlockCommandsBot, rateLimiter, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, DatabaseObj: { N, e, config }
-} = Super
+// -----------------------------------------------------------------
+
+// const {
+//     MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, CommandsLog, BlockCommandsBot, rateLimiter, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, DatabaseObj: { N, e, config }
+// } = Super
+
+// -----------------------------------------------------------------
 
 client.on('messageCreate', async message => {
 
@@ -103,6 +133,11 @@ client.on('messageCreate', async message => {
             }
         }
 
+        if (cmd.indexOf('.') > -1 || cmd.indexOf(',') > -1)
+              return message.reply(`${e.Deny} | Este comando contém caracteres bloqueado pelo meu sistema.`)
+
+        if (sdb.has(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
+
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd))
         if (command) {
 
@@ -127,12 +162,13 @@ client.on('messageCreate', async message => {
 
                 sdb.set(`Users.${AuthorId}.Timeouts.ImagesCooldown`, Date.now())
             }
+
+        } else {
+            let frases = [`Eu não tenho esse comando não... Que tal usar o \`${prefix}help\` ?`, `Olha... Eu não tenho esse comando não, sabe? Tenta usar o \`${prefix}help\`, lá tem todos os meus comandos.`, `Viiiish, comando desconhecido, foi mal.`, `Conheço esse comando aí não... Verifica a ortografia e tenta novamente`, `Huuum, quer usar o \`${prefix}help\` não?`]
+            let resposta = frases[Math.floor(Math.random() * frases.length)]
+            return message.reply(`${e.Deny} | ${resposta}`)
         }
 
-        if (cmd?.content?.includes('.'))
-            return message.channel.send(`${e.Deny} | Comando inválido.`)
-
-        if (sdb.has(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
 
         try {
 
