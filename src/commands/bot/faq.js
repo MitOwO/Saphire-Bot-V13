@@ -192,7 +192,7 @@ module.exports = {
             function Invite() {
 
                 const invite = client.generateInvite({ scopes: ['bot', 'applications.commands'], permissions: [Permissions.FLAGS.SEND_MESSAGES, Permissions.FLAGS.USE_EXTERNAL_EMOJIS, Permissions.FLAGS.ADD_REACTIONS, Permissions.FLAGS.ADMINISTRATOR, Permissions.FLAGS.USE_APPLICATION_COMMANDS] })
-                const EmbedInvite = new MessageEmbed().setColor('#246FE0').setDescription(`${e.SaphireHi} [Clique aqui pra me convidar pro seu servidor](${invite})`)
+                const EmbedInvite = new MessageEmbed().setColor('#246FE0').setDescription(`${e.SaphireHi} [Clique aqui pra me convidar no seu servidor](${invite})`)
 
                 return msg.edit({ embeds: [EmbedInvite] }).catch(() => { })
             }

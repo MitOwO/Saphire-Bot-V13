@@ -55,7 +55,7 @@ module.exports = {
                 msg.edit({ embeds: [Bingo] }).catch(() => { })
                 sdb.add(`Users.${WinnerMsg.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0))
                 sdb.set(`Users.${message.author.id}.Cache.BingoPrize`, 0)
-                WinnerMsg.reply(`${e.MoneyWings} | ${WinnerMsg.author} acertou o número do bingo! **${Number}**\n${e.PandaProfit} | ${(sdb.get(`Users.${WinnerMsg.author.id}.Cache.Resgate`) || 0)} ${Moeda(message)} estão no seu cache. Use \`${prefix}resgate\` para resgatar seu cache.\nBingo link: ${sdb.get(`Request.${message.channel.id}.BingoCommand`)}`).catch(() => { })
+                WinnerMsg.reply(`${e.MoneyWings} | ${WinnerMsg.author} acertou o número do bingo! **${Number}**\n${e.PandaProfit} | ${(sdb.get(`Users.${WinnerMsg.author.id}.Cache.Resgate`) || 0)} ${Moeda(message)} estão no seu cache. Use \`${prefix}resgate\` para resgatar seu cache.\nBingo link: ${db.get(`BingoOn${message.author.id}`)}`).catch(() => { })
                 db.delete(`BingoOn${message.author.id}`)
             })
 
@@ -65,11 +65,11 @@ module.exports = {
                     msg.edit({ embeds: [Bingo] }).catch(() => { })
                     sdb.add(`Users.${message.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0))
                     sdb.set(`Users.${message.author.id}.Cache.BingoPrize`, false)
-                    message.channel.send(`${e.Deny} | Tempo do bingo expirado!\n${message.author}, o dinheiro lançado no Bingo está no seu cache.\nBingo Link: ${sdb.get(`Request.${message.channel.id}.BingoCommand`)}`)
+                    message.channel.send(`${e.Deny} | Tempo do bingo expirado!\n${message.author}, o dinheiro lançado no Bingo está no seu cache.\nBingo Link: ${db.get(`BingoOn${message.author.id}`)}`)
                     db.delete(`BingoOn${message.author.id}`)
                 } else {
                     sdb.delete(`Bingo.${message.channel.id}`)
-                    db.delete(`Request.${message.channel.id}.BingoCommand`)
+                    db.get(`BingoOn${message.author.id}`)
                 }
             })
 

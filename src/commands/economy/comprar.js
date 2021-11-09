@@ -404,14 +404,14 @@ module.exports = {
             db.set(`Users.${message.author.id}.Tickets`, true)
             db.subtract(`Balance_${message.author.id}`, 1000); AddLoteria(1000);
             await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
-                let i = 0
+                let i = 0, TicketsArray = []
                 do {
                     i++
-                    db.push(`Loteria.${message.author.id}`, `${message.author.id}`)
+                    TicketsArray.push(message.author.id)
                 } while (i <= 100 - 1)
                 if (lotery.get('Loteria.Users')?.length <= 0) { sdb.set('Loteria.Users', []) }
 
-                lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...db.get(`Loteria.${message.author.id}`)])
+                lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
                 db.delete(`Loteria.${message.author.id}`)
 
                 msg.edit(`${e.Check} | ${message.author} comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${sdb.get('Loteria.Prize')?.toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -1000 ${Moeda(message)}`).catch(() => { })

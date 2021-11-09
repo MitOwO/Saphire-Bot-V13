@@ -16,7 +16,7 @@ module.exports = {
             .setColor('#246FE0')
             .setTitle(`${e.Info} | Informações do comando Roubo`)
             .setDescription(`O sistema de roubo da ${client.user.username} é um pouco diferente.\nVocê rouba uma quantia aleatória do valor que o seu alvo possui na **carteira**. E você só tem duas possibilidades.`)
-            .addField(`${e.Sirene} | Falha`, `Se a tentativa do roubo falhar, você vai preso e pagará uma fiança. Esta fiança tem o valor de **4x a quantia que você iria roubar**. Sendo assim, quanto maior a quantia, maior o dinheiro que você irá perder.\n1/5 do dinheiro irá para o banco do seu alvo.\n~~ O dinheiro será retirado de seu banco.`)
+            .addField(`${e.Sirene} | Falha`, `Se a tentativa do roubo falhar, você vai preso e pagará uma fiança. Esta fiança tem o valor de **4x a quantia que você iria roubar**. Sendo assim, quanto maior a quantia, maior o dinheiro que você irá perder.\n~~ O dinheiro será retirado de seu banco.`)
             .addField(`${e.PandaBag} | Sucesso`, `Você receberá uma quantia aleatória do valor que seu alvo possui na carteira, envolve de **1 a 100% do valor**.\n~~O dinheiro será adicionado na sua carteira.`)
             .addField(`${e.Info} | Roubar o Ranking Global`, `Você pode tentar roubar os **Top 10 Globais** usando o ID que é mostrado no \`${prefix}rank money\`.\n~~As regras de falha/sucesso também se aplica nesta categoria.`)
             .addField(`${e.On} | Comando`, `\`${prefix}roubar @user/ID\``)
@@ -55,7 +55,7 @@ module.exports = {
                 result === 'true' ? win(u) : lose(u)
 
                 function lose(u) {
-                    db.subtract(`Balance_${message.author.id}`, amount); db.add(`Bank_${u.id}`, (amount / 2) / 5); sdb.set(`Users.${message.author.id}.Timeouts.Roubo`, Date.now())
+                    db.subtract(`Balance_${message.author.id}`, amount); sdb.set(`Users.${message.author.id}.Timeouts.Roubo`, Date.now())
                     return message.reply(`${e.Sirene} | A polícia te pegou mas você escapou.\n-${amount} ${Moeda(message)}`)
                 }
 

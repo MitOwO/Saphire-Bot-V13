@@ -25,11 +25,8 @@ module.exports = {
         });
 
         collector.on('end', () => {
-            if (respondido) {
-                msg.edit(`${e.Check} | ${message.author}, todos os seus dados foram apagado com sucesso.\nData da Exclusão: \`${Data()}\``)
-            } else {
-                msg.edit(`${e.Deny} | Comando cancelado por tempo expirado`)
-            }
+            if (!respondido)
+                return msg.edit(`${e.Deny} | Comando cancelado por tempo expirado`)
         })
 
         function DeleteAllData(msg) {
@@ -44,7 +41,7 @@ module.exports = {
             db.delete(`Vip_${message.author.id}`)
             db.delete(`Likes_${message.author.id}`)
             db.delete(`Bitcoin_${message.author.id}`)
-            collector.stop()
+            msg.edit(`${e.Check} | ${message.author}, todos os seus dados foram apagado com sucesso.\nData da Exclusão: \`${Data()}\``)
         }
     }
 }

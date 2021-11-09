@@ -15,7 +15,7 @@ module.exports = {
 
         let target = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
         let TargetMoney = db.get(`Balance_${target.id}`) || 0
-        let Amount = Math.floor(Math.random() * TargetMoney) + 1
+        let Amount = Math.floor(Math.random() * (TargetMoney / 4)) + 1
 
         const AssaltoEmbed = new MessageEmbed().setColor('#246FE0').setTitle(`${e.PandaBag} Comando Assalto`).setDescription('Função: Assaltar **100%** do dinheiro presente na carteira do alvo definido.')
             .addFields(
