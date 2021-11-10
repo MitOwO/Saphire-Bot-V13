@@ -18,7 +18,7 @@ module.exports = {
 
         let canal = message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.Farm.MineChannel`)) || false
 
-        let { Picareta, Aguas, Mamute, Fossil, ossos, minerios, diamantes, dinh } = {
+        let { Picareta, Aguas, Mamute, Fossil, ossos, minerios, rand, randa, Embed } = {
             Picareta: {
                 Picareta: sdb.get(`Users.${message.author.id}.Slot.Picareta.Picareta`),
                 Usos: sdb.get(`Users.${message.author.id}.Slot.Picareta.Usos`)
@@ -26,14 +26,14 @@ module.exports = {
             Aguas: sdb.get(`Users.${message.author.id}.Slot.Aguas`),
             Mamute: sdb.get(`Users.${message.author.id}.Slot.Mamute`),
             Fossil: sdb.get(`Users.${message.author.id}.Slot.Fossil`),
-            ossos: Math.floor(Math.random() * 3),
-            minerios: Math.floor(Math.random() * 3),
-            diamantes: Math.floor(Math.random() * 2),
-            dinh: Math.floor(Math.random() * 40) + 1
+            ossos: Math.floor(Math.random() * 2) + 1,
+            minerios: Math.floor(Math.random() * 2) + 1,
+            diamantes: Math.floor(Math.random() * 1) + 1,
+            dinh: Math.floor(Math.random() * 40) + 1,
+            randa: Math.floor(Math.random() * 25),
+            rand: Math.floor(Math.random() * 15),
+            Embed: new MessageEmbed()
         }
-
-        let randa
-        const Embed = new MessageEmbed()
 
         if (!canal)
             return message.reply(`${e.Deny} | Este comando requer um canal específico.\n${e.SaphireObs} | Você pode usar \`${prefix}channel farm minerar\` que eu faço tudo pra você!`)
@@ -56,12 +56,9 @@ module.exports = {
         db.subtract(`Xp_${message.author.id}`, 2)
         sdb.subtract(`Users.${message.author.id}.Slot.Aguas`, 1)
         sdb.subtract(`Users.${message.author.id}.Slot.Picareta.Usos`, 1)
-        rand = Math.floor(Math.random() * 15)
         rand === 1 ? SomePrizes() : NormalFarm(minerios)
 
         function SomePrizes() {
-            randa = Math.floor(Math.random() * 25)
-
             if (randa <= 18) return Loose(ossos, minerios, diamantes, dinh)
             if (randa === 19) return NewMamute()
             if (randa === 20) return NewFossil(ossos, minerios, diamantes, dinh, Fossil)

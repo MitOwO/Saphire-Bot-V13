@@ -36,31 +36,31 @@ module.exports = {
             let money = db.get(`Balance_${message.author.id}`) || 0
             let bank = db.get(`Bank_${message.author.id}`) || 0
 
-            if (money < 10 && bank < 10) return message.reply(`${e.Deny} | Você não possui dinheiro.`)
-            if (money >= 10) return Pig()
-            if (bank >= 10) return Question()
+            if (money < 10000 && bank < 10000) return message.reply(`${e.Deny} | Você não possui dinheiro.`)
+            if (money >= 10000) return Pig()
+            if (bank >= 10000) return Question()
 
             function Pig() {
-                sdb.set(`Users.${message.author.id}.Timeouts.Porquinho`, Date.now()); sdb.add('Porquinho.Money', 10); db.subtract(`Balance_${message.author.id}`, 10)
+                sdb.set(`Users.${message.author.id}.Timeouts.Porquinho`, Date.now()); sdb.add('Porquinho.Money', 10000); db.subtract(`Balance_${message.author.id}`, 10000)
 
                 let luck = ['win', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose'] // 1% de chance de vitória
                 let result = luck[Math.floor(Math.random() * luck.length)]
-                result === "win" ? PigBroken() : message.reply(`${e.Deny} | Não foi dessa vez! Veja o status: \`${prefix}pig coins\`\n-10 ${Moeda(message)}!`)
+                result === "win" ? PigBroken() : message.reply(`${e.Deny} | Não foi dessa vez! Veja o status: \`${prefix}pig coins\`\n-10000 ${Moeda(message)}!`)
             }
 
             function PigBroken() {
-                db.add(`Balance_${message.author.id}`, PorquinhoMoney)
+                db.add(`Balance_${message.author.id}`, sdb.get('Porquinho.Money'))
                 sdb.set('Porquinho', {
-                    Lastprize: PorquinhoMoney,
+                    Lastprize: sdb.get('Porquinho.Money'),
                     LastWinner: `${message.author.tag}\n*(${message.author.id})*`,
                     Money: 0
                 })
 
-                return message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${PorquinhoMoney} ${Moeda(message)}!`)
+                return message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${sdb.get('Porquinho.Money')} ${Moeda(message)}!`)
             }
 
             function Question() {
-                message.reply(`${e.QuestionMark} | Você não tem dinheiro na carteira, deseja retirar -10 ${Moeda(message)} do banco? `).then(msg => {
+                message.reply(`${e.QuestionMark} | Você não tem dinheiro na carteira, deseja retirar -10000 ${Moeda(message)} do banco? `).then(msg => {
                     sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                     msg.react('✅').catch(() => { }) // Check
                     msg.react('❌').catch(() => { }) // X
@@ -72,8 +72,8 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            db.add(`Balance_${message.author.id}`, 10)
-                            db.subtract(`Bank_${message.author.id}`, 10)
+                            db.add(`Balance_${message.author.id}`, 10000)
+                            db.subtract(`Bank_${message.author.id}`, 10000)
                             Pig()
                             msg.delete().catch(() => { })
                         } else {
