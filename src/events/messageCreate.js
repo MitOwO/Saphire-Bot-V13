@@ -76,7 +76,6 @@ client.on('messageCreate', async message => {
     const { prefix, request, baka, blacklist, blacklistServers, Tsundere, frases, Result, AuthorId } = {
         prefix: Server.prefix,
         request: User.request,
-        // request: false,
         baka: User.baka,
         blacklist: User.blacklist,
         blacklistServers: Server.Blacklisted,

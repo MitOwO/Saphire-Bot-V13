@@ -8,14 +8,13 @@ client.on('guildUpdate', async (oldGuild, newGuild) => {
     if (!sdb.has(`Servers.${newGuild.id}`))
         return RegisterServer(newGuild)
 
-    const GuildObj = {
+    const { Owner, OwnerId, Name } = {
         Owner: sdb.get(`Servers.${newGuild.id}.Owner`),
         OwnerId: sdb.get(`Servers.${newGuild.id}.OwnerId`),
         Name: sdb.get(`Servers.${newGuild.id}.Name`),
     }
 
-    const { Owner, OwnerId, Name } = GuildObj
-    let owner = await newGuild.members.cache.get(newGuild.ownerId).user
+    let owner = await newGuild.members.cache.get(newGuild.ownerId)
 
     if (Owner?.Owner !== owner.tag || OwnerId !== owner.id) {
         sdb.set(`Servers.${newGuild.id}.OwnerId`, owner.id)
