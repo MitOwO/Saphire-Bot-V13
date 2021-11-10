@@ -287,7 +287,7 @@ async function UpdateUserName(message) {
 async function UpdateServerName(oldGuild, newGuild) {
     sdb.set(`Servers.${newGuild.id}.Name`, newGuild.name)
 
-    return Notify(newGuild.id, 'Atualização', `O nome do servidor foi atualizado no meu banco de dados. De **${oldGuild.name}** para **${newGuild.name}**`)
+    return Notify(newGuild.id, 'Atualização', `O nome do servidor foi atualizado no meu banco de dados de **${oldGuild.name}** para **${newGuild.name}**`)
 }
 
 module.exports = { RegisterUser, RegisterServer, UpdateUserName, UpdateServerName }

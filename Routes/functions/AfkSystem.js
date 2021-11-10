@@ -1,23 +1,31 @@
 const { sdb } = require('./database')
 const { e } = require('../../database/emojis.json')
+const { Message } = require('discord.js')
+
+/**
+ * @param { Message } message 
+ */
 
 function AfkSystem(message) {
 
-    if (sdb.get(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`)) {
-        sdb.delete(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`)
-        message.react(`${e.Check}`).catch(() => { message.reply(`${e.Check} | O modo AFK Local foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(() => { }) }, 3000)) })
+    const GuildId = message.guild.id
+
+    if (sdb.get(`Servers.${GuildId}.AfkSystem.${message.author.id}`)) {
+        sdb.delete(`Servers.${GuildId}.AfkSystem.${message.author.id}`)
+        message.react(`${e.Check}`).catch(() => { message.reply(`${e.Check} | O modo AFK Local foi desativado.`).catch(() => { }) })
     }
 
     if (sdb.get(`Users.${message.author.id}.AfkSystem`)) {
         sdb.delete(`Users.${message.author.id}.AfkSystem`)
-        message.react(`${e.Planet}`).catch(() => { message.reply(`${e.Check} O modo AFK Global foi desativado.`).then(msg => setTimeout(() => { msg.delete().catch(() => { }) }, 3000)) })
+        message.react(`${e.Planet}`).catch(() => { message.reply(`${e.Check} O modo AFK Global foi desativado.`).catch(() => { }) })
     }
 
-    let user = message.mentions.members.first() || message.mentions.repliedUser
+    let user = message.mentions.users.first() || message.mentions.repliedUser
     if (user) {
-        if (sdb.get(`Users.${user.id}.AfkSystem`)) { message.reply(`${e.Planet} | ${user.user.username} está offline. --> ✍️ | ${sdb.fetch(`Users.${user.id}.AfkSystem`)}`) }
-        if (sdb.get(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`)) { message.reply(`${e.Afk} | ${user.user.username} está offline. --> ✍️ | ${sdb.fetch(`Users.${user.id}.AfkSystem.${message.guild.id}`)}`) }
+        if (sdb.has(`Users.${user.id}.AfkSystem`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Users.${user.id}.AfkSystem`)}`)
+        if (sdb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`)
     }
+    return
 }
 
 module.exports = AfkSystem

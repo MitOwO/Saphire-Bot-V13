@@ -24,4 +24,4 @@ async function BlockCommandsBot(Message) {
     } else { return }
 }
 
-module.exports = { BlockCommandsBot }
+module.exports = BlockCommandsBot
