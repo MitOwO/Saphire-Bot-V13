@@ -1,9 +1,5 @@
-// const Super = require('../../Routes/classes/SupremacyClass')
-// const client = require('../../index')
+const Super = require('../../Routes/classes/SupremacyClass')
 const data = require('../../Routes/functions/data')
-
-// -----------------------------------------------------------------
-
 const { MessageEmbed, Permissions } = require('discord.js')
 const client = require('../../index')
 const { N } = require('../../database/nomes.json')
@@ -12,91 +8,48 @@ const { e } = require('../../database/emojis.json')
 const { f } = require('../../database/frases.json')
 const { RateLimiter } = require('discord.js-rate-limiter')
 const rateLimiter = new RateLimiter(1, 1500)
-const { sdb, db, CommandsLog } = require('../../Routes/functions/database')
+const { sdb, db, CommandsLog, ServerDb } = require('../../Routes/functions/database')
 const BlockCommandsBot = require('../../Routes/functions/blockcommands')
 const { RegisterUser, RegisterServer, UpdateUserName } = require("../../Routes/functions/register")
 const React = require('../../Routes/functions/reacts')
-const xp = require('../../Routes/functions/experience')
+const xp = Super.xp
 const AfkSystem = require('../../Routes/functions/AfkSystem')
 const RequestAutoDelete = require('../../Routes/functions/Request')
 const Blacklisted = require('../../Routes/functions/blacklist')
 const ServerBlocked = require('../../Routes/functions/blacklistserver')
 const Error = require('../../Routes/functions/errors')
 const ServerManager = require('../../Routes/classes/ServerManager')
-const UserManager = require('../../Routes/classes/UserManager')
 const parsems = require('parse-ms')
-
-// -----------------------------------------------------------------
-
-// const {
-//     MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, BlockCommandsBot, rateLimiter, client, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, N, e, config
-// } = {
-//     MessageEmbed: Super.MessageEmbed,
-//     Permissions: Super.Permissions,
-//     f: Super.f,
-//     RegisterUser: Super.RegisterUser,
-//     RegisterServer: Super.RegisterServer,
-//     UpdateUserName: Super.UpdateUserName,
-//     sdb: Super.sdb,
-//     db: Super.db,
-//     BlockCommandsBot: Super.BlockCommandsBot,
-//     rateLimiter: Super.rateLimiter,
-//     client: require('../../index'),
-//     ServerManager: Super.ServerManager,
-//     UserManager: Super.UserManager,
-//     AfkSystem: Super.AfkSystem,
-//     xp: Super.xp,
-//     React: Super.React,
-//     parsems: Super.parsems,
-//     RequestAutoDelete: Super.RequestAutoDelete,
-//     Blacklisted: Super.Blacklisted,
-//     ServerBlocked: Super.ServerBlocked,
-//     Error: Super.Error,
-//     N: Super.DatabaseObj.N,
-//     e: Super.DatabaseObj.e,
-//     config: Super.DatabaseObj.config
-// }
-
-// -----------------------------------------------------------------
-
-// const {
-//     MessageEmbed, Permissions, f, RegisterUser, RegisterServer, UpdateUserName, sdb, db, CommandsLog, BlockCommandsBot, rateLimiter, ServerManager, UserManager, AfkSystem, xp, React, parsems, RequestAutoDelete, Blacklisted, ServerBlocked, Error, DatabaseObj: { N, e, config }
-// } = Super
-
-// -----------------------------------------------------------------
+const LogCmd = require('../../database/logcommands.json')
 
 client.on('messageCreate', async message => {
 
     if (!message.guild || !message.channel.permissionsFor(message.guild.me).has(Permissions.FLAGS.SEND_MESSAGES) || !message.channel.permissionsFor(message.guild.me).has(Permissions.FLAGS.VIEW_CHANNEL) || !message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES) || !message.guild.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL))
         return
 
-    const Server = new ServerManager(message.guild)
-    const User = new UserManager(message, message.author)
-
-    const { prefix, request, baka, blacklist, blacklistServers, Tsundere, frases, Result, AuthorId } = {
-        prefix: Server.prefix,
-        request: User.request,
-        baka: User.baka,
-        blacklist: User.blacklist,
-        blacklistServers: Server.Blacklisted,
-        Tsundere: Server.tsundere,
-        Result: Math.floor(Math.random() * 12),
-        frases: f.Tsundere[Math.floor(Math.random() * f.Tsundere.length)],
+    const { prefix, request, baka, blacklist, blacklistServers, Tsundere, AuthorId } = {
+        prefix: ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix,
+        request: sdb.get(`Request.${message.author.id}`),
+        baka: sdb.get(`Users.${message.author.id}.Baka`),
+        blacklist: db.get(`Blacklist_${message.author.id}`),
+        blacklistServers: db.get(`BlacklistServers_${message.guild.id}`),
+        Tsundere: ServerDb.get(`Servers.${message.guild.id}.Tsundere`),
         AuthorId: message.author.id
     }
 
     if (!sdb.has(`Users.${AuthorId}`)) RegisterUser(message)
-    if (!sdb.has(`Servers.${message.guild.id}`)) RegisterServer(message.guild)
+    if (!ServerDb.has(`Servers.${message.guild.id}`)) RegisterServer(message.guild)
 
     if (message.content?.toLowerCase() === 'saphire')
         message.channel.send(`${e.SaphireHi} | \`${prefix}help\``).catch(() => { })
 
     if (!message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY) || !message.guild.me.permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS) || !message.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS) || !message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS))
-        return message.channel.send(`Hey, ${message.author}! Eu preciso das permissões "\`Ver histórico de mensagens\`, \`Usar emojis externos\` \`Adicionar Reações\` e \`Enviar links\`" para que eu possa usar meu sistema de interação, respostas, emojis e informações.`)
+        return message.author.bot ? null : message.channel.send(`Eu não tenho permissão suficiente para executar este comando. Pode conferir se eu tenho as 3 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo.)\`**`).catch(() => { })
+    // return message.channel.send(`Hey, ${message.author}! Eu preciso das permissões "\`Ver histórico de mensagens\`, \`Usar emojis externos\` \`Adicionar Reações\` e \`Enviar links\`" para que eu possa usar meu sistema de interação, respostas, emojis e informações.`)
 
     if (!message.author.bot) {
         UpdateUserName(message)
-        React(message) // React System
+        // React(message) // React System
         xp(message) // XP System
         RequestAutoDelete(message) // Auto delete requests
         AfkSystem(message)
@@ -122,7 +75,7 @@ client.on('messageCreate', async message => {
 
     try {
 
-        if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && sdb.get(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`))
+        if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && ServerDb.get(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`))
             return message.reply(`${e.Deny} | Meus comandos foram bloqueados neste canal.`).then(msg => setTimeout(() => { msg.delete().catch(() => { }) }, 4500)).catch(() => { })
 
         if (AuthorId !== config.ownerId) {
@@ -132,8 +85,9 @@ client.on('messageCreate', async message => {
             }
         }
 
-        if (cmd.indexOf('.') > -1 || cmd.indexOf(',') > -1)
-              return message.reply(`${e.Deny} | Este comando contém caracteres bloqueado pelo meu sistema.`)
+        const reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i
+        if (!reg.test(cmd))
+            return message.reply(`${e.Deny} | Este comando contém caracteres bloqueados pelo meu sistema.`)
 
         if (sdb.has(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
 
@@ -141,7 +95,7 @@ client.on('messageCreate', async message => {
         if (command) {
 
             sdb.add('Client.ComandosUsados', 1)
-
+            if (LogCmd.length > 15) CommandsLog.clear()
             CommandsLog.set(`${sdb.get('Client.ComandosUsados')}`, {
                 Author: `${message.author.tag} - ${message.author.id}` || 'Indefinido',
                 Server: `${message.guild.name} - ${message.guild.id}` || 'Indefinido',
@@ -172,16 +126,19 @@ client.on('messageCreate', async message => {
 
             if (Tsundere) {
 
-                Result === 1 ? message.reply(frases) : command.run(client, message, args, prefix, db, MessageEmbed, request, sdb).catch(err => { Error(message, err) })
+                Math.floor(Math.random() * 12) === 1
+                    ? message.reply(f.Tsundere[Math.floor(Math.random() * f.Tsundere.length)])
+                    : command.run(client, message, args, prefix, db, MessageEmbed, request, sdb).catch(err => { Error(message, err) })
 
             } else {
                 command.run(client, message, args, prefix, db, MessageEmbed, request, sdb).catch(err => { Error(message, err) })
             }
 
         } catch (err) {
-            let frases = [`Eu não tenho esse comando não... Que tal usar o \`${prefix}help\` ?`, `Olha... Eu não tenho esse comando não, sabe? Tenta usar o \`${prefix}help\`, lá tem todos os meus comandos.`, `Viiiish, comando desconhecido, foi mal.`, `Conheço esse comando aí não... Verifica a ortografia e tenta novamente`, `Huuum, quer usar o \`${prefix}help\` não?`]
-            let resposta = frases[Math.floor(Math.random() * frases.length)]
-            return message.reply(`${e.Deny} | ${resposta}`)
+            // let frases = [`Eu não tenho esse comando não... Que tal usar o \`${prefix}help\` ?`, `Olha... Eu não tenho esse comando não, sabe? Tenta usar o \`${prefix}help\`, lá tem todos os meus comandos.`, `Viiiish, comando desconhecido, foi mal.`, `Conheço esse comando aí não... Verifica a ortografia e tenta novamente`, `Huuum, quer usar o \`${prefix}help\` não?`]
+            // let resposta = frases[Math.floor(Math.random() * frases.length)]
+            // return message.reply(`${e.Deny} | ${resposta}`)
+            Error(message, err)
         }
 
     } catch (err) {

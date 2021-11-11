@@ -2,13 +2,13 @@ const { MessageEmbed, Permissions } = require('discord.js')
 const { e } = require('../../database/emojis.json')
 const client = require('../../index')
 const Data = require('../../Routes/functions/data')
-const { sdb } = require('../../Routes/functions/database')
+const { ServerDb } = require('../../Routes/functions/database')
 
 client.on('guildBanRemove', async ban => {
 
     if (!ban.guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG) || !ban.guild) { return }
 
-    let IdChannel = sdb.get(`Servers.${ban.guild.id}.LogChannel`)
+    let IdChannel = ServerDb.get(`Servers.${ban.guild.id}.LogChannel`)
     const channel = await ban.guild.channels.cache.get(IdChannel)
     if (!channel) return
 

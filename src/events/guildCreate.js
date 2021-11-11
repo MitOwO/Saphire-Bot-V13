@@ -1,4 +1,4 @@
-const { DatabaseObj, sdb, db } = require('../../Routes/functions/database')
+const { DatabaseObj, ServerDb, db } = require('../../Routes/functions/database')
 const { e, config } = DatabaseObj
 const { MessageEmbed, Permissions } = require('discord.js')
 const { RegisterServer } = require('../../Routes/functions/register')
@@ -38,7 +38,7 @@ client.on("guildCreate", async (guild) => {
         if (!channel) return await client.users.cache.get(`${config.ownerId}`).send(`${e.Deny} | Um servidor me adicionou, porém não tem o canal de envio. Servidor: ${guild.name} \`${guild.id}\`.\n\`Linha Code: 32\``).catch(err => { })
 
         let Register
-        if (!sdb.get(`Servers.${guild.id}`)) {
+        if (!ServerDb.get(`Servers.${guild.id}`)) {
             Register = `${e.Deny} | Registro no banco de dados indefinido.`
         } else {
             Register = `${e.Deny} | Registro no banco de dados concluido!.`

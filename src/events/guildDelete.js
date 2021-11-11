@@ -1,11 +1,11 @@
-const { DatabaseObj, sdb, db } = require('../../Routes/functions/database')
+const { DatabaseObj, ServerDb, db } = require('../../Routes/functions/database')
 const { e, config } = DatabaseObj
 const client = require('../../index')
 const { MessageEmbed } = require('discord.js')
 
 client.on("guildDelete", async (guild) => {
 
-    sdb.delete(`Servers.${guild.id}`)
+    ServerDb.delete(`Servers.${guild.id}`)
     let owner = await guild.fetchOwner()
 
     const Embed = new MessageEmbed()

@@ -1,4 +1,4 @@
-const { DatabaseObj, sdb } = require('../../Routes/functions/database') // Database
+const { DatabaseObj, ServerDb } = require('../../Routes/functions/database') // Database
 const { e, config } = DatabaseObj // Emoji Handler e config.json
 const { Permissions } = require('discord.js')
 const client = require('../../index')
@@ -18,12 +18,12 @@ client.on('guildMemberAdd', async (member) => {
         Autorole1: Server.Autorole.First, // ID do Autorole 1
         Autorole2: Server.Autorole.Second, // ID do Autorole 2
         BlockPermissionsArray: Server.Autorole.BlockPermissionsAutorole, // Permissões bloqueadas pelo autorole
-        Canal: await member.guild.channels.cache.get(sdb.get(`Servers.${member.guild.id}.WelcomeChannel.Canal`)), // Canal de boas-vindas (Bot manda mensagens de boas-vindas neste canal)
+        Canal: await member.guild.channels.cache.get(ServerDb.get(`Servers.${member.guild.id}.WelcomeChannel.Canal`)), // Canal de boas-vindas (Bot manda mensagens de boas-vindas neste canal)
         CanalDB: Server.WelcomeSystem.CanalDB, // ID do Canal de boas-vindas
         Emoji: Server.WelcomeSystem.Emoji, // Emoji da mensagem de boas-vindas
         Mensagem: Server.WelcomeSystem.Mensagem, // Mensagem de boas-vindas
-        Role1: await member.guild.roles.cache.get(sdb.get(`Servers.${member.guild.id}.Autorole.First`)), // Função que pega o cargo do Autorole 1
-        Role2: await member.guild.roles.cache.get(sdb.get(`Servers.${member.guild.id}.Autorole.Second`)), // Função que pega o cargo do Autorole 2
+        Role1: await member.guild.roles.cache.get(ServerDb.get(`Servers.${member.guild.id}.Autorole.First`)), // Função que pega o cargo do Autorole 1
+        Role2: await member.guild.roles.cache.get(ServerDb.get(`Servers.${member.guild.id}.Autorole.Second`)), // Função que pega o cargo do Autorole 2
     }
 
     Welcome(); // Bem-vindo

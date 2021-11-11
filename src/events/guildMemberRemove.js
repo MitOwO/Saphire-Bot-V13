@@ -1,4 +1,4 @@
-const { DatabaseObj, sdb } = require('../../Routes/functions/database')
+const { DatabaseObj, ServerDb } = require('../../Routes/functions/database')
 const { e } = DatabaseObj
 const client = require('../../index')
 const { Permissions, MessageEmbed } = require('discord.js')
@@ -8,8 +8,8 @@ client.on('guildMemberRemove', async (member) => {
 
     if (!member.guild.available) return
 
-    if (sdb.get(`Servers.${member.guild.id}.AfkSystem.${member.id}`))
-        sdb.delete(`Servers.${member.guild.id}.AfkSystem.${member.id}`)
+    if (ServerDb.get(`Servers.${member.guild.id}.AfkSystem.${member.id}`))
+        ServerDb.delete(`Servers.${member.guild.id}.AfkSystem.${member.id}`)
 
     LeaveMember(); Notify()
 
@@ -17,7 +17,7 @@ client.on('guildMemberRemove', async (member) => {
 
         if (member.id === client.user.id) return
         if (!member.guild.me.permissions.has(Permissions.FLAGS.VIEW_AUDIT_LOG) || !member.guild) { return }
-        const channel = await client.channels.cache.get(sdb.get(`Servers.${member.guild.id}.LogChannel`))
+        const channel = await client.channels.cache.get(ServerDb.get(`Servers.${member.guild.id}.LogChannel`))
         if (!channel) return
 
         const fetchedLogs = await member.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_KICK' })
@@ -45,7 +45,7 @@ client.on('guildMemberRemove', async (member) => {
     }
 
     async function LeaveMember() {
-        let LeaveChannel = sdb.get(`Servers.${member.guild.id}.LeaveChannel`)
+        let LeaveChannel = ServerDb.get(`Servers.${member.guild.id}.LeaveChannel`)
         const canal = await member.guild.channels.cache.get(LeaveChannel)
         if (!canal) return
         canal.send(`${e.Leave} | ${member.user.username} saiu do servidor.`).catch(() => { })
