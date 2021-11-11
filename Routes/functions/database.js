@@ -1,7 +1,3 @@
-// simpl.db file: base.json
-const Simpl = require("simpl.db")
-const sdb = new Simpl.Database()
-
 // quick.db file: json.sqlite
 const db = require('quick.db')
 
@@ -15,6 +11,7 @@ const emojis = new Database("../../database/emojis.json")
 const nomes = new Database("../../database/nomes.json")
 const CommandsLog = new Database("../../database/logcommands.json")
 const ServerDb = new Database("../../ServerDatabase.json")
+const sdb = new Database("../../database.json")
 
 const DatabaseObj = {
     LevelWallpapers: BgLevel.get('LevelWallpapers'),

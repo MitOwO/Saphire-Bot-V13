@@ -16,9 +16,8 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-        let Motivo = args.join(" ")
+        let Motivo = args.join(" ") || 'Sem recado definido.'
         if (Motivo.length > 150) return message.reply(`${e.Deny} | O seu motivo não pode passar de 150 caracteres.`)
-        if (!Motivo) Motivo = 'Sem recado definido.'
 
         const AfkInfoEmbed = new MessageEmbed()
             .setColor('#246FE0')
@@ -64,11 +63,16 @@ module.exports = {
                 return message.reply({ embeds: [AfkInfoEmbed] })
             })
 
-            Cancel.on('collect', () => { sdb.delete(`Request.${message.author.id}`); msg.delete().catch(() => { }) })
-            AfkServer.on('end', () => { sdb.delete(`Request.${message.author.id}`); msg.delete().catch(() => { }) })
-            AfkGlobal.on('end', () => { sdb.delete(`Request.${message.author.id}`); msg.delete().catch(() => { }) })
-            AfkInfo.on('end', () => { sdb.delete(`Request.${message.author.id}`); msg.delete().catch(() => { }) })
-            Cancel.on('end', () => { sdb.delete(`Request.${message.author.id}`); msg.delete().catch(() => { }) })
+            Cancel.on('collect', () => CancelarRequest())
+            AfkServer.on('end', () => CancelarRequest())
+            AfkGlobal.on('end', () => CancelarRequest())
+            AfkInfo.on('end', () => CancelarRequest())
+            Cancel.on('end', () => CancelarRequest())
+
+            function CancelarRequest() {
+                sdb.delete(`Request.${message.author.id}`);
+                msg.delete().catch(() => { })
+            }
         }).catch(err => {
             Error(message, err)
             sdb.delete(`Request.${message.author.id}`)

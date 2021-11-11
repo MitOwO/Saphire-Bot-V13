@@ -12,20 +12,19 @@ function AfkSystem(message) {
 
     if (ServerDb.get(`Servers.${GuildId}.AfkSystem.${message.author.id}`)) {
         ServerDb.delete(`Servers.${GuildId}.AfkSystem.${message.author.id}`)
-        message.react(`${e.Check}`).catch(() => { message.reply(`${e.Check} | O modo AFK Local foi desativado.`).catch(() => { }) })
+        return message.react(`${e.Check}`).catch(() => { return message.reply(`${e.Check} | O modo AFK Local foi desativado.`).catch(() => { }) })
     }
 
     if (sdb.get(`Users.${message.author.id}.AfkSystem`)) {
         sdb.delete(`Users.${message.author.id}.AfkSystem`)
-        message.react(`${e.Planet}`).catch(() => { message.reply(`${e.Check} O modo AFK Global foi desativado.`).catch(() => { }) })
+        return message.react(`${e.Planet}`).catch(() => { return message.reply(`${e.Check} O modo AFK Global foi desativado.`).catch(() => { }) })
     }
 
     let user = message.mentions.users.first() || message.mentions.repliedUser
     if (user) {
-        if (ServerDb.has(`Users.${user.id}.AfkSystem`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Users.${user.id}.AfkSystem`)}`)
-        if (ServerDb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`)
-    }
-    return
+        if (sdb.has(`Users.${user.id}.AfkSystem`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Users.${user.id}.AfkSystem`)}`)
+        if (ServerDb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${ServerDb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`)
+    } else { return }
 }
 
 module.exports = AfkSystem
