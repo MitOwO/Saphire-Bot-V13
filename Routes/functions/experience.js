@@ -1,7 +1,7 @@
 
 const { Message } = require('discord.js')
 const { e } = require('../../database/emojis.json')
-const { sdb, db } = require('./database')
+const { sdb, db, ServerDb } = require('./database')
 const Notify = require('./notify')
 
 /**
@@ -25,7 +25,7 @@ async function xp(message) {
     if (xpNeeded < xp) {
         db.subtract(`Xp_${message.author.id}`, level * 550)
         let newLevel = db.add(`level_${message.author.id}`, 1)
-        let canal = await message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.XPChannel`))
+        let canal = await message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.XPChannel`))
         if (db.get(`XpSystem.${message.author.id}`) && !canal) {
             Notify(message.guild.id, 'Recurso Desabilitado', 'O canal de notificações de level up presente no meu banco de dados não foi encontrado neste servidor. O canal foi deletado do meu sistema.')
         }

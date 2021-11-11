@@ -1,5 +1,5 @@
 const { Message, MessageEmbed } = require('discord.js')
-const { sdb, db, DatabaseObj } = require('./database')
+const { sdb, db, DatabaseObj, ServerDb } = require('./database')
 const { e, config } = DatabaseObj
 const client = require('../../index')
 const Moeda = require('./moeda')
@@ -13,10 +13,10 @@ function Error(message, err) {
     if (err.code === 10008) // Unknown message
         return
 
-    if (err.code === 50035) // Invalid Form Body
-        return
+    if (err.code === 50013)
+        return message.channel.send(`${e.Info} | Eu não tenho permissão suficiente para executar este comando.`).catch(() => { })
 
-    let prefix = sdb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix
+    let prefix = ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix
     const args = message.content.slice(prefix.length).trim().split(/ +/g)
     const cmd = args.shift().toLowerCase()
 

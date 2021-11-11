@@ -1,5 +1,5 @@
 const { Message } = require('discord.js')
-const { sdb, db, DatabaseObj } = require('./database')
+const { sdb, ServerDb, db, DatabaseObj } = require('./database')
 const { e, config } = DatabaseObj
 const Notify = require('./notify')
 const Error = require('./errors')
@@ -243,7 +243,7 @@ async function RegisterServer(guild) {
         },
     }
 
-    sdb.set(`Servers.${guild.id}`, ServerObj)
+    ServerDb.set(`Servers.${guild.id}`, ServerObj)
 
     try {
 
@@ -251,26 +251,26 @@ async function RegisterServer(guild) {
 
         for (const key of DatabaseKeys) {
 
-            let DataKey = sdb.get(`Servers.${guild.id}.${key}`) || []
+            let DataKey = ServerDb.get(`Servers.${guild.id}.${key}`) || {}
 
             if (!Object.keys(DataKey))
-                sdb.delete(`Servers.${guild.id}.${key}`)
+                ServerDb.delete(`Servers.${guild.id}.${key}`)
 
-            if (!sdb.get(`Servers.${guild.id}.${key}`))
-                sdb.delete(`Servers.${guild.id}.${key}`)
+            if (!ServerDb.get(`Servers.${guild.id}.${key}`))
+                ServerDb.delete(`Servers.${guild.id}.${key}`)
 
         }
 
     } catch (err) {
         await client.users.cache.get(config.ownerId)?.send(`${e.Deny} | Falha ao configurar o servidor \`${guild.id}\` na database.\n\`${err}\``)
-        sdb.delete(`Servers.${guild.id}`)
+        ServerDb.delete(`Servers.${guild.id}`)
         msg.delete().catch(() => { })
         return message?.channel.send(`${e.Deny} | Falha ao configurar o servidor \`${guild.id}\` na database.\n\`${err}\``)
     }
 
     await client.channels.cache.get(config.LogChannelId)?.send(`${e.Check} | O servidor **${guild.name}** foi registrado com sucesso!`).catch(() => { })
     Notify(guild.id, 'Atualização', 'A troca do banco de dados deste servidor foi concluída com sucesso!')
-    db.delete(`Servers.${guild.id}`)
+    return db.delete(`Servers.${guild.id}`)
 }
 
 async function UpdateUserName(message) {
@@ -285,7 +285,7 @@ async function UpdateUserName(message) {
 }
 
 async function UpdateServerName(oldGuild, newGuild) {
-    sdb.set(`Servers.${newGuild.id}.Name`, newGuild.name)
+    ServerDb.set(`Servers.${newGuild.id}.Name`, newGuild.name)
 
     return Notify(newGuild.id, 'Atualização', `O nome do servidor foi atualizado no meu banco de dados de **${oldGuild.name}** para **${newGuild.name}**`)
 }

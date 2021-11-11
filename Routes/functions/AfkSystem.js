@@ -1,4 +1,4 @@
-const { sdb } = require('./database')
+const { sdb, ServerDb } = require('./database')
 const { e } = require('../../database/emojis.json')
 const { Message } = require('discord.js')
 
@@ -10,8 +10,8 @@ function AfkSystem(message) {
 
     const GuildId = message.guild.id
 
-    if (sdb.get(`Servers.${GuildId}.AfkSystem.${message.author.id}`)) {
-        sdb.delete(`Servers.${GuildId}.AfkSystem.${message.author.id}`)
+    if (ServerDb.get(`Servers.${GuildId}.AfkSystem.${message.author.id}`)) {
+        ServerDb.delete(`Servers.${GuildId}.AfkSystem.${message.author.id}`)
         message.react(`${e.Check}`).catch(() => { message.reply(`${e.Check} | O modo AFK Local foi desativado.`).catch(() => { }) })
     }
 
@@ -22,8 +22,8 @@ function AfkSystem(message) {
 
     let user = message.mentions.users.first() || message.mentions.repliedUser
     if (user) {
-        if (sdb.has(`Users.${user.id}.AfkSystem`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Users.${user.id}.AfkSystem`)}`)
-        if (sdb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`)
+        if (ServerDb.has(`Users.${user.id}.AfkSystem`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Users.${user.id}.AfkSystem`)}`)
+        if (ServerDb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`)
     }
     return
 }
