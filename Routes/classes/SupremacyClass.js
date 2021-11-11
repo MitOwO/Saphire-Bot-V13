@@ -4,48 +4,13 @@ const { RegisterUser, RegisterServer, UpdateUserName } = require('../functions/r
 const { sdb, db, CommandsLog, BgLevel, BgWall, conf, emojis, nomes, lotery } = require('../functions/database')
 const { RateLimiter } = require('discord.js-rate-limiter')
 
-// const UserManager = require('./UserManager')
-// const ServerManager = require('./ServerManager')
-// const SaphireClient = require('./SaphireClient')
-// const Error = require('../functions/errors')
-// const { Message, MessageEmbed, Permissions, Collection } = require('discord.js')
-// const { f } = require('../../database/frases.json')
-// const { RegisterUser, RegisterServer, UpdateUserName } = require('../functions/register')
-// const { sdb, db, CommandsLog, BgLevel, BgWall, conf, emojis, nomes, lotery } = require('../functions/database')
-// const BlockCommandsBot = require('../functions/blockcommands')
-// const { RateLimiter } = require('discord.js-rate-limiter')
-// const AfkSystem = require('../functions/AfkSystem')
-// const xp = require('../functions/experience')
-// const React = require('../functions/reacts')
-// const Notify = require('../functions/notify')
-// const ms = require('ms')
-// const parsems = require('parse-ms')
-// const RequestAutoDelete = require('../functions/Request')
-// const Blacklisted = require('../functions/blacklist')
-// const ServerBlocked = require('../functions/blacklistserver')
-
 /**
  * @param { Message } message
  */
 
 class RodyBrozy {
-    // constructor(options) {
-    //     this.UserManager = UserManager
-    //     this.ServerManager = ServerManager
-    //     this.GiveawayManager = GiveawayManager
-    //     this.MessageEmbed = new MessageEmbed()
-    //     this.Permissions = Permissions
-    //     this.rateLimiter = new RateLimiter(2, 1500)
-    //     this.f = f
-    //     this.sdb = sdb
-    //     this.db = db
-    //     this.CommandsLog = CommandsLog
-    //     this.Discord = require('discord.js')
-    // }
 
     UserManager = require('./UserManager')
-    // ServerManager = require('./ServerManager')
-    // GiveawayManager = GiveawayManager
     SaphireClient = require('./SaphireClient')
     MessageEmbed = new MessageEmbed()
     Permissions = Permissions
@@ -104,33 +69,9 @@ class RodyBrozy {
         return BlockCommandsBot(message)
     }
 
-    // xp(message) {
-    //     return xp(message)
-    // }
-
-    // ms(time) {
-    //     return ms(time)
-    // }
-
     parsems(number) {
         return parsems(number)
     }
-
-    // Error(message, err) {
-    //     return Error(message, err)
-    // }
-
-    // RegisterServer(guild) {
-    //     return RegisterServer(guild)
-    // }
-
-    // RegisterUser(message) {
-    //     return RegisterUser(message)
-    // }
-
-    // UpdateUserName(message) {
-    //     return UpdateUserName(message)
-    // }
 
 }
 
