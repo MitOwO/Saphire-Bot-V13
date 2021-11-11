@@ -1,6 +1,7 @@
 const { e } = require("../../../database/emojis.json")
 const { f } = require('../../../database/frases.json')
 const Error = require('../../../Routes/functions/errors')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'ideiachannel',
@@ -17,7 +18,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
         if (['desligar', 'off'].includes(args[0]?.toLowerCase())) {
 
-            let canal = sdb.get(`Servers.${message.guild.id}.IdeiaChannel`)
+            let canal = ServerDb.get(`Servers.${message.guild.id}.IdeiaChannel`)
             if (!canal) return message.reply(`${e.Deny} | O sistema de ideias já está desativado`)
 
             await message.guild.channels.fetch(canal).then(channel => {
@@ -34,7 +35,7 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.IdeiaChannel`, null)
+                            ServerDb.delete(`Servers.${message.guild.id}.IdeiaChannel`)
                             return msg.edit(`${e.SaphireFeliz} | Prontinho, sistema de ideias desativado.`).catch(() => { })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)
@@ -53,7 +54,7 @@ module.exports = {
         } else {
 
             let channel = message.mentions.channels.first() || message.channel
-            let atual = sdb.get(`Servers.${message.guild.id}.IdeiaChannel`)
+            let atual = ServerDb.get(`Servers.${message.guild.id}.IdeiaChannel`)
 
             if (channel.id === atual) {
                 return message.reply(`${e.Info} | Este já é o canal de ideias atual`)
@@ -71,7 +72,7 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.IdeiaChannel`, channel.id)
+                            ServerDb.set(`Servers.${message.guild.id}.IdeiaChannel`, channel.id)
                             return msg.edit(`${e.NezukoJump} | Prontinho, sistema de ideias ativado.\nO comando é simples --> \`${prefix}ideia a sua ideia em diante\``).catch(() => { })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)

@@ -2,6 +2,7 @@ const { Permissions } = require('discord.js')
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Error = require('../../../Routes/functions/errors')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'autorole',
@@ -16,8 +17,8 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         let role = message.mentions.roles.first()
-        let Autorole1 = sdb.get(`Servers.${message.guild.id}.Autorole.First`)
-        let Autorole2 = sdb.get(`Servers.${message.guild.id}.Autorole.Second`)
+        let Autorole1 = ServerDb.get(`Servers.${message.guild.id}.Autorole.First`)
+        let Autorole2 = ServerDb.get(`Servers.${message.guild.id}.Autorole.Second`)
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
@@ -43,15 +44,15 @@ module.exports = {
 
         if (['off', 'desligar', 'desativar'].includes(args[0]?.toLowerCase())) {
 
-            let autorole = sdb.get(`Servers.${message.guild.id}.Autorole.First`) || sdb.get(`Servers.${message.guild.id}.Autorole.Second`)
+            let autorole = ServerDb.get(`Servers.${message.guild.id}.Autorole.First`) || ServerDb.get(`Servers.${message.guild.id}.Autorole.Second`)
             if (autorole === null || autorole === undefined) { return message.reply(`${e.Info} | O Autorole System já está desativado.`) }
 
-            let AutoroleUm = sdb.get(`Servers.${message.guild.id}.Autorole.First`)
-            if (AutoroleUm) AutoroleUm = `<@&${sdb.get(`Servers.${message.guild.id}.Autorole.First`)}>`
+            let AutoroleUm = ServerDb.get(`Servers.${message.guild.id}.Autorole.First`)
+            if (AutoroleUm) AutoroleUm = `<@&${ServerDb.get(`Servers.${message.guild.id}.Autorole.First`)}>`
             if (!AutoroleUm) AutoroleUm = 'Desativado'
 
-            let AutoroleDois = sdb.get(`Servers.${message.guild.id}.Autorole.Second`)
-            if (AutoroleDois) AutoroleDois = `<@&${sdb.get(`Servers.${message.guild.id}.Autorole.Second`)}>`
+            let AutoroleDois = ServerDb.get(`Servers.${message.guild.id}.Autorole.Second`)
+            if (AutoroleDois) AutoroleDois = `<@&${ServerDb.get(`Servers.${message.guild.id}.Autorole.Second`)}>`
             if (!AutoroleDois) AutoroleDois = 'Desativado'
 
             return message.reply(`${e.QuestionMark} | Você deseja desativar o sistema de autorole?\nAutorole 1: ${AutoroleUm}\nAutorole 2: ${AutoroleDois}`).then(msg => {
@@ -66,7 +67,7 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.set(`Servers.${message.guild.id}.Autorole`, false)
+                        ServerDb.set(`Servers.${message.guild.id}.Autorole`, false)
                         return msg.edit(`${e.Menhera} | Prontinho! Eu desativei o Autorole System.`).catch(() => { })
 
                     } else {
@@ -104,7 +105,7 @@ module.exports = {
 
                             if (reaction.emoji.name === '✅') {
                                 sdb.delete(`Request.${message.author.id}`)
-                                sdb.set(`Servers.${message.guild.id}.Autorole.First`, false)
+                                ServerDb.delete(`Servers.${message.guild.id}.Autorole.First`)
                                 return msg.edit(`${e.SadPanda} | Adeeeus carguinho... Foi bom enquanto durou.`).catch(() => { })
                             } else {
                                 msg.edit(`${e.Deny} | Request Cancelada`).catch(() => { })
@@ -146,7 +147,7 @@ module.exports = {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        sdb.set(`Servers.${message.guild.id}.Autorole.First`, role.id)
+                        ServerDb.set(`Servers.${message.guild.id}.Autorole.First`, role.id)
                         sdb.delete(`Request.${message.author.id}`)
                         return msg.edit(`${e.CatJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`).catch(() => { })
                     } else {
@@ -180,7 +181,7 @@ module.exports = {
 
                             if (reaction.emoji.name === '✅') {
                                 sdb.delete(`Request.${message.author.id}`)
-                                sdb.set(`Servers.${message.guild.id}.Autorole.Second`, false)
+                                ServerDb.delete(`Servers.${message.guild.id}.Autorole.Second`)
                                 return msg.edit(`${e.SadPanda} | Adeeeus carguinho... Vou sentir saudades.`).catch(() => { })
                             } else {
                                 sdb.delete(`Request.${message.author.id}`)
@@ -231,7 +232,7 @@ module.exports = {
 
                         msg.edit(`${e.Loading} | Autenticando...`).catch(() => { })
                         try {
-                            sdb.set(`Servers.${message.guild.id}.Autorole.Second`, role.id)
+                            ServerDb.set(`Servers.${message.guild.id}.Autorole.Second`, role.id)
                             sdb.delete(`Request.${message.author.id}`)
                             return msg.edit(`${e.NezukoJump} | Deixa comigo! Eu darei o cargo ${role} para todos os novos integrantes daqui pra frente.`)
 

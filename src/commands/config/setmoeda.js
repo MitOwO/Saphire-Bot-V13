@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const { Util } = require('discord.js')
 const { parse } = require("twemoji-parser")
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'setmoeda',
@@ -14,7 +15,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let Edit = sdb.get(`Servers.${message.guild.id}.Moeda`)
+        let Edit = ServerDb.get(`Servers.${message.guild.id}.Moeda`)
 
         if (!args[0]) return message.reply({
             embeds: [
@@ -41,7 +42,7 @@ module.exports = {
         })
 
         if (args[2]) return message.reply(`${e.Deny} | Nada além do emoji e do nome da moeda.\n${e.SaphireObs} | O nome da moeda não pode conter espaços.\n${e.Gear} | Comando: \`${prefix}setmoeda [Emoji(opcional)] NomeDaMoeda\``)
-        if (['reset', 'del', 'deletar'].includes(args[0]?.toLowerCase())) return ResetMoeda()
+        if (['reset', 'del', 'deletar', 'off'].includes(args[0]?.toLowerCase())) return ResetMoeda()
 
         let Emoji = Util.parseEmoji(args[0])
         let NomeDaMoeda = args[1]
@@ -65,7 +66,7 @@ module.exports = {
         if (Emoji && NomeDaMoeda) return SetMoeda()
 
         function SetMoeda() {
-            sdb.set(`Servers.${message.guild.id}.Moeda`, `${Emoji} ${NomeDaMoeda}`)
+            ServerDb.set(`Servers.${message.guild.id}.Moeda`, `${Emoji} ${NomeDaMoeda}`)
             return message.channel.send(`${e.Check} | ${message.author} trocou minha moeda para "${Emoji} ${NomeDaMoeda}"`)
         }
 
@@ -73,7 +74,7 @@ module.exports = {
             if (!Edit) {
                 return message.reply(`${e.Deny} | A moeda atual já é o padrão.`)
             } else {
-                sdb.set(`Servers.${message.guild.id}.Moeda`, false)
+                ServerDb.delete(`Servers.${message.guild.id}.Moeda`)
                 return message.channel.send(`${e.Check} | ${message.author} resetou minha moeda para "${e.Coin} Moedas".`)
             }
         }

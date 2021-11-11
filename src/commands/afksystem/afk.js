@@ -1,5 +1,6 @@
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
@@ -46,7 +47,7 @@ module.exports = {
             let Cancel = msg.createReactionCollector({ filter: FilterCancel, time: 15000, max: 1, errors: ['max', 'time'] })
 
             AfkServer.on('collect', (reaction, user) => {
-                sdb.set(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`, `${Motivo}`)
+                ServerDb.set(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`, `${Motivo}`)
                 sdb.delete(`Request.${message.author.id}`);
                 return message.reply(`${e.Check} | Pode deixar! Vou avisar a todos nesse servidor que te chamarem que você está offline. ${e.SaphireFeliz}`)
 

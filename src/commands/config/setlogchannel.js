@@ -1,6 +1,7 @@
 const { Permissions } = require('discord.js')
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'setlogchannel',
@@ -20,7 +21,7 @@ module.exports = {
         if (!message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) { return message.reply('⚖️ | Eu não tenho a permissão: "Gerenciar canais"') }
 
         let channel = message.mentions.channels.first() || message.channel
-        let atual = sdb.get(`Servers.${message.guild.id}.LogChannel`)
+        let atual = ServerDb.get(`Servers.${message.guild.id}.LogChannel`)
 
         const SetLogHelpEmbed = new MessageEmbed()
             .setColor('#246FE0')
@@ -56,7 +57,7 @@ module.exports = {
                         if (reaction.emoji.name === '✅') {
                             msg.reactions.removeAll().catch(() => { })
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.LogChannel`, null)
+                            ServerDb.delete(`Servers.${message.guild.id}.LogChannel`)
                             msg.edit(`${e.Check} | Sistema GSN Desativado!`).catch(() => { })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)
@@ -90,7 +91,7 @@ module.exports = {
                         if (reaction.emoji.name === '✅') {
                             msg.reactions.removeAll().catch(() => { })
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.LogChannel`, channel.id)
+                            ServerDb.set(`Servers.${message.guild.id}.LogChannel`, channel.id)
                             msg.edit(`${e.Check} | Sistema GSN Ativado!\nCanal: ${channel}`).catch(() => { })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)
@@ -131,7 +132,7 @@ module.exports = {
                                 },
                             ],
                         }).then(channel => {
-                            sdb.set(`Servers.${message.guild.id}.LogChannel`, channel.id)
+                            ServerDb.set(`Servers.${message.guild.id}.LogChannel`, channel.id)
                             channel.send(`🛰️ | **Global System Notification**\n \nO Sistema GSN foi ativado com sucesso.\nRegistro concluído para o servidor: **${message.guild.name}** | *\`${message.guild.id}\`*\nNotificações ativadas: \`General Moderation\` \`Autorole System\` \`Security System\` \`Malicious Users\` \`Anti-Raid\``)
                             channel.send(`${e.Check} | ${message.author}, canal criado com sucesso!\nQuer testar o novo sistema? Vou dar uma dica:\n1. Crie um novo cargo e o configure como autorole \`${prefix}autorole 1 @novo cargo\`\n2. Delete o novo cargo e veja o que acontece.`)
                         }).catch(err => { message.reply(`${e.Deny} | Ocorreu um erro ao criar o novo canal.\n\`${err}\``) })

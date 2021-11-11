@@ -1,6 +1,6 @@
 const { Permissions } = require('discord.js')
 const { f } = require('../../../database/frases.json')
-const { DatabaseObj } = require('../../../Routes/functions/database')
+const { DatabaseObj, ServerDb } = require('../../../Routes/functions/database')
 const { e, config } = DatabaseObj
 
 module.exports = {
@@ -50,7 +50,7 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.Prefix`, false)
+                            ServerDb.delete(`Servers.${message.guild.id}.Prefix`)
                             msg.edit(`${e.Check} | ${message.author.username} resetou meu prefixo para \`${config.prefix}\``).catch(() => { })
                             msg.reactions.removeAll().catch(() => { })
                         } else {
@@ -88,7 +88,7 @@ module.exports = {
                         if (args[0] === `${config.prefix}`) {
 
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.Prefix`, false)
+                            ServerDb.delete(`Servers.${message.guild.id}.Prefix`)
                             msg.edit(`${e.Check} | ${message.author}, como \`${config.prefix}\` é o meu prefixo padrão, eu resetei o prefixo do servidor.`).catch(() => { })
 
                         } else if (args[0] === "<") {
@@ -97,7 +97,7 @@ module.exports = {
 
                         } else {
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.Prefix`, args[0])
+                            ServerDb.set(`Servers.${message.guild.id}.Prefix`, args[0])
                             sdb.delete(`Request.${message.author.id}`)
                             msg.edit(`${e.Check} | Prefixo \`${args[0]}\` novinho em folha! Só não esquece, ok? ${e.SaphireFeliz}`)
                         }

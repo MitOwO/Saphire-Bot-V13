@@ -1,5 +1,6 @@
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'reportchannel',
@@ -15,7 +16,7 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
-        let canal = sdb.get(`Servers.${message.guild.id}.ReportChannel`)
+        let canal = ServerDb.get(`Servers.${message.guild.id}.ReportChannel`)
 
         const noargs = new MessageEmbed()
             .setColor('#246FE0') // red
@@ -36,7 +37,7 @@ module.exports = {
 
             return message.channel.send(`${e.Loading} | Ok, espera um pouquinho... | ${canal}/${message.author.id}`).then(msg => {
                 sdb.delete(`Request.${message.author.id}`)
-                sdb.set(`Servers.${message.guild.id}.ReportChannel`, null)
+                ServerDb.delete(`Servers.${message.guild.id}.ReportChannel`)
                 msg.edit(`${e.BrilanceBlob} | Nice, nice! Desativei o sistema de reports.`).catch(() => { })
             }).catch(err => { return message.channel.send(`${e.Warn} | Ocorreu um erro na execução deste comando.\n\`${err}\``) })
 
@@ -47,7 +48,7 @@ module.exports = {
         } else if (channel !== canal) {
             return message.reply(`${e.Loading} | Ooopa, entendido! Pera só um pouco. | ${channel.id}/${message.author.id}`).then(msg => {
                 sdb.delete(`Request.${message.author.id}`)
-                sdb.set(`Servers.${message.guild.id}.ReportChannel`, channel.id)
+                ServerDb.set(`Servers.${message.guild.id}.ReportChannel`, channel.id)
                 return msg.edit(`${e.NezukoJump} | Aeeee, sistema de report está ativadoooo!!\n\`${prefix}report [@user(opicional)] o seu reporte em diante\``)
 
             }).catch(err => {

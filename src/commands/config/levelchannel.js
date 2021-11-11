@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Error = require('../../../Routes/functions/errors')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'levelchannel',
@@ -16,20 +17,20 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
-        let CanalAtual = await message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.XPChannel`))
+        let CanalAtual = await message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.XPChannel`))
 
-        if (sdb.get(`Servers.${message.guild.id}.XPChannel`) && !CanalAtual) {
-            sdb.set(`Servers.${message.guild.id}.XPChannel`, null)
+        if (ServerDb.get(`Servers.${message.guild.id}.XPChannel`) && !CanalAtual) {
+            ServerDb.delete(`Servers.${message.guild.id}.XPChannel`)
             return message.reply(`${e.Deny} | O canal atual de Notificações de Level Up não foi encontrado. Eu desabilitei o Xp Channel neste servidor no meu banco de dados.`)
         }
 
-        if (['off', 'desligar', 'desativar'].includes(args[1]?.toLowerCase())) return DisableLevelChannel()
+        if (['off', 'desligar', 'desativar'].includes(args[0]?.toLowerCase())) return DisableLevelChannel()
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return LevelChannelInfo()
         return EnableLevelChannel()
 
         async function DisableLevelChannel() {
 
-            if (!sdb.get(`Servers.${message.guild.id}.XPChannel`))
+            if (!ServerDb.get(`Servers.${message.guild.id}.XPChannel`))
                 return message.reply(`${e.Deny} | Este servidor não tem um canal de Level Up definido. Use \`${prefix}levelchannel [#canal]\` para ativa-lo.`)
 
             return message.reply(`${e.QuestionMark} | Você deseja desativar o canal de Notificações de Level Up? Canal atual: ${CanalAtual}`).then(msg => {
@@ -44,7 +45,7 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.set(`Servers.${message.guild.id}.XPChannel`, null)
+                        ServerDb.set(`Servers.${message.guild.id}.XPChannel`)
                         msg.edit(`${e.Check} | O canal de notificações de level up foi desabilitado.`).catch(() => { })
 
                     } else {
@@ -64,7 +65,7 @@ module.exports = {
 
         async function EnableLevelChannel() {
 
-            if (channel.id === sdb.get(`Servers.${message.guild.id}.XPChannel`)) return message.reply(`${e.Info} | Este já é o canal de level up.`).catch(() => { })
+            if (channel.id === ServerDb.get(`Servers.${message.guild.id}.XPChannel`)) return message.reply(`${e.Info} | Este já é o canal de level up.`).catch(() => { })
 
             return message.reply(`${e.QuestionMark} | Você deseja autenticar o canal ${channel} como Canal de Notificações de Level Up?`).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -78,7 +79,7 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.set(`Servers.${message.guild.id}.XPChannel`, channel.id)
+                        ServerDb.set(`Servers.${message.guild.id}.XPChannel`, channel.id)
                         msg.edit(`${e.CatJump} | Pode deixar comigo! Eu vou avisar no canal ${channel} sempre que alguém passar de level.`).catch(() => { })
 
                     } else {

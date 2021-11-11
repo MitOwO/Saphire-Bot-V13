@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Error = require('../../../Routes/functions/errors')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'leavechannel',
@@ -17,8 +18,8 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
 
-        let canal = sdb.get(`Servers.${message.guild.id}.LeaveChannel.Canal`)
-        let WelcomeChannel = sdb.get(`Servers.${message.guild.id}.WelcomeChannel.Canal`)
+        let canal = ServerDb.get(`Servers.${message.guild.id}.LeaveChannel.Canal`)
+        let WelcomeChannel = ServerDb.get(`Servers.${message.guild.id}.WelcomeChannel.Canal`)
 
         if (args[0] === 'off') {
             if (canal) {
@@ -36,7 +37,7 @@ module.exports = {
 
                             if (reaction.emoji.name === '✅') {
                                 sdb.delete(`Request.${message.author.id}`)
-                                sdb.set(`Servers.${message.guild.id}.LeaveChannel`, null)
+                                ServerDb.delete(`Servers.${message.guild.id}.LeaveChannel`)
                                 return msg.edit(`${e.SaphireFeliz} | Prontinho, agora eu não vou dizer mais nada quando alguém sair no servidor.`).catch(() => { })
                             } else {
                                 sdb.delete(`Request.${message.author.id}`)
@@ -69,7 +70,7 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.LeaveChannel.Canal`, channel.id)
+                            ServerDb.set(`Servers.${message.guild.id}.LeaveChannel.Canal`, channel.id)
 
                             msg.edit(`Aeee ${e.NezukoJump}! De agora em diante, vou falar no canal ${channel} sobre todo mundo que sair do servidor.`).then(() => {
 
@@ -87,7 +88,7 @@ module.exports = {
 
                                             if (reaction.emoji.name === '✅') {
                                                 sdb.delete(`Request.${message.author.id}`)
-                                                sdb.set(`Servers.${message.guild.id}.WelcomeChannel`, channel.id)
+                                                ServerDb.set(`Servers.${message.guild.id}.WelcomeChannel`, channel.id)
                                                 msg.edit(`${e.NezukoJump} | Nice, nice! Daqui pra frente, eu vou avisar no canal "${channel}" sobre todo mundo que entrar e sair do servidor.`).catch(() => { })
                                             } else {
                                                 sdb.delete(`Request.${message.author.id}`)

@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const { Util } = require('discord.js')
 const { parse } = require("twemoji-parser")
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'welcomechannel',
@@ -18,9 +19,9 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
         let channel = message.mentions.channels.first() || message.channel
 
-        let canal = sdb.get(`Servers.${message.guild.id}.WelcomeChannel.Canal`) || false
-        let WelcomeMsg = sdb.get(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`) || 'entrou no servidor.'
-        let WelcomeEmoji = sdb.get(`Servers.${message.guild.id}.WelcomeChannel.Emoji`) || `${e.Join}`
+        let canal = ServerDb.get(`Servers.${message.guild.id}.WelcomeChannel.Canal`) || false
+        let WelcomeMsg = ServerDb.get(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`) || 'entrou no servidor.'
+        let WelcomeEmoji = ServerDb.get(`Servers.${message.guild.id}.WelcomeChannel.Emoji`) || `${e.Join}`
 
         if (['off', 'desligar'].includes(args[0]?.toLowerCase())) return SetWelcomeOff()
         if (['mensagem', 'edit', 'msg'].includes(args[0]?.toLowerCase())) return MsgEdit()
@@ -72,8 +73,8 @@ module.exports = {
             let MensagemPadrao = `${e.Join} 'entrou no servidor.'`
             if (MensagemCustom === MensagemPadrao) return message.reply(`${e.Info} | A mensagem de boas-vindas já é a padrão.`)
 
-            sdb.delete(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`)
-            sdb.delete(`Servers.${message.guild.id}.WelcomeChannel.Emoji`)
+            ServerDb.delete(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`)
+            ServerDb.delete(`Servers.${message.guild.id}.WelcomeChannel.Emoji`)
             return message.reply(`${e.Check} | ${message.author} resetou a minha mensagem de boas-vindas com sucesso!`)
         }
 
@@ -84,8 +85,8 @@ module.exports = {
             if (!mensagem) return message.channel.send(`${e.Info} | Mensagem de boas-vindas padrão: **${WelcomeMsg}**\n${e.SaphireObs} | Caso queira personalizar, use \`${prefix}welcome mensagem A mensagem de boas vindas\``)
             if (mensagem.length > 1400) return message.reply(`${e.Deny} | A mensagem de boas-vindas não pode ultrapassar **1400 caracteres**.`)
 
-            sdb.set(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`, mensagem)
-            return message.channel.send(`${e.Check} | ${message.author} alterou a mensagem de boas-vindas para:\n${WelcomeEmoji} | <@${client.user.id}> ${sdb.get(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`)}`)
+            ServerDb.set(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`, mensagem)
+            return message.channel.send(`${e.Check} | ${message.author} alterou a mensagem de boas-vindas para:\n${WelcomeEmoji} | <@${client.user.id}> ${ServerDb.get(`Servers.${message.guild.id}.WelcomeChannel.Mensagem`)}`)
         }
 
         function Emoji() {
@@ -96,7 +97,7 @@ module.exports = {
             if (args[2]) return message.reply(`${e.Deny} | Apenas o emoji, ok?`)
 
             if (emoji.id) {
-                sdb.set(`Servers.${message.guild.id}.WelcomeChannel.Emoji`, args[1])
+                ServerDb.set(`Servers.${message.guild.id}.WelcomeChannel.Emoji`, args[1])
                 return message.channel.send(`${e.Check} | ${message.author} alterou o emoji da mensagem de boas-vindas para:\n${args[1]} | <@${client.user.id}> ${WelcomeMsg}`)
             } else {
                 message.reply(`${e.Deny} | Este emoji não é um emoji customizado.`)
@@ -120,7 +121,7 @@ module.exports = {
 
                             if (reaction.emoji.name === '✅') {
                                 sdb.delete(`Request.${message.author.id}`)
-                                sdb.delete(`Servers.${message.guild.id}.WelcomeChannel`)
+                                ServerDb.delete(`Servers.${message.guild.id}.WelcomeChannel`)
                                 msg.edit(`${e.Nagatoro} | Prontinho, agora eu não vou dizer mais nada quando alguém entrar no servidor.`).catch(() => { })
                             } else {
                                 sdb.delete(`Request.${message.author.id}`)
@@ -153,11 +154,11 @@ module.exports = {
 
                             if (reaction.emoji.name === '✅') {
                                 sdb.delete(`Request.${message.author.id}`)
-                                sdb.set(`Servers.${message.guild.id}.WelcomeChannel.Canal`, channel.id)
+                                ServerDb.set(`Servers.${message.guild.id}.WelcomeChannel.Canal`, channel.id)
 
                                 return msg.edit(`Aeee ${e.NezukoJump}! De agora em diante, vou falar no canal ${channel} sobre todo mundo que chegar aqui.\nTenta usar o \`${prefix}welcomechannel info\``).then(() => {
 
-                                    if (sdb.get(`Servers.${message.guild.id}.LeaveChannel`))
+                                    if (ServerDb.get(`Servers.${message.guild.id}.LeaveChannel`))
                                         return
 
                                     return message.channel.send(`${e.QuestionMark} | ${message.author}, posso ativar o sistema de saídas no "${channel}" também?`).then(msg => {
@@ -173,7 +174,7 @@ module.exports = {
 
                                                 if (reaction.emoji.name === '✅') {
                                                     sdb.delete(`Request.${message.author.id}`)
-                                                    sdb.set(`Servers.${message.guild.id}.LeaveChannel.Canal`, channel.id)
+                                                    ServerDb.set(`Servers.${message.guild.id}.LeaveChannel.Canal`, channel.id)
                                                     msg.edit(`${e.NezukoJump} | Ok, ok! Pode deixar comigo. Vou avisar no canal ${channel} sobre todo mundo que entrar e sair. ${e.Menhera}\nTenta usar o \`${prefix}welcomechannel info\``).catch(() => { })
                                                 } else {
                                                     sdb.delete(`Request.${message.author.id}`)

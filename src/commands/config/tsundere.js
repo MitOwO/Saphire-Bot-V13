@@ -1,5 +1,6 @@
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'tsundere',
@@ -22,7 +23,7 @@ module.exports = {
         return message.reply(`${e.Info} | Tenta usar assim: \`${prefix}tsundere ON/OFF\``)
 
         function TurnOff() {
-            if (!sdb.get(`Servers.${message.guild.id}.Tsundere`)) return message.reply(`${e.Info} | Meu lado tsundere já está desativado.`)
+            if (!ServerDb.get(`Servers.${message.guild.id}.Tsundere`)) return message.reply(`${e.Info} | Meu lado tsundere já está desativado.`)
 
             return message.reply(`${e.Hmmm} | Quer desativar meu lado Tsundere`).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -36,7 +37,7 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.delete(`Servers.${message.guild.id}.Tsundere`)
+                        ServerDb.delete(`Servers.${message.guild.id}.Tsundere`)
                         return msg.edit(`${e.Loli} Wooah, desativaduu`).catch(() => { })
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
@@ -51,7 +52,7 @@ module.exports = {
         }
 
         function TurnOn() {
-            if (sdb.get(`Servers.${message.guild.id}.Tsundere`)) return message.reply(`${e.Info} | Meu lado tsundere já está ativado.`)
+            if (ServerDb.get(`Servers.${message.guild.id}.Tsundere`)) return message.reply(`${e.Info} | Meu lado tsundere já está ativado.`)
             
             return message.reply(`${e.Hmmm} | Certeza que quer ativar meu lado tsundere? Eu vou recusar uns comandos de vez em quando... ${e.SaphireFeliz}`).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -65,7 +66,7 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.set(`Servers.${message.guild.id}.Tsundere`, true)
+                        ServerDb.set(`Servers.${message.guild.id}.Tsundere`, true)
                         return msg.edit(`${e.Loli} Wooah.`).catch(() => { })
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
