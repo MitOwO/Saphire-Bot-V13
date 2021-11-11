@@ -2,6 +2,7 @@ const { Permissions } = require('discord.js')
 const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const colors = require('../../../Routes/functions/colors')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'buscar',
@@ -20,7 +21,7 @@ module.exports = {
         if (sdb.get(`Users.${message.author.id}.Timeouts.Buscar`) !== null && 1500 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Buscar`)) > 0)
             return
 
-        let canal = message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.Farm.BuscaChannel`)) || false
+        let canal = message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.Farm.BuscaChannel`)) || false
 
         const BuscarObj = {
             Machado: {

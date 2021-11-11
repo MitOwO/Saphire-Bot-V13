@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const { Permissions } = require('discord.js')
 const colors = require('../../../Routes/functions/colors')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'minerar',
@@ -16,9 +17,9 @@ module.exports = {
         if (!message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS))
             return message.channel.send(`${e.Deny} | Eu preciso da permissão \`GERENCIAR CANAIS\` para executar este comando.`)
 
-        let canal = message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.Farm.MineChannel`)) || false
+        let canal = message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.Farm.MineChannel`)) || false
 
-        let { Picareta, Aguas, Mamute, Fossil, ossos, minerios, rand, randa, Embed } = {
+        let { Picareta, Aguas, Mamute, Fossil, ossos, minerios, diamantes, dinh, rand, randa, Embed } = {
             Picareta: {
                 Picareta: sdb.get(`Users.${message.author.id}.Slot.Picareta.Picareta`),
                 Usos: sdb.get(`Users.${message.author.id}.Slot.Picareta.Usos`)

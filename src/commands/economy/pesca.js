@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const { Permissions } = require('discord.js')
 const Colors = require('../../../Routes/functions/colors')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'pesca',
@@ -16,7 +17,7 @@ module.exports = {
         if (!message.guild.me.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS))
             return message.channel.send(`${e.Deny} | Eu preciso da permissão \`GERENCIAR CANAIS\` para executar este comando.`)
 
-        let canal = message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.Farm.PescaChannel`))
+        let canal = message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.Farm.PescaChannel`))
 
         if (!canal)
             return message.reply(`${e.Deny} | Este comando requer um canal específico.\n${e.SaphireObs} | Você pode usar \`${prefix}channel farm pesca\` que eu faço tudo pra você!`)
