@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Data = require('../../../Routes/functions/data')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'unban',
@@ -20,7 +21,7 @@ module.exports = {
         let msgreason = args.slice(1).join(" ")
         if (!msgreason) msgreason = 'Sem motivo especificado'
 
-        let IdChannel = sdb.get(`Servers.${message.guild.id}.LogChannel`)
+        let IdChannel = ServerDb.get(`Servers.${message.guild.id}.LogChannel`)
 
         let ID = args[0]
         if (ID.length !== 18) return message.reply(`${e.Deny} | ID invalido. Todos os ID's possuem 18 caracteres, verique o ID informado.`)

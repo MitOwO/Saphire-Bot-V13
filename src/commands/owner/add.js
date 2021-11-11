@@ -70,7 +70,7 @@ module.exports = {
         function AddBonus() {
             if (!amount) return message.channel.send(`-> \`${prefix}add bonus <@user/id> <quantia>\``)
             if (isNaN(amount)) return message.channel.send(`${e.Deny} | **${amount}** | Não é um número.`)
-            sdb.add(`Users.${user.id}.Cache.Resgate`, amount)
+            sdb.add(`Users.${user.id}.Cache.Resgate`, parseInt(amount))
             user.send(`${e.SaphireFeliz} | Você recebeu um bônus de **${amount} ${Moeda(message)}**. Parabéns!`).catch(err => {
                 if (err.code === 50007)
                     return message.reply(`${e.Deny} | Não foi possível contactar este usuário.`)

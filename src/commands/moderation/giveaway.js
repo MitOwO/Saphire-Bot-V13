@@ -1,6 +1,7 @@
 const PassCode = require('../../../Routes/functions/PassCode')
 const { e } = require('../../../database/emojis.json')
 const Super = require('../../../Routes/classes/SupremacyClass')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'giveaway',
@@ -60,7 +61,7 @@ module.exports = {
         //     if (!Canal)
         //         return message.reply(`${e.Info} | Mencione um #canal para que eu possa configura-lo como um canal de sorteio.`)
 
-        //     sdb.set(`Servers.${message.guild.id}.GiveawayChannel`, Canal.id)
+        //     ServerDb.set(`Servers.${message.guild.id}.GiveawayChannel`, Canal.id)
         //     return message.channel.send(`${e.Check} | O canal ${Canal} foi configurado como canal de sorteio. Agora, todos os sorteios serão enviados neste canal.`)
         // }
 

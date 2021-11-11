@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const { Permissions } = require('discord.js')
 const { f } = require('../../../database/frases.json')
 const Data = require('../../../Routes/functions/data')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'ban',
@@ -16,7 +17,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
-        let IdChannel = await message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.LogChannel`))
+        let IdChannel = await message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.LogChannel`))
 
         let reason = args.slice(1).join(" ")
         if (!reason) reason = 'Sem motivo informado'

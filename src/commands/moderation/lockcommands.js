@@ -1,5 +1,6 @@
 const { f } = require('../../../database/frases.json')
 const { e } = require('../../../database/emojis.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'lockcommands',
@@ -27,7 +28,7 @@ module.exports = {
         if (['info', 'informações', 'informação', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return message.reply({ embeds: [InfoEmbed] })
         if (['bots', 'bot'].includes(args[0]?.toLowerCase())) return BloquearBots()
 
-        if (sdb.get(`Servers.${message.guild.id}.Blockchannels.${channel.id}`)) { return message.reply(`${e.Check} | ${channel} já está bloqueado. \`${prefix}lockcommands info\``) }
+        if (ServerDb.get(`Servers.${message.guild.id}.Blockchannels.${channel.id}`)) { return message.reply(`${e.Check} | ${channel} já está bloqueado. \`${prefix}lockcommands info\``) }
 
         return message.reply(`${e.QuestionMark} | Você deseja bloquear todos os meus comandos no canal ${channel}?`).then(msg => {
             sdb.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -41,14 +42,14 @@ module.exports = {
 
                 if (reaction.emoji.name === '✅') {
                     sdb.delete(`Request.${message.author.id}`)
-                    sdb.set(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`, true)
+                    ServerDb.set(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`, true)
                     return msg.edit(`✅ | ${message.author} bloqueou todos os meus comandos no canal ${channel}.`).then(msg => {
-                        sdb.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`) ? '' : BloquearBots()
+                        ServerDb.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`) ? '' : BloquearBots()
                     }).catch(() => { })
                 } else {
                     sdb.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Request cancelada por: ${message.author}`).then(msg => {
-                        sdb.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`) ? '' : BloquearBots()
+                        ServerDb.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`) ? '' : BloquearBots()
                     }).catch(() => { })
                 }
             }).catch(err => {
@@ -58,7 +59,7 @@ module.exports = {
         })
 
         function BloquearBots() {
-            if (sdb.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`)) { return message.reply(`${e.Check} | ${channel} já está bloqueado. \`${prefix}lockcommands info\``) }
+            if (ServerDb.get(`Servers.${message.guild.id}.Blockchannels.Bots.${channel.id}`)) { return message.reply(`${e.Check} | ${channel} já está bloqueado. \`${prefix}lockcommands info\``) }
             
             setTimeout(() => {
                 message.channel.send(`${e.QuestionMark} | ${message.author}, você quer bloquear todos os comandos de todos os bots neste canal?\n${e.SaphireObs} | Vale lembrar que Administradores **NÃO** são imunes a esse bloqueio.`).then(msg => {
@@ -73,7 +74,7 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            sdb.set(`Servers.${message.guild.id}.Blockchannels.Bots.${message.channel.id}`, true)
+                            ServerDb.set(`Servers.${message.guild.id}.Blockchannels.Bots.${message.channel.id}`, true)
                             return msg.edit(`✅ | ${message.author} bloqueou todos comandos de todos os bots canal ${channel}.`).catch(() => { })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)

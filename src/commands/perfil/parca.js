@@ -21,17 +21,16 @@ module.exports = {
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return SendInfo()
         if (['separar', 'delete', 'deletar', 'excluir'].includes(args[0]?.toLowerCase())) return DeleteParcaPosition()
 
-        if (!['1', '2', '3', '4', '5'].includes(args[0]))
+        if (!args[0] || args[0] > 5 || args[0] < 1)
             return message.reply(`${e.Deny} | Você tem que dizer qual é a posição! Se tiver dúvidas, use \`${prefix}parça info\``)
 
-        let number
-        switch (args[0]) {
-            case '1': number = 'Um'; break;
-            case '2': number = 'Dois'; break;
-            case '3': number = 'Tres'; break;
-            case '4': number = 'Quatro'; break;
-            case '5': number = 'Cinco'; break;
-        }
+        let number = {
+            1: 'Um',
+            2: 'Dois',
+            3: 'Tres',
+            4: 'Quatro',
+            5: 'Cinco'
+        }[args[0]]
 
         user ? CheckAndSetParca() : message.reply(`${e.Deny} | Você tem que dizer qual é o @membro! Se tiver dúvidas, use \`${prefix}parça info\``)
 
@@ -82,7 +81,7 @@ module.exports = {
         }
 
         async function GetUser(id, number) {
-            let User = await client.user.cache.get(id)
+            let User = await client.users.cache.get(id)
 
             if (!User) {
                 sdb.set(`Users.${message.author.id}.Perfil.Parcas.${number}`, false)
@@ -118,20 +117,19 @@ module.exports = {
 
         async function DeleteParcaPosition() {
             if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
-            if (!['1', '2', '3', '4', '5'].includes(args[0]))
-                return message.reply(`${e.Deny} | Você tem que dizer qual é a posição que deseja deletar! Se tiver dúvidas, use \`${prefix}parça info\``)
+            if (!args[1] || args[1] > 5 || args[1] < 1)
+                return message.reply(`${e.Deny} | Você tem que dizer qual é a posição que deseja deletar, de 1 a 5! Se tiver dúvidas, use \`${prefix}parça info\``)
 
-            let position
-            switch (args[0]) {
-                case '1': position = 'Um'; break;
-                case '2': position = 'Dois'; break;
-                case '3': position = 'Tres'; break;
-                case '4': position = 'Quatro'; break;
-                case '5': position = 'Cinco'; break;
-            }
+            let position = {
+                1: 'Um',
+                2: 'Dois',
+                3: 'Tres',
+                4: 'Quatro',
+                5: 'Cinco'
+            }[args[1]]
 
             if (!sdb.get(`Users.${message.author.id}.Perfil.Parcas.${position}`))
-                return message.reply(`${e.Deny} | Você não tem nenhum familiar na posição ${position}`)
+                return message.reply(`${e.Deny} | Você não tem nenhum parça na posição ${position}`)
 
             let Fam = await client.users.cache.get(sdb.get(`Users.${message.author.id}.Perfil.Parcas.${position}`))
             if (!Fam) {

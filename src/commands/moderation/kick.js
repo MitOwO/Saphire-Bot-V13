@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const { g } = require('../../../Routes/Images/gifs.json')
 const { f } = require('../../../database/frases.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'kick',
@@ -27,7 +28,7 @@ module.exports = {
         }
 
         let reason = args.slice(1).join(" ") || 'Sem motivo informado'
-        let logchannel = sdb.get(`Servers.${message.guild.id}.LogChannel`)
+        let logchannel = ServerDb.get(`Servers.${message.guild.id}.LogChannel`)
 
         if (!args[0]) { return message.reply(`${e.Info} | Comando Kick/Expulsar\n \n\`${prefix}kick @user [Razão(opicional)]\` - Expulse alguém do servidor.\n\`${prefix}kick ID [Razão(opicional)]\` - Expulse alguém pelo ID`) }
         if (!member) { return message.reply(`${e.Deny} | Você precisa marcar alguém ou fornecer um ID válido`) }

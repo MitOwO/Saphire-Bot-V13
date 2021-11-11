@@ -1,6 +1,6 @@
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
-const { BgLevel, BgWall, config, emojis, nomes, lotery  } = require('../../../Routes/functions/database')
+const { sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery, CommandsLog, DatabaseObj, ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'eval',

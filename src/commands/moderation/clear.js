@@ -116,7 +116,7 @@ module.exports = {
     }
 
     async function NewClearNuke() {
-      if (sdb.get(`Servers.${message.guild.id}.ClearNuke`))
+      if (db.get(`Servers.${message.guild.id}.ClearNuke`))
         return message.reply(`${e.Info} | Já tem um \`${prefix}clear nuke\` rolando neste servidor.`)
 
       if (args[1])
@@ -127,11 +127,11 @@ module.exports = {
       while (i) {
         if (!message.channel) {
           i = false
-          sdb.set(`Servers.${message.guild.id}.ClearNuke`, false)
+          db.delete(`Servers.${message.guild.id}.ClearNuke`)
           return
         }
 
-        sdb.set(`Servers.${message.guild.id}.ClearNuke`, true)
+        db.set(`Servers.${message.guild.id}.ClearNuke`, true)
         let deleteAble = await message.channel.messages.fetch({ limit: 100 }).catch(err => { return })
         if (deleteAble.size < 100 || messages >= 900) {
           await message.channel.bulkDelete(deleteAble).catch(err => {
@@ -149,18 +149,18 @@ module.exports = {
             Error(message, err)
             return message.reply(`${e.Deny} | Aconteceu um erro ao executar este comando, caso não saiba resolver, reporte o problema com o comando \`${prefix}bug\` ou entre no [meu servidor](${config.ServerLink}).\n\`${err}\``)
           })
-          sdb.add('Client.GlobalClearNuke', deleteAble.size)
+          db.add('Client.GlobalClearNuke', deleteAble.size)
           messages += deleteAble.size
           i = false
           message.channel.send(`${e.Check} | Deletei um total de ${messages} mensagens sob as ordens de ${message.author}.\n${e.SaphireObs} | Mensagens acima de 14 dias não podem ser apagadas.`)
-          sdb.set(`Servers.${message.guild.id}.ClearNuke`, false)
+          db.delete(`Servers.${message.guild.id}.ClearNuke`)
           messages = 0
           return
         }
-        if (sdb.get('Client.GlobalClearNuke') >= 2500) { setTimeout(() => { sdb.set('Client.GlobalClearNuke', 0) }, 3000) }
+        if (db.get('Client.GlobalClearNuke') >= 2500) { setTimeout(() => { db.set('Client.GlobalClearNuke', 0) }, 3000) }
         await message.channel.bulkDelete(deleteAble).catch(() => { })
         messages += deleteAble.size
-        sdb.add('Client.GlobalClearNuke', deleteAble.size)
+        db.add('Client.GlobalClearNuke', deleteAble.size)
       }
     }
 

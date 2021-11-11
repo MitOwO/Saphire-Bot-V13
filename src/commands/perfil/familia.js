@@ -80,7 +80,7 @@ module.exports = {
         }
 
         async function GetFamilyUser(id) {
-            let Familiar = await client.user.cache.get(id)
+            let Familiar = await client.users.cache.get(id)
             Familiar ? Familiar = Familiar.tag : Familiar = 'Familiar não encontrado.'
             return Familiar
         }
