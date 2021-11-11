@@ -1,4 +1,5 @@
 const { e } = require('../../../database/emojis.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'report',
@@ -37,7 +38,7 @@ module.exports = {
             .addField('Comando de Reporte', `\`${prefix}report [@user(opicional)] o motivo do seu report\``)
             .addField('Quer mais?', '`' + prefix + 'help report`')
 
-        const channel = message.guild.channels.cache.get(sdb.get(`Servers.${message.guild.id}.ReportChannel`))
+        const channel = message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.ReportChannel`))
         let user = message.mentions.members.first() || message.mentions.repliedUser
 
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) { return message.channel.send({ embeds: [help] }) }

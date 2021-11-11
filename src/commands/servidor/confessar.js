@@ -3,6 +3,7 @@ const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Error = require('../../../Routes/functions/errors')
 const ms = require('parse-ms')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'confessar',
@@ -24,7 +25,7 @@ module.exports = {
             return message.channel.send(`${e.Deny} | Houve um erro na execução deste comando. Verifique se eu tenho a permissão **GERENCIAR MENSAGENS** ativada.\n\`${err}\``)
         }
 
-        const channelDB = sdb.get(`Servers.${message.guild.id}.ConfessChannel`)
+        const channelDB = ServerDb.get(`Servers.${message.guild.id}.ConfessChannel`)
         const channel = await message.guild.channels.cache.get(channelDB)
         let Mensagem = args.join(' ') || 'Algo deu errado e eu não consegui captar a mensagem...'
 
@@ -80,12 +81,12 @@ module.exports = {
             if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
                 return message.reply(`${e.Deny} | Você precisa ser um **Administrador** para ativar o canal deste comando.`)
 
-            let channelDB = sdb.get(`Servers.${message.guild.id}.ConfessChannel`)
+            let channelDB = ServerDb.get(`Servers.${message.guild.id}.ConfessChannel`)
             const channel = await message.guild.channels.cache.get(channelDB)
             let NewChannel = message.mentions.channels.first() || message.channel
 
             if (channelDB && !channel)
-                sdb.set(`Servers.${message.guild.id}.ConfessChannel`, null)
+                ServerDb.delete(`Servers.${message.guild.id}.ConfessChannel`)
 
             if (channel)
                 return message.reply(`${e.Info} | Já existe um canal de confissão neste servidor. Ele está aqui: ${channel}\n${e.SaphireObs} | Caso deseje desativar este comando, só usar \`${prefix}confessar off\` ou deletar o canal.`)
@@ -117,7 +118,7 @@ module.exports = {
                             try {
                                 await message.guild.channels.cache.get(`${NewChannel.id}`).send(`${e.Check} | Este canal foi configurado como **Confessionário**. Para enviar sua confissão, basta usar o comando \`${prefix}confessar <Sua confissão em diante>\``)
                                 NewChannel.permissionOverwrites.create(NewChannel.guild.roles.everyone, { SEND_MESSAGES: false })
-                                sdb.set(`Servers.${message.guild.id}.ConfessChannel`, NewChannel.id)
+                                ServerDb.set(`Servers.${message.guild.id}.ConfessChannel`, NewChannel.id)
                                 return message.reply(`${e.Check} | Feito! Canal configurado com sucesso!`)
                             } catch (err) {
                                 message.channel.send(`${err}`)
@@ -153,7 +154,7 @@ module.exports = {
             if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
                 return message.reply(`${e.Deny} | Você precisa ser um **Administrador** para desativar o canal deste comando.`)
 
-            let channelDB = sdb.get(`Servers.${message.guild.id}.ConfessChannel`)
+            let channelDB = ServerDb.get(`Servers.${message.guild.id}.ConfessChannel`)
             const channel = await message.guild.channels.cache.get(channelDB)
 
             if (!channel || !channelDB)
@@ -174,7 +175,7 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.set(`Servers.${message.guild.id}.ConfessChannel`, null)
+                        ServerDb.delete(`Servers.${message.guild.id}.ConfessChannel`)
                         return msg.edit(`${e.Check} | Canal e comando desativado com sucesso!`)
 
                     } else {

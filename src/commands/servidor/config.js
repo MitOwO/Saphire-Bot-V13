@@ -1,4 +1,5 @@
 const { e } = require('../../../database/emojis.json')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'config',
@@ -68,14 +69,14 @@ module.exports = {
         message.channel.send({ embeds: [ConfigEmbed] }).catch(() => { })
 
         function GetAutorole() {
-            let Autorole1 = sdb.get(`Servers.${message.guild.id}.Autorole.First`) ? `Autorole 1: <@&${sdb.get(`Servers.${message.guild.id}.Autorole.First`)}>` : 'Autorole 1: Desativado'
-            let Autorole2 = sdb.get(`Servers.${message.guild.id}.Autorole.Second`) ? `Autorole 2: <@&${sdb.get(`Servers.${message.guild.id}.Autorole.Second`)}>` : 'Autorole 2: Desativado'
+            let Autorole1 = ServerDb.get(`Servers.${message.guild.id}.Autorole.First`) ? `Autorole 1: <@&${ServerDb.get(`Servers.${message.guild.id}.Autorole.First`)}>` : 'Autorole 1: Desativado'
+            let Autorole2 = ServerDb.get(`Servers.${message.guild.id}.Autorole.Second`) ? `Autorole 2: <@&${ServerDb.get(`Servers.${message.guild.id}.Autorole.Second`)}>` : 'Autorole 2: Desativado'
 
             return `${Autorole1}\n${Autorole2}`
         }
 
         function GetChannel(x) {
-            return sdb.get(`Servers.${message.guild.id}.${x}`) ? `Ativado: <#${sdb.get(`Servers.${message.guild.id}.${x}`)}>` : 'Desativado'
+            return ServerDb.get(`Servers.${message.guild.id}.${x}`) ? `Ativado: <#${ServerDb.get(`Servers.${message.guild.id}.${x}`)}>` : 'Desativado'
         }
 
     }

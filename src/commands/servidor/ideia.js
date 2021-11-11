@@ -1,5 +1,6 @@
 const { e } = require('../../../database/emojis.json')
 const ms = require('parse-ms')
+const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'ideia',
@@ -23,7 +24,7 @@ module.exports = {
             .addFields({ name: 'Comando de Ativação', value: `\`${prefix}ideiachannel\``, inline: true })
             .addFields({ name: 'Comando de Desativação', value: `\`${prefix}ideiachannel off\``, inline: true })
 
-        let canal = sdb.get(`Servers.${message.guild.id}.IdeiaChannel`)
+        let canal = ServerDb.get(`Servers.${message.guild.id}.IdeiaChannel`)
         if (!canal) return message.reply({ content: `${e.Deny} | O canal de ideias não existe no servidor`, embeds: [NoChannelEmbed] })
 
         await message.guild.channels.fetch(canal).then(channel => {
