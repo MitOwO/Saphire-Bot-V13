@@ -31,17 +31,18 @@ module.exports = {
         if (user.bot) return message.reply(`${e.Deny} | Bots não possuem experiência.`)
 
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return LevelInfo()
-        
-        let Timing = ms(30000 - (Date.now() - TimeDB))
-        if (TimeDB !== null && 30000 - (Date.now() - TimeDB) > 0)
+
+        let Timing = ms(5000 - (Date.now() - TimeDB))
+        if (TimeDB !== null && 5000 - (Date.now() - TimeDB) > 0)
             return message.reply(`⏱️ | Calminha coisa linda! \`${Timing.seconds}s\``)
 
         if (['set', 'wall', 'wallpaper', 'fundo', 'bg', 'background', 'capa'].includes(args[0]?.toLowerCase())) {
 
             let Cooldown = sdb.get(`Users.${message.author.id}.Timeouts.LevelTrade`) || 0
-            let Time = ms(1200000 - (Date.now() - Cooldown))
-            if (Cooldown !== null && 1200000 - (Date.now() - Cooldown) > 0)
-                return message.reply(`⏱️ | Espere um pouco para trocar de wallpaper. \`${Time.minutes} minutes ${Time.seconds} seconds\``)
+            let Time = ms(180000 - (Date.now() - Cooldown))
+            let minutos = Time.minutes > 0 ? `${Time.minutes} minutos e` : ''
+            if (Cooldown !== null && 180000 - (Date.now() - Cooldown) > 0)
+                return message.reply(`⏱️ | Espere mais **${minutos} ${Time.seconds} segundos** para trocar de wallpaper`)
 
             let option = args[1]?.toLowerCase()
 
