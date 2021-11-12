@@ -49,14 +49,13 @@ client.on('messageCreate', async message => {
         // React(message) // React System
         xp(message) // XP System
         RequestAutoDelete(message) // Auto delete requests
+        AfkSystem(message)
     }
 
     if (!message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY) || !message.guild.me.permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS) || !message.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS) || !message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS))
         return message.author.bot ? null : message.channel.send(`Eu não tenho permissão suficiente para executar este comando. Pode conferir se eu tenho as 3 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo.)\`**`).catch(() => { })
     // return message.channel.send(`Hey, ${message.author}! Eu preciso das permissões "\`Ver histórico de mensagens\`, \`Usar emojis externos\` \`Adicionar Reações\` e \`Enviar links\`" para que eu possa usar meu sistema de interação, respostas, emojis e informações.`)
 
-    AfkSystem(message)
-    
     if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id))
         message.channel.send(`${e.SaphireHi} | \`${prefix}help\``)
 

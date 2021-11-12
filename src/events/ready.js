@@ -6,12 +6,9 @@ const Data = require('../../Routes/functions/data')
 client.once("ready", async () => {
 
     sdb.delete('Client.Rebooting')
-
-    if (!lotery.get('Loteria.Users'))
-        lotery.set('Loteria.Users', [])
-
     sdb.delete('Request')
     sdb.delete('BetRequest')
+
     CommandsLog.clear()
 
     let Array2 = ['Procurando Nemo', 'Vingadores', 'Bob Esponja', 'Barbie Girl']
@@ -25,6 +22,14 @@ client.once("ready", async () => {
     client.user.setStatus(`${Status}`)
 
     console.log('Event Ready | OK!')
-    const channel = await client.channels.cache.get(config.LogChannelId)
-    channel ? channel.send(`⏱️ Initial Ping: \`${client.ws.ping}ms\`\n${e.Check} Login: \`${Data()}\``) : ''
+    await client.channels.cache.get(config.LogChannelId)?.send(`⏱️ Initial Ping: \`${client.ws.ping}ms\`\n${e.Check} Login: \`${Data()}\``)
+
+    // if (!sdb.get(`MuteSystem`))
+    //     sdb.set(`MuteSystem`, {})
+
+    // sdb.get(`MuteSystem`)
+
+    // setInterval(() => {
+
+    // }, 5000)
 })
