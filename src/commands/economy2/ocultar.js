@@ -19,7 +19,7 @@ module.exports = {
             if (!oculto) {
                 return message.reply(`${e.Deny} | O seu banco não está ocultado.`)
             } else {
-                s.delete(`Users.${message.author.id}.Perfil.BankOcult`)
+                sdb.delete(`Users.${message.author.id}.Perfil.BankOcult`)
                 return message.reply(`${e.Check} | O seu banco não está mais ocultado.`)
             }
         }
