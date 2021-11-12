@@ -156,7 +156,6 @@ async function RegisterUser(message) {
             },
             NoReact: db.get(`${message.author.id}.NoReact`) || undefined,
             Baka: db.get(`${message.author.id}.Baka`) || undefined,
-            AfkSystem: db.get(`Client.AfkSystem.${message.author.id}`) || undefined,
             Bolsa: db.get(`${message.author.id}.Bolsa`) || undefined,
 
         }
@@ -212,7 +211,7 @@ async function RegisterServer(guild) {
         db.delete(`Servers.${guild.id}.Prefix`)
 
     const ServerObj = {
-        Name: guild.name,
+        Name: guild.name || undefined,
         Owner: guild.members.cache.get(guild.ownerId)?.user.tag || undefined,
         OwnerId: guild.ownerId || undefined,
         Prefix: db.get(`Servers.${guild.id}.Prefix`) || undefined,
@@ -264,7 +263,6 @@ async function RegisterServer(guild) {
     } catch (err) {
         await client.users.cache.get(config.ownerId)?.send(`${e.Deny} | Falha ao configurar o servidor \`${guild.id}\` na database.\n\`${err}\``)
         ServerDb.delete(`Servers.${guild.id}`)
-        msg.delete().catch(() => { })
         return message?.channel.send(`${e.Deny} | Falha ao configurar o servidor \`${guild.id}\` na database.\n\`${err}\``)
     }
 

@@ -1,12 +1,15 @@
 const { sdb, ServerDb } = require('./database')
 const { e } = require('../../database/emojis.json')
-const { Message } = require('discord.js')
+const { Message, Permissions } = require('discord.js')
 
 /**
  * @param { Message } message 
  */
 
 function AfkSystem(message) {
+
+    if (!message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY))
+        return
 
     const GuildId = message.guild.id
 

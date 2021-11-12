@@ -12,6 +12,7 @@ const nomes = new Database("../../database/nomes.json")
 const CommandsLog = new Database("../../database/logcommands.json")
 const ServerDb = new Database("../../ServerDatabase.json")
 const sdb = new Database("../../database.json")
+const ticket = new Database('../../database/tickets.json')
 
 const DatabaseObj = {
     LevelWallpapers: BgLevel.get('LevelWallpapers'),

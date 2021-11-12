@@ -34,7 +34,7 @@ function Error(message, err) {
     }
 
     function Block() {
-        sdb.set(`ComandoBloqueado.${cmd}`, `> ${err?.message}`)
+        sdb.set(`ComandoBloqueado.${cmd}`, `${err?.message || 'Indefinido'}`)
         db.add(`Balance_${message.author.id}`, 1000)
         message.channel.send(`${e.Warn} Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.PandaProfit} +1000 ${Moeda(message)}`).catch(() => { })
     }
