@@ -48,7 +48,7 @@ module.exports = {
 
                 function NewCrimeStart(value) {
                     switch (value) {
-                        case 0: msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { }); sdb.set(`Users.${message.author.id}.Timeouts.Crime`, null); break;
+                        case 0: msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { }); sdb.delete(`Users.${message.author.id}.Timeouts.Crime`); break;
                         case 1: Casa(); break;
                         case 2: Mansao(); break;
                         case 3: Prefeitura(); break;
@@ -68,7 +68,7 @@ module.exports = {
 
             // FUNCTIONS
             function Cancel() {
-                sdb.set(`Users.${message.author.id}.Timeouts.Crime`, null)
+                sdb.delete(`Users.${message.author.id}.Timeouts.Crime`)
                 msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
             }
 

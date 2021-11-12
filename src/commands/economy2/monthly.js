@@ -22,7 +22,7 @@ module.exports = {
         let time = ms(2592000000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Monthly`)))
         if (sdb.get(`Users.${message.author.id}.Timeouts.Monthly`) !== null && 2592000000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Monthly`)) > 0) {
             return message.reply(`${e.Deny} | Epa! Espere mais \`${time.days}d ${time.hours}h, ${time.minutes}m, e ${time.seconds}s\``)
-        } else { sdb.set(`Users.${message.author.id}.Timeouts.Monthly`, null) }
+        } else { sdb.delete(`Users.${message.author.id}.Timeouts.Monthly`) }
 
         let vip = Vip(`${message.author.id}`)
         message.guild.id === config.guildId ? InsideGuild() : OutsideGuild()

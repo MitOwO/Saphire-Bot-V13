@@ -30,7 +30,7 @@ module.exports = {
         TimeBolsa = ms(172800000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Bolsa`)))
         if (sdb.get(`Users.${message.author.id}.Timeouts.Bolsa`) !== null && 172800000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Bolsa`)) > 0) {
             return message.reply(`${e.Loading} Investimento em andamento. Tente novamente em: \`${TimeBolsa.days}d ${TimeBolsa.hours}h ${TimeBolsa.minutes}m e ${TimeBolsa.seconds}s\``)
-        } else { sdb.set(`Users.${message.author.id}.Timeouts.Bolsa`, null) }
+        } else { sdb.delete(`Users.${message.author.id}.Timeouts.Bolsa`) }
 
 
         if (Valor && isNaN(args[1])) return message.reply(`${e.Deny} | **${args[1]}** | Não é um número.`)
@@ -46,8 +46,8 @@ module.exports = {
                         .setColor(colors(message.member))
                         .setTitle(`📊 ${client.user.username} Bolsa de Valores`)
                         .setDescription(`${e.SaphireObs} Para investir, use a sigla da empresa`)
-                        .addField('🚝 Train Station NYL | > TSN', `Taxa de Lucro: \`70%\`\nValor Mínimo: \`5.000.000\`\nGarantia: \`40%\``)
-                        .addField('🏗️ Construction Newest World | > CNW', `Taxa de Lucro: \`50%\`\nValor Mínimo: \`7.000.000\`\nGarantia: \`50%\``)
+                        .addField('🚝 Train Station NYL | > TSN', `Taxa de Lucro: \`70%\`\nValor Mínimo: \`5.000.000\`\nGarantia de até: \`40%\``)
+                        .addField('🏗️ Construction Newest World | > CNW', `Taxa de Lucro: \`50%\`\nValor Mínimo: \`7.000.000\`\nGarantia de até: \`50%\``)
                 ]
             })
         }
@@ -152,8 +152,8 @@ module.exports = {
                 return message.reply(`${e.Deny} | Você não tem nenhum valor na bolsa de valores para ser resgatado.`)
 
             db.add(`Balance_${message.author.id}`, Value)
-            sdb.set(`Users.${message.author.id}.Cache.BolsaLucro`, 0)
-            sdb.set(`Users.${message.author.id}.Timeouts.Bolsa`, null)
+            sdb.delete(`Users.${message.author.id}.Cache.BolsaLucro`)
+            sdb.delete(`Users.${message.author.id}.Timeouts.Bolsa`)
 
             return message.reply(`${e.Check} | Você resgatou **${Value} ${Moeda(message)}** da Bolsa de Valores.`)
         }
@@ -172,7 +172,7 @@ module.exports = {
                             },
                             {
                                 name: `${e.Stonks} Investir`,
-                                value: `Comece a investir usando o comando \`${prefix}bolsa SIGLA <valor>\`. As siglas estão ao lado do nome da empresa. ***Empresa | > "SIGLA"**, sempre seguidas de 3 letras. O valor mínimo é exigido para investir, porém valores maiores são aceitos.`
+                                value: `Comece a investir usando o comando \`${prefix}bolsa SIGLA <valor>\`. As siglas estão ao lado do nome da empresa. **Empresa | > "SIGLA"**, sempre seguidas de 3 letras. O valor mínimo é exigido para investir, porém valores maiores são aceitos.`
                             },
                             {
                                 name: '📊 Acompanhamento',

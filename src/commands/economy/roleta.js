@@ -28,8 +28,8 @@ module.exports = {
 
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase()) || !args[0]) return message.reply({ embeds: [roletaembed] })
 
-        let time = ms(2400000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Roleta`)))
-        if (sdb.get(`Users.${message.author.id}.Timeouts.Roleta`) !== null && 2400000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Roleta`)) > 0)
+        let time = ms(1200000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Roleta`)))
+        if (sdb.get(`Users.${message.author.id}.Timeouts.Roleta`) !== null && 1200000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Roleta`)) > 0)
             return message.channel.send(`${e.Loading} | ${message.author}, as roletas estão voltando ao lugar, volte em: \`${time.minutes}m e ${time.seconds}s\``)
 
         let fichas = sdb.get(`Users.${message.author.id}.Slot.Fichas`) || 0
@@ -91,17 +91,17 @@ module.exports = {
                         RolAllFunction(valor, winprize, msg)
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
-                        sdb.set(`Users.${message.author.id}.Timeouts.Roleta`, null)
+                        sdb.delete(`Users.${message.author.id}.Timeouts.Roleta`)
                         msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
                         sdb.add(`Users.${message.author.id}.Cache.Resgate`, parseInt(sdb.get(`Users.${message.author.id}.Cache.ValueAll`) || 0))
-                        sdb.set(`Users.${message.author.id}.Cache.ValueAll`, 0)
+                        sdb.delete(`Users.${message.author.id}.Cache.ValueAll`)
                     }
                 }).catch(() => {
                     sdb.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Comando cancelado por tempo expirado.`).catch(() => { })
                     sdb.add(`Users.${message.author.id}.Cache.Resgate`, sdb.get(`Users.${message.author.id}.Cache.ValueAll`) || 0)
-                    sdb.set(`Users.${message.author.id}.Cache.ValueAll`, 0)
-                    sdb.set(`Users.${message.author.id}.Timeouts.Roleta`, null)
+                    sdb.delete(`Users.${message.author.id}.Cache.ValueAll`)
+                    sdb.delete(`Users.${message.author.id}.Timeouts.Roleta`)
                 })
 
             }).catch(err => {
@@ -165,8 +165,8 @@ module.exports = {
 
         function GiveBackMoneyDraw(prize, msg) {
             sdb.add(`Users.${message.author.id}.Cache.Resgate`, ((sdb.get(`Users.${message.author.id}.Cache.Roleta`) || 0) - prize))
-            sdb.set(`Users.${message.author.id}.Cache.Roleta`, 0)
-            sdb.set(`Users.${message.author.id}.Timeouts.Roleta`, null)
+            sdb.delete(`Users.${message.author.id}.Cache.Roleta`)
+            sdb.delete(`Users.${message.author.id}.Timeouts.Roleta`)
             msg.edit(`${e.Nagatoro} | **EMPATE!** | ${message.author} jogou na roleta e empatou. O dinheiro foi retornado ao cache e o timeout zerado.`)
         }
     }

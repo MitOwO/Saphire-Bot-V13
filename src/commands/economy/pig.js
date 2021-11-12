@@ -49,14 +49,14 @@ module.exports = {
             }
 
             function PigBroken() {
-                db.add(`Balance_${message.author.id}`, sdb.get('Porquinho.Money'))
+                const PigMoney = sdb.get('Porquinho.Money') || 0
+                db.add(`Balance_${message.author.id}`, PigMoney)
+                message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${PigMoney} ${Moeda(message)}!`)
                 sdb.set('Porquinho', {
-                    Lastprize: sdb.get('Porquinho.Money'),
+                    Lastprize: PigMoney,
                     LastWinner: `${message.author.tag}\n*(${message.author.id})*`,
                     Money: 0
                 })
-
-                return message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${sdb.get('Porquinho.Money')} ${Moeda(message)}!`)
             }
 
             function Question() {

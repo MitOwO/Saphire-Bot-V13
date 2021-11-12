@@ -46,7 +46,7 @@ module.exports = {
         let AuthorMoney = db.get(`Balance_${message.author.id}`) || 0
         let UserMoney = db.get(`Balance_${user.id}`) || 0
 
-        let Valor = parseInt(args[1].replace(/k/g, '000'))
+        let Valor = parseInt(args[1]?.replace(/k/g, '000'))
 
         if (['all', 'tudo'].includes(args[1]?.toLowerCase())) Valor = ValueAll()
         if (!Valor) return message.reply(`${e.Deny} | O comando não está certo não... Tenta assim: \`${prefix}duelar <@user/id> <valor>\``)

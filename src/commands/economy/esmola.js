@@ -24,7 +24,7 @@ module.exports = {
       sdb.set(`Users.${message.author.id}.Timeouts.Esmola`, Date.now())
       sdb.set(`Request.${message.author.id}`, `${msg.url}`)
       msg.react('🪙').catch(() => { 
-        sdb.set(`Users.${message.author.id}.Timeouts.Esmola`, null)
+        sdb.delete(`Users.${message.author.id}.Timeouts.Esmola`)
       }) // Coin
 
       const filter = (reaction, user) => { return reaction.emoji.name === '🪙' && user.id === user.id; };
