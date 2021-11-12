@@ -16,10 +16,16 @@ module.exports = {
 
         let NewJob = args.join(' ')
 
+        let BlockWords = ['undefined', 'false', 'null', 'nan']
+        for (const word of BlockWords) {
+            if (Motivo.toLowerCase() === NewJob)
+                return message.channel.send(`${e.Deny} | ${message.author}, somente a palavra **${word}** é proibida neste comando. Escreva algo mais.`)
+        }
+
         if (NewJob === Job) return message.reply(`${e.SaphireEntaoKkk} | Então... Esse já é o seu trabalho definido.`).catch(() => { })
         if (NewJob.length > 20 || NewJob.length < 4) return message.reply(`${e.SaphireRaiva} | O tamanho limite é de **4~~20 caracteres**.`).catch(() => { })
 
         sdb.set(`Users.${message.author.id}.Perfil.Trabalho`, NewJob)
-        return message.reply(`${e.SaphireFeliz} | Trabalho definido com sucesso! Você pode vê-lo no seu perfil!`).catch(() => { })
+        return message.reply(`${e.SaphireFeliz} | Trabalhos definido com sucesso! Você pode vê-lo no seu perfil!`).catch(() => { })
     }
 }

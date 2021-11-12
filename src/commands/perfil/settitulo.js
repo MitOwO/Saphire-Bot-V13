@@ -22,6 +22,12 @@ module.exports = {
             let NewTitle = args.join(' ')
             if (NewTitle.length > 20) { return message.reply(`${e.Deny} | O título não pode ultrapassar **20 caracteres**`) }
 
+            let BlockWords = ['undefined', 'false', 'null', 'nan']
+            for (const word of NewTitle) {
+                if (Motivo.toLowerCase() === NewJob)
+                    return message.channel.send(`${e.Deny} | ${message.author}, somente a palavra **${word}** é proibida neste comando. Escreva algo mais.`)
+            }
+
             if (NewTitle === sdb.get(`Users.${message.author.id}.Perfil.Titulo`)) return message.reply(`${e.Info} | Este já é o seu Título atual.`)
 
             return message.reply(`${e.QuestionMark} | Deseja alterar seu título para: **${NewTitle}** ?`).then(msg => {

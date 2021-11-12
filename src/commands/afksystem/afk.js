@@ -19,6 +19,12 @@ module.exports = {
         let Motivo = args.join(" ") || 'Sem recado definido.'
         if (Motivo.length > 150) return message.reply(`${e.Deny} | O seu motivo não pode passar de 150 caracteres.`)
 
+        let BlockWords = ['undefined', 'false', 'null', 'nan']
+        for (const word of BlockWords) {
+            if (Motivo.toLowerCase() === word)
+                return message.channel.send(`${e.Deny} | ${message.author}, somente a palavra **${word}** é proibida neste comando. Escreva algo mais.`)
+        }
+
         const AfkInfoEmbed = new MessageEmbed()
             .setColor('#246FE0')
             .setTitle(`${e.Planet} Afk Global System`)
