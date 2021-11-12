@@ -80,8 +80,8 @@ module.exports = {
         } else { sdb.delete(`Users.${user.id}.Timeouts.Cu`); TCu = Dpn }
 
         // Timeout Roleta
-        let TimeRoleta = ms(2400000 - (Date.now() - Roleta))
-        if (Roleta !== null && 2400000 - (Date.now() - Roleta) > 0) {
+        let TimeRoleta = ms(1200000 - (Date.now() - Roleta))
+        if (Roleta !== null && 1200000 - (Date.now() - Roleta) > 0) {
             TRoleta = `${e.Loading} \`${TimeRoleta.minutes}m e ${TimeRoleta.seconds}s\``
         } else { sdb.delete(`Users.${user.id}.Timeouts.Roleta`); TRoleta = Dpn }
 

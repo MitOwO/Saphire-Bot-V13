@@ -27,7 +27,7 @@ module.exports = {
         let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[1])
 
         if (CanalAtual && !CanalServer)
-            sdb.set(`Users.${message.author.id}.PrivateChannel.Channel`, null)
+            sdb.delete(`Users.${message.author.id}.PrivateChannel.Channel`)
 
         if (['delete', 'deletar', 'excluir', 'fechar', 'apagar'].includes(args[0]?.toLowerCase()))
             return DeleteChannel()

@@ -46,9 +46,9 @@ module.exports = {
                         let amount = Math.floor(Math.random() * 20000)
 
                         if (result <= 30) {
-                            sdb.set(`Users.${message.author.id}.Timeouts.Preso`, null)
+                            sdb.delete(`Users.${message.author.id}.Timeouts.Preso`)
                             return message.channel.send(`${e.Loading} | Fugindo da detenção...`).then(msg => {
-                                setTimeout(() => { sdb.set(`Users.${message.author.id}.Timeouts.Preso`, null); msg.edit(`${e.Check} | ${message.author} fugiu da detenção com sucesso!`).catch(() => { }) })
+                                setTimeout(() => { sdb.delete(`Users.${message.author.id}.Timeouts.Preso`); msg.edit(`${e.Check} | ${message.author} fugiu da detenção com sucesso!`).catch(() => { }) })
                             })
                         } else {
                             sdb.set(`Users.${message.author.id}.Timeouts.Preso`, Date.now())
