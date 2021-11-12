@@ -19,12 +19,12 @@ module.exports = {
 
             if (!args[0]) return message.reply(`${e.SaphireObs} | Você precisa me dizer qual o seu novo título.`)
 
-            let NewTitle = args.join(' ')
-            if (NewTitle.length > 20) { return message.reply(`${e.Deny} | O título não pode ultrapassar **20 caracteres**`) }
+            let NewTitle = args.join(' ') || 'Indefinido'
+            if (NewTitle.length > 20) return message.reply(`${e.Deny} | O título não pode ultrapassar **20 caracteres**`)
 
             let BlockWords = ['undefined', 'false', 'null', 'nan']
-            for (const word of NewTitle) {
-                if (Motivo.toLowerCase() === NewJob)
+            for (const word of BlockWords) {
+                if (NewTitle.toLowerCase() === word)
                     return message.channel.send(`${e.Deny} | ${message.author}, somente a palavra **${word}** é proibida neste comando. Escreva algo mais.`)
             }
 
