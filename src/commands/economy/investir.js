@@ -81,7 +81,7 @@ module.exports = {
             Valor ? Invest = Valor : Invest = Invest
 
             db.subtract(`Balance_${message.author.id}`, Invest)
-            sdb.add(`Users.${message.author.id}.Cache.Bolsa`, Invest)
+            sdb.add(`Users.${message.author.id}.Cache.Bolsa`, parseInt(Invest))
 
             return message.reply(`${e.QuestionMark} | Pedido: Investir **${Invest?.toFixed(0)} ${Moeda(message)}** na empresa **${Empresa}**
             \nVocê terá que esperar **2 dias** até o resultado do investimento sair. Você tem **${Chance}%** de garantia que receberá até **${Lucro}%** de lucro.
@@ -117,7 +117,7 @@ module.exports = {
             sdb.set(`Users.${message.author.id}.Timeouts.Bolsa`, Date.now())
             sdb.set(`Users.${message.author.id}.Cache.BolsaValue`, Invest)
             sdb.set(`Users.${message.author.id}.Cache.BolsaEmpresa`, Empresa)
-            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, Result)
+            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, parseInt(Result))
 
             return message.reply(`${e.Check} | Investimento efetuado com sucesso! Daqui 2 dias, use o comando \`${prefix}bolsa me\` ou \`${prefix}balance\` e veja seu resultado!`).catch(() => { })
         }

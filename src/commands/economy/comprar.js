@@ -393,7 +393,6 @@ module.exports = {
             if (count >= 2000)
                 return message.reply(`${e.Deny} | Você já atingiu o limite máximo de 2000 tickets comprados.`)
 
-
             db.get(`Balance_${message.author.id}`) >= 1000 ? AddNewTickets() : NoMoney(1000)
         }
 
