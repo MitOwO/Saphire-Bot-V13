@@ -3,9 +3,8 @@ const { e } = require('../../../database/emojis.json')
 
 module.exports = {
     name: 'translate',
-    aliases: ['t'],
+    aliases: ['t', 'tradutor'],
     category: 'util',
-    
     ClientPermissions: 'EMBED_LINKS',
     emoji: `${e.Translate}`,
     usage: '<t> <sigla> <texto para traduzir>',

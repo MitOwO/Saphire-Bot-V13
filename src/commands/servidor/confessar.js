@@ -18,38 +18,35 @@ module.exports = {
 
         if (['set', 'on'].includes(args[0]?.toLowerCase())) return SetNewChannel()
         if (['off', 'desligar'].includes(args[0]?.toLowerCase())) return SetOffChannel()
+        if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return message.channel.send({
+            embeds: [
+                new MessageEmbed()
+                    .setColor('#246FE0')
+                    .setTitle(`📝 ${client.user.username} Confessionário`)
+                    .setDescription(`Confesse tudo o que você quiser com este comando. É simples, fácil e anônimo.`)
+                    .addFields(
+                        {
+                            name: `${e.Gear} Comando`,
+                            value: `\`${prefix}confessar <Sua confissão e diante>\`\nAtalhos: \`confess | confes\``
+                        },
+                        {
+                            name: `${e.On} Ativação do Canal`,
+                            value: `\`${prefix}confessar set <#channel>\``
+                        },
+                        {
+                            name: `${e.Off} Desativação`,
+                            value: `\`${prefix}confessar off\``
+                        }
+                    )
+                    .setFooter(`A ${client.user.username} não se responsabiliza por quaisquer mensagem enviada atráves deste comando.`)
+            ]
+        })
 
-        try {
-            message.delete()
-        } catch (err) {
-            return message.channel.send(`${e.Deny} | Houve um erro na execução deste comando. Verifique se eu tenho a permissão **GERENCIAR MENSAGENS** ativada.\n\`${err}\``)
-        }
+        message.delete().catch(() => { return message.channel.send(`${e.Deny} | Houve um erro na execução deste comando. Verifique se eu tenho a permissão **GERENCIAR MENSAGENS** ativada.\n\`${err}\``) })
 
         const channelDB = ServerDb.get(`Servers.${message.guild.id}.ConfessChannel`)
         const channel = await message.guild.channels.cache.get(channelDB)
-        let Mensagem = args.join(' ') || 'Algo deu errado e eu não consegui captar a mensagem...'
-
-        const InfoEmbed = new MessageEmbed()
-            .setColor('#246FE0')
-            .setTitle(`📝 ${client.user.username} Confessionário`)
-            .setDescription(`Confesse tudo o que você quiser com este comando. É simples, fácil e anônimo.`)
-            .addFields(
-                {
-                    name: `${e.Gear} Comando`,
-                    value: `\`${prefix}confessar <Sua confissão e diante>\`\nAtalhos: \`confess | confes\``
-                },
-                {
-                    name: `${e.On} Ativação do Canal`,
-                    value: `\`${prefix}confessar set <#channel>\``
-                },
-                {
-                    name: `${e.Off} Desativação`,
-                    value: `\`${prefix}confessar off\``
-                }
-            )
-            .setFooter(`A ${client.user.username} não se responsabiliza por quaisquer mensagem enviada atráves deste comando.`)
-
-        if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return message.channel.send({ embeds: [InfoEmbed] })
+        let Mensagem = args.join(' ')
 
         let time = ms(60000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Confess`)))
         if (sdb.get(`Users.${message.author.id}.Timeouts.Confess`) !== null && 60000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Confess`)) > 0)
@@ -64,7 +61,6 @@ module.exports = {
             .setColor('#246FE0')
             .setDescription(`📝 ${Mensagem}`)
             .setFooter(`${prefix}confessar`)
-            .setTimestamp()
 
         try {
             if (channel.permissionsFor(channel.guild.roles.everyone).has(Permissions.FLAGS.SEND_MESSAGES))

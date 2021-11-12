@@ -35,7 +35,7 @@ module.exports = {
         if (['add', 'addfriend', 'adicionar'].includes(args[0]?.toLowerCase()))
             return AddFriend()
 
-        if (['edit', 'editar', 'noome'].includes(args[0]?.toLowerCase()))
+        if (['edit', 'editar', 'nome', 'name'].includes(args[0]?.toLowerCase()))
             return EditChannelName()
 
         if (['rem', 'removefriend', 'remover', 'tirar', 'delfriend', 'remove'].includes(args[0]?.toLowerCase()))
