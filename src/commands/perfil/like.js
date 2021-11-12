@@ -3,7 +3,7 @@ const ms = require("parse-ms")
 
 module.exports = {
     name: 'like',
-    aliases: ['curtir'],
+    aliases: ['curtir', 'laique'],
     category: 'perfil',
     emoji: `${e.Like}`,
     usage: '<like> [@user]',

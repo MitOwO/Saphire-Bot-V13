@@ -184,7 +184,7 @@ module.exports = {
         Moderator = sdb.get(`Client.Moderadores.${user.id}`) ? `\n${e.ModShield} **Official Moderator**` : ''
         Developer = sdb.get(`Client.Developer.${user.id}`) ? `\n${e.OwnerCrow} **Official Developer**` : ''
         BugHunter = sdb.get(`Client.BugHunter.${user.id}`) ? `\n${e.Gear} **Bug Hunter**` : ''
-        OfficialDesigner = sdb.get(`OfficialDesigner.${user.id}`) ? `\n${e.SaphireFeliz} **Designer Official & Emojis Productor**` : ''
+        OfficialDesigner = sdb.get(`Client.OfficialDesigner.${user.id}`) ? `\n${e.SaphireFeliz} **Designer Official**` : ''
         Mage = sdb.get(`Titulos.${user.id}.Halloween`) ? `\n🎃 **Halloween 2021**` : ''
 
         if (user.id === client.user.id) {

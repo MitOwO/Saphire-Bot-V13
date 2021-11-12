@@ -15,12 +15,12 @@ module.exports = {
 
         if (!args[0]) return message.reply(`${e.SaphireObs} | Você precisa me dizer qual o seu novo status.`)
 
-        let NewStatus = args.join(' ')
-        if (NewStatus.length > 140) { return message.reply(`${e.Deny} | O status não pode ultrapassar **140 caracteres**`) }
+        let NewStatus = args.join(' ') || 'Indefinido'
+        if (NewStatus.length > 140) return message.reply(`${e.Deny} | O status não pode ultrapassar **140 caracteres**`)
 
         let BlockWords = ['undefined', 'false', 'null', 'nan']
         for (const word of BlockWords) {
-            if (Motivo.toLowerCase() === NewStatus)
+            if (NewStatus?.toLowerCase() === word)
                 return message.channel.send(`${e.Deny} | ${message.author}, somente a palavra **${word}** é proibida neste comando. Escreva algo mais.`)
         }
 

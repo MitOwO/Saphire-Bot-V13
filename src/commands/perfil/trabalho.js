@@ -14,11 +14,11 @@ module.exports = {
 
         if (!args[0]) return message.channel.send(`${e.SaphireObs} | Escolha uma profissão pro ser perfil. Você pode usar o comando assim: \`${prefix}job Bombeiro\``)
 
-        let NewJob = args.join(' ')
+        let NewJob = args.join(' ') || 'Indefinido'
 
         let BlockWords = ['undefined', 'false', 'null', 'nan']
         for (const word of BlockWords) {
-            if (Motivo.toLowerCase() === NewJob)
+            if (NewJob.toLowerCase() === word)
                 return message.channel.send(`${e.Deny} | ${message.author}, somente a palavra **${word}** é proibida neste comando. Escreva algo mais.`)
         }
 
