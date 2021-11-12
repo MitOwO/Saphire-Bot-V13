@@ -18,7 +18,7 @@ client.on('channelDelete', async (channel) => {
         case ServerDb.get(`Servers.${channel.guild.id}.LeaveChannel`): DeletedChannel('LeaveChannel', 'Canal de Saída'); break;
         case ServerDb.get(`Servers.${channel.guild.id}.XPChannel`): DeletedChannel('XPChannel', 'Canal de Level Up'); break;
         case ServerDb.get(`Servers.${channel.guild.id}.ReportChannel`): DeletedChannel('ReportChannel', 'Canal de Reportes'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.LogChannel`): sdb.set(`Servers.${channel.guild.id}.LogChannel`, null); break;
+        case ServerDb.get(`Servers.${channel.guild.id}.LogChannel`): sdb.delete(`Servers.${channel.guild.id}.LogChannel`); break;
         case ServerDb.get(`Servers.${channel.guild.id}.WelcomeChannel.Canal`): DeletedChannel('WelcomeChannel', 'Canal de Boas-Vindas'); break;
         case ServerDb.get(`Servers.${channel.guild.id}.Farm.BuscaChannel`): DeletedChannel('Farm.BuscaChannel', 'Farming Floresta Cammum'); break;
         case ServerDb.get(`Servers.${channel.guild.id}.Farm.PescaChannel`): DeletedChannel('Farm.PescaChannel', 'Farming Pesca'); break;
