@@ -23,7 +23,7 @@ module.exports = {
         }
 
         if (['servers', 'servidores'].includes(args[0]?.toLowerCase())) {
-            sdb.delete('Servers')
+            ServerDb.delete('Servers')
             return message.reply(`${e.Check} Todas as informações de todos os servidores foram apagadas.`)
         }
 

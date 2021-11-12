@@ -21,16 +21,7 @@ module.exports = {
         if (['servers', 'server', 'servidores', 'guild', 'guilds'].includes(args[0]?.toLowerCase()))
             return RebootGuild()
 
-        if (['serverdatabase'].includes(args[0]?.toLowerCase()))
-            return RebootServer()
-
         return RebootLock(args?.join(' '))
-
-        function RebootServer() {
-            ServerDb.set('Servers', sdb.get('Servers'))
-            sdb.delete('Servers')
-            return message.channel.send(`${e.Check} | O dados de todos os servidores foram transferidos de **"database.json"** para **"ServerDatabase.json"**.`)
-        }
 
         function RebootLock(x) {
             sdb.set('Client.Rebooting', { ON: true, Features: x || 'Nenhum dado fornecido.' })
@@ -86,7 +77,7 @@ module.exports = {
             let keys, i = 0
 
             try {
-                keys = Object.keys(sdb.get('Servers'))
+                keys = Object.keys(ServerDb.get('Servers'))
             } catch (err) {
                 Error(message, err)
             }

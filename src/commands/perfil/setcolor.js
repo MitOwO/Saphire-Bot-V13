@@ -28,7 +28,7 @@ module.exports = {
         }
 
         function SetColorOff() {
-            sdb.set(`Users.${message.author.id}.Color.Set`, null)
+            sdb.delete(`Users.${message.author.id}.Color.Set`)
             return message.reply(`${e.SaphireFeliz} | Sua cor foi deletada e agora eu vou pegar a cor do seu cargo pra colocar nas suas mensagens.`)
 
         }
