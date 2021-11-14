@@ -10,7 +10,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
         try {
-            await simplydjs.calculator(message, { embedColor: '#246FE0', credit: false })
+            await simplydjs.calculator(message, { embedColor: '#246FE0', credit: false })?.catch(() => { })
         } catch (err) { return }
     }
 }
