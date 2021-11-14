@@ -43,7 +43,7 @@ client.on('messageCreate', async message => {
     if (message.content?.toLowerCase() === 'saphire')
         message.channel.send(`${e.SaphireHi} | \`${prefix}help\``).catch(() => { })
 
-        
+
     if (!message.author.bot) {
         UpdateUserName(message)
         // React(message) // React System
@@ -79,14 +79,12 @@ client.on('messageCreate', async message => {
         if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && ServerDb.get(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`))
             return message.reply(`${e.Deny} | Meus comandos foram bloqueados neste canal.`).then(msg => setTimeout(() => { msg.delete().catch(() => { }) }, 4500)).catch(() => { })
 
-        if (AuthorId !== config.ownerId) {
-            if (!sdb.get(`Moderadores.${AuthorId}`)) {
-                if (blacklist) return Blacklisted(message)
-                if (blacklistServers) return ServerBlocked(message)
-            }
+        if (AuthorId !== config.ownerId && !sdb.get(`Client.Moderadores.${AuthorId}`)) {
+            if (blacklist) return Blacklisted(message)
+            if (blacklistServers) return ServerBlocked(message)
         }
 
-        const reg = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i
+        const reg = /^[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i
         if (!reg.test(cmd))
             return message.reply(`${e.Deny} | Este comando contém caracteres bloqueados pelo meu sistema.`)
 

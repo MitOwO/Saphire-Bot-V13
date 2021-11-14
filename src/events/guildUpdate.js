@@ -9,17 +9,18 @@ client.on('guildUpdate', async (oldGuild, newGuild) => {
         return RegisterServer(newGuild)
 
     const { Owner, OwnerId, Name } = {
-        Owner: ServerDb.get(`Servers.${newGuild.id}.Owner`),
-        OwnerId: ServerDb.get(`Servers.${newGuild.id}.OwnerId`),
-        Name: ServerDb.get(`Servers.${newGuild.id}.Name`),
+        Owner: ServerDb.get(`Servers.${newGuild.id}.Owner`) || 'Indefinido',
+        OwnerId: ServerDb.get(`Servers.${newGuild.id}.OwnerId`) || 'Indefinido',
+        Name: ServerDb.get(`Servers.${newGuild.id}.Name`) || 'Indefinido',
     }
 
-    let owner = await newGuild.members.cache.get(`${newGuild.ownerId}`)
+    let Guild = await client.guilds.cache.get(newGuild.id)
+    let owner = Guild.members.cache.get(Guild?.ownerId)?.user
 
-    if (Owner !== owner?.user?.tag || OwnerId !== newGuild.ownerId) {
-        ServerDb.set(`Servers.${newGuild.id}.OwnerId`, newGuild.ownerId)
-        ServerDb.set(`Servers.${newGuild.id}.Owner`, owner?.user?.tag)
-        Notify(newGuild.id, 'Atualização', `Os dados do*(a)* dono*(a)* do servidor foi alterado e atualizado no meu banco de dados.`)
+    if (Owner !== owner?.tag || OwnerId !== owner.id) {
+        ServerDb.set(`Servers.${newGuild.id}.OwnerId`, owner.id)
+        ServerDb.set(`Servers.${newGuild.id}.Owner`, owner.tag)
+        Notify(newGuild.id, 'Atualização', `Os dados do*(a)* dono*(a)* do servidor foram alterado e atualizado no meu banco de dados.`)
     }
 
     if (Name !== newGuild.name)
