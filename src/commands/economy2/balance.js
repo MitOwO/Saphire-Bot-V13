@@ -19,26 +19,31 @@ module.exports = {
         if (!u.id) return message.reply(`${e.Deny} | Eu não achei ninguém ${e.SaphireCry}`)
         let user = await client.users.cache.get(u.id)
 
-        let bal, bank, bolsa, oculto, frase, cache, avatar, name, TimeBolsa, Bolsa
+        let { bal, bank, bolsa, oculto, frase, cache, avatar, name, TimeBolsa, Bolsa } = {
 
-        bal = db.get(`Balance_${user.id}`)?.toFixed(0) || 0
-        bank = db.get(`Bank_${user.id}`)?.toFixed(0) || 0
-        oculto = sdb.get(`Users.${user.id}.Perfil.BankOcult`)
-        cache = sdb.get(`Users.${user.id}.Cache.Resgate`)?.toFixed(0) || 0
-        avatar = user?.displayAvatarURL({ dynamic: true }) || user.user.displayAvatarURL({ dynamic: true })
-        name = user.username || user.user.username
+            bal: db.get(`Balance_${user.id}`)?.toFixed(0) || 0,
+            bank: db.get(`Bank_${user.id}`)?.toFixed(0) || 0,
+            oculto: sdb.get(`Users.${user.id}.Perfil.BankOcult`),
+            cache: sdb.get(`Users.${user.id}.Cache.Resgate`)?.toFixed(0) || 0,
+            avatar: user?.displayAvatarURL({ dynamic: true }) || user.user.displayAvatarURL({ dynamic: true }),
+            name: user.username || user.user.username,
+        }
 
         const embed = new MessageEmbed()
             .setColor(Colors(user))
             .setAuthor(`Finanças de ${name}`, avatar)
             .addField('👝 Carteira', `${bal} ${Moeda(message)}`)
 
-        if (!oculto) {
-            embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`)
-        } else if (oculto) { message.author.id === (config.ownerId || user.id) ? embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`, true) : embed.addField('🏦 Banco', `||Oculto|| ${Moeda(message)}`, true) }
+        if (oculto) {
+
+            message.author.id === config.ownerId || message.author.id === user.id
+            ? embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`, true) 
+            : embed.addField('🏦 Banco', `||Oculto|| ${Moeda(message)}`, true)
+
+        } else { embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`) }
 
         TimeBolsa = ms(172800000 - (Date.now() - (sdb.get(`Users.${user.id}.Timeouts.Bolsa`))))
-        if (sdb.get(`Users.${user.id}.Timeouts.Bolsa`) !== null && 172800000 - (Date.now() - sdb.get(`Users.${user.id}.Timeouts.Bolsa`)) > 0) {
+        if (sdb.get(`Users${user.id}.Timeouts.Bolsa`) !== null && 172800000 - (Date.now() - sdb.get(`Users.${user.id}.Timeouts.Bolsa`)) > 0) {
             Bolsa = `${e.Loading} \`${TimeBolsa.days}d ${TimeBolsa.hours}h ${TimeBolsa.minutes}m e ${TimeBolsa.seconds}s\``
         } else {
             Bolsa = `${sdb.get(`Users.${user.id}.Cache.BolsaLucro`)?.toFixed(0) || 0} ${Moeda(message)}`

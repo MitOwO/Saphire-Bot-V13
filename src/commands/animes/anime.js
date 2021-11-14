@@ -80,9 +80,10 @@ module.exports = {
                         .setColor('GREEN')
                         .setTitle(`🔍 Pesquisa Requisitada: ${search}`)
                         .setDescription(`**📑 Sinopse**\n${Sinopse}`)
-                        .addField('🗂️ Informações', `Nome Japonês: ${NomeJapones}\Faixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\NTipo: ${Status}`)
+                        .addField('🗂️ Informações', `Nome Japonês: ${NomeJapones}\nFaixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\NTipo: ${Status}`)
                         .addField('📊 Status', `Nota Média: ${Nota}\nRank: ${AnimeRanking}\nPopularidade: ${AnimePop}\nEpisódios: ${Epsodios}\nLancamento: ${Lancamento}\nTérmino: ${Termino}`)
-                        .setImage(anime.posterImage.original)
+
+                    anime.posterImage?.original ? AnimeSearchEmbed.setImage(anime.posterImage.original)  : null
 
                     return message.reply({ embeds: [AnimeSearchEmbed] }).catch(err => {
                         Error(message, err)
@@ -95,9 +96,10 @@ module.exports = {
                         .setColor('GREEN')
                         .setTitle(`🔍 Pesquisa Requisitada: ${search}`)
                         .setDescription(`**📑 Sinopse**\n${Sinopse}`)
-                        .addField('🗂️ Informações', `Nome Japonês: ${NomeJapones}\nIdade: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Status}`)
+                        .addField('🗂️ Informações', `Nome Japonês: ${NomeJapones}\Faixa Etária: ${IdadeRating}\nNSFW: ${NSFW}\nTipo: ${Status}`)
                         .addField('📊 Status', `Nota Média: ${Nota}\nRank: ${AnimeRanking}\nPopularidade: ${AnimePop}\nEpisódios: ${Epsodios}\nLancamento: ${Lancamento}\nTérmino: ${new Date(Termino).toLocaleDateString("pt-br")}`)
-                        .setImage(anime.posterImage.original)
+
+                    anime.posterImage?.original ? AnimeSearchEmbed.setImage(anime.posterImage.original) : null
 
                     return message.reply({ embeds: [AnimeSearchEmbed] }).catch(err => {
                         Error(message, err)

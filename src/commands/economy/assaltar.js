@@ -43,7 +43,6 @@ module.exports = {
         if (sdb.get(`Users.${message.author.id}.Timeouts.Assalto`) !== null && 1200000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Assalto`)) > 0)
             return message.reply(`Calminha! Cooldown Assalto: \`${time.minutes}m e ${time.seconds}s\``)
 
-
         let arma = sdb.get(`Users.${message.author.id}.Slot.Arma`)
         if (!arma) return message.reply(`${e.Deny} | É necessário que você tenha uma **🔫 Arma** para utilizar este comando.`)
         if (target.id === message.author.id) return message.reply(`${e.Deny} | @Marque alguém ou responda a mensagem da pessoa. Você também pode usar \`${prefix}assalto info\``)

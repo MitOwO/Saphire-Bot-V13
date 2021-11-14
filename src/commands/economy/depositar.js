@@ -24,7 +24,8 @@ module.exports = {
 
         function Dep(Amount) {
             
-            if (Amount <= 0 || isNaN(Amount)) return message.reply(`${e.Deny} | **${Amount}** | O valor que você digitou não é um número ou é menor que 1.`)
+            if (Amount <= 0 ) return message.reply(`${e.Deny} | Você não tem nada para depositar.`)
+            if (isNaN(Amount)) return message.reply(`${e.Deny} | **${Amount}** | O valor que você digitou não é um número ou é menor que 1.`)
             if (money <= 0 || money < Amount) return message.reply(`${e.Deny} | Você não tem **${Amount} ${Moeda(message)}** para depositar.`)
 
             db.add(`Bank_${message.author.id}`, parseInt(Amount))

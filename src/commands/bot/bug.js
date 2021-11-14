@@ -38,7 +38,7 @@ module.exports = {
         async function WithChannel() {
             sdb.set(`Users.${message.author.id}.Timeouts.Bug`, Date.now())
             message.channel.createInvite({ maxAge: 0 }).then(async ChannelInvite => {
-                const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `[${message.guild.name}](${ChannelInvite.url}) (*${message.guild.id}*)`).addField('Relatório', mensagem)
+                const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `[${message.guild.name}](${ChannelInvite.url}) (*${message.guild.id}*)\nMensagem: [Link](${message.url})`).addField('Relatório', mensagem)
                 if (!config.BugsChannelId) {
                     return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`)
                 } else {
@@ -62,7 +62,7 @@ module.exports = {
 
         async function WithoutChannel() {
             sdb.set(`Users.${message.author.id}.Timeouts.Bug`, Date.now())
-            const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `${message.guild.name} (*${message.guild.id}*)`).addField('Relatório', mensagem)
+            const ReportBugEmbed = new MessageEmbed().setColor('RED').setTitle('📢 Report de Bug/Erro Recebido').addField('Enviado por', `${message.author.tag} (*\`${message.author.id}\`*)`, true).addField('Servidor', `${message.guild.name} (*${message.guild.id}*)\nMensagem: [Link](${message.url})`).addField('Relatório', mensagem)
             if (!config.BugsChannelId) { return message.reply(`${e.Deny} | Eu não encontrei o canal de envio no meu servidor central.\nPor favor, contacte meu criador --> ${N.Rody} <---`) } else {
                 const channel = await client.channels.cache.get(config.BugsChannelId); if (!channel) { return } else {
                     channel.send({ embeds: [ReportBugEmbed] }).then(() => {

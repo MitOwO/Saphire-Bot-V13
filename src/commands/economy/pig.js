@@ -7,7 +7,6 @@ module.exports = {
     name: 'pig',
     aliases: ['porco'],
     category: 'economy',
-
     ClientPermissions: 'ADD_REACTIONS',
     emoji: `${e.Pig}`,
     usage: '<pig> [coins/status]',
@@ -53,9 +52,9 @@ module.exports = {
                 db.add(`Balance_${message.author.id}`, PigMoney)
                 message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${PigMoney} ${Moeda(message)}!`)
                 sdb.set('Porquinho', {
-                    Lastprize: PigMoney,
+                    LastPrize: PigMoney,
                     LastWinner: `${message.author.tag}\n*(${message.author.id})*`,
-                    Money: 0
+                    Money: 10000
                 })
             }
 

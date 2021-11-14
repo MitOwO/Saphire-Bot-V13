@@ -4,6 +4,7 @@ const { stripIndent } = require('common-tags')
 const { config, e, N, Wallpapers } = DatabaseObj
 const Error = require('../../../Routes/functions/errors')
 const IsUrl = require('../../../Routes/functions/isurl')
+const Colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'wallpaper',
@@ -145,9 +146,30 @@ module.exports = {
             return message.reply({
                 embeds: [
                     new MessageEmbed()
-                        .setColor('#246FE0')
+                        .setColor(client.blue)
                         .setDescription(`${e.Info} | Abaixo, estão os créditos de todas as pessoas e o que elas fizeram na construção do comando \`${prefix}wallpaper\``)
                         .addField('🤝 Créditos', `\`${N.Rody}\` - Idealizador, implementação dos Wallpapers ao banco de dados e código fonte da ${client.user.username}\n \n\`${N.Gowther}\` - Fornecedor de 100% dos Wallpapers, Organização de Links, dados e review técnico\n \n\`${N.Makol}\` - Review adição de Links e sequência de ordem`)
+                ]
+            })
+        }
+
+        if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) {
+            return message.channel.send({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor(Colors(message.member))
+                        .setTitle(`:tv: Comandos Wallpapers`)
+                        .setDescription(`Aqui estão todos os comandos deste comando`)
+                        .addFields(
+                            {
+                                name: `${e.HiNagatoro} Padrões`,
+                                value: `\`${prefix}w\` Lista de todos os wallpapers\n\`${prefix}w <NomeDoAnime>\` Wallpapers do anime selecionado\n\`${prefix}w credits\` Créditos do comando\n\`${prefix}w info\` Este painelzinho`
+                            },
+                            {
+                                name: `${e.Gear} Administrativo`,
+                                value: `\`${prefix}w [add] <NomeDoAnime> <LinkDoWallpaper>\` Adiciona um novo wallpaper ao anime selecionado.\n\`${prefix}w [new] <NomeDoNovoAnimeNaListaDeAnimes>\` Adiciona um novo anime a lista\n\`${prefix}w [del] [NomeDoAnime]\` Deleta o anime da lista oficial`
+                            }
+                        )
                 ]
             })
         }
@@ -157,12 +179,22 @@ module.exports = {
         return Check()
 
         function Check() {
+
             try {
+
                 let Animes = Object.keys(BgWall.get('Wallpapers'))
-                if (Animes.includes(args[0])) {
-                    return WallPapers(BgWall.get(`Wallpapers.${args[0]}`))
-                } else { return message.reply(`${e.Deny} | Escreva o nome de acordo a tabela do comando \`${prefix}wallpaper\``) }
+
+                for (const Key of Animes) {
+
+                    if (Key?.toLowerCase() === args[0]?.toLowerCase())
+                        return WallPapers(BgWall.get(`Wallpapers.${Key}`))
+
+                }
+
+                return message.reply(`${e.Deny} | Este anime não existe no meu banco de dados... Verefique os nomes usando somente \`${prefix}w\``)
+
             } catch (err) { return Error(message, err) }
+
         }
 
         function NewWallpaperDatabase() {
@@ -172,10 +204,11 @@ module.exports = {
                     return message.reply(`${e.Deny} | Este comando é privado aos administradores do Sistema de Wallpapers.`)
             }
 
-            let keys, anime, link
-
-            anime = args[1]
-            link = args[2]
+            let { keys, anime, link } = {
+                anime: args[1],
+                link: args[2],
+                keys: ''
+            }
 
             if (!anime)
                 return message.reply(`${e.Info} | Para adicionar um novo anime na database. Forneça o nome *(O nome deve ser único)* do anime e o link *(O link deve ser o link da imagem depois de postada no canal no servidor package)* da imagem\nComando exemplo: \`${prefix}w add Naruto LinkDoWallpaperNaruto\``)
