@@ -13,15 +13,15 @@ module.exports = {
         if (!args[0]) return BlacklistRanking();
         if (['servers', 'server', 'servidores', 'servidor'].includes(args[0]?.toLowerCase())) return BlacklistRankingServer()
 
-        if (message.author.id !== config.ownerId) {
-            if (!sdb.get(`Moderadores.${message.author.id}`)) return message.reply(`${e.Deny} | Este é um comando da classe Moderador.`)
+        if (message.author.id !== config.ownerId && !sdb.get(`Client.Moderadores.${message.author.id}`)) {
+            return message.reply(`${e.Deny} | Este é um comando da classe Moderador.`)
         }
 
         let u = message.mentions.members.first() || message.mentions.repliedUser || await client.users.cache.get(args[1]) || await client.guilds.cache.get(args[1])
         if (!u) return message.reply(`${e.SaphireObs} | Opções: \`add\` | \`remover\` | \`addserver\` | \`removeserver\``)
         let target = await client.users.cache.get(u.id) || await client.guilds.cache.get(u.id)
         if (!target) return message.reply(`${e.Deny} | Alvo não encontrado.`)
-        if (sdb.get(`Moderadores.${target.id}`)) return message.reply(`${e.Deny} | Este usuário é um Moderador.`)
+        if (sdb.get(`Client.Moderadores.${target.id}`)) return message.reply(`${e.Deny} | Este usuário é um Moderador.`)
 
         let razao = args.slice(2).join(" ") || 'Nenhum motivo especificado.'
 
@@ -61,7 +61,7 @@ module.exports = {
             if (db.get(`Blacklist_${target.id}`)) return message.reply(`${e.Info} | Este usuário já está bloqueado.`)
 
             if (target.id === config.ownerId) {
-                sdb.delete(`Moderadores.${message.author.id}`)
+                sdb.delete(`Client.Moderadores.${message.author.id}`)
                 return message.reply(`${e.SaphireRaivaFogo} | Por tentar bloquear meu criador, você perdeu seu cargo de Moderador!`)
             }
 

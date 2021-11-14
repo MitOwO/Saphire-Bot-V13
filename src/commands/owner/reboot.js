@@ -79,24 +79,49 @@ module.exports = {
             try {
                 keys = Object.keys(ServerDb.get('Servers'))
             } catch (err) {
-                Error(message, err)
+                return message.reply(`${e.Deny} | Não há servidores na database.`)
             }
 
-            return message.channel.send(`${e.Loading} | Atualizando os servidores no banco de dados...`).then(async msg => {
-                sdb.set('Client.Rebooting', { ON: true, Features: 'Relodango usuários no banco de dados...' })
-                lotery.set('Loteria.Close', true)
+            const msg = await message.channel.send(`${e.Loading} | Atualizando os servidores no banco de dados...`)
+            sdb.set('Client.Rebooting', { ON: true, Features: 'Relogando servidores no banco de dados...' })
+            lotery.set('Loteria.Close', true)
 
-                for (const id of keys) {
+            for (const id of keys) {
+
+                const array = ["Farm", "LeaveChannel", "WelcomeChannel", "Autorole", "AfkSystem"]
+
+                try {
+
                     if (!await client.guilds.cache.get(id)) {
                         i++
                         ServerDb.delete(`Servers.${id}`)
                     }
-                }
 
-                sdb.delete('Client.Rebooting')
-                lotery.set('Loteria.Close', false)
-                return msg.edit(`${e.Check} | ${i} servidores foram deletados da minha database.`).catch(() => { })
-            }).catch(err => { Error(message, err) })
+                    if (ServerDb.get(`Servers.${id}`)) {
+
+                        for (const item of array) {
+
+                            try {
+
+                                const keys = Object.keys(ServerDb.get(`Servers.${id}.${item}`))
+
+                                if (keys?.length < 1)
+                                    ServerDb.delete(`Servers.${id}.${item}`)
+
+                            } catch (err) { }
+
+                        }
+
+                    }
+
+                } catch (err) { }
+
+            }
+
+            sdb.delete('Client.Rebooting')
+            lotery.set('Loteria.Close', false)
+            return msg.edit(`${e.Check} | Todos os servidores foram atualizados com sucesso!\n${e.Info} ${i} servidores foram deletados da minha database.`).catch(() => { })
+
         }
     }
 }

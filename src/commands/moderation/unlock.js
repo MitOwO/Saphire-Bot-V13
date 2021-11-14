@@ -38,7 +38,7 @@ module.exports = {
 
                 })
             } else {
-                channel.permissionOverwrites.delete()
+                channel.permissionOverwrites.delete(user)
                 message.channel.send(`🔓 | ${message.author} liberou ${user} para falar no canal. ${channel}`)
             }
         }

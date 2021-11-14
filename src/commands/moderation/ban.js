@@ -62,7 +62,12 @@ module.exports = {
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
                             return message.guild.bans.create(ID).then(ban => {
-                                IdChannel ? (message.reply(`${e.Check} | Prontinho! Eu mandei as informações no canal <#${IdChannel}>`), Notify(ban, true)) : message.reply(`${e.Check} | Prontinho! Eu não achei o canal de logs no servidor :( Ativa ele ou apenas veja do que ele é capaz -> \`-logs\``)
+                                IdChannel ?
+                                    (() => {
+                                        Notify(ban, true)
+                                        return message.reply(`${e.Check} | Prontinho! Eu mandei as informações no canal <#${IdChannel}>`)
+                                    })()
+                                    : message.reply(`${e.Check} | Prontinho! Eu não achei o canal de logs no servidor :( Ativa ele ou apenas veja do que ele é capaz -> \`-logs\``)
                             }).catch(err => {
                                 return message.channel.send(`${e.Info} | Este usuário não existe ou é dono do servidor ou eu não tenho permissão o suficiente.\n${err}`)
                             })
@@ -119,7 +124,7 @@ module.exports = {
         async function Notify(ban, x) {
             let banid = `${ban.user?.tag ?? ban.tag ?? ban}`
 
-            if (!channel) return
+            if (!IdChannel) return
 
             const embed = new MessageEmbed()
                 .setColor('RED')
@@ -134,7 +139,7 @@ module.exports = {
             x ? embed.setTitle(`🛰️ | Global System Notification | Forceban`) : embed.setTitle(`🛰️ | Global System Notification | Banimento`)
             x ? embed.setThumbnail(ban.displayAvatarURL({ dynamic: true })) : embed.setThumbnail(ban.user.displayAvatarURL({ dynamic: true }))
 
-            return channel.send({ embeds: [embed] }).catch(() => { })
+            return IdChannel.send({ embeds: [embed] }).catch(() => { })
 
         }
     }
