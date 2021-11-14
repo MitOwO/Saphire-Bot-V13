@@ -24,13 +24,34 @@ function Error(message, err) {
     Block();
 
     async function Send() {
-        message.channel?.createInvite({ maxAge: 0 }).then(async ChannelInvite => {
-            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: [${message.guild.name}](${ChannelInvite.url})\nMensagem: [Link Mensagem](${message.url})\n\`\`\`js\n${err.stack?.slice(0, 2000)}\`\`\``).setFooter(`Error Code: ${err.code || 0}`)
-            await client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(() => { })
-        }).catch(async () => {
-            const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\nMensagem: [Link Mensagem](${message.url})\n\`\`\`js\n${err.stack?.slice(0, 2000)}\`\`\``).setFooter(`Error Code: ${err.code || 0}`)
-            await client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(() => { })
-        })
+        let ChannelInvite
+
+        try {
+            ChannelInvite = await message.channel?.createInvite({ maxAge: 0 })
+            return SendError()
+        } catch (err) {
+            return SendError()
+        }
+
+        async function SendError() {
+
+            await client.users.cache.get(config.ownerId)?.send({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor('RED')
+                        .setTitle(`${e.Loud} Report de Erro | Handler`)
+                        .setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: [${message.guild.name}](${ChannelInvite?.url || 'Não foi possivel obter o link deste servidor'})\nMensagem: [Link Mensagem](${message.url})\n\`\`\`js\n${err.stack?.slice(0, 2000)}\`\`\``)
+                        .setFooter(`Error Code: ${err.code || 0}`)
+                ]
+            }).catch(() => { })
+
+            return
+
+        }
+        // .catch(async () => {
+        //     const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\nMensagem: [Link Mensagem](${message.url})\n\`\`\`js\n${err.stack?.slice(0, 2000)}\`\`\``).setFooter(`Error Code: ${err.code || 0}`)
+        //     await client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(() => { })
+        // })
     }
 
     function Block() {

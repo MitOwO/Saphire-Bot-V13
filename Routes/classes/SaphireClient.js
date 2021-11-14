@@ -8,7 +8,7 @@ require('dotenv').config()
  */
 
 const SaphireClientConfiguration = {
-    intents: 1815,
+    intents: 2047,
     disableMentions: {
         parse: ['everyone']
     },
