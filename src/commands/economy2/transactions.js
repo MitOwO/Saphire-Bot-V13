@@ -49,7 +49,7 @@ module.exports = {
                 if (!embeds[EmbedsControl]) {
                     EmbedsControl--
                 } else {
-                    return msg.edit({ embeds: [embeds[EmbedsControl]] })//.catch(() => { return FinishCollector() })
+                    return msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { return FinishCollector() })
                 }
 
             } catch (err) {
@@ -66,7 +66,7 @@ module.exports = {
                 if (!embeds[EmbedsControl]) {
                     EmbedsControl++
                 } else {
-                    return msg.edit({ embeds: [embeds[EmbedsControl]] })//.catch(() => { return FinishCollector() })
+                    return msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { return FinishCollector() })
                 }
 
             } catch (err) {
