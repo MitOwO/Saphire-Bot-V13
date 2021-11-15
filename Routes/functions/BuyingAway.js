@@ -6,6 +6,7 @@ const Error = require('./errors')
 const NewLoteryGiveaway = require('./newlotery')
 const ms = require('parse-ms')
 const Vip = require('./vip')
+const { PushTrasaction } = require('./transctionspush')
 
 /** 
 * @param {Message} message
@@ -182,6 +183,10 @@ function BuyingAway(message, prefix, args, args1) {
         function BuyItemFunction() {
             db.subtract(`Balance_${message.author.id}`, Price); AddLoteria(Price / 2)
             sdb.set(`Users.${message.author.id}.Slot.${NameDB}`, true)
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} Gastou ${Price} Moedas na loja.`
+            )
             return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`${ItemName}\`\n${e.PandaProfit} | -${Price} ${Moeda(message)}`)
         }
     }
@@ -192,6 +197,10 @@ function BuyingAway(message, prefix, args, args1) {
         function BuyItemFunction() {
             db.subtract(`Balance_${message.author.id}`, Price); AddLoteria(Price / 2)
             sdb.set(`Users.${message.author.id}.Perfil.${NameDB}`, true)
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} Gastou ${Price} Moedas na loja.`
+            )
             return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`${ItemName}\`\n${e.PandaProfit} | -${Price} ${Moeda(message)}`)
         }
     }
@@ -202,6 +211,10 @@ function BuyingAway(message, prefix, args, args1) {
         function BuyItemFunction() {
             db.subtract(`Balance_${message.author.id}`, 2000000); AddLoteria(1000000)
             sdb.set(`Users.${message.author.id}.Color.Perm`, true)
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} Gastou 2000000 Moedas na loja.`
+            )
             return message.channel.send(`${e.Check} | ${message.author} comprou um item: \`Color\`\n${e.PandaProfit} | -2000000 ${Moeda(message)}`)
         }
     }
@@ -226,6 +239,10 @@ function BuyingAway(message, prefix, args, args1) {
             sdb.add(`Users.${message.author.id}.Slot.${NomeTec}`, quantia)
             db.subtract(`Balance_${message.author.id}`, quantia * Price)
             AddLoteria((quantia * Price) / 2)
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} Gastou ${quantia * Price} Moedas na loja.`
+            )
             message.channel.send(`${e.Check} | ${message.author} comprou ${quantia} ${NomeUser} ficando com um total de ${sdb.get(`Users.${message.author.id}.Slot.${NomeTec}`)} ${NomeUser}.\n${e.PandaProfit} | -${q} ${Moeda(message)}`)
         }
 
@@ -237,6 +254,10 @@ function BuyingAway(message, prefix, args, args1) {
                 AddLoteria(Price / 2)
                 i++
             } while (sdb.get(`Users.${message.author.id}.Slot.${NomeTec}`) <= Limit)
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} Gastou ${Price * i - 1} Moedas na loja.`
+            )
             message.channel.send(`${e.Check} | ${message.author} completou o limite de ${NomeUser} comprando +${i - 1} ${NomeUser}.\n${e.PandaProfit} | -${Price * i - 1} ${Moeda(message)}`)
         }
     }

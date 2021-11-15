@@ -3,6 +3,7 @@ const { sdb, db, DatabaseObj, ServerDb } = require('./database')
 const { e, config } = DatabaseObj
 const client = require('../../index')
 const Moeda = require('./moeda')
+const { PushTrasaction } = require('./transctionspush')
 
 /**
  * @param { Message } message
@@ -48,15 +49,15 @@ function Error(message, err) {
             return
 
         }
-        // .catch(async () => {
-        //     const NewError = new MessageEmbed().setColor('RED').setTitle(`${e.Loud} Report de Erro | Handler`).setDescription(`Author: ${message.author} | ${message.author.tag} |*\`${message.author.id}\`*\nMensagem: \`${message.content}\`\nServidor: ${message.guild.name} *(Falha ao obter o convite)*\nMensagem: [Link Mensagem](${message.url})\n\`\`\`js\n${err.stack?.slice(0, 2000)}\`\`\``).setFooter(`Error Code: ${err.code || 0}`)
-        //     await client.users.cache.get(config.ownerId).send({ embeds: [NewError] }).catch(() => { })
-        // })
     }
 
     function Block() {
         sdb.set(`ComandoBloqueado.${cmd}`, `${err?.message || 'Indefinido'}`)
         db.add(`Balance_${message.author.id}`, 1000)
+        PushTrasaction(
+            message.author.id,
+            `💰 Recebeu 1000 Moedas por descobrir um bug`
+        )
         message.channel.send(`${e.Warn} Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.PandaProfit} +1000 ${Moeda(message)}`).catch(() => { })
     }
 }

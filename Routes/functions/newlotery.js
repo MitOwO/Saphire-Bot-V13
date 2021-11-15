@@ -3,6 +3,7 @@ const { Message, MessageEmbed } = require('discord.js')
 const { e, config, Loteria } = DatabaseObj
 const client = require('../../index')
 const Moeda = require('./moeda')
+const { PushTrasaction } = require('./transctionspush')
 
 /**
  * @param { Message } message 
@@ -62,6 +63,10 @@ async function NewLoteryGiveaway(LoteriaUsers, message) {
         let LoteriaChannel = await client.channels.cache.get(config.LoteriaChannel)
         LoteriaChannel ? LoteriaChannel.send({ embeds: [WinEmbed] }) : ''
         sdb.add(`Users.${winner.id}.Cache.Resgate`, (Loteria.Prize || 0))
+        PushTrasaction(
+            winner.id,
+            `💰 Recebeu ${Loteria.Prize || 0} Moedas na loteria`
+        )
         try {
             winner.send(`${e.PandaProfit} | Oi oi, estou passando aqui para te falar que você foi o ganhador*(a)* da Loteria.\n${e.MoneyWings} | Você ganhou o prêmio de ${Prize} ${e.Coin} Moedas.\n${e.SaphireObs} | Você pode resgata-lo a qualquer momento usando \`-resgate\``)
         } catch (err) {
