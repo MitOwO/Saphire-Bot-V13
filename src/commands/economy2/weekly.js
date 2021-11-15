@@ -4,6 +4,7 @@ const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 const Vip = require('../../../Routes/functions/vip')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'weekly',
@@ -27,6 +28,7 @@ module.exports = {
         message.guild.id === config.guildId ? InsideGuild() : OutsideGuild()
 
         function InsideGuild() {
+
             let amountcoins = parseInt(Math.floor(Math.random() * 100000) + 1)
             let amountxp = parseInt(Math.floor(Math.random() * 3000) + 1)
             let Bonus1 = parseInt(Math.floor(Math.random() * 100000) + 1)
@@ -45,27 +47,31 @@ module.exports = {
             db.add(`Xp_${message.author.id}`, Bonus2)
             sdb.set(`Users.${message.author.id}.Timeouts.Weekly`, Date.now())
 
+           PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} Recebeu ${amountcoins + Bonus1} no semanal`
+            )
+
             let ComVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
 
             vip ? message.reply(ComVip) : message.reply(NoVip)
+        
         }
 
         function OutsideGuild() {
+
             let amountcoins = parseInt(Math.floor(Math.random() * 80000) + 1)
             let amountxp = parseInt(Math.floor(Math.random() * 1000) + 1)
-
-            if (vip) {
-                let BonusVipMoney = Math.floor(Math.random() * amountcoins)
-                let BonusVipXp = Math.floor(Math.random() * amountxp)
-
-                prizemoney = amountcoins + BonusVipMoney
-                prizexp = amountxp + BonusVipXp
-            }
 
             db.add(`Bank_${message.author.id}`, amountcoins)
             db.add(`Xp_${message.author.id}`, amountxp)
             sdb.set(`Users.${message.author.id}.Timeouts.Weekly`, Date.now())
+
+            PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} Recebeu ${amountcoins} no mensal`
+            )
 
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireObs} | Sabia que se você der \`${prefix}weekly\` dentro do meu servidor você pode ganhar até 4x a mais?`
             let WithVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireObs} | Sabia que se você der \`${prefix}weekly\` dentro do meu servidor você pode ganhar até 4x a mais?`

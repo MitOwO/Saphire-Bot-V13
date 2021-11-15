@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'cu',
@@ -51,11 +52,19 @@ module.exports = {
                             sdb.delete(`Request.${message.author.id}`)
                             db.add(`Balance_${message.author.id}`, din)
                             sdb.set(`Users.${message.author.id}.Timeouts.Cu`, Date.now())
+                            PushTrasaction(
+                                message.author.id,
+                                `${e.BagMoney} Ganhou ${din} Moedas dando o cú`
+                            )
                             return msg.edit(`${e.Check} | ${message.author}, o cliente anônimo gostou dos serviços e te pagou +${din}${Moeda(message)}`).catch(() => { })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)
                             db.subtract(`Balance_${message.author.id}`, din)
                             sdb.set(`Users.${message.author.id}.Timeouts.Cu`, Date.now())
+                            PushTrasaction(
+                                message.author.id,
+                                `${e.MoneyWithWings} Perdeu ${din} Moedas dando o cú`
+                            )
                             return msg.edit(`${e.Deny} | ${message.author}, o cliente anônimo não gostou dos serviços e seu prejuízo foi de -${din}${Moeda(message)}`).catch(() => { })
                         }
                     } else {

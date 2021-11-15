@@ -4,6 +4,7 @@ const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 const Vip = require('../../../Routes/functions/vip')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'monthly',
@@ -46,6 +47,11 @@ module.exports = {
             db.add(`Xp_${message.author.id}`, Bonus2)
             sdb.set(`Users.${message.author.id}.Timeouts.Monthly`, Date.now())
 
+            PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} Recebeu ${amountcoins + Bonus1} no mensal`
+            )
+
             let ComVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
 
@@ -67,6 +73,12 @@ module.exports = {
             db.add(`Bank_${message.author.id}`, amountcoins)
             db.add(`Xp_${message.author.id}`, amountxp)
             sdb.set(`Users.${message.author.id}.Timeouts.Monthly`, Date.now())
+
+
+            PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} Recebeu ${amountcoins} no mensal`
+            )
 
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireObs} | Sabia que se você der \`${prefix}monthly\` dentro do meu servidor você pode ganhar até 4x a mais?`
             let WithVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireObs} | Sabia que se você der \`${prefix}monthly\` dentro do meu servidor você pode ganhar até 4x a mais?`

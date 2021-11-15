@@ -4,6 +4,7 @@ const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 const Vip = require('../../../Routes/functions/vip')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'daily',
@@ -35,8 +36,8 @@ module.exports = {
             if (vip) {
                 let MoneyVipBonus = parseInt(Math.floor(Math.random() * amountcoins))
                 let XpVipBonus = parseInt(amountxp + Math.floor(Math.random() * 100))
-                amountcoins = (amountcoins + MoneyVipBonus)
-                amountxp = (amountxp + XpVipBonus)
+                amountcoins += MoneyVipBonus
+                amountxp += XpVipBonus
             }
 
             db.add(`Bank_${message.author.id}`, amountcoins)
@@ -48,6 +49,11 @@ module.exports = {
             let ComVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
 
+            PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} Recebeu ${amountcoins + Bonus1} Moedas no daily`
+            )
+
             vip ? message.reply(ComVip) : message.reply(NoVip)
         }
 
@@ -55,17 +61,14 @@ module.exports = {
             let amountcoins = parseInt(Math.floor(Math.random() * 500) + 1)
             let amountxp = parseInt(Math.floor(Math.random() * 500) + 1)
 
-            if (vip) {
-                let BonusVipMoney = Math.floor(Math.random() * amountcoins)
-                let BonusVipXp = Math.floor(Math.random() * amountxp)
-
-                prizemoney = amountcoins + BonusVipMoney
-                prizexp = amountxp + BonusVipXp
-            }
-
             db.add(`Bank_${message.author.id}`, amountcoins)
             db.add(`Xp_${message.author.id}`, amountxp)
             sdb.set(`Users.${message.author.id}.Timeouts.Daily`, Date.now())
+
+            PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} Recebeu ${amountcoins} Moedas no daily`
+            )
 
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireObs} | Sabia que se você der \`${prefix}daily\` dentro do meu servidor você pode ganhar até 4x a mais?`
             let WithVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireObs} | Sabia que se você der \`${prefix}daily\` dentro do meu servidor você pode ganhar até 4x a mais?`
