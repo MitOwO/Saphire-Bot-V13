@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
 const UserManager = require('../../../Routes/classes/UserManager')
+const ms = require('ms')
 
 module.exports = {
     name: 'adicionar',
@@ -41,6 +42,7 @@ module.exports = {
             case 'helpier': case 'ajudante': AddNewHelpier(); break;
             case 'halloween': case 'h': AddNewTitleHalloween(); break;
             case 'bgacess': AddNewBgAcess(); break;
+            case 'vip': AddTimeVip(); break;
 
             default: message.reply(`${e.Deny} | **${args[0]?.toLowerCase()}** | Não é um argumento válido.`); break;
         }
@@ -100,6 +102,21 @@ module.exports = {
                 Error(message, err)
             })
             return message.channel.send(`${e.Check} | ${user.username} agora é um moderador*(a)*.`)
+        }
+
+        function AddTimeVip() {
+
+            if (!args[1]) return message.reply(`${e.Info} | Formato deste sub-comando: \`${prefix}add vip 4d\``)
+
+            if (!['s', 'm', 'h', 'd', 'y'].includes(args[1].slice(-1)))
+                return message.reply(`${e.Deny} | Tempo inválido!`)
+
+            const Time = ms(`${args[1]}`)
+
+            sdb.add(`Users.${user.id}.Timeouts.Vip.TimeRemaing`, Time)
+
+            return message.reply(`${e.Check} | Feito!`)
+
         }
 
         function SetNewBugHunter() {
