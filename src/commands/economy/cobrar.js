@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
+const { TransactionsPush } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'cobrar',
@@ -70,7 +71,14 @@ module.exports = {
         })
 
         function PayStart(msg) {
-            db.subtract(`Balance_${member.id}`, Quantia); db.add(`Balance_${message.author.id}`, Quantia)
+            db.subtract(`Balance_${member.id}`, Quantia)
+            db.add(`Balance_${message.author.id}`, Quantia)
+            TransactionsPush(
+                user.id,
+                message.author.id,
+                `💸 Pagou a cobrança de ${Quantia || 0} Moedas a ${message.author.tag}`,
+                `💰 Recebeu a cobrança de ${Quantia || 0} Moedas feita a ${user.user.tag}`
+            )
             msg.edit(`${e.Check} | ${member} pagou a quantia de **${Quantia} ${Moeda(message)}** cobrada por ${message.author}\n${e.PandaProfit} Stats\n${member.user.username} -${Quantia} ${Moeda(message)}\n${message.author.username} +${Quantia} ${Moeda(message)}`).catch(err => {
                 message.channel.send(`${e.Check} | ${member} pagou a quantia de **${Quantia} ${Moeda(message)}** cobrada por ${message.author}\n${e.PandaProfit} Stats\n${member.user.username} -${Quantia} ${Moeda(message)}\n${message.author.username} +${Quantia} ${Moeda(message)}`).catch(() => { })
             })

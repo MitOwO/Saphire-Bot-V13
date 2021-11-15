@@ -3,7 +3,7 @@ const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Data = require('../../../Routes/functions/data')
 const Error = require('../../../Routes/functions/errors')
-const { default: Users } = require('node-os-utils/lib/users')
+const { TransactionsPush } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'pagar',
@@ -106,6 +106,12 @@ module.exports = {
             msg.edit(`${e.Check} | Transferência realizada com sucesso!\n${(sdb.get(`Users.${message.author.id}.EmojiAuthor`) ? sdb.get(`Users.${message.author.id}.EmojiAuthor`) : e.Check)} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${(sdb.get(`Users.${message.author.id}.EmojiUser`) ? sdb.get(`Users.${message.author.id}.EmojiUser`) : e.Check)} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**\n⏱️ | \`${Data()}\``).catch(() => { })
             sdb.delete(`Request.${message.author.id}`)
             db.add(`Balance_${user.id}`, (sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0))
+            TransactionsPush(
+                user.id,
+                message.author.id,
+                `💰 Recebeu ${sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0} Moedas de ${message.author.tag}`,
+                `💸 Pagou ${sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0} Moedas para ${user.user.tag}`,
+            )
             sdb.delete(`Users.${message.author.id}.Allowed`)
             sdb.delete(`Users.${message.author.id}.Cache.Pay`)
             sdb.delete(`Users.${message.author.id}.EmojiUser`)

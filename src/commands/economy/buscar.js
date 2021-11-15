@@ -1,7 +1,6 @@
 const { Permissions } = require('discord.js')
 const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
-const colors = require('../../../Routes/functions/colors')
 const { ServerDb } = require('../../../Routes/functions/database')
 
 module.exports = {

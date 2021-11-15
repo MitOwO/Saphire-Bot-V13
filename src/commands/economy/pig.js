@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const ms = require("parse-ms")
 const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'pig',
@@ -40,7 +41,13 @@ module.exports = {
             if (bank >= 10000) return Question()
 
             function Pig() {
-                sdb.set(`Users.${message.author.id}.Timeouts.Porquinho`, Date.now()); sdb.add('Porquinho.Money', 10000); db.subtract(`Balance_${message.author.id}`, 10000)
+                sdb.set(`Users.${message.author.id}.Timeouts.Porquinho`, Date.now()); sdb.add('Porquinho.Money', 10000);
+                db.subtract(`Balance_${message.author.id}`, 10000)
+
+                PushTrasaction(
+                    message.author.id,
+                    `${e.Pig} Apostou 10000 no porquinho.`
+                )
 
                 let luck = ['win', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose', 'lose'] // 1% de chance de vitória
                 let result = luck[Math.floor(Math.random() * luck.length)]
@@ -56,6 +63,10 @@ module.exports = {
                     LastWinner: `${message.author.tag}\n*(${message.author.id})*`,
                     Money: 10000
                 })
+                PushTrasaction(
+                    message.author.id,
+                    `${e.Pig} Ganhou ${PigMoney} quebrando o porquinho.`
+                )
             }
 
             function Question() {

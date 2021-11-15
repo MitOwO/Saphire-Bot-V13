@@ -1,6 +1,7 @@
 const ms = require("parse-ms")
 const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
+const { PushTrasaction, TransactionsPush } = require("../../../Routes/functions/transctionspush")
 
 module.exports = {
     name: 'roubar',
@@ -30,39 +31,50 @@ module.exports = {
             return message.reply(`${e.Sirene} | ${message.author}, a polícia está em sua busca... Tente novamente em \`${time.minutes}m e ${time.seconds}s\`.`)
         } else {
 
-            if (!isNaN(args[0]) && args[0]) {
-                let u = await client.users.cache.get(args[0])
-                u ? Rob(u) : message.reply(`${e.Deny} | Não achei ninguém com esse ID.`)
-            } else {
-                let u = message.mentions.members.first() || message.member
-                let user = u.user
-                if (user.id === client.user.id) return message.reply(`${e.Nagatoro} | Você realmente quer me roubar?`)
-                if (user.id === message.author.id) return message.reply(`${e.Deny} | Tenta assim: \`${prefix}roubar @user/ID\` ou \`${prefix}roubar info\``)
-                Rob(user)
+            let user = message.mentions.users.first() || client.users.cache.get(args[0]) || message.mentions.repliedUser
+
+            if (!user)
+                return message.reply(`${e.Info} | Mencione alguém ou use \`${prefix}roubar info\``)
+
+            if (args[0] && !user)
+                return message.reply(`${e.Deny} | Eu não consegui encontar ninguém...`)
+
+            if (user.id === message.author.id) return message.reply(`${e.Deny} | Vou nem responder isso, ok?`)
+            if (user.id === client.user.id) return message.reply(`${e.Nagatoro} | Você realmente quer me roubar?`)
+            let usermoney = db.get(`Balance_${user.id}`) || 0
+            if (usermoney <= 0) return message.reply(`${e.Deny} | ${user.username} não possui dinheiro na carteira.`)
+
+            let luck = ['true', 'false']
+            let result = luck[Math.floor(Math.random() * luck.length)]
+            let amount = Math.floor(Math.random() * usermoney * 4) + 1
+            let amount1 = Math.floor(Math.random() * usermoney) + 1
+            result === 'true' ? win() : lose()
+
+            function lose() {
+                db.subtract(`Balance_${message.author.id}`, amount);
+
+                PushTrasaction(
+                    message.author.id,
+                    `${e.MoneyWithWings} Perdeu ${amount} Moedas ao tentar roubar ${user.tag}`
+                )
+
+                sdb.set(`Users.${message.author.id}.Timeouts.Roubo`, Date.now())
+                return message.reply(`${e.Sirene} | A polícia te pegou mas você escapou.\n-${amount} ${Moeda(message)}`)
             }
 
-            function Rob(u) {
+            function win() {
+                db.subtract(`Balance_${user.id}`, amount1);
+                db.add(`Balance_${message.author.id}`, amount1);
+                sdb.set(`Users.${message.author.id}.Timeouts.Roubo`, Date.now())
 
-                if (u.id === message.author.id) return message.reply(`${e.Deny} | Vou nem responder isso, ok?`)
-                if (u.id === client.user.id) return message.reply(`${e.Nagatoro} | Você realmente quer me roubar?`)
-                let usermoney = db.get(`Balance_${u.id}`) || 0
-                if (usermoney <= 0) return message.reply(`${e.Deny} | ${u.username} não possui dinheiro na carteira.`)
+                TransactionsPush(
+                    user.id,
+                    message.author.id,
+                    `${e.MoneyWithWings} Perdeu ${amount1} Moeda em um roubo para ${message.author.tag}`,
+                    `${e.BagMoney} Roubou ${amount1} Moedas de ${user.tag}`
+                )
 
-                let luck = ['true', 'false']
-                let result = luck[Math.floor(Math.random() * luck.length)]
-                let amount = Math.floor(Math.random() * usermoney * 4) + 1
-                let amount1 = Math.floor(Math.random() * usermoney) + 1
-                result === 'true' ? win(u) : lose(u)
-
-                function lose(u) {
-                    db.subtract(`Balance_${message.author.id}`, amount); sdb.set(`Users.${message.author.id}.Timeouts.Roubo`, Date.now())
-                    return message.reply(`${e.Sirene} | A polícia te pegou mas você escapou.\n-${amount} ${Moeda(message)}`)
-                }
-
-                function win(u) {
-                    db.subtract(`Balance_${u.id}`, amount1); db.add(`Balance_${message.author.id}`, amount1); sdb.set(`Users.${message.author.id}.Timeouts.Roubo`, Date.now())
-                    return message.reply(`${e.PandaBag} | Você roubou ${u.username} com sucesso!\n+${amount1} ${Moeda(message)}`)
-                }
+                return message.reply(`${e.PandaBag} | Você roubou ${user.username} com sucesso!\n+${amount1} ${Moeda(message)}`)
             }
         }
     }

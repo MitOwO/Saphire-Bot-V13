@@ -3,6 +3,8 @@ const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
 const Colors = require('../../../Routes/functions/colors')
+const data = require('../../../Routes/functions/data')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'bet',
@@ -39,6 +41,10 @@ module.exports = {
         if (parseInt(db.get(`Balance_${message.author.id}`)) >= quantia) {
             sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
             db.subtract(`Balance_${message.author.id}`, quantia)
+            PushTrasaction(
+                message.author.id,
+                `💰 Apostou ${quantia || 0} Moedas no comando bet`
+            )
             BetUsers.push(message.author.id)
             return BetInit()
         } else {
@@ -96,6 +102,10 @@ module.exports = {
 
                 db.subtract(`Balance_${user.id}`, quantia)
                 sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
+                PushTrasaction(
+                    user.id,
+                    `💰 Apostou ${quantia || 0} Moedas no comando bet`
+                )
                 BetUsers.push(user.id)
 
                 BetEmbed.setDescription(`Valor da aposta: ${quantia} ${Moeda(message)}\n**Participantes**\n${BetUsersEmbed()}\n \n💰 Prêmio acumulado: ${(BetUsers?.length || 0) * quantia}`)
@@ -121,6 +131,10 @@ module.exports = {
                     const BetEmbedCancel = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description}\n \n${e.Deny} Essa aposta foi cancelada por não haver participantes suficientes`)
                     msg.edit({ embeds: [BetEmbedCancel] }).catch(() => { Erro() })
                     db.add(`Balance_${message.author.id}`, (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0))
+                    PushTrasaction(
+                        message.author.id,
+                        `💰 Recebeu de volta ${(sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0)} Moedas no comando bet`
+                    )
                     sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
                     sdb.delete(`Users.${message.author.id}.Cache.BetPrize`)
                     sdb.delete(`Users.${message.author.id}.Cache.Bet`)
@@ -130,6 +144,10 @@ module.exports = {
 
                     let winner = BetUsers[Math.floor(Math.random() * BetUsers.length)]
                     db.add(`Balance_${winner}`, parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0)
+                    PushTrasaction(
+                        winner,
+                        `💰 Recebeu ${parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0} Moedas no comando bet`
+                    )
                     message.channel.send(`${e.MoneyWings} | <@${winner}> ganhou a aposta no valor de **${sdb.get(`Users.${message.author.id}.Cache.BetPrize`)} ${Moeda(message)}** iniciada por ${message.author}. Use \`${prefix}dep all\` para depositar o dinheiro e não ser roubado*(a)*.`).catch(() => { Erro() })
                     sdb.delete(`Users.${message.author.id}.Cache.BetPrize`)
                     const NewWinner = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description}\n \n🏆 <@${winner}> ganhou a aposta`)
@@ -146,6 +164,10 @@ module.exports = {
                 msg.edit({ embeds: [BetEmbed] }).catch(() => { })
 
                 db.add(`Balance_${user.id}`, quantia)
+                PushTrasaction(
+                    user.id,
+                    `💰 Recebeu de volta ${quantia || 0} Moedas no comando bet`
+                )
                 sdb.subtract(`Users.${message.author.id}.Cache.BetPrize`, quantia)
                 return
             }
@@ -154,6 +176,10 @@ module.exports = {
 
                 let quantia = sdb.get(`Users.${message.author.id}.Cache.BetPrize`) || 0
                 sdb.add(`Users.${message.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BetPrize`) || 0))
+                PushTrasaction(
+                    message.author.id,
+                    `💰 Recebeu ${quantia || 0} Moedas por erro no comando bet`
+                )
                 sdb.set(`Users.${message.author.id}.Cache.BetPrize`, 0)
                 sdb.delete(`Request.${message.author.id}`)
                 Error(message, err)

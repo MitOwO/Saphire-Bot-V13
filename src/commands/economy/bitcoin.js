@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const ms = require('parse-ms')
 const Moeda = require('../../../Routes/functions/moeda')
+const { PushTrasaction} = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'bitcoin',
@@ -36,7 +37,15 @@ module.exports = {
             Bits >= 1000 ? NewBitCoin() : MineBitCoin()
 
             function NewBitCoin() {
-                sdb.set(`Users.${message.author.id}.Perfil.Bits`, 1); db.add(`Bitcoin_${message.author.id}`, 1); db.add(`Bank_${message.author.id}`, 1000000000)
+                sdb.set(`Users.${message.author.id}.Perfil.Bits`, 1)
+                db.add(`Bitcoin_${message.author.id}`, 1)
+                db.add(`Bank_${message.author.id}`, 1000000000)
+
+                PushTrasaction(
+                    message.author.id,
+                    `💰 Recebeu 1000000000 Moedas por ter adquirido um Bitcoin`
+                )
+
                 return message.reply(`${e.Tada} | Você obteve **1 ${e.BitCoin} BitCoin**\n${e.PandaProfit} +1000000000 ${Moeda(message)}`)
             }
 

@@ -1,7 +1,8 @@
 const { e } = require('../../../database/emojis.json')
-const ms = require('parse-ms')
-const Moeda = require('../../../Routes/functions/moeda')
 const { f } = require('../../../database/frases.json')
+const { TransactionsPush } = require('../../../Routes/functions/transctionspush')
+const Moeda = require('../../../Routes/functions/moeda')
+
 
 module.exports = {
     name: 'pix',
@@ -56,6 +57,12 @@ module.exports = {
 
         function NewPix(msg) {
             db.add(`Bank_${user.id}`, (sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0))
+            TransactionsPush(
+                user.id,
+                message.author.id,
+                `💰 Recebeu ${sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0} Moedas de ${message.author.tag} via pix`,
+                `💸 Enviou ${sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0} Moedas para ${user.tag} via pix`
+            )
             msg.edit(`${e.Pix} | Transação PIX efetuada com sucesso!\n${e.PandaProfit} Stats\n${message.author.tag} -${sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0} ${Moeda(message)}\n${user.username} +${sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0} ${Moeda(message)}`).catch(() => { })
             sdb.set(`Users.${message.author.id}.Cache.Pix`, 0)
         }

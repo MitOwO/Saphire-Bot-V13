@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'crime',
@@ -88,6 +89,10 @@ module.exports = {
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
                             db.subtract(`Balance_${message.author.id}`, multa)
+                            PushTrasaction(
+                                message.author.id,
+                                `${e.MoneyWithWings} Pagou ${multa} Moedas de multa por cometer um crime`
+                            )
                             let chances = Math.floor(Math.random() * 10)
                             if (chances <= 5) {
                                 return msg.edit(`${e.Check} | O policial aceitou o seu suborno e você foi liberado!`)
@@ -131,12 +136,20 @@ module.exports = {
                 } else {
                     sdb.set(`Users.${message.author.id}.Timeouts.Preso`, Date.now());
                     db.subtract(`Balance_${message.author.id}`, multa);
+                    PushTrasaction(
+                        message.author.id,
+                        `${e.MoneyWithWings} Pagou ${multa} Moedas de multa por cometer um crime`
+                    )
                     msg.edit(`${e.Sirene} | Você foi pego no ato e o juiz decretou sua prisão mais multa!\n${e.PandaProfit} -${multa} ${Moeda(message)}`).catch(() => { })
                 }
             }
 
             function add(amount) {
                 db.add(`Balance_${message.author.id}`, amount)
+                PushTrasaction(
+                    message.author.id,
+                    `${e.BagMoney} Recebeu ${amount} Moedas por cometer um crime`
+                )
             }
 
             function Casa() {

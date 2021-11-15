@@ -6,6 +6,7 @@ const Vip = require('../../../Routes/functions/vip')
 const parsems = require('parse-ms')
 const ms = require('ms')
 const Error = require('../../../Routes/functions/errors')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'resgatar',
@@ -23,6 +24,10 @@ module.exports = {
         if (cache <= 0) return message.reply(`${e.PandaProfit} | Você não possui dinheiro no cache.`)
 
         db.add(`Balance_${message.author.id}`, cache)
+        PushTrasaction(
+            message.author.id,
+            `${e.BagMoney} Resgatou ${cache} Moedas`
+        )
         sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
         return message.channel.send(`${e.PandaProfit} | ${message.author} resgatou ${cache.toFixed(0)} ${Moeda(message)}`)
 

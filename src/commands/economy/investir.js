@@ -4,6 +4,7 @@ const ms = require('parse-ms')
 const colors = require('../../../Routes/functions/colors')
 const Moeda = require('../../../Routes/functions/moeda')
 const PassCode = require('../../../Routes/functions/PassCode')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 // #246FE0 - Azul Saphire
 module.exports = {
@@ -110,14 +111,19 @@ module.exports = {
 
         function SetNewInvestiment(msg, Invest) {
 
-            Result = Invest + Math.floor(Math.random() * (Invest * `0.${Lucro}`))
+            Result = parseInt(Invest + Math.floor(Math.random() * (Invest * `0.${Lucro}`))) || 0
             if (Math.floor(Math.random() * 100) > Chance) Result = 0
 
             sdb.set(`Users.${message.author.id}.Cache.Bolsa`, 0)
             sdb.set(`Users.${message.author.id}.Timeouts.Bolsa`, Date.now())
             sdb.set(`Users.${message.author.id}.Cache.BolsaValue`, Invest)
             sdb.set(`Users.${message.author.id}.Cache.BolsaEmpresa`, Empresa)
-            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, parseInt(Result))
+            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, Result)
+
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} | Investiu ${Invest} Moedas na bolsa de valores`
+            )
 
             return message.reply(`${e.Check} | Investimento efetuado com sucesso! Daqui 2 dias, use o comando \`${prefix}bolsa me\` ou \`${prefix}balance\` e veja seu resultado!`).catch(() => { })
         }
@@ -154,6 +160,11 @@ module.exports = {
             db.add(`Balance_${message.author.id}`, Value)
             sdb.delete(`Users.${message.author.id}.Cache.BolsaLucro`)
             sdb.delete(`Users.${message.author.id}.Timeouts.Bolsa`)
+
+            PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} | Recebeu ${Value} Moedas na bolsa de valores`
+            )
 
             return message.reply(`${e.Check} | Você resgatou **${Value} ${Moeda(message)}** da Bolsa de Valores.`)
         }

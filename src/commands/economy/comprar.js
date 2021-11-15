@@ -9,6 +9,7 @@ const Colors = require('../../../Routes/functions/colors')
 const Error = require('../../../Routes/functions/errors')
 const NewLoteryGiveaway = require('../../../Routes/functions/newlotery')
 const Vip = require('../../../Routes/functions/vip')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'comprar',
@@ -21,7 +22,6 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         let vip = Vip(`${message.author.id}`)
-        let bank = db.get(`Bank_${message.author.id}`) || 0
         let color = Colors(message.member)
 
         const LojaEmbed = new MessageEmbed()
@@ -249,6 +249,13 @@ module.exports = {
             })
         }
 
+        function PushData(value) {
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} Gastou ${value} Moedas na loja`
+            )
+        }
+
         function NoMoney(value) {
             sdb.set(`Users.${message.author.id}.Tickets`, false)
             message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${value} ${Moeda(message)} na carteira para comprar este item.`)
@@ -259,6 +266,7 @@ module.exports = {
 
             function BuyNewColor() {
                 db.subtract(`Balance_${message.author.id}`, 2000000); AddLoteria(1000000)
+                PushData(2000000)
                 sdb.set(`Users.${message.author.id}.Color.Perm`, true)
                 return message.channel.send(`${e.Check} | ${message.author} comprou a permissão 🎨 \`Cores\`.\n${e.PandaProfit} | -2000000 ${Moeda(message)}`)
             }
@@ -269,6 +277,7 @@ module.exports = {
 
             function BuyHelpier() {
                 db.subtract(`Balance_${message.author.id}`, 50000); AddLoteria(25000)
+                PushData(50000)
                 sdb.set(`Users.${message.author.id}.Timeouts.Helpier`, Date.now())
                 return message.channel.send(`${e.Check} | ${message.author} contratou um ${e.Helpier} \`Ajudante\` e ganhou +5% de chance de sucesso no \`${prefix}crime\` por 7 dias.\n${e.PandaProfit} | -50000 ${Moeda(message)}`)
             }
@@ -279,6 +288,7 @@ module.exports = {
 
             function BuyVara() {
                 db.subtract(`Balance_${message.author.id}`, 180); AddLoteria(60)
+                PushData(180)
                 sdb.set(`Users.${message.author.id}.Slot.Vara`, true)
                 return message.channel.send(`${e.Check} | ${message.author} comprou uma 🎣 \`Vara de Pesca\`.\n${e.PandaProfit} | -180 ${Moeda(message)}`)
             }
@@ -291,6 +301,7 @@ module.exports = {
             function Restaurar() {
                 if (db.get(`Balance_${message.author.id}`) < 30) return message.channel.send(`${e.Deny} | ${message.author}, você precisa ter pelo menos 30 ${Moeda(message)} na carteira para renovar a sua picareta.`)
                 db.subtract(`Balance_${message.author.id}`, 30)
+                PushData(30)
                 sdb.set(`Users.${message.author.id}.Slot.Picareta.Usos`, 50)
                 message.channel.send(`${e.Check} | ${message.author} renovou sua picareta para 50 usos.\n${e.PandaProfit} | -30 ${Moeda(message)}`)
             }
@@ -311,6 +322,10 @@ module.exports = {
                 let profit = (Divida - Divida) - Divida
                 message.channel.send(`${e.Check} | ${message.author} restaurou sua dívida com sucesso!\n${e.PandaProfit} | +${profit} ${Moeda(message)}`).catch(() => { })
                 db.delete(`Balance_${message.author.id}`)
+                PushTrasaction(
+                    message.author.id,
+                    `🔄 Restaurou a dívida.`
+                )
             }
         }
 
@@ -319,6 +334,7 @@ module.exports = {
 
             function BuyBalaclava() {
                 db.subtract(`Balance_${message.author.id}`, 60000); AddLoteria(30000)
+                PushData(60000)
                 sdb.set(`Users.${message.author.id}.Slot.Balaclava`, true)
                 return message.channel.send(`${e.Check} | ${message.author} comprou uma ${e.Balaclava} \`Balaclava\` e liberou o comando \`${prefix}assaltar\`.\n${e.PandaProfit} | -60000 ${Moeda(message)}`)
             }
@@ -329,6 +345,7 @@ module.exports = {
 
             function BuyArma() {
                 db.subtract(`Balance_${message.author.id}`, 4800); AddLoteria(2400)
+                PushData(4800)
                 sdb.set(`Users.${message.author.id}.Slot.Arma`, true)
                 return message.channel.send(`${e.Check} | ${message.author} comprou uma 🔫 \`Arma\` e liberou o comando \`${prefix}assaltar\`.\n${e.PandaProfit} | -4800 ${Moeda(message)}`)
             }
@@ -339,6 +356,7 @@ module.exports = {
 
             function BuyMachado() {
                 db.subtract(`Balance_${message.author.id}`, 120); AddLoteria(60)
+                PushData(120)
                 sdb.set(`Users.${message.author.id}.Slot.Machado.Machado`, true)
                 sdb.set(`Users.${message.author.id}.Slot.Machado.Usos`, 50)
                 return message.channel.send(`${e.Check} | ${message.author} comprou um 🪓 \`Machado\`.\n${e.PandaProfit} | -120 ${Moeda(message)}`)
@@ -352,6 +370,7 @@ module.exports = {
             function RestaurarMachado() {
                 if (db.get(`Balance_${message.author.id}`) < 30) return message.channel.send(`${e.Deny} | ${message.author}, você precisa ter pelo menos 30 ${Moeda(message)} na carteira para restaurar seu machado.`)
                 db.subtract(`Balance_${message.author.id}`, 30)
+                PushData(30)
                 sdb.set(`Users.${message.author.id}.Slot.Machado.Usos`, 50)
                 message.channel.send(`${e.Check} | ${message.author} renovou seu machado para 50 usos.\n${e.PandaProfit} | -30 ${Moeda(message)}`)
             }
@@ -362,6 +381,7 @@ module.exports = {
 
             function BuyPicareta() {
                 db.subtract(`Balance_${message.author.id}`, 120); AddLoteria(60)
+                PushData(120)
                 sdb.set(`Users.${message.author.id}.Slot.Picareta`, { Picareta: true, Usos: 50 })
                 return message.channel.send(`${e.Check} | ${message.author} comprou uma ⛏️ \`Picareta\`.\n${e.PandaProfit} | -120 ${Moeda(message)}`)
             }
@@ -372,6 +392,7 @@ module.exports = {
 
             function BuyTitulo() {
                 db.subtract(`Balance_${message.author.id}`, 10000); AddLoteria(60)
+                PushData(10000)
                 sdb.set(`Users.${message.author.id}.Perfil.TitlePerm`, true)
                 return message.channel.send(`${e.Check} | ${message.author} comprou a permissão 🔰 \`Título\`.\n${e.PandaProfit} | -10000 ${Moeda(message)}`)
             }
@@ -402,6 +423,7 @@ module.exports = {
 
             db.set(`Users.${message.author.id}.Tickets`, true)
             db.subtract(`Balance_${message.author.id}`, 1000); AddLoteria(1000);
+            PushData(1000)
             await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
                 let i = 0, TicketsArray = []
                 do {
@@ -431,6 +453,7 @@ module.exports = {
             x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de fichas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 5 ? BuyFichas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 5} ${Moeda(message)} para comprar mais ${50 - x} fichas.`)
             function BuyFichas() {
                 db.subtract(`Balance_${message.author.id}`, (50 - x) * 5)
+                PushData((50 - x) * 5)
                 AddLoteria(((50 - x) * 5) / 2)
                 sdb.add(`Users.${message.author.id}.Slot.Fichas`, 50 - x)
                 message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Fichas da Roleta\` comprando +${50 - x} fichas.\n${e.PandaProfit} | -${(50 - x) * 5} ${Moeda(message)}`)
@@ -442,6 +465,7 @@ module.exports = {
             x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de cartas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 2 ? BuyCartas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 2} ${Moeda(message)} para comprar mais ${50 - x} cartas.`)
             function BuyCartas() {
                 db.subtract(`Balance_${message.author.id}`, (50 - x) * 2)
+                PushData(((50 - x) * 2))
                 AddLoteria(((50 - x) * 2) / 2)
                 sdb.add(`Users.${message.author.id}.Slot.Cartas`, 50 - x)
                 message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Cartas de Amor\` comprando +${50 - x} cartas.\n${e.PandaProfit} | -${(50 - x) * 2} ${Moeda(message)}`)
@@ -453,6 +477,7 @@ module.exports = {
             x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de comidas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 2 ? BuyComidas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 2} ${Moeda(message)} para comprar mais ${50 - x} comidas.`)
             function BuyComidas() {
                 db.subtract(`Balance_${message.author.id}`, (50 - x) * 2)
+                PushData((50 - x) * 2)
                 AddLoteria(((50 - x) * 2) / 2)
                 sdb.add(`Users.${message.author.id}.Slot.Comidas`, 50 - x)
                 message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Comidas\` comprando +${50 - x} comidas.\n${e.PandaProfit} | -${(50 - x) * 2} ${Moeda(message)}`)
@@ -464,6 +489,7 @@ module.exports = {
             x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de iscas.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 1 ? BuyIscas() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 1} ${Moeda(message)} para comprar mais ${50 - x} iscas.`)
             function BuyIscas() {
                 db.subtract(`Balance_${message.author.id}`, (50 - x) * 1)
+                PushData((50 - x) * 1)
                 AddLoteria(((50 - x) * 1) / 2)
                 sdb.add(`Users.${message.author.id}.Slot.Iscas`, 50 - x)
                 message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Iscas\` comprando +${50 - x} iscas.\n${e.PandaProfit} | -${(50 - x) * 1} ${Moeda(message)}`)
@@ -475,6 +501,7 @@ module.exports = {
             x >= 50 ? message.reply(`${e.Deny} | Você já atingiu o limite de copos.`) : db.get(`Balance_${message.author.id}`) >= (50 - x) * 1 ? BuyCopos() : message.channel.send(`${e.Deny} | ${message.author}, você precisa de ${(50 - x) * 1} ${Moeda(message)} para comprar mais ${50 - x} copos.`)
             function BuyCopos() {
                 db.subtract(`Balance_${message.author.id}`, (50 - x) * 1)
+                PushData((50 - x) * 1)
                 AddLoteria(((50 - x) * 1) / 2)
                 sdb.add(`Users.${message.author.id}.Slot.Aguas`, 50 - x)
                 message.channel.send(`${e.Check} | ${message.author} completou o limite de \`Copos d'água'\` comprando +${50 - x} copos.\n${e.PandaProfit} | -${(50 - x) * 1} ${Moeda(message)}`)
@@ -532,6 +559,7 @@ module.exports = {
 
                         sdb.set(`Users.${message.author.id}.Slot.Walls.Bg.${code}`, true)
                         db.subtract(`Balance_${message.author.id}`, price)
+                        PushData(price)
                         return msg.edit({ content: `${e.Check} Compra confirmada!`, embeds: [embed.setColor('GREEN').setTitle(`${e.Check} Compra efetuada com sucesso!`).setDescription(`${e.SaphireObs} | ${message.author}, eu já adicionei o novo wallpaper no seu slot. Você pode usar \`${prefix}level set ${code}\` para usar o seu novo wallpaper.`)] }).catch(() => { })
 
                     } else {

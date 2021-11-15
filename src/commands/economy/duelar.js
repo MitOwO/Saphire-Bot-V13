@@ -3,6 +3,7 @@ const { f } = require('../../../database/frases.json')
 const Colors = require('../../../Routes/functions/colors')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
+const { PushTrasaction, TransactionsPush } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'duelar',
@@ -128,6 +129,21 @@ module.exports = {
         function NewWinner(Winner, Loser, msg) {
             let Prize = sdb.get(`Users.${message.author.id}.Cache.Duelo`).toFixed(0)
             db.add(`Balance_${Winner.id}`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
+            if (Winner.id !== message.author.id) {
+                TransactionsPush(
+                    Winner.id,
+                    message.author.id,
+                    `${e.BagMoney} Recebeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${message.author.tag}`,
+                    `${e.MoneyWithWings} Perdeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${Winner.user.tag}`
+                )
+            } else {
+                TransactionsPush(
+                    Winner.id,
+                    message.author.id,
+                    `${e.MoneyWithWings} Perdeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${message.author.tag}`
+                    `${e.BagMoney} Recebeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${Winner.user.tag}`,
+                )
+            }
             sdb.set(`Users.${message.author.id}.Cache.Duelo`, 0)
             msg.edit(`${e.OwnerCrow} | ${Winner} ganhou o duelo contra ${Loser}\n${e.PandaProfit} | ${Winner.user.username} teve o retorno de **${Prize} ${Moeda(message)}** com um lucro de **${Prize / 2} ${Moeda(message)}**\n*${Loser.user.username} perdeu o dinheiro no duelo.*`).catch(() => { })
         }

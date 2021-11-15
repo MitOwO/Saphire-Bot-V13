@@ -2,6 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const ms = require('parse-ms')
 const Error = require('../../../Routes/functions/errors')
 const Moeda = require('../../../Routes/functions/moeda')
+const { TransactionsPush, PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'assaltar',
@@ -17,27 +18,32 @@ module.exports = {
         let TargetMoney = db.get(`Balance_${target.id}`) || 0
         let Amount = Math.floor(Math.random() * (TargetMoney / 4)) + 1
 
-        const AssaltoEmbed = new MessageEmbed().setColor('#246FE0').setTitle(`${e.PandaBag} Comando Assalto`).setDescription('Função: Assaltar **100%** do dinheiro presente na carteira do alvo definido.')
-            .addFields(
-                {
-                    name: `${e.Info} Item necessário`,
-                    value: '🔫 Arma'
-                },
-                {
-                    name: `${e.Info} Alvo sem arma`,
-                    value: 'Assaltar alguém que não tenha arma te garante **70% de chance de sucesso** e **30% de chance de ser preso**.'
-                },
-                {
-                    name: `${e.Info} Alvo com arma`,
-                    value: `Assaltar alguém que tenha uma arma é um pouco mais complicado. Chances:\n**25% de sucesso\n25% de ser assaltado de volta** e o alvo receber um valor aleatório do próprio dinheiro\n**25% de ser preso\n25% de receber um tiro** e pagar o tratamento de **1~5000 ${Moeda(message)}**`
-                },
-                {
-                    name: `${e.Info} Preso`,
-                    value: 'Ser preso te bloqueia do sistema de economia por **20 minutos**'
-                }
-            )
-
-        if (['info', 'informação', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return message.reply({ embeds: [AssaltoEmbed] })
+        if (['info', 'informação', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return message.reply({
+            embeds: [
+                new MessageEmbed()
+                    .setColor('#246FE0')
+                    .setTitle(`${e.PandaBag} Comando Assalto`)
+                    .setDescription('Função: Assaltar **100%** do dinheiro presente na carteira do alvo definido.')
+                    .addFields(
+                        {
+                            name: `${e.Info} Item necessário`,
+                            value: '🔫 Arma'
+                        },
+                        {
+                            name: `${e.Info} Alvo sem arma`,
+                            value: 'Assaltar alguém que não tenha arma te garante **70% de chance de sucesso** e **30% de chance de ser preso**.'
+                        },
+                        {
+                            name: `${e.Info} Alvo com arma`,
+                            value: `Assaltar alguém que tenha uma arma é um pouco mais complicado. Chances:\n**25% de sucesso\n25% de ser assaltado de volta** e o alvo receber um valor aleatório do próprio dinheiro\n**25% de ser preso\n25% de receber um tiro** e pagar o tratamento de **1~5000 ${Moeda(message)}**`
+                        },
+                        {
+                            name: `${e.Info} Preso`,
+                            value: 'Ser preso te bloqueia do sistema de economia por **20 minutos**'
+                        }
+                    )
+            ]
+        })
 
         let time = ms(1200000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Assalto`)))
         if (sdb.get(`Users.${message.author.id}.Timeouts.Assalto`) !== null && 1200000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Assalto`)) > 0)
@@ -69,6 +75,12 @@ module.exports = {
                 message.reply(`${e.Loading} | ${message.author} está assaltando ${target}`).then(msg => {
                     setTimeout(() => {
                         AuthorAdd(cache); Timeout()
+                        TransactionsPush(
+                            target.id,
+                            message.author.id,
+                            `💸 Foi assaltado por ${message.author.tag} e perdeu ${cache || 0} Moedas`,
+                            `💰 Recebeu ${cache || 0} Moedas assaltando ${target.user.tag}`
+                        )
                         msg.edit(`${e.PandaBag} | ${message.author} assaltou todo o dinheiro de ${target}.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} +${cache} ${Moeda(message)}\n${target.user.tag} -${cache} ${Moeda(message)}`).catch(() => { })
                         sdb.set(`Users.${message.author.id}.Cache.Assalto`, 0)
                     }, 4500)
@@ -84,6 +96,12 @@ module.exports = {
                     setTimeout(() => {
                         db.add(`Balance_${target.id}`, (cache + Amount))
                         db.subtract(`Balance_${message.author.id}`, Amount)
+                        TransactionsPush(
+                            target.id,
+                            message.author.id,
+                            `💰 Recebeu ${cache + Amount || 0} Moedas assaltando ${target.user.tag}`,
+                            `💸 Foi assaltado por ${message.author.tag} e perdeu ${Amount || 0} Moedas`
+                        )
                         Timeout()
                         msg.edit(`${e.Deny} | ${target} estava armado e assaltou ${message.author} devolta.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} -${Amount} ${Moeda(message)}\n${target.user.tag} +${Amount} ${Moeda(message)}`).catch(() => { })
                         sdb.set(`Users.${message.author.id}.Cache.Assalto`, 0)
@@ -115,6 +133,10 @@ module.exports = {
                         AuthorSubtract(tratamento)
                         Timeout()
                         TargetAdd(cache)
+                        PushTrasaction(
+                            message.author.id,
+                            `💸 Pagou ${tratamento || 0} Moedas ao hospital por levar um tiro de ${target.user.tag}`
+                        )
                         msg.edit(`🏥 | ${message.author}, você levou um tiro e correu perigo de vida. Debitamos do seu banco os gastos necessário.\n${e.PandaProfit} -${tratamento} ${Moeda(message)}`).catch(() => { })
                         sdb.set(`Users.${message.author.id}.Cache.Assalto`, 0)
                     }, 4500)
@@ -132,6 +154,12 @@ module.exports = {
 
             if (result <= 70) {
                 AuthorAdd(TargetMoney); TargetSubtract(TargetMoney)
+                TransactionsPush(
+                    target.id,
+                    message.author.id,
+                    `💸 Perdeu ${TargetMoney || 0} Moedas ao ser assaltado por ${message.author.tag}`,
+                    `💰 Recebeu ${TargetMoney || 0} Moedas ao assaltar ${target.user.tag}`
+                )
                 return message.reply(`${e.PandaBag} | ${message.author} assaltou todo o dinheiro de ${target}.\n${e.PandaProfit} +${TargetMoney} ${Moeda(message)}`)
             } else {
                 Timeout()
@@ -143,6 +171,12 @@ module.exports = {
         function AssaltClient() {
             let multa = Math.floor(Math.random() * 3000)
             AuthorSubtract(multa)
+            TransactionsPush(
+                target.id,
+                message.author.id,
+                `💸 Perdeu 0 Moedas ao ser assaltado por ${message.author.tag}`,
+                `💸 Pagou ${multa || 0} Moedas de multa ao tentar assaltar ${target.user.tag}`
+            )
             Loteria(multa / 2)
             sdb.set(`Users.${message.author.id}.Timeouts.Preso`, Date.now())
             return message.channel.send(`👩‍⚖️ | Eu decreto a prisão de ${message.author} *\`${message.author.tag} | ${message.author.id}\`* por tentar me assaltar mais multa.\n${e.PandaProfit} -${multa} ${Moeda(message)}`)

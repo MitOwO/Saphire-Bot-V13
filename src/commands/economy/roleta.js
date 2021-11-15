@@ -4,6 +4,7 @@ const { f } = require('../../../database/frases.json')
 const Colors = require('../../../Routes/functions/colors')
 const Moeda = require("../../../Routes/functions/moeda")
 const Error = require('../../../Routes/functions/errors')
+const { PushTrasaction } = require("../../../Routes/functions/transctionspush")
 
 module.exports = {
     name: 'roleta',
@@ -154,20 +155,32 @@ module.exports = {
 
         function AddMoneyVictory(prize, msg) {
             sdb.add(`Users.${message.author.id}.Cache.Resgate`, (parseInt(sdb.get(`Users.${message.author.id}.Cache.Roleta`)) || 0))
-            msg.edit(`${e.Tada} | **GANHOU!** | ${message.author} jogou na roleta e teve o retorno de **${(sdb.get(`Users.${message.author.id}.Cache.Roleta`) || 0).toFixed(0)} ${Moeda(message)}** com um lucro de **${prize} ${Moeda(message)}**.\n${e.SaphireObs} | Para garantir que você não seja roubado, o dinheiro está em seu cache.`)
-            sdb.set(`Users.${message.author.id}.Cache.Roleta`, 0)
+
+            PushTrasaction(
+                message.author.id,
+                `${e.BagMoney} Recebeu ${parseInt(sdb.get(`Users.${message.author.id}.Cache.Roleta`)) || 0} Moedas jogando na roleta`
+            )
+
+            msg.edit(`${e.Tada} | **GANHOU!** | ${message.author} jogou na roleta e teve o retorno de **${(sdb.get(`Users.${message.author.id}.Cache.Roleta`) || 0).toFixed(0)} ${Moeda(message)}** com um lucro de **${prize} ${Moeda(message)}**.\n${e.SaphireObs} | Para garantir que você não seja roubado, o dinheiro está em seu cache.`).catch(() => { })
+            return sdb.delete(`Users.${message.author.id}.Cache.Roleta`)
         }
 
         function SubtractMoneyLose(prize, msg) {
-            msg.edit(`${e.SaphireCry} | **PERDEU!** | ${message.author} jogou na roleta e perdeu **${((sdb.get(`Users.${message.author.id}.Cache.Roleta`) || 0) - prize).toFixed(0)} ${Moeda(message)}**.`)
-            sdb.set(`Users.${message.author.id}.Cache.Roleta`, 0)
+            msg.edit(`${e.SaphireCry} | **PERDEU!** | ${message.author} jogou na roleta e perdeu **${((sdb.get(`Users.${message.author.id}.Cache.Roleta`) || 0) - prize).toFixed(0)} ${Moeda(message)}**.`).catch(() => { })
+
+            PushTrasaction(
+                message.author.id,
+                `${e.MoneyWithWings} Perdeu ${valor} Moedas jogando na roleta`
+            )
+
+            return sdb.delete(`Users.${message.author.id}.Cache.Roleta`)
         }
 
         function GiveBackMoneyDraw(prize, msg) {
             sdb.add(`Users.${message.author.id}.Cache.Resgate`, ((sdb.get(`Users.${message.author.id}.Cache.Roleta`) || 0) - prize))
             sdb.delete(`Users.${message.author.id}.Cache.Roleta`)
             sdb.delete(`Users.${message.author.id}.Timeouts.Roleta`)
-            msg.edit(`${e.Nagatoro} | **EMPATE!** | ${message.author} jogou na roleta e empatou. O dinheiro foi retornado ao cache e o timeout zerado.`)
+            return msg.edit(`${e.Nagatoro} | **EMPATE!** | ${message.author} jogou na roleta e empatou. O dinheiro foi retornado ao cache e o timeout zerado.`).catch(() => { })
         }
     }
 }

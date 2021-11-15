@@ -2,6 +2,7 @@ const ms = require("parse-ms")
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
   name: 'esmola',
@@ -19,6 +20,7 @@ module.exports = {
       return message.reply(`${e.Deny} | Você já pediu esmola! Volte em: \`${time.minutes}m e ${time.seconds}s\``)
 
     if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
+    let count = 0
 
     return message.reply(`${e.SadPepe} | ${message.author.username} está pedindo um pouco de dinheiro`).then(msg => {
       sdb.set(`Users.${message.author.id}.Timeouts.Esmola`, Date.now())
@@ -37,11 +39,20 @@ module.exports = {
         if (money < 50) { return message.channel.send(`${e.Deny} | ${user}, você não tem 50 ${Moeda(message)} na carteira para ajudar ${message.author}`) }
         db.subtract(`Balance_${user.id}`, 50)
         db.add(`Balance_${message.author.id}`, 50)
+        count += 50
         message.channel.send(`${e.MoneyWings} | ${user} ajudou ${message.author} com 50 ${Moeda(message)}`)
       });
 
-      collector.on('end', collected => {
+      collector.on('end', () => {
         sdb.delete(`Request.${message.author.id}`)
+
+        if (count > 0) {
+          PushTrasaction(
+            message.author.id,
+            `${e.BagMoney} Recebeu ${count} Moedas de esmola`
+          )
+        }
+
         msg.edit(`${e.Deny} | ${message.author.username} está pedindo um pouco de dinheiro | Request expirada`)
       });
     })

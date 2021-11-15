@@ -3,6 +3,7 @@ const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
 const Colors = require('../../../Routes/functions/colors')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'lance',
@@ -97,6 +98,11 @@ module.exports = {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                 for (const e of ['✅', '💸', '❌']) msg.react(e).catch()
 
+                PushTrasaction(
+                    message.author.id,
+                    `${e.MoneyWithWings} Lançou ${prize} Moedas no chat`
+                )
+
                 const filter = (reaction, user) => { return reaction.emoji.name === '💸' && user.id === user.id; };
                 const collector = msg.createReactionCollector({ filter, time: 120000 })
 
@@ -160,8 +166,11 @@ module.exports = {
                         return RemoveUserFromArray(ArrayUsers, winner)
 
                     sdb.add(`Users.${winner.id}.Cache.Resgate`, prize)
-                    sdb.set(`Users.${message.author.id}.Cache.LancePrize`, 0)
-                    sdb.delete(`LanceFixArray.${message.author.id}`)
+                    PushTrasaction(
+                        winner.id,
+                        `${e.BagMoney} Recebeu ${prize} Moedas de um lançamento no chat`
+                    )
+                    sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                     message.channel.send(`${e.MoneyWings} | ${winner} pegou o ${prize} ${Moeda(message)} lançado por ${message.author}\n${e.SaphireObs} | ${winner}, você possui ${(sdb.get(`Users.${winner.id}.Cache.Resgate`) || 0)} ${Moeda(message)} no cache. Use \`${prefix}resgate\` para resgatar o prêmio ou \`${prefix}lance again\` para lançar ${sdb.get(`Users.${winner.id}.Cache.Resgate`) || 0} ${Moeda(message)}.`).catch(() => { })
                     return msg.edit(`${e.Check} ${message.author} lançou ${prize} ${Moeda(message)} no chat. | ${winner.id} levou este lance.`).catch(() => { })
 
@@ -175,17 +184,9 @@ module.exports = {
                         return message.channel.send(`${e.Deny} | Falha ao sortear o lance. Dinheiro retornado a carteira.`)
                     }
 
-                    /**
-                     * param array || Array de usuários que participarram do lance
-                     * param IdToRemove || Usuário que saiu do servidor antes do lance terminar
-                     * 
-                     */
-
-                    // Remoção do usuário do array
                     let NewArray = []
                     for (const id of array) id !== IdToRemove ? NewArray.push(id) : null
 
-                    // função que ativa o sorteio novamente
                     return GetWinner(NewArray)
 
                 }

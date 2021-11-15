@@ -1,7 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
-const { sdb } = require('../../../Routes/functions/database')
+const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'bingo',
@@ -33,6 +33,10 @@ module.exports = {
 
         sdb.add(`Users.${message.author.id}.Cache.BingoPrize`, quantia)
         db.subtract(`Balance_${message.author.id}`, quantia)
+        PushTrasaction(
+            message.author.id,
+            `💸 Inicou um bingo no valor de ${quantia || 0} Moedas`
+        )
 
         let Number = Math.floor(Math.random() * 90)
         Number = Number === 0 ? 1 : Number
@@ -54,7 +58,11 @@ module.exports = {
                 Bingo.setTitle(`${message.author.username} fez um Bingo.`).setDescription(`🏆 ${quantia} ${Moeda(message)}\n${e.OwnerCrow} ${WinnerMsg.author} Acertou o número: ${Number}`).setFooter('Concluído')
                 msg.edit({ embeds: [Bingo] }).catch(() => { })
                 sdb.add(`Users.${WinnerMsg.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0))
-                sdb.set(`Users.${message.author.id}.Cache.BingoPrize`, 0)
+                PushTrasaction(
+                    WinnerMsg.author.id,
+                    `💰 Recebeu ${quantia || 0} Moedas jogando no bingo`
+                )
+                sdb.delete(`Users.${message.author.id}.Cache.BingoPrize`)
                 WinnerMsg.reply(`${e.MoneyWings} | ${WinnerMsg.author} acertou o número do bingo! **${Number}**\n${e.PandaProfit} | ${(sdb.get(`Users.${WinnerMsg.author.id}.Cache.Resgate`) || 0)} ${Moeda(message)} estão no seu cache. Use \`${prefix}resgate\` para resgatar seu cache.\nBingo link: ${db.get(`BingoOn${message.author.id}`)}`).catch(() => { })
                 db.delete(`BingoOn${message.author.id}`)
             })
@@ -64,7 +72,11 @@ module.exports = {
                     Bingo.setColor('RED').setTitle(`${message.author.username} fez um Bingo.`).setDescription(`🏆 ${quantia} ${Moeda(message)}\n${e.Deny} Ninguém acertou o número: ${Number}`).setFooter('Concluído')
                     msg.edit({ embeds: [Bingo] }).catch(() => { })
                     sdb.add(`Users.${message.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0))
-                    sdb.set(`Users.${message.author.id}.Cache.BingoPrize`, false)
+                    PushTrasaction(
+                        message.author.id,
+                        `💰 Recebeu ${sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0} Moedas jogando no bingo`
+                    )
+                    sdb.delete(`Users.${message.author.id}.Cache.BingoPrize`)
                     message.channel.send(`${e.Deny} | Tempo do bingo expirado!\n${message.author}, o dinheiro lançado no Bingo está no seu cache.\nBingo Link: ${db.get(`BingoOn${message.author.id}`)}`)
                     db.delete(`BingoOn${message.author.id}`)
                 } else {
