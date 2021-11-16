@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
-const { lotery } = require('../../../Routes/functions/database')
+const { lotery, Clan } = require('../../../Routes/functions/database')
 const Moeda = require('../../../Routes/functions/moeda')
+const Colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'rank',
@@ -20,6 +21,7 @@ module.exports = {
         if (['carteira', 'wallet'].includes(args[0]?.toLowerCase())) return RankCarteira()
         if (['like', 'curtidas', 'likes'].includes(args[0]?.toLowerCase())) return RankLikes()
         if (['dividas', 'invertido', 'dívidas', 'invert', 'invertido'].includes(args[0]?.toLowerCase())) return RankInvert()
+        if (['clan', 'clans'].includes(args[0]?.toLowerCase())) return ClanRanking()
 
         return message.reply(`${e.Deny} | ${message.author}, este ranking não existe ou você escreveu errado. Use \`${prefix}rank\` e veja os rankings disponiveis.`)
 
@@ -63,8 +65,6 @@ module.exports = {
             for (const id of USERS) {
 
                 const { Bal, Bank, Resgate } = {
-                    // Bal: sdb.get(`Users.${id}.Balance.Bal`) || 0,
-                    // Bank: sdb.get(`Users.${id}.Balance.Bank`) || 0,
                     Bal: db.get(`Balance_${id}`) || 0,
                     Bank: db.get(`Bank_${id}`) || 0,
                     Resgate: sdb.get(`Users.${id}.Cache.Resgate`) || 0
@@ -186,7 +186,48 @@ module.exports = {
 
         }
 
-        async function NoArgs() {
+        function ClanRanking() {
+
+            const ClansArray = []
+            const keys = Object.keys(Clan.get('Clans'))
+            const AtualClan = sdb.get(`Users.${message.author.id}.Clan`)
+
+            for (const key of keys) {
+                if (Clan.get(`Clans.${key}.Donation`) > 0) {
+                    ClansArray.push({ key: key, name: Clan.get(`Clans.${key}.Name`), donation: Clan.get(`Clans.${key}.Donation`) })
+                }
+            }
+
+            if (ClansArray.length < 1) return message.reply(`${e.Info} | Não tem nenhum ranking por enquanto.`)
+
+            const rank = ClansArray.slice(0, 10).sort((a, b) => b.donation - a.donation).map((clan, i) => ` \n> ${Medals(i)} **${clan.name}** - \`${clan.key}\`\n> ${clan.donation} ${Moeda(message)}\n`).join('\n')
+            let MyClanRank = ClansArray.findIndex(clans => clans.name === AtualClan) + 1 || 'N/A'
+
+            function Medals(i) {
+                const Medals = {
+                    1: '🥇',
+                    2: '🥈',
+                    3: '🥉'
+                }
+
+                return Medals[i + 1] || `${i + 1}.`
+            }
+
+            return message.reply(
+                {
+                    embeds: [
+                        new MessageEmbed()
+                            .setColor(Colors(message.member))
+                            .setTitle(`👑 Top 10 Clans`)
+                            .setDescription(`O clan é baseado nas doações\n \n${rank}`)
+                            .setFooter(`Meu Clan: ${MyClanRank}`)
+                    ]
+                }
+            )
+
+        }
+
+        function NoArgs() {
             return message.reply({
                 embeds: [
                     new MessageEmbed()
@@ -196,6 +237,7 @@ module.exports = {
                         .addField('Ranking Money', `\`${prefix}rank money\`\n\`${prefix}rank carteira\`\n\`${prefix}rank invertido\``)
                         .addField('Ranking Experiência', '`' + prefix + 'rank xp`')
                         .addField('Ranking Reputação', '`' + prefix + 'rank likes`')
+                        .addField('Ranking Clans', `\`${prefix}rank clan\``)
                 ]
             })
         }

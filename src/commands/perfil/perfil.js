@@ -37,6 +37,7 @@ module.exports = {
             Sexo: sdb.get(`Users.${user.id}.Perfil.Sexo`),
             Aniversario: sdb.get(`Users.${user.id}.Perfil.Aniversario`),
             Trabalho: sdb.get(`Users.${user.id}.Perfil.Trabalho`),
+            Clan: sdb.get(`Users.${user.id}.Clan`) || 'Não possui',
             Estrela: {
                 Um: sdb.get(`Users.${user.id}.Perfil.Estrela.Um`),
                 Dois: sdb.get(`Users.${user.id}.Perfil.Estrela.Dois`),
@@ -59,7 +60,7 @@ module.exports = {
             },
         }
 
-        let { Marry, Titulo, TitlePerm, Estrela, Parcas, Family, Status, Signo, Sexo, Aniversario, Trabalho } = PerfilObj
+        let { Marry, Titulo, TitlePerm, Estrela, Parcas, Family, Status, Signo, Sexo, Aniversario, Trabalho, Clan } = PerfilObj
 
         if (Marry && !await client.users.cache.get(Marry)) {
             sdb.delete(`Users.${Marry}`)
@@ -255,7 +256,7 @@ module.exports = {
                 },
                 {
                     name: '🛡️ Clan',
-                    value: 'Sessão em produção'
+                    value: Clan
                 }
             )
             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
