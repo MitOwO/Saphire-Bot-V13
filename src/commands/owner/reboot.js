@@ -1,5 +1,5 @@
 const { e } = require('../../../database/emojis.json')
-const { lotery, ServerDb } = require('../../../Routes/functions/database')
+const { lotery, ServerDb, Transactions } = require('../../../Routes/functions/database')
 const glob = require("glob")
 const Error = require('../../../Routes/functions/errors')
 
@@ -23,10 +23,32 @@ module.exports = {
 
         return RebootLock(args?.join(' '))
 
-        function RebootLock(x) {
-            sdb.set('Client.Rebooting', { ON: true, Features: x || 'Nenhum dado fornecido.' })
-            lotery.set('Loteria.Close', true)
-            message.channel.send(`${e.Check} Accepted!\n${e.Loading} Rebooting starting...`)
+        async function RebootLock(x) {
+
+            const msg = await message.reply(`${e.QuestionMark} | Iniciar o reboot?`)
+            for (const emoji of ['✅', '❌']) {
+                msg.react(emoji).catch()
+            }
+
+            const collector = msg.createReactionCollector({
+                filter: (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
+                time: 30000,
+                errors: ['time']
+            });
+
+            collector.on('collect', (reaction, user) => {
+
+                if (reaction.emoji.name === '✅') {
+
+                    sdb.set('Client.Rebooting', { ON: true, Features: x || 'Nenhum dado fornecido.' })
+                    lotery.set('Loteria.Close', true)
+                    return msg.edit(`${e.Check} Accepted!\n${e.Loading} Rebooting starting...`)
+
+                } else {
+                    return msg.edit(`${e.Deny} | Comando cancelado.`)
+                }
+
+            });
         }
 
         function RebootCommands() {
@@ -49,26 +71,54 @@ module.exports = {
 
             let keys, i = 0
 
+            const array = ["Timeouts", "Cache", "Color", "Perfil.Family", "Perfil.Marry", "Perfil.Estrela", "Perfil", "Slot.Medalha", "Slot.Machado", "Slot.Picareta", "Slot"]
+
             try {
-                keys = Object.keys(sdb.get('Users'))
+                keys = Object.keys(sdb.get('Users') || {})
             } catch (err) {
                 Error(message, err)
             }
 
             return message.channel.send(`${e.Loading} | Atualizando os usuários no banco de dados...`).then(async msg => {
+
                 sdb.set('Client.Rebooting', { ON: true, Features: 'Relogando usuários no banco de dados...' })
                 lotery.set('Loteria.Close', true)
 
                 for (const id of keys) {
+
                     if (!await client.users.cache.get(id)) {
                         i++
                         sdb.delete(`Users.${id}`)
+                        Transactions.delete(`Transactions.${id}`)
                     }
+
+                    if (sdb.get(`Users.${id}.Transactions`)?.length > 2) {
+                        Transactions.set(`Transactions.${id}`, sdb.get(`Users.${id}.Transactions`))
+                        sdb.delete(`Users.${id}.Transactions`)
+                    }
+
+                    for (const item of array) {
+
+                        try {
+
+                            if (!sdb.get(`Users.${id}.${item}`))
+                                sdb.delete(`Users.${id}.${item}`)
+
+                            const keys = Object.keys(sdb.get(`Users.${id}.${item}`) || {})
+
+                            if (keys?.length < 1)
+                                sdb.delete(`Users.${id}.${item}`)
+
+                        } catch (err) { }
+
+                    }
+
                 }
 
                 sdb.delete('Client.Rebooting')
                 lotery.set('Loteria.Close', false)
-                return msg.edit(`${e.Check} | ${i} usuários foram deletados da minha database.`).catch(() => { })
+                return msg.edit(`${e.Check} | Todos os usuários foram atualizados na database.\n${e.Info} | ${i} usuários foram deletados da minha database`).catch(() => { })
+
             }).catch(err => { Error(message, err) })
         }
 
@@ -77,7 +127,7 @@ module.exports = {
             let keys, i = 0
 
             try {
-                keys = Object.keys(ServerDb.get('Servers'))
+                keys = Object.keys(ServerDb.get('Servers') || {})
             } catch (err) {
                 return message.reply(`${e.Deny} | Não há servidores na database.`)
             }
@@ -88,7 +138,7 @@ module.exports = {
 
             for (const id of keys) {
 
-                const array = ["Farm", "LeaveChannel", "WelcomeChannel", "Autorole", "AfkSystem"]
+                const array = ["Farm", "LeaveChannel", "WelcomeChannel", "Autorole", "AfkSystem", "Moeda", "Prefix"]
 
                 try {
 
@@ -99,11 +149,23 @@ module.exports = {
 
                     if (ServerDb.get(`Servers.${id}`)) {
 
+                        const guild = await client.guilds.cache.get(id)
+                        const owner = guild.members.cache.get(guild?.ownerId)?.user
+
+                        ServerDb.set(`Servers.${id}.Name`, guild?.name || undefined)
+                        if (owner?.user.tag !== ServerDb.get(`Servers.${id}.Owner`)) {
+                            ServerDb.set(`Servers.${id}.Owner`, owner?.tag || undefined)
+                            ServerDb.set(`Servers.${id}.OwnerId`, owner?.id || undefined)
+                        }
+
                         for (const item of array) {
 
                             try {
 
-                                const keys = Object.keys(ServerDb.get(`Servers.${id}.${item}`))
+                                if (!ServerDb.get(`Servers.${id}.${item}`))
+                                    ServerDb.delete(`Servers.${id}.${item}`)
+
+                                const keys = Object.keys(ServerDb.get(`Servers.${id}.${item}`) || {})
 
                                 if (keys?.length < 1)
                                     ServerDb.delete(`Servers.${id}.${item}`)
@@ -120,7 +182,7 @@ module.exports = {
 
             sdb.delete('Client.Rebooting')
             lotery.set('Loteria.Close', false)
-            return msg.edit(`${e.Check} | Todos os servidores foram atualizados com sucesso!\n${e.Info} ${i} servidores foram deletados da minha database.`).catch(() => { })
+            return msg.edit(`${e.Check} | Todos os servidores foram atualizados com sucesso!\n${e.Info} | ${i} servidores foram deletados da minha database.`).catch(() => { })
 
         }
     }
