@@ -9,6 +9,7 @@ module.exports = {
     aliases: ['b', 'bal', 'money', 'banco', 'dinheiro', 'conta', 'saldo', 'sp', 'coins', 'coin', 'atm', 'carteira', 'bank'],
     category: 'economy2',
     emoji: `${e.Coin}`,
+    ClientPermissions: ['ADD_REACTIONS'],
     usage: '<bal> [@user]',
     description: 'Confira as finanças',
 
@@ -19,28 +20,16 @@ module.exports = {
         if (!u.id) return message.reply(`${e.Deny} | Eu não achei ninguém ${e.SaphireCry}`)
         let user = await client.users.cache.get(u.id)
 
-        let { bal, bank, bolsa, oculto, frase, cache, avatar, name, TimeBolsa, Bolsa } = {
-
+        let { bal, bank, oculto, cache, avatar, name, TimeBolsa, Bolsa, control } = {
             bal: db.get(`Balance_${user.id}`)?.toFixed(0) || 0,
             bank: db.get(`Bank_${user.id}`)?.toFixed(0) || 0,
             oculto: sdb.get(`Users.${user.id}.Perfil.BankOcult`),
             cache: sdb.get(`Users.${user.id}.Cache.Resgate`)?.toFixed(0) || 0,
-            avatar: user?.displayAvatarURL({ dynamic: true }) || user.user.displayAvatarURL({ dynamic: true }),
+            avatar: user?.displayAvatarURL({ dynamic: true }),
             name: user.username || user.user.username,
+            control: true
         }
 
-        const embed = new MessageEmbed()
-            .setColor(Colors(user))
-            .setAuthor(`Finanças de ${name}`, avatar)
-            .addField('👝 Carteira', `${bal} ${Moeda(message)}`)
-
-        if (oculto) {
-
-            message.author.id === config.ownerId || message.author.id === user.id
-            ? embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`, true) 
-            : embed.addField('🏦 Banco', `||Oculto|| ${Moeda(message)}`, true)
-
-        } else { embed.addField('🏦 Banco', `${bank} ${Moeda(message)}`) }
 
         TimeBolsa = ms(172800000 - (Date.now() - (sdb.get(`Users.${user.id}.Timeouts.Bolsa`))))
         if (sdb.get(`Users${user.id}.Timeouts.Bolsa`) !== null && 172800000 - (Date.now() - sdb.get(`Users.${user.id}.Timeouts.Bolsa`)) > 0) {
@@ -49,11 +38,61 @@ module.exports = {
             Bolsa = `${sdb.get(`Users.${user.id}.Cache.BolsaLucro`)?.toFixed(0) || 0} ${Moeda(message)}`
         }
 
-        embed.addField('📦 Cache', `${cache} ${Moeda(message)}`)
+        const embed = new MessageEmbed()
+            .setColor(Colors(user))
+            .setAuthor(`Finanças de ${name}`, avatar)
+            .addField('👝 Carteira', `${bal} ${Moeda(message)}`)
+            .addField('🏦 Banco', `${bank} ${Moeda(message)}`)
+            .addField('📦 Cache', `${cache} ${Moeda(message)}`)
             .addField('📊 Bolsa de Valores', `${Bolsa}`)
             .setFooter(`Dúvidas? ${prefix}bal info`)
 
-        return message.reply({ embeds: [embed] })
+        const OcultEmbed = new MessageEmbed()
+            .setColor(Colors(user))
+            .setAuthor(`Finanças de ${name}`, avatar)
+            .addField('👝 Carteira', `||Ocultado ${Moeda(message)}||`)
+            .addField('🏦 Banco', `||Ocultado ${Moeda(message)}||`)
+            .addField('📦 Cache', `||Ocultado ${Moeda(message)}||`)
+            .addField('📊 Bolsa de Valores', `||Ocultado||`)
+            .setFooter(`Dúvidas? ${prefix}bal info`)
+
+        const Initial = oculto ? OcultEmbed : embed
+        const msg = await message.reply({ embeds: [Initial] })
+
+        msg.react('❌').catch(() => { })
+
+        if (oculto) msg.react('👁️').catch(() => { })
+
+        const collector = msg.createReactionCollector({
+            filter: (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id; },
+            time: 30000,
+            errors: ['time']
+        });
+
+        const OcultCollector = msg.createReactionCollector({
+            filter: (reaction, u) => { return reaction.emoji.name === '👁️' && u.id === user.id || u.id === config.ownerId; },
+            time: 30000,
+            errors: ['time']
+        });
+
+        collector.on('collect', () => {
+            msg.delete().catch(() => { })
+        });
+
+        OcultCollector.on('collect', () => {
+
+            if (control) {
+                control = false
+                return msg.edit({ embeds: [embed] }).catch(() => { })
+
+            } else {
+                control = true
+                return msg.edit({ embeds: [OcultEmbed] }).catch(() => { })
+            }
+
+        })
+
+        return;
 
         function BalInfo() {
             return message.reply({

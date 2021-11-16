@@ -13,7 +13,7 @@ module.exports = {
     category: 'economy2',
     ClientPermissions: ['ADD_REACTIONS'],
     emoji: '🖼️',
-    usage: '<levelwallpapers>',
+    usage: '<levelwallpapers> [all]',
     description: 'Confira os wallpapers de level',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
@@ -91,9 +91,92 @@ module.exports = {
 
         }
 
+        async function AllWallpapers() {
+
+            let BgArray = []
+            let control = 0
+            let BgCodes = ''
+
+            try {
+
+                BgCodes = Object.keys(LevelWallpapers)?.sort((a, b) => a.slice(2) - b.slice(2))
+
+                for (const bg of BgCodes) {
+                    BgArray.push({ code: bg, name: LevelWallpapers[bg].Name, price: LevelWallpapers[bg].Price })
+                }
+
+            } catch (err) {
+                Error(message, err)
+            }
+
+            function EmbedGenerator() {
+                let amount = 10
+                let Page = 1
+                const embeds = [];
+                let length = parseInt(BgArray.length / 10) + 1
+
+                for (let i = 0; i < BgArray.length; i += 10) {
+
+                    const current = BgArray.slice(i, amount)
+                    const description = current.map((wall) => ` \n> ${wall.name}\n> Código: \`${wall.code}\` | ${wall.price} ${Moeda(message)}`).join("\n")
+
+                    embeds.push({
+                        color: Colors(message.member),
+                        title: `🖼️ ${client.user.username} Level's Wallpapers - ${Page}/${length}`,
+                        description: `${description}`,
+                        footer: {
+                            text: `${BgArray.length} Wallpapers | ${prefix}lvlwall <código>`
+                        },
+                    })
+
+                    Page++
+                    amount += 10
+
+                }
+
+                return embeds;
+            }
+
+            const embeds = EmbedGenerator()
+
+            const msg = await message.reply({ embeds: [embeds[0]] })
+
+            if (embeds.length > 1) {
+                for (const emoji of ['◀️', '▶️']) {
+                    msg.react(emoji).catch()
+                }
+            }
+
+            const collector = msg.createReactionCollector({
+                filter: (reaction, user) => { return ['◀️', '▶️'].includes(reaction.emoji.name) && user.id === message.author.id },
+                idle: 60000,
+                errors: ['idle']
+            });
+
+            collector.on('collect', (reaction, user) => {
+
+                if (reaction.emoji.name === '◀️') {
+                    control--
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control++
+                }
+
+                if (reaction.emoji.name === '▶️') {
+                    control++
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control--
+                }
+
+            });
+
+            collector.on('end', () => {
+                msg.reactions.removeAll().catch()
+            })
+
+        }
+
         if (args[1])
             return message.reply(`${e.Deny} | Não diga nada ou apenas o código. Este é um comando sensível, então por favor, colabore.`)
 
+        if (['all', 'todos'].includes(args[0]?.toLowerCase())) return AllWallpapers()
         return args[0] ? WallPapersCode() : WallPapers()
 
     }

@@ -1,8 +1,8 @@
 const { f } = require('../../../database/frases.json')
 const { e } = require('../../../database/emojis.json')
 const Error = require('../../../Routes/functions/errors')
+const { Transactions } = require('../../../Routes/functions/database')
 
-// #246FE0 - Azul Saphire
 module.exports = {
     name: 'transactions',
     aliases: ['transações', 'extrato', 'transação', 'ts'],
@@ -13,11 +13,10 @@ module.exports = {
     description: 'Veja o extrato bancário.',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
-        if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
         let user = message.mentions.users.first() || client.users.cache.get(args[0]) || message.mentions.repliedUser || message.author
 
-        let transactions = sdb.get(`Users.${user.id}.Transactions`) || []
+        let transactions = Transactions.get(`Transactions.${user.id}`) || []
 
         if (user.bot || transactions.length < 1)
             return message.reply(`${e.Deny} | Nenhuma transação foi encontrada.`)
@@ -40,7 +39,7 @@ module.exports = {
 
         const CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }
         const collectorCancel = msg.createReactionCollector({ filter: CancelFilter, time: 30000, errors: ['time'] });
-
+        
         collectorRight.on('collect', () => {
 
             try {
@@ -78,7 +77,6 @@ module.exports = {
         collectorCancel.on('collect', () => { FinishCollector() });
 
         function FinishCollector() {
-            sdb.delete(`Request.${message.author.id}`)
             collectorLeft.stop()
             collectorRight.stop()
             collectorCancel.stop()

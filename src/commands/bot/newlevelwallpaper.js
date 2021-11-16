@@ -82,17 +82,14 @@ module.exports = {
             if (message.author.id !== config.ownerId)
                 return message.reply(`${e.Deny} | Este sub-comando é privado ao meu criador.`)
 
-            let bgCode = parseInt(args[1])?.toFixed(0)
+            let bgCode = args[1]
             let NewArgs = args.slice(3).join(' ')
 
             if (!args[1])
                 return message.reply(`${e.Info} | Para alterar alguma informação na database é necessário usar o comando com os seguintes parâmetros: **\`Code | Image | Price | Name\`**\n\`${prefix}bg edit **bgCode** "Code/Image/Price/Name" Novo Argumento\` - Exemplo: \`${prefix}bg edit **bgCode** Price NovoPreço\``)
 
-            if (isNaN(bgCode))
-                return message.reply(`${e.Deny} | O número de registro **${args[1]}** não é válido. Certifique-se de que isso é mesmo um número.`)
-
-            if (!BgLevel.has(`LevelWallpapers.bg${bgCode}`))
-                return message.reply(`${e.Deny} | Este bgCode não existe no meu banco de dados.`)
+            if (!bg[`${bgCode}`])
+                return message.reply(`${e.Deny} | O número de registro **${args[1]}** não é válido ou não existe na minha database.`)
 
             if (!NewArgs)
                 return message.reply(`${e.Deny} | Forneça um novo argumento para a edição de dado do bgCode.`)
@@ -118,15 +115,12 @@ module.exports = {
                     try {
 
                         BgLevel.set(`LevelWallpapers.bg${newbgCode}`, {
-                            Name: BgLevel.get(`LevelWallpapers.bg${bgCode}.Name`),
-                            Image: BgLevel.get(`LevelWallpapers.bg${bgCode}.Image`),
-                            Price: BgLevel.get(`LevelWallpapers.bg${bgCode}.Price`)
+                            Name: BgLevel.get(`LevelWallpapers.${bgCode}.Name`),
+                            Image: BgLevel.get(`LevelWallpapers.${bgCode}.Image`),
+                            Price: BgLevel.get(`LevelWallpapers.${bgCode}.Price`)
                         })
-                        return message.reply(`${e.Check} | O código **bg${bgCode}** foi alterado para **bg${newbgCode}**.`).then(() => {
-                            BgLevel.delete(`LevelWallpapers.bg${bgCode}`)
-                        }).catch(err => {
-                            return message.reply(`${e.Warn} | Ocorreu um erro ao editar o bgCode.\n\`\`${err}`)
-                        })
+                        BgLevel.delete(`LevelWallpapers.${bgCode}`)
+                        return message.reply(`${e.Check} | O código **bg${bgCode}** foi alterado para **bg${newbgCode}**.`)
 
                     } catch (err) {
                         return message.reply(`${e.Warn} | Ocorreu um erro ao editar o bgCode.\n\`\`${err}`)
@@ -140,7 +134,6 @@ module.exports = {
 
                 if (!IsUrl(NewArgs))
                     return message.reply(`${e.Deny} | O argumento **${NewArgs}** não é um link. Para ver o comando, use \`${prefix}bg\`.`)
-
 
                 try {
 
@@ -180,7 +173,7 @@ module.exports = {
                 }
 
                 function EditBgImage() {
-                    BgLevel.set(`LevelWallpapers.bg${bgCode}.Image`, NewArgs)
+                    BgLevel.set(`LevelWallpapers.${bgCode}.Image`, NewArgs)
                     return message.reply(`${e.Check} | Background atualizado com sucesso!`)
                 }
                 return EditBgImage()
@@ -199,7 +192,7 @@ module.exports = {
                 if (BgLevel.get(`LevelWallpapers.bg${bgCode}.Price`) === NewPrice)
                     return message.reply(`${e.Info} | Este já é o preço atual deste background.`)
 
-                BgLevel.set(`LevelWallpapers.bg${bgCode}.Price`, NewPrice)
+                BgLevel.set(`LevelWallpapers.${bgCode}.Price`, NewPrice)
                 return message.reply(`${e.Check} | Preço atualizado com sucesso!`)
 
             }
@@ -217,7 +210,7 @@ module.exports = {
                     return message.reply(`${e.Warn} | Houve um erro ao buscar os nomes de comprovação.\n\`${err}\``)
                 }
 
-                BgLevel.set(`LevelWallpapers.bg${bgCode}.Name`, NewArgs)
+                BgLevel.set(`LevelWallpapers.${bgCode}.Name`, NewArgs)
                 return message.reply(`${e.Check} | Nome atualizado com sucesso!`)
 
             }

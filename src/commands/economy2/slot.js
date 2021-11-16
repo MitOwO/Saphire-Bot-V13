@@ -1,7 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const Colors = require('../../../Routes/functions/colors')
 const Error = require('../../../Routes/functions/errors')
-const { BgLevel } = require('../../../Routes/functions/database')
+const { BgLevel, DatabaseObj } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'slot',
@@ -93,7 +93,7 @@ module.exports = {
         if (Medalha.Acess) cachorro = '', bola = '', remedio = ''
         nada = !Helpier && !balaclava && !arma && !picareta && !vara && !machado && cartas <= 0 ? 'Não há nada aqui' : ''
         nada2 = !sdb.get(`Users.${user.id}.Color.Perm`) && !title && !faca && !loli && !fossil && !mamute && !diamante && !Medalha.Medalha && !bola && !cachorro && !remedio ? 'Não há nada aqui' : ''
-        
+
         LevelBgAtual = !sdb.get(`Users.${user.id}.Slot.Walls.Set`) ? 'Padrão: bg0' : 'Indefinido'
 
         Um ? star = `${e.Star}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}` : star = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
@@ -143,61 +143,90 @@ module.exports = {
             return message.reply({ embeds: [new MessageEmbed().setColor(color).setAuthor(`Inventário VIP de ${user.username}`, avatar).setDescription(`${e.SaphireEntaoKkk} Tudo vázio`).setFooter(`${prefix}buy | ${prefix}vip`)] })
         }
 
-        function SlotBackgrouds() {
+        async function SlotBackgrouds() {
+
+            let BgArray = []
+            const WallpaperDB = DatabaseObj.LevelWallpapers
+            let keys
+            let control = 0
 
             if (sdb.get(`Client.BackgroundAcess.${user.id}`))
-                return message.reply({ embeds: [new MessageEmbed().setTitle(`🖼️ ${user.username} Level's Backgrounds`).setColor(color).setDescription(`Este usuário possui todos os wallpapers.`)] })
-
-            let keys, Walls, Page1, Page2, Page3
+                return message.reply(`${e.Info} | ${message.author.id === user.id ? 'Você' : 'Este usuário'} possui todos os wallpapers.`)
 
             try {
-                keys = Object.keys(sdb.get(`Users.${user.id}.Slot.Walls.Bg`))
+                keys = Object.keys(sdb.get(`Users.${user.id}.Slot.Walls.Bg`))?.sort((a, b) => a.slice(2) - b.slice(2))
             } catch (err) {
                 return message.reply(`${e.Info} | Nenhum wallpaper por aqui.`)
             }
 
-            // Walls = keys.sort((a, b) => Number(a.match(/(\d+)/g)[0]) - Number((b.match(/(\d+)/g)[0])))
-
-            try {
-
-                Walls = Object.entries(sdb.get(`Users.${user.id}.Slot.Walls.Bg`))
-
-                Page1 = Walls?.slice(0, 50)?.map(([a, b]) => `\`${a}\`: ${BgLevel.get(`LevelWallpapers.${a}.Name`)}`).join('\n') || false
-                Page2 = Walls?.slice(50, 100)?.map(([a, b]) => `\`${a}\`: ${BgLevel.get(`LevelWallpapers.${a}.Name`)}`).join('\n') || false
-                Page3 = Walls?.slice(100, 150)?.map(([a, b]) => `\`${a}\`: ${BgLevel.get(`LevelWallpapers.${a}.Name`)}`).join('\n') || false
-
-                function Fil() {
-                    if (Page3 && Page2 && Page1) return 1
-                    if (Page2 && Page1) return 2
-                    if (Page1) return 3
-                    return 0
-                }
-
-                const embed1 = new MessageEmbed().setTitle(`🖼️ ${user.username} Level's Backgrounds`).setColor(color).setDescription(`${Page1}`)
-                const embed2 = new MessageEmbed().setColor(color).setDescription(`${Page2}`)
-                const embed3 = new MessageEmbed().setColor(color).setDescription(`${Page3}`)
-
-                switch (Fil()) {
-                    case 1:
-                        message.reply({ content: `${e.SaphireObs} Use \`${prefix}level set <bgCode>\` para definir seu wallpaper. Deseja vê-los? Sem problemas! Use o comando \`${prefix}lvlwall <bgCode>\``, embeds: [embed1, embed2, embed3] })
-                        break;
-                    case 2:
-                        message.reply({ content: `${e.SaphireObs} Use \`${prefix}level set <bgCode>\` para definir seu wallpaper. Deseja vê-los? Sem problemas! Use o comando \`${prefix}lvlwall <bgCode>\``, embeds: [embed1, embed2] })
-                        break;
-                    case 3:
-                        message.reply({ content: `${e.SaphireObs} Use \`${prefix}level set <bgCode>\` para definir seu wallpaper. Deseja vê-los? Sem problemas! Use o comando \`${prefix}lvlwall <bgCode>\``, embeds: [embed1] })
-                        break;
-                    default:
-                        message.reply(`${e.Info} | Não há backgrounds no banco de dados.`)
-                        break;
-                }
-
-                return
-
-            } catch (err) {
-                Error(message, err)
-                return message.reply(`${e.Warn} | Falha ao enviar os nomes dos backgrounds.\n\`${err}\``)
+            for (const wall of keys) {
+                BgArray.push({ code: wall, name: WallpaperDB[wall].Name })
             }
+
+            function EmbedGenerator() {
+                let amount = 10
+                let Page = 1
+                const embeds = [];
+                let length = parseInt(BgArray.length / 10) + 1
+                const title = message.author.id === user.id ? '🖼️ Seus Level\'s Backgrounds' : `🖼️ ${user.username} Level's Backgrounds`
+
+                for (let i = 0; i < BgArray.length; i += 10) {
+
+                    const current = BgArray.slice(i, amount)
+                    const description = current.map(wall => `> \`${wall.code}\`: ${wall.name}`).join("\n")
+
+                    embeds.push({
+                        color: color,
+                        title: `${title} | ${Page}/${length}`,
+                        description: `${description}`,
+                        footer: {
+                            text: `${BgArray?.length || 0} Wallpapers`
+                        }
+                    })
+
+                    Page++
+                    amount += 10
+
+                }
+
+                return embeds;
+            }
+
+            const embeds = EmbedGenerator()
+            const msg = await message.reply({ embeds: [embeds[0]] })
+
+            if (embeds.length > 1) {
+                for (const emoji of ['◀️', '▶️', '❌']) {
+                    msg.react(emoji).catch()
+                }
+            }
+
+            const collector = msg.createReactionCollector({
+                filter: (reaction, user) => { return ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
+                idle: 30000,
+                errors: ['idle']
+            });
+
+            collector.on('collect', (reaction, user) => {
+
+                if (reaction.emoji.name === '◀️') {
+                    control--
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control++
+                }
+
+                if (reaction.emoji.anme === '▶️') {
+                    control++
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control--
+                }
+
+                if (reaction.emoji.name === '❌') { collector.stop() }
+
+            });
+
+            collector.on('end', () => {
+                msg.reactions.removeAll().catch(() => { })
+            })
+
         }
 
         function NormalSlot() {
@@ -215,4 +244,5 @@ module.exports = {
         }
     }
 }
+
 
