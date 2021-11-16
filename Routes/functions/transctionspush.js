@@ -1,30 +1,30 @@
 const data = require('./data')
-const { sdb } = require('./database')
+const { Transactions } = require('./database')
 
 function TransactionsPush(UserOrMemberId, MessageAuthorId, FraseUser, FraseAuthor) {
 
     let UserData, AuthorData
-    sdb.get(`Users.${UserOrMemberId}.Transactions`)?.length > 0
-        ? UserData = [{ time: data(), data: `${FraseUser}` }, ...sdb.get(`Users.${UserOrMemberId}.Transactions`)]
+    Transactions.get(`Transactions.${UserOrMemberId}`)?.length > 0
+        ? UserData = [{ time: data(), data: `${FraseUser}` }, ...Transactions.get(`Transactions.${UserOrMemberId}`)]
         : UserData = [{ time: data(), data: `${FraseUser}` }]
 
-    sdb.get(`Users.${MessageAuthorId}.Transactions`)?.length > 0
-        ? AuthorData = [{ time: data(), data: `${FraseAuthor}` }, ...sdb.get(`Users.${MessageAuthorId}.Transactions`)]
+    Transactions.get(`Transactions.${MessageAuthorId}`)?.length > 0
+        ? AuthorData = [{ time: data(), data: `${FraseAuthor}` }, ...Transactions.get(`Transactions.${MessageAuthorId}`)]
         : AuthorData = [{ time: data(), data: `${FraseAuthor}` }]
 
-    sdb.set(`Users.${UserOrMemberId}.Transactions`, UserData)
-    sdb.set(`Users.${MessageAuthorId}.Transactions`, AuthorData)
+    Transactions.set(`Transactions.${UserOrMemberId}`, UserData)
+    Transactions.set(`Transactions.${MessageAuthorId}`, AuthorData)
 
 }
 
 function PushTrasaction(UserId, Frase) {
 
     let Data
-    sdb.get(`Users.${UserId}.Transactions`)?.length > 0
-        ? Data = [{ time: data(), data: `${Frase}` }, ...sdb.get(`Users.${UserId}.Transactions`)]
+    Transactions.get(`Transactions.${UserId}`)?.length > 0
+        ? Data = [{ time: data(), data: `${Frase}` }, ...Transactions.get(`Transactions.${UserId}`)]
         : Data = [{ time: data(), data: `${Frase}` }]
 
-    sdb.set(`Users.${UserId}.Transactions`, Data)
+    Transactions.set(`Transactions.${UserId}`, Data)
 }
 
 module.exports = { TransactionsPush, PushTrasaction }

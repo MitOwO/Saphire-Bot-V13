@@ -13,6 +13,8 @@ const CommandsLog = new Database("../../database/logcommands.json")
 const ServerDb = new Database("../../ServerDatabase.json")
 const sdb = new Database("../../database.json")
 const ticket = new Database('../../database/tickets.json')
+const Transactions = new Database('../../database/transactions.json')
+const Clan = new Database('../../database/clans.json')
 
 const DatabaseObj = {
     LevelWallpapers: BgLevel.get('LevelWallpapers'),
@@ -25,4 +27,4 @@ const DatabaseObj = {
     sdb: sdb,
 }
 
-module.exports = { sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery, CommandsLog, DatabaseObj, ServerDb }
+module.exports = { sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery, CommandsLog, DatabaseObj, ServerDb, ticket, Transactions, Clan }
