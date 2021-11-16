@@ -18,8 +18,8 @@ client.on('guildUpdate', async (oldGuild, newGuild) => {
     let owner = Guild.members.cache.get(Guild?.ownerId)?.user
 
     if (Owner !== owner?.tag || OwnerId !== owner.id) {
-        ServerDb.set(`Servers.${newGuild.id}.OwnerId`, owner.id)
-        ServerDb.set(`Servers.${newGuild.id}.Owner`, owner.tag)
+        ServerDb.set(`Servers.${newGuild.id}.OwnerId`, owner?.id || undefined)
+        ServerDb.set(`Servers.${newGuild.id}.Owner`, owner?.tag || undefined)
         Notify(newGuild.id, 'Atualização', `Os dados do*(a)* dono*(a)* do servidor foram alterado e atualizado no meu banco de dados.`)
     }
 
