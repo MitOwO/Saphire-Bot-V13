@@ -99,8 +99,8 @@ module.exports = {
                         TransactionsPush(
                             target.id,
                             message.author.id,
-                            `💰 Recebeu ${cache + Amount || 0} Moedas assaltando ${target.user.tag}`,
-                            `💸 Foi assaltado por ${message.author.tag} e perdeu ${Amount || 0} Moedas`
+                            `💰 Recebeu ${cache + Amount || 0} Moedas assaltando ${message.author.tag}`,
+                            `💸 Foi assaltado por ${target.user.tag} e perdeu ${Amount || 0} Moedas`
                         )
                         Timeout()
                         msg.edit(`${e.Deny} | ${target} estava armado e assaltou ${message.author} devolta.\n${e.PandaProfit} Panda Profit Stats\n${message.author.tag} -${Amount} ${Moeda(message)}\n${target.user.tag} +${Amount} ${Moeda(message)}`).catch(() => { })
