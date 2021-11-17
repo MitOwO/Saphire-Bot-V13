@@ -25,7 +25,9 @@ module.exports = {
         },
             keys = Object.keys(Clans),
             key,
-            RequestControl
+            RequestControl,
+            reg = /^[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ' ]+$/i,
+            control = 0
 
         for (const i of keys) {
             if (AtualClan === Clans[i].Name) {
@@ -34,10 +36,9 @@ module.exports = {
             }
         }
 
-        const Admin = Clan.get(`Clans.${key}.Admins`)?.includes(message.author.id)
-        const Owner = Clan.get(`Clans.${key}.Owner`) === message.author.id
-
-        let Argument = args[0] || 'NoArgs'
+        let Admin = Clan.get(`Clans.${key}.Admins`)?.includes(message.author.id),
+            Owner = Clan.get(`Clans.${key}.Owner`) === message.author.id,
+            Argument = args[0] || 'NoArgs'
 
         if (!args[1] && user) {
 
@@ -99,7 +100,6 @@ module.exports = {
             if (!ClanName)
                 return message.reply(`${e.Info} | Você precisa fornecer um nome para a criação do seu clan.`)
 
-            const reg = /^[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i
             if (!reg.test(ClanName))
                 return message.reply(`${e.Deny} | O nome do clan aceita apenas **letras, letras com acento e números**`)
 
@@ -267,7 +267,7 @@ module.exports = {
                 for (let i = 0; i < membros.length; i += 10) {
 
                     let current = membros.slice(i, amount),
-                        description = current.map(member => `${ClanKey['Owner'] === member ? e.OwnerCrow : ''}${ClanKey['Admins']?.includes(member) && ClanKey['Owner'] !== member ? e.ModShield : ''}${!ClanKey['Admins'].includes(member) && !ClanKey['Owner'] !== member ? '👤' : ''}${client.users.cache.get(member)?.tag || "Membro não encontrado"} \`${client.users.cache.get(member)?.id || "N/A"}\``).join("\n")
+                        description = current.map(member => `${ClanKey['Owner'] === member ? e.OwnerCrow : ''}${ClanKey['Admins']?.includes(member) && ClanKey['Owner'] !== member ? e.ModShield : ''}${!ClanKey['Admins'].includes(member) && !ClanKey['Owner'] !== member ? '👤' : ''}${client.users.cache.get(member)?.tag.replace(/`/g, '') || "Membro não encontrado"} \`${client.users.cache.get(member)?.id || "N/A"}\``).join("\n")
 
                     embeds.push({
                         color: color(message.member),
@@ -286,8 +286,8 @@ module.exports = {
                 return embeds;
             }
 
-            const embeds = EmbedGenerator()
-            const msg = await message.reply({ embeds: [embeds[0]] })
+            const embeds = EmbedGenerator(),
+                msg = await message.reply({ embeds: [embeds[0]] })
 
             if (embeds.length > 1) {
                 for (const emoji of ['◀️', '▶️', '❌']) {
@@ -295,22 +295,34 @@ module.exports = {
                 }
             }
 
-            const collector = msg.createReactionCollector({
-                filter: (reaction, user) => { return ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
+            let collector = msg.createReactionCollector({
+                filter: (reaction, user) => ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
                 idle: 30000,
                 errors: ['idle']
-            });
+            })
 
             collector.on('collect', (reaction, user) => {
 
                 if (reaction.emoji.name === '◀️') {
+
                     control--
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control++
+
+                    if (embeds[control])
+                        return msg.edit({ embeds: [embeds[control]] })
+
+                    control++
+
                 }
 
                 if (reaction.emoji.anme === '▶️') {
+
                     control++
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control--
+
+                    if (embeds[control])
+                        return msg.edit({ embeds: [embeds[control]] })
+
+                    control--
+
                 }
 
                 if (reaction.emoji.name === '❌') {
@@ -721,7 +733,6 @@ module.exports = {
             if (!NewName)
                 return message.reply(`${e.Info} | Você precisa fornecer um nome para a criação do seu clan.`)
 
-            const reg = /^[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i
             if (!reg.test(NewName))
                 return message.reply(`${e.Deny} | O nome do clan aceita apenas **letras, letras com acento e números**`)
 
