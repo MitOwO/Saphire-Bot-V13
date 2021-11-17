@@ -190,10 +190,10 @@ module.exports = {
         }
 
         function AddNewTitleHalloween() {
-            if (sdb.get(`Titulos.${user.id}.Halloween`))
+            if (sdb.get(`Titulos.Halloween`)?.includes(user.id))
                 return message.reply(`${e.Info} | ${user.tag} já possui o título **🎃 Halloween 2021**`)
 
-            sdb.set(`Titulos.${user.id}.Halloween`, true)
+            sdb.push(`Titulos.Halloween`, user.id)
             user.send(`Parabéns! Você adquiriu o título **🎃 Halloween 2021**!`).catch(err => {
                 if (err.code === 50007)
                     return message.reply(`${e.Deny} | Não foi possível contactar este usuário.`)

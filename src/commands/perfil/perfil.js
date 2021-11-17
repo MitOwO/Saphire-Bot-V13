@@ -18,7 +18,7 @@ module.exports = {
         if (!u.id) return message.reply(`${e.Deny} | Eu não achei ninguém com esse ID.`)
         let user = await client.users.cache.get(u.id)
 
-        let color, money, marry, level, likes, titulo, status, signo, sexo, niver, job, vip, estrela = 'Indefinido', TopGlobalMoney, TopGlobalLevel, TopGlobalLikes, LevelData, LikesData, MoneyData, OfficialTitle, Moderator, Developer, BugHunter, OfficialDesigner, Mage, parca1, parca2, parca3, parca4, parca5, NoParcas, family1, family2, family3, NoFamily
+        let color, money, marry, level, likes, titulo, status, signo, sexo, niver, job, vip, estrela = 'Indefinido', TopGlobalMoney, TopGlobalLevel, TopGlobalLikes, LevelData, LikesData, MoneyData, OfficialTitle, Moderator, Developer, BugHunter, OfficialDesigner, HalloweenTitle, parca1, parca2, parca3, parca4, parca5, NoParcas, family1, family2, family3, NoFamily
 
         color = Colors(user)
         money = (db.get(`Balance_${user.id}`) || 0) + (db.get(`Bank_${user.id}`) || 0) + (sdb.get(`Users.${user.id}.Cache.Resgate`) || 0)
@@ -153,7 +153,7 @@ module.exports = {
         if (Estrela.Quatro) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.GrayStar}`
         if (Estrela.Cinco) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
         if (Estrela.Seis) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
-        if (!Estrela.um && !Estrela.Dois && !Estrela.Tres && !Estrela.Quatro && !Estrela.Cinco && !Estrela.Seis) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
+        if (!Estrela.Um && !Estrela.Dois && !Estrela.Tres && !Estrela.Quatro && !Estrela.Cinco && !Estrela.Seis) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
 
         LevelData = db.all().filter(i => i.ID.startsWith("level_")).sort((a, b) => b.data - a.data)
         if (LevelData.length < 1) {
@@ -186,7 +186,7 @@ module.exports = {
         Developer = sdb.get(`Client.Developer.${user.id}`) ? `\n${e.OwnerCrow} **Official Developer**` : ''
         BugHunter = sdb.get(`Client.BugHunter.${user.id}`) ? `\n${e.Gear} **Bug Hunter**` : ''
         OfficialDesigner = sdb.get(`Client.OfficialDesigner.${user.id}`) ? `\n${e.SaphireFeliz} **Designer Official**` : ''
-        Mage = sdb.get(`Titulos.${user.id}.Halloween`) ? `\n🎃 **Halloween 2021**` : ''
+        HalloweenTitle = sdb.get(`Titulos.Halloween`)?.includes(user.id) ? `\n🎃 **Halloween 2021**` : ''
 
         if (user.id === client.user.id) {
             const perfil = new MessageEmbed()
@@ -219,7 +219,7 @@ module.exports = {
                     },
                     {
                         name: '🛡️ Clan',
-                        value: 'Machine Saphire'
+                        value: Clan
                     }
                 )
                 .setThumbnail(user.displayAvatarURL({ dynamic: true }))
@@ -228,7 +228,7 @@ module.exports = {
 
         const perfilembed = new MessageEmbed()
             .setColor(color)
-            .setDescription(`${vip} **Perfil de ${user.username}**${Developer}${OfficialDesigner}${Moderator}${Mage}${BugHunter}${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`)
+            .setDescription(`${vip} **Perfil de ${user.username}**${Developer}${OfficialDesigner}${Moderator}${HalloweenTitle}${BugHunter}${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`)
             .addFields(
                 {
                     name: '👤 Pessoal',

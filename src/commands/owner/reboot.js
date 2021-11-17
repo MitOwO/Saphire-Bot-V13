@@ -89,12 +89,8 @@ module.exports = {
                     if (!await client.users.cache.get(id)) {
                         i++
                         sdb.delete(`Users.${id}`)
+                        sdb.pull(`Titulos.Halloween`, id)
                         Transactions.delete(`Transactions.${id}`)
-                    }
-
-                    if (sdb.get(`Users.${id}.Transactions`)?.length > 2) {
-                        Transactions.set(`Transactions.${id}`, sdb.get(`Users.${id}.Transactions`))
-                        sdb.delete(`Users.${id}.Transactions`)
                     }
 
                     for (const item of array) {

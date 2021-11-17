@@ -12,7 +12,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        if (message.author.id !== config.ownerId && message.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES))
+        if (message.author.id !== config.ownerId && !message.member.permissions.has(Permissions.FLAGS.MANAGE_MESSAGES))
             return message.reply(`${e.Deny} | Permissão necessária: Gerenciar Mensagens`)
 
         let Message = args.join(' ')
