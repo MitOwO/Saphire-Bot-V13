@@ -163,7 +163,7 @@ async function RegisterUser(message) {
         sdb.set(`Users.${message.author.id}`, RegisterObj)
 
         if (db.get(`Titulos.${message.author.id}.Halloween`)) {
-            sdb.set(`Titulos.${message.author.id}.Halloween`, true)
+            sdb.push(`Titulos.Halloween`, message.author.id)
             db.delete(`Titulos.${message.author.id}.Halloween`)
         }
 
