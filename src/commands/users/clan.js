@@ -5,6 +5,7 @@ const PassCode = require('../../../Routes/functions/PassCode')
 const Vip = require('../../../Routes/functions/vip')
 const color = require('../../../Routes/functions/colors')
 const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const ms = require('parse-ms')
 
 module.exports = {
     name: 'clan',
@@ -16,15 +17,15 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
+
         let { Clans, AtualClan, user } = {
             Clans: Clan.get('Clans') || {},
             AtualClan: sdb.get(`Users.${message.author.id}.Clan`),
             user: message.mentions.members.first() || message.guild.members.cache.get(args[1]),
-        }
-
-        let keys = Object.keys(Clans)
-
-        let key
+        },
+            keys = Object.keys(Clans),
+            key,
+            RequestControl
 
         for (const i of keys) {
             if (AtualClan === Clans[i].Name) {
@@ -59,7 +60,8 @@ module.exports = {
             case 'create': case 'criar': NewClan(); break;
             case 'invite': case 'convidar': case 'convite': NewClanInvitation(); break;
             case 'expulsar': case 'kick': case 'banir': case 'ban': KickMember(); break;
-            case 'list': case 'membros': case 'members': case 'lista': MemberList(); break;
+            case 'membros': case 'members': case 'lista': MemberList(); break;
+            case 'list': case 'lista': case 'todos': case 'all': ClanList(); break;
             case 'staff': case 'mod': case 'adm': case 'admin': AddOrRemoveStaff(); break;
             case 'delete': case 'apagar': case 'deletar': DeleteClan(); break;
             case 'doar': case 'donate': NewDonate(); break;
@@ -82,9 +84,9 @@ module.exports = {
             if (AtualClan)
                 return message.reply(`${e.Deny} | Você já pertence a um clan.`)
 
-            let ClanName = args.slice(1).join(' ')
-            let Money = db.get(`Balance_${message.author.id}`) || 0
-            let ID = Pass()
+            let ClanName = args.slice(1).join(' '),
+                Money = db.get(`Balance_${message.author.id}`) || 0,
+                ID = Pass()
 
             function Pass() {
                 const code = PassCode(10)
@@ -114,7 +116,8 @@ module.exports = {
                 Owner: `${message.author.id}`,
                 Admins: [`${message.author.id}`],
                 Members: [`${message.author.id}`],
-                Donation: 0
+                Donation: 0,
+                CreatAt: Date.now()
             })
 
             sdb.set(`Users.${message.author.id}.Clan`, `${ClanName}`)
@@ -140,6 +143,9 @@ module.exports = {
             if (Clan.get(`Clans.${key}.Members`).length >= 40)
                 return message.reply(`${e.Deny} | O clan atingiu o número máximo de membros.`)
 
+            if (!user)
+                return message.reply(`${e.Info} | Você precisa @mencionar ou dizer o ID da pessoa que você quer convidar para o clan`)
+
             if (user.user.bot || user.id === message.author.id || sdb.get(`Users.${user.id}.Clan`))
                 return message.reply(`${e.Deny} | Este usuário não pode ser convidado para o seu clan por ser um bot ou por já possuir um clan.`)
 
@@ -161,17 +167,25 @@ module.exports = {
                     Clan.push(`Clans.${key}.Members`, user.id)
                     sdb.set(`Users.${user.id}.Clan`, AtualClan)
                     msg.edit(`${e.Check} | ${user.user.tag} entrou para o Clan **${AtualClan}**`)
+                    RequestControl = true
                     collector.stop()
                 }
 
                 if (reaction.emoji.name === '❌') {
 
-                    msg.edit(`${e.Deny} | Pedido recusado.`)
                     collector.stop()
 
                 }
 
             });
+
+
+            collector.on('end', () => {
+                if (!RequestControl)
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+
+                return
+            })
 
         }
 
@@ -213,19 +227,25 @@ module.exports = {
                     Clan.pull(`Clans.${key}.Admins`, User.id)
                     sdb.delete(`Users.${User.id}.Clan`)
                     msg.edit(`${e.Check} | ${User.tag} foi expulso do Clan **${AtualClan}** pelo Admin \`${message.author.tag}\``).catch()
+                    RequestControl = true
                     collector.stop()
 
                 }
 
                 if (reaction.emoji.name === '❌') {
 
-                    msg.edit(`${e.Deny} | Pedido recusado.`)
                     collector.stop()
 
                 }
 
             });
 
+            collector.on('end', () => {
+                if (!RequestControl)
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+
+                return
+            })
 
         }
 
@@ -237,15 +257,17 @@ module.exports = {
             let membros = Clan.get(`Clans.${key}.Members`)
 
             function EmbedGenerator() {
-                let amount = 10
-                let Page = 1
-                const embeds = [];
-                let length = parseInt(membros.length / 10) + 1
+
+                let amount = 10,
+                    Page = 1,
+                    embeds = [],
+                    length = parseInt(membros.length / 10) + 1,
+                    ClanKey = Clan.get(`Clans.${key}`)
 
                 for (let i = 0; i < membros.length; i += 10) {
 
-                    const current = membros.slice(i, amount)
-                    const description = current.map((member) => `${Clan.get(`Clans.${key}.Owner`) === member ? e.OwnerCrow : ''}${Clan.get(`Clans.${key}.Admins`).includes(member) && Clan.get(`Clans.${key}.Owner`) !== member ? e.ModShield : ''}${client.users.cache.get(member)?.tag || "Membro não encontrado"} \`${client.users.cache.get(member)?.id || "N/A"}\``).join("\n")
+                    let current = membros.slice(i, amount),
+                        description = current.map(member => `${ClanKey['Owner'] === member ? e.OwnerCrow : ''}${ClanKey['Admins']?.includes(member) && ClanKey['Owner'] !== member ? e.ModShield : ''}${!ClanKey['Admins'].includes(member) && !ClanKey['Owner'] !== member ? '👤' : ''}${client.users.cache.get(member)?.tag || "Membro não encontrado"} \`${client.users.cache.get(member)?.id || "N/A"}\``).join("\n")
 
                     embeds.push({
                         color: color(message.member),
@@ -298,7 +320,83 @@ module.exports = {
             });
 
             collector.on('end', () => {
-                msg.reactions.removeAll().catch(() => { })
+                return msg.reactions.removeAll().catch(() => { })
+            })
+
+        }
+
+        async function ClanList() {
+
+            const ListArray = []
+
+            for (const key of keys) {
+                ListArray.push({ key: key, name: Clan.get(`Clans.${key}.Name`) || 'Indefinido', owner: client.users.cache.get(Clan.get(`Clans.${key}.Owner`))?.tag || 'Indefinido' })
+            }
+
+            function EmbedGenerator() {
+
+                let amount = 10,
+                    Page = 1,
+                    embeds = [],
+                    length = parseInt(ListArray.length / 10) + 1
+
+                for (let i = 0; i < ListArray.length; i += 10) {
+
+                    const current = ListArray.slice(i, amount)
+                    const description = current.map(clan => `> \`${clan.key}\` - **${clan.name}**\n> ${e.OwnerCrow} ${clan.owner}\n⠀`).join("\n")
+
+                    embeds.push({
+                        color: color(message.member),
+                        title: `🛡️ Lista de Todos os Clans | ${Page}/${length}`,
+                        description: `${description}`,
+                        footer: {
+                            text: `${ListArray?.length || 0} Clans contabilizados`
+                        }
+                    })
+
+                    Page++
+                    amount += 10
+
+                }
+
+                return embeds;
+            }
+
+            const embeds = EmbedGenerator()
+            const msg = await message.reply({ embeds: [embeds[0]] })
+
+            if (embeds.length > 1) {
+                for (const emoji of ['◀️', '▶️', '❌']) {
+                    msg.react(emoji).catch()
+                }
+            }
+
+            const collector = msg.createReactionCollector({
+                filter: (reaction, user) => { return ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
+                idle: 30000,
+                errors: ['idle']
+            });
+
+            collector.on('collect', (reaction, user) => {
+
+                if (reaction.emoji.name === '◀️') {
+                    control--
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control++
+                }
+
+                if (reaction.emoji.anme === '▶️') {
+                    control++
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control--
+                }
+
+                if (reaction.emoji.name === '❌') {
+                    collector.stop()
+                }
+
+            });
+
+            collector.on('end', () => {
+                return msg.reactions.removeAll().catch(() => { })
             })
 
         }
@@ -383,6 +481,7 @@ module.exports = {
 
                     Clan.delete(`Clans.${key}`)
                     msg.edit(`${e.Check} | O Clan **${AtualClan}** foi deletado com sucesso!`).catch()
+                    RequestControl = true
                     collector.stop()
 
                 }
@@ -395,6 +494,14 @@ module.exports = {
                 }
 
             });
+
+
+            collector.on('end', () => {
+                if (!RequestControl)
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+
+                return
+            })
 
         }
 
@@ -437,13 +544,19 @@ module.exports = {
             if (!Clan.get(`Clans.${KeyArgs}`))
                 return message.reply(`${e.Deny} | Você não possui clan ou o clan requisitado não existe.`)
 
-            let { Name, Owner, Admins, Members, Donation } = {
+            if (!Clan.get(`Clans.${KeyArgs}.CreatAt`))
+                Clan.set(`Clans.${KeyArgs}.CreatAt`, Date.now())
+
+            let { Name, Owner, AdminsLength, Admins, Members, Donation, data } = {
                 Name: Clan.get(`Clans.${KeyArgs}.Name`),
                 Owner: await client.users.cache.get(Clan.get(`Clans.${KeyArgs}.Owner`))?.tag || 'Indefinido',
-                Admins: Clan.get(`Clans.${KeyArgs}.Admins`)?.length || 0,
+                AdminsLength: Clan.get(`Clans.${KeyArgs}.Admins`)?.length || 0,
+                Admins: Clan.get(`Clans.${KeyArgs}.Admins`)?.map(adm => `> ${client.users.cache.get(adm)?.tag || "Indefinido"}`).join('\n') || 'Nenhum',
                 Members: Clan.get(`Clans.${KeyArgs}.Members`)?.length || 0,
-                Donation: Clan.get(`Clans.${KeyArgs}.Donation`) || 0
-            }
+                Donation: Clan.get(`Clans.${KeyArgs}.Donation`) || 0,
+                data: Date.now() - Clan.get(`Clans.${KeyArgs}.CreatAt`)
+            },
+                DataFormatada = `${ms(data)?.days} dias, ${ms(data)?.hours} horas, ${ms(data)?.minutes} minutos e ${ms(data)?.seconds} segundos`
 
             return message.reply({
                 embeds: [
@@ -453,7 +566,7 @@ module.exports = {
                         .addFields(
                             {
                                 name: `${e.Gear} Clan Key`,
-                                value: `> ${KeyArgs}`
+                                value: `> \`${KeyArgs}\``
                             },
                             {
                                 name: '📝 Nome',
@@ -464,8 +577,8 @@ module.exports = {
                                 value: `> ${Owner}`
                             },
                             {
-                                name: `${e.ModShield} Administradores`,
-                                value: `> ${Admins}/5`
+                                name: `${e.ModShield} Administradores - ${AdminsLength}/5`,
+                                value: `${Admins}`
                             },
                             {
                                 name: '👥 Membros',
@@ -473,7 +586,11 @@ module.exports = {
                             },
                             {
                                 name: `${e.MoneyWings} Doações`,
-                                value: `> ${Donation}`
+                                value: `> ${Donation} ${Moeda(message)}`
+                            },
+                            {
+                                name: 'Criado em',
+                                value: `> ${DataFormatada}`
                             }
                         )
                 ]
@@ -508,6 +625,7 @@ module.exports = {
                     Clan.pull(`Clans.${key}.Admins`, message.author.id)
                     sdb.delete(`Users.${message.author.id}.Clan`)
                     msg.edit(`${e.Check} | Você saiu do Clan **${AtualClan}**!`).catch()
+                    RequestControl = true
                     collector.stop()
 
                 }
@@ -520,6 +638,14 @@ module.exports = {
                 }
 
             });
+
+
+            collector.on('end', () => {
+                if (!RequestControl)
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+
+                return
+            })
 
         }
 
@@ -555,6 +681,7 @@ module.exports = {
                     Clan.set(`Clans.${key}.Owner`, user.id)
                     Clan.push(`Clans.${key}.Admins`, message.author.id)
                     msg.edit(`${e.Check} | Você transferiu a posse do Clan **${AtualClan}** para ${user.user.tag} com sucesso! Por padrão, você ainda é um administrador.`).catch()
+                    RequestControl = true
                     collector.stop()
 
                 }
@@ -567,6 +694,13 @@ module.exports = {
                 }
 
             });
+
+            collector.on('end', () => {
+                if (!RequestControl)
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+
+                return
+            })
 
         }
 
@@ -626,6 +760,7 @@ module.exports = {
 
                     db.subtract(`Balance_${message.author.id}`, 1000000)
                     msg.edit(`${e.Check} | Você trocou o nome do seu Clan com sucesso!`).catch()
+                    RequestControl = true
                     collector.stop()
 
                 }
@@ -638,6 +773,13 @@ module.exports = {
                 }
 
             });
+
+            collector.on('end', () => {
+                if (!RequestControl)
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+
+                return
+            })
 
         }
 
@@ -706,8 +848,8 @@ module.exports = {
                                     value: `\`${prefix}clan kick <@user>\` - Apenas donos e administradores podem expulsar`
                                 },
                                 {
-                                    name: `${e.Commands} Veja quem está no clan`,
-                                    value: `\`${prefix}clan list\``
+                                    name: `${e.Commands} Veja quem está no clan ou os clans`,
+                                    value: `\`${prefix}clan membros\` - \`${prefix}clan list\``
                                 },
                                 {
                                     name: `${e.ModShield} Adicione ou remova administradores`,
