@@ -29,6 +29,7 @@
         "weather-js": "^2.0.0",
         "fromnow": "^3.0.1",
         "simply-djs": "^2.0.96",
-        "ark.db": "^2.7.1"
+        "ark.db": "^2.7.1",
+        "express": "^4.17.1"
     }
 }
