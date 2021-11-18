@@ -1,11 +1,12 @@
-const { e } = require('../../../database/emojis.json')
-const { Clan } = require('../../../Routes/functions/database')
-const Moeda = require('../../../Routes/functions/moeda')
-const PassCode = require('../../../Routes/functions/PassCode')
-const Vip = require('../../../Routes/functions/vip')
-const color = require('../../../Routes/functions/colors')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
-const ms = require('parse-ms')
+const
+    { e } = require('../../../database/emojis.json'),
+    { Clan } = require('../../../Routes/functions/database'),
+    Moeda = require('../../../Routes/functions/moeda'),
+    PassCode = require('../../../Routes/functions/PassCode'),
+    Vip = require('../../../Routes/functions/vip'),
+    color = require('../../../Routes/functions/colors'),
+    { PushTrasaction } = require('../../../Routes/functions/transctionspush'),
+    ms = require('parse-ms')
 
 module.exports = {
     name: 'clan',
@@ -16,7 +17,6 @@ module.exports = {
     description: 'Saphire\'s Clan System',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
-
 
         let { Clans, AtualClan, user } = {
             Clans: Clan.get('Clans') || {},
@@ -35,26 +35,31 @@ module.exports = {
                 break
             }
         }
-
-        let Admin = Clan.get(`Clans.${key}.Admins`)?.includes(message.author.id),
-            Owner = Clan.get(`Clans.${key}.Owner`) === message.author.id,
+        let ClanKey = Clan.get(`Clans.${key}`),
+            Admins = ClanKey['Admins'],
+            Admin = Admins?.includes(message.author.id),
+            Owner = ClanKey['Owner'] === message.author.id,
+            Name = ClanKey['Name'],
+            Donation = ClanKey['Donation'],
+            Members = ClanKey['Members'],
             Argument = args[0] || 'NoArgs'
 
         if (!args[1] && user) {
 
-            let ClanKey
+            let ClanChave
 
             for (const k of keys) {
 
                 if (Clan.get(`Clans.${k}.Name`) === sdb.get(`Users.${user.id}.Clan`)) {
-                    ClanKey = k
+                    ClanChave = k
                     break;
                 }
 
             }
 
-            const UserClan = sdb.get(`Users.${user.id}.Clan`) ? `**${sdb.get(`Users.${user.id}.Clan`)}** | \`${ClanKey}\`` : 'Não possui'
+            const UserClan = sdb.get(`Users.${user.id}.Clan`) ? `**${sdb.get(`Users.${user.id}.Clan`)}** | \`${ClanChave}\`` : 'Não possui'
             return message.reply(`${e.Info} | ${user.user.tag} Clan Status: ${UserClan}`)
+
         }
 
         switch (Argument.toLowerCase()) {
@@ -140,7 +145,7 @@ module.exports = {
             if (!Admin)
                 return message.reply(`${e.Deny} | Você precisa ser um*(a)* administrador*(a)* do clan para convidar outras pessoas.`)
 
-            if (Clan.get(`Clans.${key}.Members`).length >= 40)
+            if (Members.length >= 40)
                 return message.reply(`${e.Deny} | O clan atingiu o número máximo de membros.`)
 
             if (!user)
@@ -202,10 +207,10 @@ module.exports = {
             if (!User)
                 return message.reply(`${e.Info} | Você precisar mencionar ou dizer o ID do membro que deseja expulsar.`)
 
-            if (!Clan.get(`Clans.${key}.Members`).includes(User.id))
+            if (!Members.includes(User.id))
                 return message.reply(`${e.Deny} | Este usuário não faz parte do clan.`)
 
-            if (Clan.get(`Clans.${key}.Admins`)?.includes(User.id) && Clan.get(`Clans.${key}.Owner`) !== message.author.id)
+            if (Admins?.includes(User.id) && Owner !== message.author.id)
                 return message.reply(`${e.Deny} | Este usuário é um administrador e apenas o criado*(a)* do clan pode expulsa-lo*(a)*.`)
 
             const msg = await message.reply(`${e.QuestionMark} | **Clan: ${AtualClan}** | Você confirma a expulsão do membro **${User.tag}**?`)
@@ -254,20 +259,18 @@ module.exports = {
             if (!AtualClan)
                 return message.reply(`${e.Deny} | Você não possui clan.`)
 
-            let membros = Clan.get(`Clans.${key}.Members`)
-
             function EmbedGenerator() {
 
                 let amount = 10,
                     Page = 1,
                     embeds = [],
-                    length = parseInt(membros.length / 10) + 1,
-                    ClanKey = Clan.get(`Clans.${key}`)
+                    membros = Members,
+                    length = parseInt(membros.length / 10) + 1
 
                 for (let i = 0; i < membros.length; i += 10) {
 
                     let current = membros.slice(i, amount),
-                        description = current.map(member => `${ClanKey['Owner'] === member ? e.OwnerCrow : ''}${ClanKey['Admins']?.includes(member) && ClanKey['Owner'] !== member ? e.ModShield : ''}${!ClanKey['Admins'].includes(member) && !ClanKey['Owner'] !== member ? '👤' : ''}${client.users.cache.get(member)?.tag.replace(/`/g, '') || "Membro não encontrado"} \`${client.users.cache.get(member)?.id || "N/A"}\``).join("\n")
+                        description = current.map(member => `${Owner === member ? e.OwnerCrow : ''}${Admins?.includes(member) && Owner !== member ? e.ModShield : ''}${!Admins.includes(member) && !Owner !== member ? '👤' : ''}${client.users.cache.get(member)?.tag.replace(/`/g, '') || "Membro não encontrado"} \`${client.users.cache.get(member)?.id || "N/A"}\``).join("\n")
 
                     embeds.push({
                         color: color(message.member),
@@ -314,7 +317,7 @@ module.exports = {
 
                 }
 
-                if (reaction.emoji.anme === '▶️') {
+                if (reaction.emoji.name === '▶️') {
 
                     control++
 
@@ -396,7 +399,7 @@ module.exports = {
                     embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control++
                 }
 
-                if (reaction.emoji.anme === '▶️') {
+                if (reaction.emoji.name === '▶️') {
                     control++
                     embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control--
                 }
@@ -427,16 +430,16 @@ module.exports = {
 
             function AddAdmin() {
 
-                if (Clan.get(`Clans.${key}.Admins`).length >= 5)
+                if (Admins.length >= 5)
                     return message.reply(`${e.Deny} | O clan atingiu o número máximo de administradores.`)
 
                 if (!user)
                     return message.reply(`${e.Info} | Mencione o usuário que deseja promover para Administrador*(a)*`)
 
-                if (!Clan.get(`Clans.${key}.Members`)?.includes(user.id))
+                if (!Members?.includes(user.id))
                     return message.reply(`${e.Deny} | Este usuário não é membro do clan.`)
 
-                if (Clan.get(`Clans.${key}.Admins`)?.includes(user.id))
+                if (Admins?.includes(user.id))
                     return message.reply(`${e.Deny} | Este usuário já é um administrador.`)
 
                 Clan.push(`Clans.${key}.Admins`, user.id)
@@ -449,10 +452,10 @@ module.exports = {
                 if (!user)
                     return message.reply(`${e.Info} | Mencione o usuário que deseja remover do cargo Administrador*(a)*`)
 
-                if (!Clan.get(`Clans.${key}.Members`)?.includes(user.id))
+                if (!Members?.includes(user.id))
                     return message.reply(`${e.Deny} | Este usuário não é membro do clan.`)
 
-                if (!Clan.get(`Clans.${key}.Admins`)?.includes(user.id))
+                if (!Admins?.includes(user.id))
                     return message.reply(`${e.Deny} | Este usuário não é um administrador.`)
 
                 Clan.pull(`Clans.${key}.Admins`, user.id)
@@ -485,7 +488,7 @@ module.exports = {
 
                 if (reaction.emoji.name === '✅') {
 
-                    let membros = Clan.get(`Clans.${key}.Members`)
+                    let membros = Members
 
                     for (const id of membros) {
                         sdb.delete(`Users.${id}.Clan`)
@@ -601,7 +604,7 @@ module.exports = {
                                 value: `> ${Donation} ${Moeda(message)}`
                             },
                             {
-                                name: 'Criado em',
+                                name: 'Criado há',
                                 value: `> ${DataFormatada}`
                             }
                         )
@@ -651,7 +654,6 @@ module.exports = {
 
             });
 
-
             collector.on('end', () => {
                 if (!RequestControl)
                     return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
@@ -672,7 +674,7 @@ module.exports = {
             if (!user)
                 return message.reply(`${e.Info} | @Mencione o membro que você deseja transferir a posse do clan`)
 
-            if (!Clan.get(`Clans.${key}.Members`).includes(user.id))
+            if (!Members.includes(user.id))
                 return message.reply(`${e.Deny} | Este usuário não faz parte do clan.`)
 
             const msg = await message.reply(`${e.QuestionMark} | Você confirma transferir a posso do clan **${AtualClan}** para **${user.user.tag}**?`)
@@ -763,7 +765,7 @@ module.exports = {
 
                 if (reaction.emoji.name === '✅') {
 
-                    for (const m of Clan.get(`Clans.${key}.Members`)) {
+                    for (const m of Members) {
                         sdb.set(`Users.${m}.Clan`, NewName)
                     }
 
@@ -799,8 +801,8 @@ module.exports = {
             const ClansArray = []
 
             for (const key of keys) {
-                if (Clan.get(`Clans.${key}.Donation`) > 0) {
-                    ClansArray.push({ key: key, name: Clan.get(`Clans.${key}.Name`), donation: Clan.get(`Clans.${key}.Donation`) })
+                if (Donation > 0) {
+                    ClansArray.push({ key: key, name: Name, donation: Donation })
                 }
             }
 
