@@ -1,7 +1,6 @@
-const { f } = require('../../../database/frases.json')
-const { e } = require('../../../database/emojis.json')
-const Error = require('../../../Routes/functions/errors')
-const { Transactions } = require('../../../Routes/functions/database')
+const { f } = require('../../../database/frases.json'),
+    { e } = require('../../../database/emojis.json'),
+    { Transactions } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'transactions',
@@ -14,86 +13,68 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let user = message.mentions.users.first() || client.users.cache.get(args[0]) || message.mentions.repliedUser || message.author
-
-        let transactions = Transactions.get(`Transactions.${user.id}`) || []
+        let user = message.mentions.users.first() || client.users.cache.get(args[0]) || message.mentions.repliedUser || message.author,
+            transactions = Transactions.get(`Transactions.${user.id}`) || []
 
         if (user.bot || transactions.length < 1)
             return message.reply(`${e.Deny} | Nenhuma transação foi encontrada.`)
 
-        const embeds = EmbedGenerator()
-        const msg = await message.reply({ embeds: [embeds[0]] })
-        let EmbedsControl = 0
+        if (['delete', 'excluir', 'del'].includes(args[0]?.toLowerCase()))
+            return DeleteAllTransactions()
+
+        if (args[0])
+            return message.reply(`${e.Info} | Você pode usar o comando \`${prefix}transações delete\` para deletar todas as suas transações. Ou só \`${prefix}transações <@user/ID>\` para ver as suas transações ou a de algém`)
+
+        let embeds = EmbedGenerator(),
+            msg = await message.reply({ embeds: [embeds[0]] }),
+            EmbedsControl = 0
 
         if (embeds.length === 1) return
 
         for (const i of ['◀️', '▶️', '❌']) {
-            msg.react(i).catch(() => { return FinishCollector() })
+            msg.react(i).catch()
         }
 
-        const LeftFilter = (reaction, user) => { return reaction.emoji.name === '◀️' && user.id === message.author.id }
-        const collectorLeft = msg.createReactionCollector({ filter: LeftFilter, time: 30000, errors: ['time'] });
+        const CancelFilter = (reaction, user) => { return ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
+            collector = msg.createReactionCollector({ filter: CancelFilter, time: 30000, errors: ['time'] });
 
-        const RightFilter = (reaction, user) => { return reaction.emoji.name === '▶️' && user.id === message.author.id }
-        const collectorRight = msg.createReactionCollector({ filter: RightFilter, time: 30000, errors: ['time'] });
+        collector.on('collect', (reaction) => {
 
-        const CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }
-        const collectorCancel = msg.createReactionCollector({ filter: CancelFilter, time: 30000, errors: ['time'] });
-        
-        collectorRight.on('collect', () => {
-
-            try {
+            if (reaction.emoji.name === '◀️') {
 
                 EmbedsControl++
-                if (!embeds[EmbedsControl]) {
-                    EmbedsControl--
-                } else {
-                    return msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { return FinishCollector() })
-                }
+                return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl--
 
-            } catch (err) {
-                Error(message, err)
             }
 
-        });
-
-        collectorLeft.on('collect', () => {
-
-            try {
+            if (reaction.emoji.name === '▶️') {
 
                 EmbedsControl--
-                if (!embeds[EmbedsControl]) {
-                    EmbedsControl++
-                } else {
-                    return msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { return FinishCollector() })
-                }
+                return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl++
 
-            } catch (err) {
-                Error(message, err)
             }
+
+            if (reaction.emoji.name === '❌')
+                return collector.stop()
 
         })
 
-        collectorCancel.on('collect', () => { FinishCollector() });
-
-        function FinishCollector() {
-            collectorLeft.stop()
-            collectorRight.stop()
-            collectorCancel.stop()
-            return msg.edit({ content: `${e.Deny} Comando cancelado.` }).catch(() => { return FinishCollector() })
-        }
+        collect.on('end', () => {
+            return msg.edit({ content: `${e.Deny} Comando cancelado.` })
+        })
 
         function EmbedGenerator() {
-            let amount = 10
-            let Page = 1
-            const embeds = [];
-            let AuthorOrUser = user.id === message.author.id ? 'Suas transações' : `Transações de ${user.tag}`
+
+            let amount = 10,
+                Page = 1,
+                embeds = [],
+                AuthorOrUser = user.id === message.author.id ? 'Suas transações' : `Transações de ${user.tag}`,
+                length = parseInt(transactions.length / 10) + 1
 
             for (let i = 0; i < transactions.length; i += 10) {
 
                 const current = transactions.slice(i, amount)
                 const description = current.map(t => `> \`${t.time}\` ${t.data}`).join("\n")
-                let length = parseInt(transactions.length / 10) + 1
 
                 embeds.push({
                     color: 'GREEN',
@@ -103,19 +84,40 @@ module.exports = {
                         text: `${transactions.length} transações contabilizadas`
                     },
                 })
+
                 Page++
                 amount += 10
+
             }
 
             return embeds;
         }
 
-        function ReactCollection(msg, emoji) {
-            return msg.createReactionCollector({
-                filter: (reaction, user) => reaction.emoji.name === `${emoji}` && user.id === message.author.id,
-                time: 30000,
-                errors: ['time']
-            });
+        async function DeleteAllTransactions() {
+
+            const msg = await message.channel.send(`${e.QuestionMark} | Você realmente deseja apagar **TODAS** as suas transações?`),
+                collector = msg.createReactionCollector({
+                    filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                    time: 30000,
+                    errors: ['time']
+                });
+
+            for (const emoji of ['✅', '❌'])
+                msg.react(emoji).catch()
+
+            collector.on('collect', (reaction) => {
+                return reaction.emoji.name === '✅' ? DeleteAllData(msg) : collector.stop()
+            })
+
+            collector.on('end', () => {
+                return msg.edit(`${e.Deny} | Comando cancelado`).catch()
+            })
+
+        }
+
+        function DeleteAllData(msg) {
+            Transactions.delete(`Transactions.${message.author.id}`)
+            return msg.edit(`${e.Check} | Todas as suas transações foram deletadas.`).catch()
         }
 
     }

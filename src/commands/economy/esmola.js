@@ -25,22 +25,31 @@ module.exports = {
     return message.reply(`${e.SadPepe} | ${message.author.username} está pedindo um pouco de dinheiro`).then(msg => {
       sdb.set(`Users.${message.author.id}.Timeouts.Esmola`, Date.now())
       sdb.set(`Request.${message.author.id}`, `${msg.url}`)
-      msg.react('🪙').catch(() => { 
-        sdb.delete(`Users.${message.author.id}.Timeouts.Esmola`)
-      }) // Coin
+      for (const emoji of ['🪙', '❌']) {
+        msg.react(emoji).catch()
+      }
 
-      const filter = (reaction, user) => { return reaction.emoji.name === '🪙' && user.id === user.id; };
+      const filter = (reaction, user) => { return ['🪙', '❌'].includes(reaction.emoji.name) && user.id === user.id; };
 
       const collector = msg.createReactionCollector({ filter, time: 30000 });
 
       collector.on('collect', (reaction, user) => {
-        if (user.id === client.user.id || user.id === message.author.id) return
-        let money = db.get(`Balance_${user.id}`)
-        if (money < 50) { return message.channel.send(`${e.Deny} | ${user}, você não tem 50 ${Moeda(message)} na carteira para ajudar ${message.author}`) }
-        db.subtract(`Balance_${user.id}`, 50)
-        db.add(`Balance_${message.author.id}`, 50)
-        count += 50
-        message.channel.send(`${e.MoneyWings} | ${user} ajudou ${message.author} com 50 ${Moeda(message)}`)
+
+        if (reaction.emoji.name === '') {
+
+          if (user.id === client.user.id || user.id === message.author.id) return
+          let money = db.get(`Balance_${user.id}`)
+          if (money < 50) { return message.channel.send(`${e.Deny} | ${user}, você não tem 50 ${Moeda(message)} na carteira para ajudar ${message.author}`) }
+          db.subtract(`Balance_${user.id}`, 50)
+          db.add(`Balance_${message.author.id}`, 50)
+          count += 50
+          message.channel.send(`${e.MoneyWings} | ${user} ajudou ${message.author} com 50 ${Moeda(message)}`)
+        }
+
+        if (reaction.emoji.name === '❌' && user.id === message.author.id) {
+          collector.stop()
+        }
+
       });
 
       collector.on('end', () => {
@@ -53,7 +62,7 @@ module.exports = {
           )
         }
 
-        msg.edit(`${e.Deny} | ${message.author.username} está pedindo um pouco de dinheiro | Request expirada`)
+        return msg.edit(`${e.Deny} | ${message.author.username} está pedindo um pouco de dinheiro | Esmola expirada`)
       });
     })
   }
