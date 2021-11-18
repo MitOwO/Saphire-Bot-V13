@@ -35,7 +35,7 @@ module.exports = {
 
       collector.on('collect', (reaction, user) => {
 
-        if (reaction.emoji.name === '') {
+        if (reaction.emoji.name === '🪙') {
 
           if (user.id === client.user.id || user.id === message.author.id) return
           let money = db.get(`Balance_${user.id}`)

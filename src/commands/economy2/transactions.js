@@ -23,7 +23,7 @@ module.exports = {
             return DeleteAllTransactions()
 
         if (args[0])
-            return message.reply(`${e.Info} | Você pode usar o comando \`${prefix}transações delete\` para deletar todas as suas transações. Ou só \`${prefix}transações <@user/ID>\` para ver as suas transações ou a de algém`)
+            return message.reply(`${e.Info} | Você pode usar o comando \`${prefix}transações delete\` para deletar todas as suas transações. Ou só \`${prefix}transações <@user/ID>\` para ver as suas transações ou a de alguém`)
 
         let embeds = EmbedGenerator(),
             msg = await message.reply({ embeds: [embeds[0]] }),
@@ -35,31 +35,27 @@ module.exports = {
             msg.react(i).catch()
         }
 
-        const CancelFilter = (reaction, user) => { return ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
-            collector = msg.createReactionCollector({ filter: CancelFilter, time: 30000, errors: ['time'] });
+        const CancelFilter = (reaction, user) => ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+            collector = msg.createReactionCollector({ filter: CancelFilter, time: 30000, errors: ['time'] })
 
         collector.on('collect', (reaction) => {
-
-            if (reaction.emoji.name === '◀️') {
-
-                EmbedsControl++
-                return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl--
-
-            }
-
-            if (reaction.emoji.name === '▶️') {
-
-                EmbedsControl--
-                return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl++
-
-            }
-
+            
             if (reaction.emoji.name === '❌')
                 return collector.stop()
 
+            reaction.emoji.name === '▶️'
+            ? (() => {
+                EmbedsControl++
+                return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl--
+            })()
+            : (() => {
+                EmbedsControl--
+                return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl++
+            })()
+
         })
 
-        collect.on('end', () => {
+        collector.on('end', () => {
             return msg.edit({ content: `${e.Deny} Comando cancelado.` })
         })
 
