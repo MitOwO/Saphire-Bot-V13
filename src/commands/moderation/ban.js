@@ -73,11 +73,11 @@ module.exports = {
                             })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)
-                            msg.edit(`${e.Check} | Request FORCEBAN abortada | ${ID}/${message.author.id}/${message.guild.id}`)
+                            msg.edit(`${e.Check} | Request FORCEBAN abortada`)
                         }
                     }).catch(() => {
                         sdb.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Check} | Request FORCEBAN abortada: Tempo Expirado | ${ID}/${message.author.id}/${message.guild.id}`)
+                        msg.edit(`${e.Check} | Request FORCEBAN abortada: Tempo Expirado`)
                     })
                 })
 
@@ -112,11 +112,11 @@ module.exports = {
                         })
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Check} | Request BAN abortada | ${user.id}/${message.author.id}/${message.guild.id}`)
+                        msg.edit(`${e.Deny} | Request BAN abortada`)
                     }
                 }).catch(() => {
                     sdb.delete(`Request.${message.author.id}`)
-                    msg.edit(`${e.Check} | Request BAN abortada: Tempo Expirado | ${user.id}/${message.author.id}/${message.guild.id}`)
+                    msg.edit(`${e.Deny} | Request BAN abortada: Tempo Expirado`)
                 })
             })
         }

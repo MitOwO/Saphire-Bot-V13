@@ -88,7 +88,7 @@ module.exports = {
                 sdb.delete(`Users.${id}`)
             }
 
-            User ? User = Familiar.tag : User = 'Parça não encontrado.'
+            User ? User = User.tag : User = 'Parça não encontrado.'
             return User
         }
 
