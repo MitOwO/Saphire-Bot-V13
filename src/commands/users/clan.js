@@ -6,7 +6,8 @@ const
     Vip = require('../../../Routes/functions/vip'),
     color = require('../../../Routes/functions/colors'),
     { PushTrasaction } = require('../../../Routes/functions/transctionspush'),
-    ms = require('parse-ms')
+    ms = require('parse-ms'),
+    Data = require('../../../Routes/functions/data')
 
 module.exports = {
     name: 'clan',
@@ -35,6 +36,7 @@ module.exports = {
                 break
             }
         }
+
         let ClanKey = Clan.get(`Clans.${key}`),
             Admins = ClanKey['Admins'],
             Admin = Admins?.includes(message.author.id),
@@ -43,6 +45,15 @@ module.exports = {
             Donation = ClanKey['Donation'],
             Members = ClanKey['Members'],
             Argument = args[0] || 'NoArgs'
+
+        function LogRegister(MessageData) {
+            return !Clan.get(`Clans.${key}.LogRegister`)
+                ? Clan.push(`Clans.${key}.LogRegister`, { Data: Data(), Message: MessageData })
+                : (() => {
+                    const Array = [{ Data: Data(), Message: MessageData }, ...Clan.get('LogRegister')]
+                    Clan.set(`Clans.${key}.LogRegister`, Array)
+                })()
+        }
 
         if (!args[1] && user) {
 
@@ -77,6 +88,7 @@ module.exports = {
             case 'editname': EditClanName(); break;
             case 'rank': ClanRanking(); break;
             case 'info': case 'help': case 'help': ClanInfo(); break;
+            case 'logs': case 'logs': case 'histórico': case 'historico': ClanLogs(); break;
             default:
                 message.reply(`${e.Info} | Caso tenha alguma dúvida de como usar este comando, use \`${prefix}clan info\``)
                 break;
@@ -124,7 +136,7 @@ module.exports = {
                 Donation: 0,
                 CreatAt: Date.now()
             })
-
+            LogRegister(`🛡️ ${message.author.tag} criou o clan **${ClanName}**`)
             sdb.set(`Users.${message.author.id}.Clan`, `${ClanName}`)
             db.subtract(`Balance_${message.author.id}`, 5000000)
 
@@ -160,30 +172,27 @@ module.exports = {
             msg.react('❌').catch()
 
             const collector = msg.createReactionCollector({
-                filter: (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === user.id },
+                filter: (reaction, u) => ['✅', '❌'].includes(reaction.emoji.name) && u.id === user.id,
                 time: 30000,
                 errors: ['time']
             });
 
             collector.on('collect', (reaction, u) => {
 
-                if (reaction.emoji.name === '✅') {
+                reaction.emoji.name === '✅'
+                    ? (() => {
 
-                    Clan.push(`Clans.${key}.Members`, user.id)
-                    sdb.set(`Users.${user.id}.Clan`, AtualClan)
-                    msg.edit(`${e.Check} | ${user.user.tag} entrou para o Clan **${AtualClan}**`)
-                    RequestControl = true
-                    collector.stop()
-                }
+                        Clan.push(`Clans.${key}.Members`, user.id)
+                        sdb.set(`Users.${user.id}.Clan`, AtualClan)
+                        msg.edit(`${e.Check} | ${user.user.tag} entrou para o Clan **${AtualClan}**`)
+                        RequestControl = true
+                        collector.stop()
+                        LogRegister(`➡️ **${user.tag}** entrou no clan por convite de **${message.author.tag}**`)
 
-                if (reaction.emoji.name === '❌') {
-
-                    collector.stop()
-
-                }
+                    })()
+                    : collector.stop()
 
             });
-
 
             collector.on('end', () => {
                 if (!RequestControl)
@@ -230,6 +239,7 @@ module.exports = {
 
                     Clan.pull(`Clans.${key}.Members`, User.id)
                     Clan.pull(`Clans.${key}.Admins`, User.id)
+                    LogRegister(`⬅️ **${User.tag}** foi expulso pelo Adm **${message.author.tag}**`)
                     sdb.delete(`Users.${User.id}.Clan`)
                     msg.edit(`${e.Check} | ${User.tag} foi expulso do Clan **${AtualClan}** pelo Admin \`${message.author.tag}\``).catch()
                     RequestControl = true
@@ -237,11 +247,8 @@ module.exports = {
 
                 }
 
-                if (reaction.emoji.name === '❌') {
-
-                    collector.stop()
-
-                }
+                if (reaction.emoji.name === '❌')
+                    return collector.stop()
 
             });
 
@@ -443,6 +450,7 @@ module.exports = {
                     return message.reply(`${e.Deny} | Este usuário já é um administrador.`)
 
                 Clan.push(`Clans.${key}.Admins`, user.id)
+                LogRegister(`${e.ModShield} **${user.tag}** foi promivido para Administrador`)
                 return message.reply(`${e.Check} | ${user.user.tag} foi promovido para ${e.ModShield} **Administrador*(a)*** no clan **${AtualClan}**`)
 
             }
@@ -486,11 +494,11 @@ module.exports = {
 
             collector.on('collect', (reaction, u) => {
 
-                if (reaction.emoji.name === '✅') {
+                return reaction.emoji.name === '✅' ? Checked() : Denied()
 
-                    let membros = Members
+                function Checked() {
 
-                    for (const id of membros) {
+                    for (const id of Members) {
                         sdb.delete(`Users.${id}.Clan`)
                     }
 
@@ -501,11 +509,9 @@ module.exports = {
 
                 }
 
-                if (reaction.emoji.name === '❌') {
-
+                function Denied() {
                     msg.edit(`${e.Deny} | Pedido recusado.`)
                     collector.stop()
-
                 }
 
             });
@@ -547,7 +553,7 @@ module.exports = {
                 message.author.id,
                 `🛡️ Doou ${amount} Moedas para o Clan ${AtualClan}`
             )
-
+            LogRegister(`${e.BagMoney} **${message.author.tag}** doou **${amount} Moedas**`)
             return message.reply(`${e.Check} | Você doou **${amount} ${Moeda(message)}** para o Clan **${AtualClan}**`)
 
         }
@@ -638,6 +644,7 @@ module.exports = {
 
                     Clan.pull(`Clans.${key}.Members`, message.author.id)
                     Clan.pull(`Clans.${key}.Admins`, message.author.id)
+                    LogRegister(`⬅️ **${message.author.tag}** saiu do clan`)
                     sdb.delete(`Users.${message.author.id}.Clan`)
                     msg.edit(`${e.Check} | Você saiu do Clan **${AtualClan}**!`).catch()
                     RequestControl = true
@@ -693,7 +700,7 @@ module.exports = {
                 if (reaction.emoji.name === '✅') {
 
                     Clan.set(`Clans.${key}.Owner`, user.id)
-                    Clan.push(`Clans.${key}.Admins`, message.author.id)
+                    LogRegister(`${e.ModShield} **${message.author.tag}** transferiu a posse do servidor para **${user.tag}**`)
                     msg.edit(`${e.Check} | Você transferiu a posse do Clan **${AtualClan}** para ${user.user.tag} com sucesso! Por padrão, você ainda é um administrador.`).catch()
                     RequestControl = true
                     collector.stop()
@@ -749,7 +756,6 @@ module.exports = {
             if (NewName.length > 30)
                 return message.reply(`${e.Deny} | O nome do clan não pode ultrapassar **30 caracteres.**`)
 
-
             const msg = await message.reply(`${e.QuestionMark} | Você confirma trocar o nome do clan de **${AtualClan}** para **${NewName}**?`)
 
             msg.react('✅').catch()
@@ -765,11 +771,14 @@ module.exports = {
 
                 if (reaction.emoji.name === '✅') {
 
+                    let OldName = ClanKey['Name']
+
                     for (const m of Members) {
                         sdb.set(`Users.${m}.Clan`, NewName)
                     }
 
                     Clan.set(`Clans.${key}.Name`, NewName)
+                    LogRegister(`${e.ModShield} O nome do clan foi alterado de **${OldName}** para **${NewName}**`)
 
                     db.subtract(`Balance_${message.author.id}`, 1000000)
                     msg.edit(`${e.Check} | Você trocou o nome do seu Clan com sucesso!`).catch()
@@ -802,24 +811,16 @@ module.exports = {
 
             for (const key of keys) {
                 if (Donation > 0) {
-                    ClansArray.push({ key: key, name: Name, donation: Donation })
+                    ClansArray.push({ key: key, name: Clan.get(`Clans.${key}.Name`) || 'Indefinido', donation: Clan.get(`Clans.${key}.Donation`) || 0 })
                 }
             }
 
-            if (ClansArray.length < 1) return message.reply(`${e.Info} | Não tem nenhum ranking por enquanto.`)
+            if (ClansArray.length < 1) return message.reply(`${e.Info} | Não tem há ranking por enquanto.`)
 
-            const rank = ClansArray.slice(0, 10).sort((a, b) => b.donation - a.donation).map((clan, i) => ` \n> ${Medals(i)} **${clan.name}** - \`${clan.key}\`\n> ${clan.donation} ${Moeda(message)}\n`).join('\n')
+            const Medals = { 1: '🥇', 2: '🥈', 3: '🥉' }
+
+            const rank = ClansArray.slice(0, 10).sort((a, b) => b.donation - a.donation).map((clan, i) => ` \n> ${Medals[i + 1] || `${i + 1}.`} **${clan.name}** - \`${clan.key}\`\n> ${clan.donation} ${Moeda(message)}\n`).join('\n')
             let MyClanRank = ClansArray.findIndex(clans => clans.name === AtualClan) + 1 || 'N/A'
-
-            function Medals(i) {
-                const Medals = {
-                    1: '🥇',
-                    2: '🥈',
-                    3: '🥉'
-                }
-
-                return Medals[i + 1] || `${i + 1}.`
-            }
 
             return message.reply(
                 {
@@ -893,6 +894,10 @@ module.exports = {
                                     value: `\`${prefix}clan editname <Novo Nome>\` - Apenas o dono pode mudar o nome do clan`
                                 },
                                 {
+                                    name: `${e.Info} Veja o que acontece no clan`,
+                                    value: `\`${prefix}clan logs\``
+                                },
+                                {
                                     name: `${e.Upvote} Veja o ranking dos clans`,
                                     value: `\`${prefix}clan rank\``
                                 }
@@ -904,6 +909,89 @@ module.exports = {
                     ]
                 }
             )
+        }
+
+        async function ClanLogs() {
+
+            const ClanLogArray = [],
+                ClanLogs = Clan.get(`Clans.${key}.LogRegister`) || []// Data, Message
+
+            if (ClanLogs.length < 1)
+                return message.reply(`${e.Info} | Este clan não possui nenhum log.`)
+
+            for (const log of ClanLogs) {
+                ClanLogArray.push({ Data: log.Data, Message: log.Message })
+            }
+
+            function EmbedGenerator() {
+
+                let amount = 10,
+                    Page = 1,
+                    embeds = [],
+                    length = parseInt(ClanLogArray.length / 10) + 1
+
+                for (let i = 0; i < ClanLogArray.length; i += 10) {
+
+                    let current = ClanLogArray.slice(i, amount),
+                        description = current.map(log => `\`${log.Data}\` ${log.Message}`).join("\n")
+
+                    embeds.push({
+                        color: color(message.member),
+                        title: `🛡️ Logs do Clan ${AtualClan} | ${Page}/${length}`,
+                        description: `${description}`,
+                        footer: {
+                            text: `${ClanLogArray?.length || 0} Logs`
+                        }
+                    })
+
+                    Page++
+                    amount += 10
+
+                }
+
+                return embeds;
+            }
+
+            const embeds = EmbedGenerator(),
+                msg = await message.reply({ embeds: [embeds[0]] })
+
+            if (embeds.length > 1) {
+                for (const emoji of ['◀️', '▶️', '❌']) {
+                    msg.react(emoji).catch()
+                }
+            }
+
+            let collector = msg.createReactionCollector({
+                filter: (reaction, user) => ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                idle: 30000,
+                errors: ['idle']
+            })
+
+            collector.on('collect', (reaction, user) => {
+
+                if (reaction.emoji.name === '❌')
+                    return collector.stop()
+
+                return reaction.emoji.name === '◀️'
+                    ? (() => {
+
+                        control--
+                        return embeds[control] ? msg.edit({ embeds: [embeds[control]] }) : control++
+
+                    })()
+                    : (() => {
+
+                        control++
+                        return embeds[control] ? msg.edit({ embeds: [embeds[control]] }) : control--
+
+                    })()
+
+            });
+
+            collector.on('end', () => {
+                return msg.reactions.removeAll().catch(() => { })
+            })
+
         }
 
     }
