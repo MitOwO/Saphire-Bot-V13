@@ -1000,7 +1000,7 @@ module.exports = {
                                 },
                                 {
                                     name: `${e.Commands} Veja quem está no clan ou os clans`,
-                                    value: `\`${prefix}clan membros\` - \`${prefix}clan list\``
+                                    value: `\`${prefix}clan membros [KeyCode de outro Clan (opcional)]\` - \`${prefix}clan list\``
                                 },
                                 {
                                     name: `${e.ModShield} Adicione ou remova administradores`,
