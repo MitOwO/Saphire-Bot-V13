@@ -264,24 +264,30 @@ module.exports = {
 
         async function MemberList() {
 
-            if (!AtualClan)
-                return message.reply(`${e.Deny} | Você não possui clan.`)
+            const K = args[1] || key
+
+            if (!Clan.get(`Clans.${K}`))
+                return message.reply(`${e.Deny} | Não um clan foi encontrado.`)
+
+            let ClanKey = Clan.get(`Clans.${K}`),
+                Admins = ClanKey?.Admins,
+                Name = ClanKey?.Name,
+                Members = ClanKey?.Members || []
 
             function EmbedGenerator() {
 
                 let amount = 10,
                     Page = 1,
                     embeds = [],
-                    membros = Members,
-                    length = membros.length / 10 < 1 ? 1 : parseInt((membros.length / 10) + 1)
+                    length = Members.length / 10 < 1 ? 1 : parseInt((Members.length / 10) + 1)
 
-                for (let i = 0; i < membros.length; i += 10) {
+                for (let i = 0; i < Members.length; i += 10) {
 
-                    let current = membros.slice(i, amount),
+                    let current = Members.slice(i, amount),
                         description = current.map(member => {
-                            let Coroa = ClanKey.Owner === member ? e.OwnerCrow : '',
-                                ModShield = Admins?.includes(member) && !Owner ? e.ModShield : '',
-                                MemberBust = !Admins.includes(member) && !Owner ? '👤' : '',
+                            let Coroa = ClanKey?.Owner === member ? e.OwnerCrow : '',
+                                ModShield = Admins?.includes(member) && ClanKey?.Owner !== member ? e.ModShield : '',
+                                MemberBust = !Admins.includes(member) && ClanKey?.Owner !== member ? '👤' : '',
                                 MemberTag = client.users.cache.get(member)?.tag.replace(/`/g, '') || "Membro não encontrado",
                                 MemberId = client.users.cache.get(member)?.id || "N/A"
 
@@ -290,10 +296,10 @@ module.exports = {
 
                     embeds.push({
                         color: color(message.member),
-                        title: `🛡️ Membros do Clan ${AtualClan} | ${Page}/${length}`,
+                        title: `🛡️ Membros do Clan ${Name} | ${Page}/${length}`,
                         description: `${description}`,
                         footer: {
-                            text: `${membros?.length || 0}/40 Membros`
+                            text: `${Members?.length || 0}/40 Membros`
                         }
                     })
 
@@ -826,7 +832,7 @@ module.exports = {
                 }
             }
 
-            if (ClansArray.length < 1) return message.reply(`${e.Info} | Não tem há ranking por enquanto.`)
+            if (ClansArray.length < 1) return message.reply(`${e.Info} | Não há ranking por enquanto.`)
 
             const Medals = { 1: '🥇', 2: '🥈', 3: '🥉' }
 
