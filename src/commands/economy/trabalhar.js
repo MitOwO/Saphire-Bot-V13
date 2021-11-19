@@ -44,7 +44,7 @@ module.exports = {
 
             PushTrasaction(
                 message.author.id,
-                `${e.BagMoney} Ganhou ${work} trabalhando`
+                `${e.BagMoney} Ganhou ${work} Moedas trabalhando`
             )
 
             vip ? message.reply(comvip) : message.reply(semvip)
@@ -60,7 +60,7 @@ module.exports = {
 
             PushTrasaction(
                 message.author.id,
-                `${e.BagMoney} Ganhou ${work + gorjeta} trabalhando`
+                `${e.BagMoney} Ganhou ${work + gorjeta} Moedas trabalhando`
             )
 
             vip ? message.reply(comvip) : message.reply(semvip)

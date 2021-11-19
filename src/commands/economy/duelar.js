@@ -137,14 +137,15 @@ module.exports = {
                     `${e.MoneyWithWings} Perdeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${Winner.user.tag}`
                 )
             } else {
+                let M = (sdb.get(`Users.${message.author.id}.Cache.Duelo`) || 0) / 2
                 TransactionsPush(
                     Winner.id,
                     message.author.id,
-                    `${e.MoneyWithWings} Perdeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${message.author.tag}`
+                    `${e.MoneyWithWings} Perdeu ${M} em um duelo contra ${message.author.tag}`,
                     `${e.BagMoney} Recebeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${Winner.user.tag}`,
                 )
             }
-            sdb.set(`Users.${message.author.id}.Cache.Duelo`, 0)
+            sdb.delete(`Users.${message.author.id}.Cache.Duelo`)
             msg.edit(`${e.OwnerCrow} | ${Winner} ganhou o duelo contra ${Loser}\n${e.PandaProfit} | ${Winner.user.username} teve o retorno de **${Prize} ${Moeda(message)}** com um lucro de **${Prize / 2} ${Moeda(message)}**\n*${Loser.user.username} perdeu o dinheiro no duelo.*`).catch(() => { })
         }
 

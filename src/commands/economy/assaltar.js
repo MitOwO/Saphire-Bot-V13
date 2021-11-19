@@ -99,7 +99,7 @@ module.exports = {
                         TransactionsPush(
                             target.id,
                             message.author.id,
-                            `💰 Recebeu ${cache + Amount || 0} Moedas assaltando ${message.author.tag}`,
+                            `💰 Recebeu ${cache || 0} Moedas assaltando ${message.author.tag}`,
                             `💸 Foi assaltado por ${target.user.tag} e perdeu ${Amount || 0} Moedas`
                         )
                         Timeout()
