@@ -3,7 +3,7 @@ const { e } = require('../../../database/emojis.json')
 
 module.exports = {
     name: 'gay',
-    aliases: ['gai', 'guey', 'guei'],
+    aliases: ['gai', 'guey', 'guei', 'yag'],
     category: 'random',
     emoji: '🏳️‍🌈',
     usage: '<gay> [@user]',

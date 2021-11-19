@@ -11,7 +11,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let user = message.mentions.users.first() || await message.guild.members.cache.get(args[0]) || message.mentions.repliedUser || message.author || message.member
+        let user = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.mentions.repliedUser || message.author
         if (!user) return message.reply(`${e.Deny} | Não achei ninguém...`)
         if (user.id === client.user.id) return message.reply(`${e.Deny} | Eu não tenho essa coisa, para com isso!`)
 

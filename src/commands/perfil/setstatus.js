@@ -8,7 +8,7 @@ module.exports = {
     ClientPermissions: 'ADD_REACTIONS',
     emoji: '✍️',
     usage: '<setstatus> <Seu Novo Status>',
-    description: 'Escolha um título grandioso',
+    description: 'Defina seu status no perfil',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)

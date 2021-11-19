@@ -9,7 +9,7 @@ module.exports = {
     ClientPermissions: 'ADD_REACTIONS',
     emoji: '💔',
     usage: '<divorce>',
-    description: 'Divórcie do seu casamento',
+    description: 'Divorcie do seu casamento',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
