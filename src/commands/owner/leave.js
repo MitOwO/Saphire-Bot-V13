@@ -12,12 +12,11 @@ module.exports = {
 
         if (!args[0]) return message.reply(`${e.Deny} | Informe o ID do servidor para que eu possa sair.`)
 
-        let GuildID = args[0]
-        if (isNaN(GuildID) || GuildID.length !== 18) return message.reply(`${e.Deny} | ID Inválido.`)
+        let Guild = await client.guilds.cache.get(`${args[0]}`)
 
-        let Guild = await client.guilds.cache.get(GuildID)
+        if (!Guild) return message.reply(`${e.Deny} | Servidor não encontrado`)
 
-        Guild ? GuildExit() : message.channel.send(`${e.Deny} | Este servidor não existe ou eu não estou nele.`)
+        return Guild ? GuildExit() : message.channel.send(`${e.Deny} | Este servidor não existe ou eu não estou nele.`)
 
         function GuildExit() {
             Guild.leave().then(guild => {
