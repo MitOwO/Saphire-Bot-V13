@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let user = message.mentions.users.first() || message.author || message.mentions.repliedUser
+        let user = message.mentions.users.first() || await message.guild.members.cache.get(args[0]) || message.mentions.repliedUser || message.author
         let avatar = user.displayAvatarURL({ dynamic: true, format: "png", size: 1024 })
 
         try {

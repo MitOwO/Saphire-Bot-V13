@@ -49,7 +49,7 @@ module.exports = {
 
            PushTrasaction(
                 message.author.id,
-                `${e.BagMoney} Recebeu ${amountcoins + Bonus1} no semanal`
+               `${e.BagMoney} Recebeu ${amountcoins + Bonus1} Moedas no semanal`
             )
 
             let ComVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
@@ -70,7 +70,7 @@ module.exports = {
 
             PushTrasaction(
                 message.author.id,
-                `${e.BagMoney} Recebeu ${amountcoins} no mensal`
+                `${e.BagMoney} Recebeu ${amountcoins} Moedas no mensal`
             )
 
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireObs} | Sabia que se você der \`${prefix}weekly\` dentro do meu servidor você pode ganhar até 4x a mais?`
