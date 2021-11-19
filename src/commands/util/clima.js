@@ -23,9 +23,8 @@ module.exports = {
         if (!args[0]) { return message.reply({ embeds: [noargs] }) }
 
         let city = args.join(" ")
-        let degreetype = "C" // Mude para Fahrenheit "F"
 
-        await weather.find({ search: city, degreeType: degreetype }, function (err, result) {
+        await weather.find({ search: city, degreeType: "C" }, function (err, result) {
 
             if (!city) { return message.reply(`${e.Deny} | Formato incorreto! | \`${prefix}clima SP/RJ/MG ou o nome da Cidade/Estado\``) }
             if (err || result === undefined || result.length === 0) { return message.reply(`${e.Deny} | Nenhuma cidade/estado foi encontrado, verifique a ortografia.`) }

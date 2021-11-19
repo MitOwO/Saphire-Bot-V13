@@ -38,21 +38,21 @@ module.exports = {
         }
 
         let ClanKey = Clan.get(`Clans.${key}`),
-            Admins = ClanKey['Admins'],
+            Admins = ClanKey?.Admins,
             Admin = Admins?.includes(message.author.id),
-            Owner = ClanKey['Owner'] === message.author.id,
-            Name = ClanKey['Name'],
-            Donation = ClanKey['Donation'],
-            Members = ClanKey['Members'],
+            Owner = ClanKey?.Owner === message.author.id,
+            Name = ClanKey?.Name,
+            Donation = ClanKey?.Donation,
+            Members = ClanKey?.Members,
             Argument = args[0] || 'NoArgs'
 
         function LogRegister(MessageData) {
-            return !Clan.get(`Clans.${key}.LogRegister`)
-                ? Clan.push(`Clans.${key}.LogRegister`, { Data: Data(), Message: MessageData })
-                : (() => {
-                    const Array = [{ Data: Data(), Message: MessageData }, ...Clan.get('LogRegister')]
-                    Clan.set(`Clans.${key}.LogRegister`, Array)
-                })()
+
+            let ClanLogs = Clan.get(`Clans.${key}.LogRegister`) || []
+
+            const Array = [{ Data: Data(), Message: MessageData }, ...ClanLogs]
+            Clan.set(`Clans.${key}.LogRegister`, Array)
+
         }
 
         if (!args[1] && user) {
@@ -89,6 +89,7 @@ module.exports = {
             case 'rank': ClanRanking(); break;
             case 'info': case 'help': case 'help': ClanInfo(); break;
             case 'logs': case 'logs': case 'histórico': case 'historico': ClanLogs(); break;
+            case 'logsdelete': ClanLogsDelete(); break;
             default:
                 message.reply(`${e.Info} | Caso tenha alguma dúvida de como usar este comando, use \`${prefix}clan info\``)
                 break;
@@ -187,7 +188,7 @@ module.exports = {
                         msg.edit(`${e.Check} | ${user.user.tag} entrou para o Clan **${AtualClan}**`)
                         RequestControl = true
                         collector.stop()
-                        LogRegister(`➡️ **${user.tag}** entrou no clan por convite de **${message.author.tag}**`)
+                        LogRegister(`➡️ **${user.user.tag}** entrou no clan por convite de **${message.author.tag}**`)
 
                     })()
                     : collector.stop()
@@ -272,12 +273,20 @@ module.exports = {
                     Page = 1,
                     embeds = [],
                     membros = Members,
-                    length = parseInt(membros.length / 10) + 1
+                    length = membros.length / 10 < 1 ? 1 : parseInt((membros.length / 10) + 1)
 
                 for (let i = 0; i < membros.length; i += 10) {
 
                     let current = membros.slice(i, amount),
-                        description = current.map(member => `${Owner === member ? e.OwnerCrow : ''}${Admins?.includes(member) && Owner !== member ? e.ModShield : ''}${!Admins.includes(member) && !Owner !== member ? '👤' : ''}${client.users.cache.get(member)?.tag.replace(/`/g, '') || "Membro não encontrado"} \`${client.users.cache.get(member)?.id || "N/A"}\``).join("\n")
+                        description = current.map(member => {
+                            let Coroa = ClanKey.Owner === member ? e.OwnerCrow : '',
+                                ModShield = Admins?.includes(member) && !Owner ? e.ModShield : '',
+                                MemberBust = !Admins.includes(member) && !Owner ? '👤' : '',
+                                MemberTag = client.users.cache.get(member)?.tag.replace(/`/g, '') || "Membro não encontrado",
+                                MemberId = client.users.cache.get(member)?.id || "N/A"
+
+                            return `${Coroa}${ModShield}${MemberBust}${MemberTag} \`${MemberId}\``
+                        }).join("\n")
 
                     embeds.push({
                         color: color(message.member),
@@ -450,7 +459,7 @@ module.exports = {
                     return message.reply(`${e.Deny} | Este usuário já é um administrador.`)
 
                 Clan.push(`Clans.${key}.Admins`, user.id)
-                LogRegister(`${e.ModShield} **${user.tag}** foi promivido para Administrador`)
+                LogRegister(`${e.ModShield} **${user.user.tag}** foi promivido para Administrador`)
                 return message.reply(`${e.Check} | ${user.user.tag} foi promovido para ${e.ModShield} **Administrador*(a)*** no clan **${AtualClan}**`)
 
             }
@@ -531,11 +540,10 @@ module.exports = {
             if (!AtualClan)
                 return message.reply(`${e.Deny} | Você precisa estar em um clan para usar este comando.`)
 
-            let amount = parseInt(args[1]?.replace(/k/g, '000'))
-            let money = db.get(`Balance_${message.author.id}`) || 0
+            let amount = parseInt(args[1]?.replace(/k/g, '000')) || 0
+            let money = parseInt(db.get(`Balance_${message.author.id}`)) || 0
 
-            if (['all', 'tudo'].includes(args[0]?.toLowerCase()))
-                amount = money
+            if (['all', 'tudo'].includes(args[1]?.toLowerCase())) amount = money
 
             if (!amount || isNaN(amount))
                 return message.reply(`${e.Deny} | Você precisa dizer uma quantia para doar ao clan.`)
@@ -553,6 +561,7 @@ module.exports = {
                 message.author.id,
                 `🛡️ Doou ${amount} Moedas para o Clan ${AtualClan}`
             )
+
             LogRegister(`${e.BagMoney} **${message.author.tag}** doou **${amount} Moedas**`)
             return message.reply(`${e.Check} | Você doou **${amount} ${Moeda(message)}** para o Clan **${AtualClan}**`)
 
@@ -700,7 +709,9 @@ module.exports = {
                 if (reaction.emoji.name === '✅') {
 
                     Clan.set(`Clans.${key}.Owner`, user.id)
-                    LogRegister(`${e.ModShield} **${message.author.tag}** transferiu a posse do servidor para **${user.tag}**`)
+                    if (!Admins?.includes(user.id)) Clan.push(`Clans.${key}.Admins`, user.id)
+                    if (!Admins?.includes(message.author.id)) Clan.push(`Clans.${key}.Admins`, message.author.id)
+                    LogRegister(`${e.ModShield} **${message.author.tag}** transferiu a posse do servidor para **${user.user.tag}**`)
                     msg.edit(`${e.Check} | Você transferiu a posse do Clan **${AtualClan}** para ${user.user.tag} com sucesso! Por padrão, você ainda é um administrador.`).catch()
                     RequestControl = true
                     collector.stop()
@@ -836,85 +847,10 @@ module.exports = {
 
         }
 
-        function ClanInfo() {
-            return message.reply(
-                {
-                    embeds: [
-                        {
-                            color: color(message.member),
-                            title: `🛡️ ${client.user.username}'s Clan System`,
-                            description: `No sistema de clans, você pode fazer parte dos clans ou até criar o seu. Presente em rankings globais, você pode competir para ver qual é o maior clan!`,
-                            fields: [
-                                {
-                                    name: `👀 Veja o clan de alguém, ou o seu`,
-                                    value: `\`${prefix}clan <@user>\` ou \`${prefix}clan status <KeyCode>\``
-                                },
-                                {
-                                    name: `${e.Stonks} Crie o seu clan`,
-                                    value: `\`${prefix}clan create <Nome do Clan>\``
-                                },
-                                {
-                                    name: `${e.Join} Convite membros para o seu clan`,
-                                    value: `\`${prefix}clan invite <@user>\` - Apenas donos e administradores podem convidar`
-                                },
-                                {
-                                    name: `${e.Leave} Expulse pessoas do clan`,
-                                    value: `\`${prefix}clan kick <@user>\` - Apenas donos e administradores podem expulsar`
-                                },
-                                {
-                                    name: `${e.Commands} Veja quem está no clan ou os clans`,
-                                    value: `\`${prefix}clan membros\` - \`${prefix}clan list\``
-                                },
-                                {
-                                    name: `${e.ModShield} Adicione ou remova administradores`,
-                                    value: `\`${prefix}clan adm add/remove <@user>\` - Apenas donos podem adicionar ou remover adms`
-                                },
-                                {
-                                    name: `${e.Deny} Delete o clan`,
-                                    value: `\`${prefix}clan delete\` - Apenas donos podem deletar o clan`
-                                },
-                                {
-                                    name: `${e.MoneyWithWings} Doe ao clan`,
-                                    value: `\`${prefix}clan donate <valor>\``
-                                },
-                                {
-                                    name: `${e.Download} Veja como está o seu clan`,
-                                    value: `\`${prefix}clan status\``
-                                },
-                                {
-                                    name: `${e.PandaBag} Saia do clan`,
-                                    value: `\`${prefix}clan leave\``
-                                },
-                                {
-                                    name: '🔄 Transfira a posse do clan',
-                                    value: `\`${prefix}clan transferirposse <@user>\` - Apenas o dono pode dar a posse de dono`
-                                },
-                                {
-                                    name: `🔄 Mude o nome do clan`,
-                                    value: `\`${prefix}clan editname <Novo Nome>\` - Apenas o dono pode mudar o nome do clan`
-                                },
-                                {
-                                    name: `${e.Info} Veja o que acontece no clan`,
-                                    value: `\`${prefix}clan logs\``
-                                },
-                                {
-                                    name: `${e.Upvote} Veja o ranking dos clans`,
-                                    value: `\`${prefix}clan rank\``
-                                }
-                            ],
-                            footer: {
-                                text: `Este comando faz parte da categoria "${client.user.username} hiper commands"`
-                            }
-                        }
-                    ]
-                }
-            )
-        }
-
         async function ClanLogs() {
 
             const ClanLogArray = [],
-                ClanLogs = Clan.get(`Clans.${key}.LogRegister`) || []// Data, Message
+                ClanLogs = Clan.get(`Clans.${key}.LogRegister`) || [] // Data, Message
 
             if (ClanLogs.length < 1)
                 return message.reply(`${e.Info} | Este clan não possui nenhum log.`)
@@ -928,7 +864,7 @@ module.exports = {
                 let amount = 10,
                     Page = 1,
                     embeds = [],
-                    length = parseInt(ClanLogArray.length / 10) + 1
+                    length = ClanLogArray.length / 10 <= 1 ? 1 : parseInt((ClanLogArray.length / 10) + 1)
 
                 for (let i = 0; i < ClanLogArray.length; i += 10) {
 
@@ -994,5 +930,120 @@ module.exports = {
 
         }
 
+        async function ClanLogsDelete() {
+
+            if (!Owner)
+                return message.reply(`${e.Deny} | Apenas o dono do clan pode apagar o histórico.`)
+
+            const ClanLogs = Clan.get(`Clans.${key}.LogRegister`) || []
+
+            if (ClanLogs.length < 1)
+                return message.reply(`${e.Deny} | O clan não tem nenhum histórico a ser deletado.`)
+
+            const msg = await message.reply(`${e.QuestionMark} | Você realmente deseja excluir todo o histórico do seu clan?`),
+                collector = msg.createReactionCollector({
+                    filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                    time: 30000,
+                    errors: ['time']
+                })
+
+            for (const emoji of ['✅', '❌'])
+                msg.react(emoji).catch()
+
+            collector.on('collect', (reaction, user) => {
+
+                return reaction.emoji.name === '✅'
+                    ? (() => {
+                        Clan.delete(`Clans.${key}.LogRegister`)
+                        return msg.edit(`${e.Check} | Você deletou todo o histórico do seu clan.`)
+                    })()
+                    : collector.stop()
+
+            })
+
+            collector.on('end', () => {
+                return msg.edit(`${e.Deny} | Comando cancelado.`)
+            })
+
+        }
+
+        function ClanInfo() {
+            return message.reply(
+                {
+                    embeds: [
+                        {
+                            color: color(message.member),
+                            title: `🛡️ ${client.user.username}'s Clan System`,
+                            description: `No sistema de clans, você pode fazer parte dos clans ou até criar o seu. Presente em rankings globais, você pode competir para ver qual é o maior clan!`,
+                            fields: [
+                                {
+                                    name: `👀 Veja o clan de alguém, ou o seu`,
+                                    value: `\`${prefix}clan <@user>\` ou \`${prefix}clan status <KeyCode>\``
+                                },
+                                {
+                                    name: `${e.Stonks} Crie o seu clan`,
+                                    value: `\`${prefix}clan create <Nome do Clan>\``
+                                },
+                                {
+                                    name: `${e.Join} Convite membros para o seu clan`,
+                                    value: `\`${prefix}clan invite <@user>\` - Apenas donos e administradores podem convidar`
+                                },
+                                {
+                                    name: `${e.Leave} Expulse pessoas do clan`,
+                                    value: `\`${prefix}clan kick <@user>\` - Apenas donos e administradores podem expulsar`
+                                },
+                                {
+                                    name: `${e.Commands} Veja quem está no clan ou os clans`,
+                                    value: `\`${prefix}clan membros\` - \`${prefix}clan list\``
+                                },
+                                {
+                                    name: `${e.ModShield} Adicione ou remova administradores`,
+                                    value: `\`${prefix}clan adm add/remove <@user>\` - Apenas donos podem adicionar ou remover adms`
+                                },
+                                {
+                                    name: `${e.Deny} Delete o clan`,
+                                    value: `\`${prefix}clan delete\` - Apenas donos podem deletar o clan`
+                                },
+                                {
+                                    name: `${e.MoneyWithWings} Doe ao clan`,
+                                    value: `\`${prefix}clan donate <valor>\``
+                                },
+                                {
+                                    name: `${e.Download} Veja como está o seu clan`,
+                                    value: `\`${prefix}clan status\``
+                                },
+                                {
+                                    name: `${e.PandaBag} Saia do clan`,
+                                    value: `\`${prefix}clan leave\``
+                                },
+                                {
+                                    name: '🔄 Transfira a posse do clan',
+                                    value: `\`${prefix}clan transferirposse <@user>\` - Apenas o dono pode dar a posse de dono`
+                                },
+                                {
+                                    name: `🔄 Mude o nome do clan`,
+                                    value: `\`${prefix}clan editname <Novo Nome>\` - Apenas o dono pode mudar o nome do clan`
+                                },
+                                {
+                                    name: `${e.Info} Veja o que acontece no clan`,
+                                    value: `\`${prefix}clan logs\``
+                                },
+                                {
+                                    name: `${e.Deny} Delete o histórico`,
+                                    value: `\`${prefix}clan logsdelete\``
+                                },
+                                {
+                                    name: `${e.Upvote} Veja o ranking dos clans`,
+                                    value: `\`${prefix}clan rank\``
+                                }
+                            ],
+                            footer: {
+                                text: `Este comando faz parte da categoria "${client.user.username} hiper commands"`
+                            }
+                        }
+                    ]
+                }
+            )
+        }
     }
 }
