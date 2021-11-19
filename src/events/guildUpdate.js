@@ -14,10 +14,12 @@ client.on('guildUpdate', async (oldGuild, newGuild) => {
         Name: ServerDb.get(`Servers.${newGuild.id}.Name`) || 'Indefinido',
     }
 
-    let Guild = await client.guilds.cache.get(newGuild.id)
-    let owner = Guild.members.cache.get(Guild?.ownerId)?.user
+    let Guild = await client.guilds.cache.get(newGuild.id) || false
+    let owner = Guild.members.cache.get(Guild?.ownerId)?.user || false
 
     if (Owner !== owner?.tag || OwnerId !== owner.id) {
+        if (!owner) return
+
         ServerDb.set(`Servers.${newGuild.id}.OwnerId`, owner?.id || undefined)
         ServerDb.set(`Servers.${newGuild.id}.Owner`, owner?.tag || undefined)
         Notify(newGuild.id, 'Atualização', `Os dados do*(a)* dono*(a)* do servidor foram alterado e atualizado no meu banco de dados.`)
@@ -25,4 +27,5 @@ client.on('guildUpdate', async (oldGuild, newGuild) => {
 
     if (Name !== newGuild.name)
         return UpdateServerName(oldGuild, newGuild)
+
 })
