@@ -37,12 +37,11 @@ client.on('messageCreate', async message => {
         AuthorId: message.author.id
     }
 
-    if (!sdb.has(`Users.${AuthorId}`)) RegisterUser(message)
+    if (!sdb.get(`Users.${AuthorId}.Name`)) RegisterUser(message)
     if (!ServerDb.has(`Servers.${message.guild.id}`)) RegisterServer(message.guild)
 
     if (message.content?.toLowerCase() === 'saphire')
         message.channel.send(`${e.SaphireHi} | \`${prefix}help\``).catch(() => { })
-
 
     if (!message.author.bot) {
         UpdateUserName(message)
