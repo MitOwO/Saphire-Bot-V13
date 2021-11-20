@@ -23,7 +23,7 @@ module.exports = {
         let cache = sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0
         if (cache <= 0) return message.reply(`${e.PandaProfit} | Você não possui dinheiro no cache.`)
 
-        db.add(`Balance_${message.author.id}`, cache)
+        sdb.add(`Users.${message.author.id}.Balance`, cache)
         PushTrasaction(
             message.author.id,
             `${e.BagMoney} Resgatou ${cache} Moedas`

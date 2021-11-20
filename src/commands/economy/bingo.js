@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let money = parseInt(db.get(`Balance_${message.author.id}`))
+        let money = parseInt(sdb.get(`Users.${message.author.id}.Balance`))
         let ChannelActived = db.get(`BingoOn${message.author.id}`)
         if (ChannelActived) return message.reply(`${e.Nagatoro} | Opa opa coisinha fofa! Já tem um bingo rolando nesse chat.\n${ChannelActived}`)
 
@@ -32,7 +32,7 @@ module.exports = {
         if (quantia > money || quantia <= 0) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro na carteira.`)
 
         sdb.add(`Users.${message.author.id}.Cache.BingoPrize`, quantia)
-        db.subtract(`Balance_${message.author.id}`, quantia)
+        sdb.subtract(`Users.${message.author.id}.Balance`, quantia)
         PushTrasaction(
             message.author.id,
             `💸 Inicou um bingo no valor de ${quantia || 0} Moedas`

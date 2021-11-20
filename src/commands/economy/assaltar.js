@@ -15,7 +15,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         let target = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
-        let TargetMoney = db.get(`Balance_${target.id}`) || 0
+        let TargetMoney = sdb.get(`Users.${target.id}.Balance`) || 0
         let Amount = Math.floor(Math.random() * (TargetMoney / 4)) + 1
 
         if (['info', 'informação', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return message.reply({
@@ -67,7 +67,7 @@ module.exports = {
             let tratamento = Math.floor(Math.random() * 5000) + 1
 
             sdb.add(`Users.${message.author.id}.Cache.Assalto`, TargetMoney)
-            db.subtract(`Balance_${target.id}`, TargetMoney)
+            sdb.subtract(`Users.${target.id}.Balance`, TargetMoney)
 
             let cache = sdb.get(`Users.${message.author.id}.Cache.Assalto`)
 
@@ -94,8 +94,8 @@ module.exports = {
             if (result === 'lose') {
                 message.reply(`${e.Loading} | ${message.author} está assaltando ${target}`).then(msg => {
                     setTimeout(() => {
-                        db.add(`Balance_${target.id}`, (cache + Amount))
-                        db.subtract(`Balance_${message.author.id}`, Amount)
+                        sdb.add(`Users.${target.id}.Balance`, (cache + Amount))
+                        sdb.subtract(`Users.${message.author.id}.Balance`, Amount)
                         TransactionsPush(
                             target.id,
                             message.author.id,
@@ -182,10 +182,10 @@ module.exports = {
             return message.channel.send(`👩‍⚖️ | Eu decreto a prisão de ${message.author} *\`${message.author.tag} | ${message.author.id}\`* por tentar me assaltar mais multa.\n${e.PandaProfit} -${multa} ${Moeda(message)}`)
         }
 
-        function AuthorAdd(x) { db.add(`Balance_${message.author.id}`, x) }
-        function AuthorSubtract(x) { db.subtract(`Balance_${message.author.id}`, x) }
-        function TargetAdd(x) { db.add(`Balance_${target.id}`, x) }
-        function TargetSubtract(x) { db.subtract(`Balance_${target.id}`, x) }
+        function AuthorAdd(x) { sdb.add(`Users.${message.author.id}.Balance`, x) }
+        function AuthorSubtract(x) { sdb.subtract(`Users.${message.author.id}.Balance`, x) }
+        function TargetAdd(x) { sdb.add(`Users.${target.id}.Balance`, x) }
+        function TargetSubtract(x) { sdb.subtract(`Users.${target.id}.Balance`, x) }
         function Loteria(x) { sdb.add(`Loteria.Prize`, x) }
         function Timeout() { sdb.set(`Users.${message.author.id}.Timeouts.Assalto`, Date.now()) }
 

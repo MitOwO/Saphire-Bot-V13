@@ -32,8 +32,8 @@ module.exports = {
         if (isNaN(parseInt(Quantia))) return message.reply(`${e.Deny} | **${Quantia}** | Não é um número.`)
         if (parseInt(Quantia) <= 0) { return message.reply('Diga um valor maior que 0') }
 
-        let UserMoney = db.get(`Balance_${member.id}`)
-        let UserBank = db.get(`Bank_${member.id}`)
+        let UserMoney = sdb.get(`Users.${member.id}.Balance`)
+        let UserBank = sdb.get(`Users.${member.id}.Bank`)
         if ((UserMoney + UserBank) <= 0) return message.reply(`${e.Deny} | ${member.user.username} não possui dinheiro.`)
         if ((UserMoney + UserBank) < Quantia) return message.reply(`${e.Deny} | ${member.user.username} não possui toda essa quantia para te pagar.`)
 
@@ -49,8 +49,8 @@ module.exports = {
 
             CollectorPayment.on('collect', (reaction, user) => {
                 if (user.id === client.user.id) return
-                if (db.get(`Balance_${user.id}`) < Quantia) return BankSubtract(msg)
-                if (db.get(`Balance_${user.id}`) >= Quantia) return PayStart(msg)
+                if (sdb.get(`Users.${user.id}.Balance`) < Quantia) return BankSubtract(msg)
+                if (sdb.get(`Users.${user.id}.Balance`) >= Quantia) return PayStart(msg)
             });
 
             CollectorPayment.on('end', collected => {
@@ -71,8 +71,8 @@ module.exports = {
         })
 
         function PayStart(msg) {
-            db.subtract(`Balance_${member.id}`, Quantia)
-            db.add(`Balance_${message.author.id}`, Quantia)
+            sdb.subtract(`Users.${member.id}.Balance`, Quantia)
+            sdb.add(`Users.${message.author.id}.Balance`, Quantia)
             TransactionsPush(
                 user.id,
                 message.author.id,
@@ -91,7 +91,7 @@ module.exports = {
 
         function BankSubtract(x) {
             x.delete().catch(() => { })
-            message.channel.send(`${e.QuestionMark} | ${member}, o dinheiro que você possui na carteira não é o suficiente. Deseja retirar **${(Quantia - db.get(`Balance_${member.id}`))} ${Moeda(message)}** do banco para efetuar o pagamento?`).then(msg => {
+            message.channel.send(`${e.QuestionMark} | ${member}, o dinheiro que você possui na carteira não é o suficiente. Deseja retirar **${(Quantia - sdb.get(`Users.${member.id}.Balance`))} ${Moeda(message)}** do banco para efetuar o pagamento?`).then(msg => {
                 msg.react('✅').catch(() => { }) // Check
                 msg.react('❌').catch(() => { }) // X
 
@@ -101,8 +101,8 @@ module.exports = {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
-                        db.subtract(`Bank_${member.id}`, (Quantia - db.get(`Balance_${member.id}`)))
-                        db.add(`Balance_${member.id}`, (Quantia - db.get(`Balance_${member.id}`)))
+                        sdb.subtract(`Users.${member.id}.Bank`, (Quantia - sdb.get(`Users.${member.id}.Balance`)))
+                        sdb.add(`Users.${member.id}.Balance`, (Quantia - sdb.get(`Users.${member.id}.Balance`)))
                         PayStart(msg)
 
                     } else {

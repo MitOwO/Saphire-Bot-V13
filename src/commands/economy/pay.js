@@ -32,7 +32,7 @@ module.exports = {
         if (user.id === message.author.id) return message.reply(`${e.Deny} | Nada de pagar você mesmo.`)
         if (user.bot) return message.reply(`${e.Deny} | Nada de bots.`)
 
-        let money = db.get(`Balance_${message.author.id}`) || 0
+        let money = sdb.get(`Users.${message.author.id}.Balance`) || 0
         if (money <= 0) return message.reply(`${e.Deny} | Você não possui dinheiro na carteira. Que tal um \`${prefix}pix\`.`)
 
         let quantia = args[1]?.replace(/k/g, '000')
@@ -47,7 +47,7 @@ module.exports = {
 
         let UsersPay = []
         sdb.add(`Users.${message.author.id}.Cache.Pay`, parseInt(quantia))
-        db.subtract(`Balance_${message.author.id}`, parseInt(quantia))
+        sdb.subtract(`Users.${message.author.id}.Balance`, parseInt(quantia))
 
         return message.reply(`${e.QuestionMark} | ${message.author} e ${user}, vocês confirmam a transferência?\n${sdb.get(`Users.${message.author.id}.EmojiAuthor`) || `${e.Loading}`} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${sdb.get(`Users.${message.author.id}.EmojiUser`) || `${e.Loading}`} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**`).then(msg => {
             msg.react('✅').catch(() => { }) // Check
@@ -105,7 +105,7 @@ module.exports = {
             msg.reactions.removeAll().catch(() => { })
             msg.edit(`${e.Check} | Transferência realizada com sucesso!\n${(sdb.get(`Users.${message.author.id}.EmojiAuthor`) ? sdb.get(`Users.${message.author.id}.EmojiAuthor`) : e.Check)} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${(sdb.get(`Users.${message.author.id}.EmojiUser`) ? sdb.get(`Users.${message.author.id}.EmojiUser`) : e.Check)} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**\n⏱️ | \`${Data()}\``).catch(() => { })
             sdb.delete(`Request.${message.author.id}`)
-            db.add(`Balance_${user.id}`, (sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0))
+            sdb.add(`Users.${user.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0))
             TransactionsPush(
                 user.id,
                 message.author.id,
@@ -121,7 +121,7 @@ module.exports = {
         function CancelPayment(msg) {
             msg.reactions.removeAll().catch(() => { })
             msg.edit(`${e.Deny} | Transferência cancelada!\n${(sdb.get(`Users.${message.author.id}.EmojiAuthor`) ? sdb.get(`Users.${message.author.id}.EmojiAuthor`) : '❔')} | \`${message.author.tag}\` **+0 ${Moeda(message)}**\n${(sdb.get(`Users.${message.author.id}.EmojiUser`) ? sdb.get(`Users.${message.author.id}.EmojiUser`) : '❔')} | \`${user.user.tag}\` **+0 ${Moeda(message)}**`).catch(() => { })
-            db.add(`Balance_${message.author.id}`, (sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0))
+            sdb.add(`Users.${message.author.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0))
             sdb.delete(`Request.${message.author.id}`)
             sdb.delete(`Users.${message.author.id}.Allowed`)
             sdb.delete(`Users.${message.author.id}.Cache.Pay`)

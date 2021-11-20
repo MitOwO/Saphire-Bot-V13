@@ -39,7 +39,7 @@ module.exports = {
             function NewBitCoin() {
                 sdb.set(`Users.${message.author.id}.Perfil.Bits`, 1)
                 db.add(`Bitcoin_${message.author.id}`, 1)
-                db.add(`Bank_${message.author.id}`, 1000000000)
+                sdb.add(`Users.${message.author.id}.Bank`, 1000000000)
 
                 PushTrasaction(
                     message.author.id,

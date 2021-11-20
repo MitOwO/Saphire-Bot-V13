@@ -33,8 +33,8 @@ module.exports = {
 
             if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-            let money = db.get(`Balance_${message.author.id}`) || 0
-            let bank = db.get(`Bank_${message.author.id}`) || 0
+            let money = sdb.get(`Users.${message.author.id}.Balance`) || 0
+            let bank = sdb.get(`Users.${message.author.id}.Bank`) || 0
 
             if (money < 10000 && bank < 10000) return message.reply(`${e.Deny} | Você não possui dinheiro.`)
             if (money >= 10000) return Pig()
@@ -42,7 +42,7 @@ module.exports = {
 
             function Pig() {
                 sdb.set(`Users.${message.author.id}.Timeouts.Porquinho`, Date.now()); sdb.add('Porquinho.Money', 10000);
-                db.subtract(`Balance_${message.author.id}`, 10000)
+                sdb.subtract(`Users.${message.author.id}.Balance`, 10000)
 
                 PushTrasaction(
                     message.author.id,
@@ -56,7 +56,7 @@ module.exports = {
 
             function PigBroken() {
                 const PigMoney = sdb.get('Porquinho.Money') || 0
-                db.add(`Balance_${message.author.id}`, PigMoney)
+                sdb.add(`Users.${message.author.id}.Balance`, PigMoney)
                 message.reply(`${e.Check} | ${message.author} quebrou o porquinho e conseguiu +${PigMoney} ${Moeda(message)}!`)
                 sdb.set('Porquinho', {
                     LastPrize: PigMoney,
@@ -82,8 +82,8 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            db.add(`Balance_${message.author.id}`, 10000)
-                            db.subtract(`Bank_${message.author.id}`, 10000)
+                            sdb.add(`Users.${message.author.id}.Balance`, 10000)
+                            sdb.subtract(`Users.${message.author.id}.Bank`, 10000)
                             Pig()
                             msg.delete().catch(() => { })
                         } else {

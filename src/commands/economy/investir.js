@@ -20,7 +20,7 @@ module.exports = {
         let Empresa, Invest, Pass, Bolsa, Money, Chance, Lucro, TimeBolsa, Result, Valor
 
         Bolsa = sdb.get(`Users.${message.author.id}.Bolsa`)?.toFixed(0) || 0
-        Money = db.get(`Balance_${message.author.id}`)?.toFixed(0) || 0
+        Money = sdb.get(`Users.${message.author.id}.Balance`)?.toFixed(0) || 0
         Pass = PassCode(30)
         Valor = parseInt(args[1]) || false
 
@@ -81,7 +81,7 @@ module.exports = {
 
             Valor ? Invest = Valor : Invest = Invest
 
-            db.subtract(`Balance_${message.author.id}`, Invest)
+            sdb.subtract(`Users.${message.author.id}.Balance`, Invest)
             sdb.add(`Users.${message.author.id}.Cache.Bolsa`, parseInt(Invest))
 
             return message.reply(`${e.QuestionMark} | Pedido: Investir **${Invest?.toFixed(0)} ${Moeda(message)}** na empresa **${Empresa}**
@@ -97,7 +97,7 @@ module.exports = {
                         msg.delete().catch(() => { })
                     } else {
                         collector.stop()
-                        db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.Bolsa`) || 0)
+                        sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Bolsa`) || 0)
                         sdb.set(`Users.${message.author.id}.Cache.Bolsa`, 0)
                         msg.edit(`${e.Deny} | Investimento cancelado.`).catch(() => { })
                     }
@@ -157,7 +157,7 @@ module.exports = {
             if (Value <= 0)
                 return message.reply(`${e.Deny} | Você não tem nenhum valor na bolsa de valores para ser resgatado.`)
 
-            db.add(`Balance_${message.author.id}`, Value)
+            sdb.add(`Users.${message.author.id}.Balance`, Value)
             sdb.delete(`Users.${message.author.id}.Cache.BolsaLucro`)
             sdb.delete(`Users.${message.author.id}.Timeouts.Bolsa`)
 

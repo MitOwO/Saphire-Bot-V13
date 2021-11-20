@@ -38,10 +38,10 @@ module.exports = {
         if (reaction.emoji.name === '🪙') {
 
           if (user.id === client.user.id || user.id === message.author.id) return
-          let money = db.get(`Balance_${user.id}`)
+          let money = sdb.get(`Users.${user.id}.Balance`)
           if (money < 50) { return message.channel.send(`${e.Deny} | ${user}, você não tem 50 ${Moeda(message)} na carteira para ajudar ${message.author}`) }
-          db.subtract(`Balance_${user.id}`, 50)
-          db.add(`Balance_${message.author.id}`, 50)
+          sdb.subtract(`Users.${user.id}.Balance`, 50)
+          sdb.add(`Users.${message.author.id}.Balance`, 50)
           count += 50
           message.channel.send(`${e.MoneyWings} | ${user} ajudou ${message.author} com 50 ${Moeda(message)}`)
         }

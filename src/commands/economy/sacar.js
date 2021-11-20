@@ -11,7 +11,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let money = db.get(`Bank_${message.author.id}`) || 0
+        let money = sdb.get(`Users.${message.author.id}.Bank`) || 0
 
         if (!args[0]) return message.reply(`${e.Deny} | Tenta assim...\n\`${prefix}sacar [quantia]/[all]\` ou \`${prefix}sacar 1k / 1kk (milhar, milhão)\``)
         if (args[1]) return message.reply(`${e.Deny} | Apenas a quantidade que você deseja sacar.`)
@@ -21,8 +21,8 @@ module.exports = {
         if (money <= 0 || money < quantia) return message.reply(`${e.Deny} | Você não possui dinheiro para saque.`)
         if (quantia <= 0 || isNaN(quantia)) return message.reply(`${e.Deny} | O valor que você digitou não é um número ou é menor que 1.`)
 
-        db.add(`Balance_${message.author.id}`, quantia)
-        db.subtract(`Bank_${message.author.id}`, quantia)
+        sdb.add(`Users.${message.author.id}.Balance`, quantia)
+        sdb.subtract(`Users.${message.author.id}.Bank`, quantia)
         return message.reply(`${e.Check} | ${message.author} sacou ${quantia} ${Moeda(message)}`)
     }
 }

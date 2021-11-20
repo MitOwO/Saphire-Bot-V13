@@ -17,7 +17,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         let cache = parseInt(sdb.get(`Users.${message.author.id}.Cache.Resgate`)) || 0
-        let money = parseInt(db.get(`Balance_${message.author.id}`)) || 0
+        let money = parseInt(sdb.get(`Users.${message.author.id}.Balance`)) || 0
         let UsersLance = []
 
         const Embed = new MessageEmbed()
@@ -41,7 +41,7 @@ module.exports = {
 
             sdb.add(`Users.${message.author.id}.Cache.LancePrize`, quantia)
             sdb.set(`Users.${message.author.id}.Cache.Resgate`, 0)
-            db.delete(`Balance_${message.author.id}`)
+            sdb.delete(`Users.${message.author.id}.Balance`)
 
             return message.reply(`${e.QuestionMark} | Você confirma lançar **${quantia} ${Moeda(message)}** no chat?`).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -60,19 +60,19 @@ module.exports = {
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
                         msg.edit(`${e.Deny} | Comando cancelado. Dinheiro retornado a carteira.`).catch(() => { })
-                        db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
+                        sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
                         sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                     }
                 }).catch(() => {
                     sdb.delete(`Request.${message.author.id}`)
                     msg.edit(`${e.Deny} | Comando cancelado por tem expirado. O dinheiro foi retornado a carteira.`).catch(() => { })
-                    db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
+                    sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
                     sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                 })
 
             }).catch(err => {
                 Error(message, err)
-                db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
+                sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
                 sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                 message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
             })
@@ -81,11 +81,11 @@ module.exports = {
         if (quantia < 500) return message.reply(`${e.Deny} | Quantia mínima para lances é de 500 ${Moeda(message)}`)
         if (isNaN(quantia)) return message.reply(`${e.Deny} | **${quantia}** | Não é um número`)
         if (args[1]) return message.reply(`${e.Deny} | Por favor, use \`${prefix}lance [quantia/all/resgate]\` ou \`${prefix}lance\`, nada além disso, ok?`)
-        if ((db.get(`Balance_${message.author.id}`) || 0) < quantia) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro.`)
+        if ((sdb.get(`Users.${message.author.id}.Balance`) || 0) < quantia) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro.`)
 
-        if ((db.get(`Balance_${message.author.id}`) || 0) >= quantia) {
+        if ((sdb.get(`Users.${message.author.id}.Balance`) || 0) >= quantia) {
             sdb.add(`Users.${message.author.id}.Cache.LancePrize`, quantia)
-            db.subtract(`Balance_${message.author.id}`, quantia)
+            sdb.subtract(`Users.${message.author.id}.Balance`, quantia)
             UsersLance.push(message.author.id)
             return Lance(sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
         } else {
@@ -134,7 +134,7 @@ module.exports = {
                 CollectorCancel.on('collect', collected => {
                     sdb.delete(`Request.${message.author.id}`)
                     msg.delete().catch(() => {
-                        db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
+                        sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
                         sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                         return message.channel.send(`${e.Deny} | Falha ao forçar o sorteio do lance. Dinheiro retornado a carteira.`)
                     })
@@ -145,7 +145,7 @@ module.exports = {
                     if (UsersLance.length <= 1) {
 
                         msg.delete().catch(() => { })
-                        sdb.add(`Balance_${message.author.id}`, prize)
+                        ssdb.add(`Users.${message.author.id}.Balance`, prize)
                         sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                         return message.channel.send(`${e.Deny} | Lance cancelado por falta de participantes (Min: 2 players). Dinheiro retornado a carteira. `)
 
@@ -179,7 +179,7 @@ module.exports = {
                 function RemoveUserFromArray(array, IdToRemove) {
 
                     if (array.length <= 0) {
-                        db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
+                        sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.LancePrize`))
                         sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                         return message.channel.send(`${e.Deny} | Falha ao sortear o lance. Dinheiro retornado a carteira.`)
                     }

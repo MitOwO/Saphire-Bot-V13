@@ -82,7 +82,7 @@ module.exports = {
                 sdb.add(`Users.${message.author.id}.Slot.Iscas`, Iscas)
                 sdb.add(`Users.${message.author.id}.Slot.Peixes`, peixes)
                 sdb.add(`Users.${message.author.id}.Slot.Camarao`, camarao)
-                db.add(`Balance_${message.author.id}`, dinh)
+                sdb.add(`Users.${message.author.id}.Balance`, dinh)
                 Embed.addField('🪙 🪙 Você achou um baú do tesouro! 🪙 🪙', `Você obteve: ${dinh} ${Moeda(message)}, ${peixes} 🐟 peixes, ${Iscas} 🪱 Iscas e ${camarao} 🍤 Camarões `)
                 return message.reply({ embeds: [Embed] })
             }

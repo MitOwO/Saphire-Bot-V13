@@ -70,7 +70,7 @@ module.exports = {
             sdb.add(`Users.${message.author.id}.Slot.Minerios`, minerios)
             sdb.add(`Users.${message.author.id}.Slot.Ossos`, ossos)
             sdb.add(`Users.${message.author.id}.Slot.Diamante`, diamantes)
-            db.add(`Balance_${message.author.id}`, dinh)
+            sdb.add(`Users.${message.author.id}.Balance`, dinh)
             return message.reply({ embeds: [Embed.setColor('GREEN').setTitle('⛏️ Você cavou itens valiosos!').addField('🪙 🪙 Você achou novos itens! 🪙 🪙', `Você obteve: ${dinh} ${Moeda(message)}, ${minerios} 🪨 Minerios, ${ossos} 🦴 Ossos e ${diamantes} 💎 Diamantes`).setFooter(`R:${rand}`)] })
         }
 
@@ -96,14 +96,14 @@ module.exports = {
                 sdb.add(`Users.${message.author.id}.Slot.Minerios`, minerios)
                 sdb.add(`Users.${message.author.id}.Slot.Ossos`, ossos)
                 sdb.add(`Users.${message.author.id}.Slot.Diamante`, diamantes)
-                db.add(`Balance_${message.author.id}`, dinh)
+                sdb.add(`Users.${message.author.id}.Balance`, dinh)
                 sdb.set(`Users.${message.author.id}.Slot.Fossil`, true)
                 return message.reply({ embeds: [Embed.setColor('GREEN').setTitle('⭐ Você adquiriu um item de Classe Especial').addField(`Item: ${e.Fossil} Fossil`, `Você obteve: ${dinh} ${Moeda(message)}, ${minerios} 🪨 Minerios, ${ossos} 🦴 Ossos e ${diamantes} 💎 Diamantes`).setFooter(`R:${rand}`)] })
             } else {
                 sdb.add(`Users.${message.author.id}.Slot.Minerios`, minerios)
                 sdb.add(`Users.${message.author.id}.Slot.Ossos`, ossos)
                 sdb.add(`Users.${message.author.id}.Slot.Diamante`, diamantes)
-                db.add(`Balance_${message.author.id}`, dinh)
+                sdb.add(`Users.${message.author.id}.Balance`, dinh)
                 return message.reply({ embeds: [Embed.setColor('GREEN').setTitle('⛏️ Você cavou itens valiosos!').setDescription(`Você obteve: ${dinh} ${Moeda(message)}, ${minerios} 🪨 Minerios, ${ossos} 🦴 Ossos e ${diamantes} 💎 Diamantes`).setFooter(`R:${rand}`)] })
             }
         }

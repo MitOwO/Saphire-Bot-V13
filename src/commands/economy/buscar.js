@@ -62,13 +62,13 @@ module.exports = {
                 rosas = Math.floor(Math.random() * 2) + 1
 
                 if (!Bola) {
-                    sdb.add(`Users.${message.author.id}.Slot.Apple`, apple); sdb.add(`Users.${message.author.id}.Slot.Comida`, comidas); sdb.add(`Users.${message.author.id}.Slot.Rosas`, rosas); db.add(`Balance_${message.author.id}`, dinh); sdb.set(`Users.${message.author.id}.Slot.Bola`, true);
+                    sdb.add(`Users.${message.author.id}.Slot.Apple`, apple); sdb.add(`Users.${message.author.id}.Slot.Comida`, comidas); sdb.add(`Users.${message.author.id}.Slot.Rosas`, rosas); sdb.add(`Users.${message.author.id}.Balance`, dinh); sdb.set(`Users.${message.author.id}.Slot.Bola`, true);
                     return message.reply({ embeds: [new MessageEmbed().setColor('GREEN').setTitle('⭐ Você adquiriu um item de Classe Especial').addField('Item: 🥎 Bola do Brown', `Você obteve: ${dinh} ${Moeda(message)}, ${apple} 🍎 Maças, ${comidas} 🥘 Comidas e ${rosas} 🌹 Rosas`)] })
                 } else {
                     sdb.add(`Users.${message.author.id}.Slot.Apple`, apple)
                     sdb.add(`Users.${message.author.id}.Slot.Comida`, comidas)
                     sdb.add(`Users.${message.author.id}.Slot.Rosas`, rosas)
-                    db.add(`Balance_${message.author.id}`, dinh)
+                    sdb.add(`Users.${message.author.id}.Balance`, dinh)
                     return message.reply({ embeds: [new MessageEmbed().setColor('GREEN').addField('🪙 🪙 Baú perdido! 🪙 🪙', `Você obteve: ${dinh} ${Moeda(message)}, ${apple} 🍎 Maças, ${comidas} 🥘 Comidas e ${rosas} 🌹 Rosas`)] })
                 }
 
@@ -87,7 +87,7 @@ module.exports = {
                     sdb.add(`Users.${message.author.id}.Slot.Apple`, apple)
                     sdb.add(`Users.${message.author.id}.Slot.Comida`, comidas)
                     sdb.add(`Users.${message.author.id}.Slot.Rosas`, rosas)
-                    db.add(`Balance_${message.author.id}`, dinh)
+                    sdb.add(`Users.${message.author.id}.Balance`, dinh)
                     return message.reply({ embeds: [new MessageEmbed().setColor('GREEN').addField('🪙 🪙 Baú perdido! 🪙 🪙', `Você obteve: ${dinh} ${Moeda(message)}, ${apple} 🍎 Maças, ${comidas} 🥘 Comidas e ${rosas} 🌹 Rosas`)] })
                 }
 
@@ -102,7 +102,7 @@ module.exports = {
                 sdb.add(`Users.${message.author.id}.Slot.Apple`, apple)
                 sdb.add(`Users.${message.author.id}.Slot.Comida`, comidas)
                 sdb.add(`Users.${message.author.id}.Slot.Rosas`, rosas)
-                db.add(`Balance_${message.author.id}`, dinh)
+                sdb.add(`Users.${message.author.id}.Balance`, dinh)
                 return message.reply({ embeds: [new MessageEmbed().setColor('GREEN').addField('🪙 🪙 Baú perdido! 🪙 🪙', `Você obteve: ${dinh} ${Moeda(message)}, ${apple} 🍎 Maças, ${comidas} 🥘 Comidas e ${rosas} 🌹 Rosas`)] })
             }
 

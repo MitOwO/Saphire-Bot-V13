@@ -36,7 +36,7 @@ module.exports = {
         result === "win" ? NewGorjeta() : Commum()
 
         function Commum() {
-            db.add(`Balance_${message.author.id}`, work)
+            sdb.add(`Users.${message.author.id}.Balance`, work)
             db.add(`Xp_${message.author.id}`, xp)
 
             let comvip = `Bônus ${e.VipStar} | Você trabalhou e ganhou ${work} ${Moeda(message)} e ${xp} ${e.RedStar}XP`
@@ -51,8 +51,8 @@ module.exports = {
         }
 
         function NewGorjeta() {
-            db.add(`Balance_${message.author.id}`, gorjeta)
-            db.add(`Balance_${message.author.id}`, work)
+            sdb.add(`Users.${message.author.id}.Balance`, gorjeta)
+            sdb.add(`Users.${message.author.id}.Balance`, work)
             db.add(`Xp_${message.author.id}`, xp)
 
             let comvip = `Bônus ${e.VipStar} | Você trabalhou e ganhou ${work} ${Moeda(message)}, ${xp} ${e.RedStar}XP e uma gorjeta de ${gorjeta} ${Moeda(message)}`

@@ -88,7 +88,7 @@ module.exports = {
 
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
-                            db.subtract(`Balance_${message.author.id}`, multa)
+                            sdb.subtract(`Users.${message.author.id}.Balance`, multa)
                             PushTrasaction(
                                 message.author.id,
                                 `${e.MoneyWithWings} Pagou ${multa} Moedas de multa por cometer um crime`
@@ -135,7 +135,7 @@ module.exports = {
                     return Preso()
                 } else {
                     sdb.set(`Users.${message.author.id}.Timeouts.Preso`, Date.now());
-                    db.subtract(`Balance_${message.author.id}`, multa);
+                    sdb.subtract(`Users.${message.author.id}.Balance`, multa);
                     PushTrasaction(
                         message.author.id,
                         `${e.MoneyWithWings} Pagou ${multa} Moedas de multa por cometer um crime`
@@ -145,7 +145,7 @@ module.exports = {
             }
 
             function add(amount) {
-                db.add(`Balance_${message.author.id}`, amount)
+                sdb.add(`Users.${message.author.id}.Balance`, amount)
                 PushTrasaction(
                     message.author.id,
                     `${e.BagMoney} Recebeu ${amount} Moedas por cometer um crime`

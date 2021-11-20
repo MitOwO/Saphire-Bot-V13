@@ -29,18 +29,18 @@ module.exports = {
         if (!args[0]) return message.reply({ embeds: [Embed] })
 
         let quantia = parseInt(args[0].replace(/k/g, '000'))
-        if (['all', 'tudo'].includes(args[0]?.toLowerCase())) quantia = parseInt(db.get(`Balance_${message.author.id}`))
+        if (['all', 'tudo'].includes(args[0]?.toLowerCase())) quantia = parseInt(sdb.get(`Users.${message.author.id}.Balance`))
         if (isNaN(quantia)) return message.reply(`${e.Deny} | **${args[0]}** | Não é um número`)
         if (args[1]) return message.reply(`${e.Deny} | Por favor, use \`${prefix}bet [quantia/all]\` ou \`${prefix}bet\`, nada além disso, ok?`)
-        if (parseInt(db.get(`Balance_${message.author.id}`)) < quantia || quantia <= 0) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro na carteira.`)
+        if (parseInt(sdb.get(`Users.${message.author.id}.Balance`)) < quantia || quantia <= 0) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro na carteira.`)
         let BetUsers = []
         function BetUsersEmbed() { return BetUsers?.length >= 1 ? BetUsers.map((id) => `<@${id}>`).join('\n') : 'Ninguém' }
 
         const BetEmbed = new MessageEmbed().setColor('GREEN').setThumbnail('https://imgur.com/k5NKfe8.gif').setTitle(`${message.member.displayName} iniciou uma nova aposta`).setFooter('Limite máximo: 30 participantes')
 
-        if (parseInt(db.get(`Balance_${message.author.id}`)) >= quantia) {
+        if (parseInt(sdb.get(`Users.${message.author.id}.Balance`)) >= quantia) {
             sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
-            db.subtract(`Balance_${message.author.id}`, quantia)
+            sdb.subtract(`Users.${message.author.id}.Balance`, quantia)
             PushTrasaction(
                 message.author.id,
                 `💰 Apostou ${quantia || 0} Moedas no comando bet`
@@ -97,10 +97,10 @@ module.exports = {
             collector.on('collect', (reaction, user) => {
                 if (BetUsers.includes(user.id)) return
 
-                if (db.get(`Balance_${user.id}`) < quantia)
+                if (sdb.get(`Users.${user.id}.Balance`) < quantia)
                     return message.channel.send(`${e.Deny} | ${user}, você deve ter pelo menos **${quantia} ${Moeda(message)}** na carteira para entrar na aposta.`)
 
-                db.subtract(`Balance_${user.id}`, quantia)
+                sdb.subtract(`Users.${user.id}.Balance`, quantia)
                 sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
                 PushTrasaction(
                     user.id,
@@ -130,7 +130,7 @@ module.exports = {
 
                     const BetEmbedCancel = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description}\n \n${e.Deny} Essa aposta foi cancelada por não haver participantes suficientes`)
                     msg.edit({ embeds: [BetEmbedCancel] }).catch(() => { Erro() })
-                    db.add(`Balance_${message.author.id}`, (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0))
+                    sdb.add(`Users.${message.author.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0))
                     PushTrasaction(
                         message.author.id,
                         `💰 Recebeu de volta ${(sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0)} Moedas no comando bet`
@@ -138,12 +138,12 @@ module.exports = {
                     sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
                     sdb.delete(`Users.${message.author.id}.Cache.BetPrize`)
                     sdb.delete(`Users.${message.author.id}.Cache.Bet`)
-                    return message.channel.send(`${e.Deny} | ${message.author}, aposta cancelada.\n${e.PandaProfit} | ${db.get(`Balance_${message.author.id}`) || 0} ${Moeda(message)} estão na sua carteira. Use \`${prefix}dep all\` para depositar o dinheiro e não ser roubado*(a)*.`)
+                    return message.channel.send(`${e.Deny} | ${message.author}, aposta cancelada.\n${e.PandaProfit} | ${sdb.get(`Users.${message.author.id}.Balance`) || 0} ${Moeda(message)} estão na sua carteira. Use \`${prefix}dep all\` para depositar o dinheiro e não ser roubado*(a)*.`)
 
                 } else {
 
                     let winner = BetUsers[Math.floor(Math.random() * BetUsers.length)]
-                    db.add(`Balance_${winner}`, parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0)
+                    sdb.add(`Users.${winner}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0)
                     PushTrasaction(
                         winner,
                         `💰 Recebeu ${parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0} Moedas no comando bet`
@@ -163,7 +163,7 @@ module.exports = {
                 BetEmbed.setDescription(`Valor da aposta: ${quantia} ${Moeda(message)}\n**Participantes**\n${BetUsersEmbed()}\n \n💰 Prêmio acumulado: ${(BetUsers?.length || 0) * (quantia || 0)}`)
                 msg.edit({ embeds: [BetEmbed] }).catch(() => { })
 
-                db.add(`Balance_${user.id}`, quantia)
+                sdb.add(`Users.${user.id}.Balance`, quantia)
                 PushTrasaction(
                     user.id,
                     `💰 Recebeu de volta ${quantia || 0} Moedas no comando bet`

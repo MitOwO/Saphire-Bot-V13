@@ -51,7 +51,7 @@ module.exports = {
         if (isNaN(valor))
             return message.reply(`${e.Deny} | **${args[0]}** | Não é um número.`)
 
-        if (valor > (db.get(`Balance_${message.author.id}`) || 0))
+        if (valor > (sdb.get(`Users.${message.author.id}.Balance`) || 0))
             return message.reply(`${e.Deny} | Você não tem todo esse dinheiro na carteira.`)
 
         if (valor <= 0)
@@ -66,13 +66,13 @@ module.exports = {
             if (request)
                 return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-            if ((db.get(`Balance_${message.author.id}`) || 0) + (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) <= 0)
+            if ((sdb.get(`Users.${message.author.id}.Balance`) || 0) + (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) <= 0)
                 return message.reply(`${e.Deny} | Você não tem dinheiro na carteira nem no cache.`)
 
             sdb.set(`Users.${message.author.id}.Timeouts.Roleta`, Date.now())
-            sdb.add(`Users.${message.author.id}.Cache.ValueAll`, (db.get(`Balance_${message.author.id}`) || 0) + (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0))
+            sdb.add(`Users.${message.author.id}.Cache.ValueAll`, (sdb.get(`Users.${message.author.id}.Balance`) || 0) + (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0))
             sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
-            db.delete(`Balance_${message.author.id}`)
+            sdb.delete(`Users.${message.author.id}.Balance`)
             valor = sdb.get(`Users.${message.author.id}.Cache.ValueAll`) || 0
 
             let winprize = Math.floor(Math.random() * (sdb.get(`Users.${message.author.id}.Cache.ValueAll`) || 0))
@@ -135,7 +135,7 @@ module.exports = {
 
         function StartNewRol(value, prize) {
 
-            db.subtract(`Balance_${message.author.id}`, value)
+            sdb.subtract(`Users.${message.author.id}.Balance`, value)
             sdb.set(`Users.${message.author.id}.Timeouts.Roleta`, Date.now())
             sdb.subtract(`Users.${message.author.id}.Slot.Fichas`, 1)
             sdb.add(`Users.${message.author.id}.Cache.Roleta`, (parseInt(value) + parseInt(prize)))

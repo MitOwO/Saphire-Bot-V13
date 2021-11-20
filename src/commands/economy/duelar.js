@@ -44,8 +44,8 @@ module.exports = {
         if (user.id === message.author.id) return message.reply(`${e.Deny} | Você não pode duelar com você mesmo.`)
         if (args[2]) return message.reply(`${e.Deny} | Por favor, não use nada além da quantia. Informações adicionais podem atrapalhar o meu processsamento.`)
 
-        let AuthorMoney = db.get(`Balance_${message.author.id}`) || 0
-        let UserMoney = db.get(`Balance_${user.id}`) || 0
+        let AuthorMoney = sdb.get(`Users.${message.author.id}.Balance`) || 0
+        let UserMoney = sdb.get(`Users.${user.id}.Balance`) || 0
 
         let Valor = parseInt(args[1]?.replace(/k/g, '000'))
 
@@ -55,9 +55,9 @@ module.exports = {
 
         if (AuthorMoney <= 0) return message.reply(`${e.Deny} | Você não pode duelar sem dinheiro na carteira.`)
         if (AuthorMoney < Valor) return message.reply(`${e.Deny} | Você não tem **${Valor}** ${Moeda(message)} na carteira. Duele com o valor desejado sacando mais \`${prefix}sacar ${(Valor - AuthorMoney)}\` ${Moeda(message)}`)
-        if (Valor > ((db.get(`Balance_${user.id}`) || 0) + (db.get(`Bank_${user.id}`) || 0))) return message.reply(`${e.Deny} | ${user.user.username} não possui todo esse dinheiro.`)
+        if (Valor > ((sdb.get(`Users.${user.id}.Balance`) || 0) + (sdb.get(`Users.${user.id}.Bank`) || 0))) return message.reply(`${e.Deny} | ${user.user.username} não possui todo esse dinheiro.`)
 
-        db.subtract(`Balance_${message.author.id}`, Valor)
+        sdb.subtract(`Users.${message.author.id}.Balance`, Valor)
         sdb.add(`Users.${message.author.id}.Cache.Duelo`, parseInt(Valor))
         sdb.set(`Users.${message.author.id}.Duelo`, true)
 
@@ -75,7 +75,7 @@ module.exports = {
                 if (UserMoney < Valor)
                     return Withdraw(msg)
 
-                db.subtract(`Balance_${user.id}`, Valor)
+                sdb.subtract(`Users.${user.id}.Balance`, Valor)
                 sdb.add(`Users.${message.author.id}.Cache.Duelo`, parseInt(Valor))
                 sdb.set(`Users.${user.id}.Duelo`, true)
                 DuelStart(msg)
@@ -92,7 +92,7 @@ module.exports = {
             CollectorCancel.on('end', collected => {
                 if (sdb.get(`Users.${user.id}.Duelo`))
                     return
-                db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
+                sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
                 sdb.set(`Users.${message.author.id}.Cache.Duelo`, 0)
                 sdb.set(`Users.${message.author.id}.Duelo`, false)
                 sdb.set(`Users.${user.id}.Duelo`, false)
@@ -128,7 +128,7 @@ module.exports = {
 
         function NewWinner(Winner, Loser, msg) {
             let Prize = sdb.get(`Users.${message.author.id}.Cache.Duelo`).toFixed(0)
-            db.add(`Balance_${Winner.id}`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
+            sdb.add(`Users.${Winner.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
             if (Winner.id !== message.author.id) {
                 TransactionsPush(
                     Winner.id,
@@ -163,15 +163,15 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${user.id}`)
-                        db.subtract(`Bank_${user.id}`, (Valor - UserMoney))
-                        db.subtract(`Balance_${user.id}`, UserMoney)
+                        sdb.subtract(`Users.${user.id}.Bank`, (Valor - UserMoney))
+                        sdb.subtract(`Users.${user.id}.Balance`, UserMoney)
                         sdb.add(`Users.${message.author.id}.Cache.Duelo`, parseInt(Valor))
                         sdb.set(`Users.${user.id}.Duelo`, true)
                         Msg.delete().catch(() => { })
                         DuelStart(msg)
                     } else {
                         sdb.delete(`Request.${user.id}`)
-                        db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
+                        sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
                         sdb.set(`Users.${message.author.id}.Cache.Duelo`, 0)
                         sdb.set(`Users.${message.author.id}.Duelo`, false)
                         sdb.set(`Users.${user.id}.Duelo`, false)
@@ -179,7 +179,7 @@ module.exports = {
                     }
                 }).catch(() => {
                     sdb.delete(`Request.${user.id}`)
-                    db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
+                    sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Duelo`))
                     sdb.set(`Users.${message.author.id}.Cache.Duelo`, 0)
                     sdb.set(`Users.${message.author.id}.Duelo`, false)
                     sdb.set(`Users.${user.id}.Duelo`, false)
@@ -189,10 +189,10 @@ module.exports = {
         }
 
         function ValueAll() {
-            db.add(`Balance_${message.author.id}`, sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0)
+            sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0)
             sdb.set(`Users.${message.author.id}.Cache.Resgate`, 0)
 
-            return db.get(`Balance_${message.author.id}`)
+            return sdb.get(`Users.${message.author.id}.Balance`)
         }
 
     }

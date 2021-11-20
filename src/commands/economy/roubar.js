@@ -41,7 +41,7 @@ module.exports = {
 
             if (user.id === message.author.id) return message.reply(`${e.Deny} | Vou nem responder isso, ok?`)
             if (user.id === client.user.id) return message.reply(`${e.Nagatoro} | Você realmente quer me roubar?`)
-            let usermoney = db.get(`Balance_${user.id}`) || 0
+            let usermoney = sdb.get(`Users.${user.id}.Balance`) || 0
             if (usermoney <= 0) return message.reply(`${e.Deny} | ${user.username} não possui dinheiro na carteira.`)
 
             let luck = ['true', 'false']
@@ -51,7 +51,7 @@ module.exports = {
             result === 'true' ? win() : lose()
 
             function lose() {
-                db.subtract(`Balance_${message.author.id}`, amount);
+                sdb.subtract(`Users.${message.author.id}.Balance`, amount);
 
                 PushTrasaction(
                     message.author.id,
@@ -63,8 +63,8 @@ module.exports = {
             }
 
             function win() {
-                db.subtract(`Balance_${user.id}`, amount1);
-                db.add(`Balance_${message.author.id}`, amount1);
+                sdb.subtract(`Users.${user.id}.Balance`, amount1);
+                sdb.add(`Users.${message.author.id}.Balance`, amount1);
                 sdb.set(`Users.${message.author.id}.Timeouts.Roubo`, Date.now())
 
                 TransactionsPush(
