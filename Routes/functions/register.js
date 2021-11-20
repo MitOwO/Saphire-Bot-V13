@@ -153,8 +153,10 @@ async function RegisterUser(message) {
             NoReact: db.get(`${message.author.id}.NoReact`) || undefined,
             Baka: db.get(`${message.author.id}.Baka`) || undefined,
             Bolsa: db.get(`${message.author.id}.Bolsa`) || undefined,
-            Balance: db.get(`Balance_${message.author.id}`),
-            Bank: db.get(`Bank_${message.author.id}`)
+            Bank: sdb.get(`Users.${message.author.id}.Bank`) || undefined,
+            Balance: sdb.get(`Users.${message.author.id}.Balance`) || undefined,
+            Likes: sdb.get(`Users.${message.author.id}.Likes`) || undefined,
+            Xp: sdb.get(`Users.${message.author.id}.Xp`) || undefined
 
         }
 
