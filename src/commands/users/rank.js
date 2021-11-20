@@ -26,30 +26,34 @@ module.exports = {
         return message.reply(`${e.Deny} | ${message.author}, este ranking não existe ou você escreveu errado. Use \`${prefix}rank\` e veja os rankings disponiveis.`)
 
         async function RankLevel() {
-            let data = db.all().filter(i => i.ID.startsWith("level_")).sort((a, b) => b.data - a.data)
-            if (data.length < 1) return message.reply(`${e.Deny} | Sem ranking por enquanto`)
-            let myrank = data.map(m => m.ID).indexOf(`level_${message.author.id}`) + 1 || "N/A"
-            data.length = 10
-            let lb = []
-            for (let i in data) {
-                let id = data[i].ID.split("_")[1]
-                let user = await client.users.cache.get(id)
-                user = user ? user.tag : "Usuário não encontrado"
-                let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`level_${id}`) || 1
-                let xp = db.get(`Xp_${id}`)
-                let xpreq = Math.floor(level * 550)
-                lb.push({ user: { id, tag: user }, rank, level, xp, xpreq })
+
+            let users = Object.keys(sdb.get('Users')),
+                UsersArray = []
+
+            for (const id of users) {
+                let Exp = sdb.get(`Users.${id}.Xp`) || 0,
+                    Level = db.get(`level_${id}`) || 0,
+                    XpNeeded = Exp * 550
+
+                if (Exp > 0)
+                    UsersArray.push({ id: id, xp: Exp, XpNeeded: XpNeeded, level: Level })
             }
 
-            const embedxp = new MessageEmbed()
+            if (!UsersArray.length) rank = 'Não há ninguém no ranking'
+
+            let RankingSorted = UsersArray.sort((a, b) => b.level - a.level),
+                Rank = RankingSorted.slice(0, 10),
+                RankMapped = Rank.map((user, i) => `**${Medals(i)} ${client.users.cache.get(user.id)?.tag || 'Usuário não encontrado'}**\n🆔 \`${user.id}\`\n${e.RedStar} ${user.level} *(${user.xp}/${user.XpNeeded})*\n`).join('\n'),
+                embed = new MessageEmbed(),
+                myrank = RankingSorted.findIndex(author => author.id === message.author.id) + 1 || "N/A"
+
+            embed
                 .setColor('YELLOW')
-                .setTitle(`🏆 Ranking - Experiência`)
-            lb.forEach(d => {
-                embedxp.addField(`${d.rank}. ${d.user.tag}`, `:id: *\`${d.user.id}\`*\n${e.RedStar} ${d.level} *(${d.xp} / ${d.xpreq})*`)
-            })
-            embedxp.setFooter(`Seu ranking: ${myrank}`)
-            return message.reply({ embeds: [embedxp] })
+                .setTitle(`👑 Ranking - Global Experience`)
+                .setDescription(`${RankMapped}`)
+                .setFooter(`Seu ranking: ${myrank} | Rank Base: XP`)
+            return message.reply({ embeds: [embed] })
+
         }
 
         async function RankMoney() {
@@ -113,16 +117,16 @@ module.exports = {
                 Rank = RankingSorted.slice(0, 10),
                 RankMapped = Rank.map((user, i) => `**${Medals(i)} ${client.users.cache.get(user.id)?.tag || 'Usuário não encontrado'}**\n🆔 \`${user.id}\`\n${e.Bells} ${user.money} ${Moeda(message)}\n`).join('\n'),
                 loteria = lotery.get('Loteria.Prize')?.toFixed(0) || 0,
-                embedxp = new MessageEmbed(),
+                embed = new MessageEmbed(),
                 myrank = RankingSorted.findIndex(author => author.id === message.author.id) + 1 || "N/A"
 
-            embedxp
+            embed
                 .setColor('YELLOW')
                 .setTitle(`👑 Ranking - Global Money | Carteira`)
                 .setDescription(`${RankMapped}`)
                 .addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
                 .setFooter(`Seu ranking: ${myrank} | Rank Base: Carteira`)
-            return message.reply({ embeds: [embedxp] })
+            return message.reply({ embeds: [embed] })
 
         }
 
@@ -143,15 +147,15 @@ module.exports = {
             let RankingSorted = UsersArray.sort((a, b) => b.like - a.like),
                 Rank = RankingSorted.slice(0, 10),
                 RankMapped = Rank.map((user, i) => `**${Medals(i)} ${client.users.cache.get(user.id)?.tag || 'Usuário não encontrado'}**\n🆔 \`${user.id}\`\n${e.Like} ${user.like}\n`).join('\n'),
-                embedxp = new MessageEmbed(),
+                embed = new MessageEmbed(),
                 myrank = RankingSorted.findIndex(author => author.id === message.author.id) + 1 || "N/A"
 
-            embedxp
+            embed
                 .setColor('YELLOW')
                 .setTitle(`👑 Ranking - Global Money | Likes`)
                 .setDescription(`${RankMapped}`)
                 .setFooter(`Seu ranking: ${myrank} | Rank Base: Likes`)
-            return message.reply({ embeds: [embedxp] })
+            return message.reply({ embeds: [embed] })
 
         }
 

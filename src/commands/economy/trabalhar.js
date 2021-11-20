@@ -37,7 +37,7 @@ module.exports = {
 
         function Commum() {
             sdb.add(`Users.${message.author.id}.Balance`, work)
-            db.add(`Xp_${message.author.id}`, xp)
+            sdb.add(`Users.${message.author.id}.Xp`, xp)
 
             let comvip = `Bônus ${e.VipStar} | Você trabalhou e ganhou ${work} ${Moeda(message)} e ${xp} ${e.RedStar}XP`
             let semvip = `${e.Check} | Você trabalhou e ganhou ${work} ${Moeda(message)} e ${xp} ${e.RedStar}XP\n${e.SaphireObs} | Sabia que Vips ganham bônus? \`${prefix}vip\``
@@ -53,7 +53,7 @@ module.exports = {
         function NewGorjeta() {
             sdb.add(`Users.${message.author.id}.Balance`, gorjeta)
             sdb.add(`Users.${message.author.id}.Balance`, work)
-            db.add(`Xp_${message.author.id}`, xp)
+            sdb.add(`Users.${message.author.id}.Xp`, xp)
 
             let comvip = `Bônus ${e.VipStar} | Você trabalhou e ganhou ${work} ${Moeda(message)}, ${xp} ${e.RedStar}XP e uma gorjeta de ${gorjeta} ${Moeda(message)}`
             let semvip = `${e.Check} | Você trabalhou e ganhou ${work} ${Moeda(message)}, ${xp} ${e.RedStar}XP e uma gorjeta de ${gorjeta} ${Moeda(message)}\n${e.SaphireObs} | Sabia que Vips ganham bônus? \`${prefix}vip\``

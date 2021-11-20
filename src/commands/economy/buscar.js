@@ -45,7 +45,7 @@ module.exports = {
         if ((Machado.Usos || 0) <= 0) return message.reply(`${e.Deny} | Seu machado está danificado! Restaure ele na \`${prefix}loja\``)
 
         if ((Comidas || 0) >= 1) {
-            db.subtract(`Xp_${message.author.id}`, 2)
+            sdb.subtract(`Users.${message.author.id}.Xp`, 1)
             rand = Math.floor(Math.random() * 100)
             randa = Math.floor(Math.random() * 100)
 

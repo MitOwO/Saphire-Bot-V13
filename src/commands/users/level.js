@@ -21,7 +21,7 @@ module.exports = {
 
         const { level, exp, xpNeeded, rank, LevelWallpapers, TimeDB } = {
             level: db.get(`level_${user.id}`) || 0,
-            exp: db.get(`Xp_${user.id}`) || 0,
+            exp: sdb.get(`Users.${user.id}.Xp`) || 0,
             xpNeeded: (db.get(`level_${user.id}`) || 0) * 550,
             rank: db.all().filter(i => i.ID.startsWith("level_")).sort((a, b) => b.data - a.data).map(x => x.ID).indexOf(`level_${user.id}`) + 1,
             LevelWallpapers: BgLevel.get('LevelWallpapers'),

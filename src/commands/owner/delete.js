@@ -38,7 +38,7 @@ module.exports = {
                 await client.users.cache.forEach(user => {
                     i++
                     db.delete(`level_${user.id}`)
-                    db.delete(`Xp_${user.id}`)
+                    sdb.delete(`Users.${user.id}.Xp`)
                 })
                 message.channel.send(`${e.Check} | O Sistema de Experiência deletou ${i || 0} usuários com sucesso.`)
             })
@@ -82,7 +82,6 @@ module.exports = {
 
             sdb.delete(`Users.${user.id}`)
             db.delete(`${user.id}`)
-            db.delete(`Xp_${user.id}`)
             db.delete(`level_${user.id}`)
             db.delete(`Bitcoin_${user.id}`)
             return message.reply(`${e.Check} Todos os dados de ${user.tag} foram deletados.`)
@@ -135,7 +134,7 @@ module.exports = {
         }
 
         if (['xp', 'level'].includes(args[0]?.toLowerCase())) {
-            db.delete(`Xp_${user.id}`)
+            sdb.delete(`Users.${user.id}.Xp`)
             db.delete(`level_${user.id}`)
             return message.reply(`${e.Check} | Feito!`)
         }

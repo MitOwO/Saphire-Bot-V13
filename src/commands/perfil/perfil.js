@@ -109,27 +109,27 @@ module.exports = {
 
         if (Parcas.Um && !parca1) {
             sdb.delete(`Users.${Parcas.Um}`)
-            sdb.set(`Users.${user.id}.Perfil.Parcas.Um`, false)
+            sdb.delete(`Users.${user.id}.Perfil.Parcas.Um`)
         }
 
         if (Parcas.Dois && !parca2) {
             sdb.delete(`Users.${Parcas.Dois}`)
-            sdb.set(`Users.${user.id}.Perfil.Parcas.Dois`, false)
+            sdb.delete(`Users.${user.id}.Perfil.Parcas.Dois`)
         }
 
         if (Parcas.Tres && !parca3) {
             sdb.delete(`Users.${Parcas.Tres}`)
-            sdb.set(`Users.${user.id}.Perfil.Parcas.Tres`, false)
+            sdb.delete(`Users.${user.id}.Perfil.Parcas.Tres`)
         }
 
         if (Parcas.Quatro && !parca4) {
             sdb.delete(`Users.${Parcas.Quatro}`)
-            sdb.set(`Users.${user.id}.Perfil.Parcas.Quatro`, false)
+            sdb.delete(`Users.${user.id}.Perfil.Parcas.Quatro`)
         }
 
         if (Parcas.Cinco && !parca5) {
             sdb.delete(`Users.${Parcas.Cinco}`)
-            sdb.set(`Users.${user.id}.Perfil.Parcas.Cinco`, false)
+            sdb.delete(`Users.${user.id}.Perfil.Parcas.Cinco`)
         }
 
         parca1 = parca1 ? `\n1. ${parca1.tag}` : ''
@@ -155,23 +155,31 @@ module.exports = {
         if (Estrela.Seis) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
         if (!Estrela.Um && !Estrela.Dois && !Estrela.Tres && !Estrela.Quatro && !Estrela.Cinco && !Estrela.Seis) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
 
-        LevelData = db.all().filter(i => i.ID.startsWith("level_")).sort((a, b) => b.data - a.data)
-        if (LevelData.length < 1) {
-            TopGlobalLevel = ''
-        } else {
-            let Ranking = LevelData.map(m => m.ID).indexOf(`level_${user.id}`) + 1 || 0
-            TopGlobalLevel = Ranking === 1 ? `\n${e.RedStar} **Top Global Level**` : ''
-        }
-
         let usersdb = Object.keys(sdb.get('Users')),
             likesarray = [],
-            dbarray = []
+            dbarray = [],
+            xparray = []
 
         for (const id of usersdb) {
-            let likes = sdb.get(`Users.${id}.Likes`) || 0
+            let XpUser = db.get(`level_${id}`) || 0,
+                likes = sdb.get(`Users.${id}.Likes`) || 0,
+                amount = (sdb.get(`Users.${id}.Bank`) || 0) + (sdb.get(`Users.${id}.Balance`) || 0) + ((sdb.get(`Users.${id}.Cache.Resgate`) || 0))
+
+            if (amount > 0)
+                dbarray.push({ id: id, amount: amount })
+
+            if (XpUser > 0)
+                xparray.push({ id: id, amount: XpUser })
 
             if (likes > 0)
                 likesarray.push({ id: id, amount: likes })
+        }
+
+        if (xparray.length < 1) {
+            TopGlobalLevel = ''
+        } else {
+            let Ranking = xparray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
+            TopGlobalLevel = Ranking === 1 ? `\n${e.RedStar} **Top Global Level**` : ''
         }
 
         if (likesarray.length < 1) {
@@ -179,13 +187,6 @@ module.exports = {
         } else {
             let Ranking = likesarray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
             TopGlobalLikes = Ranking === 1 ? `\n${e.Like} **Top Global Likes**` : ''
-        }
-
-        for (const id of usersdb) {
-            let amount = (sdb.get(`Users.${id}.Bank`) || 0) + (sdb.get(`Users.${id}.Balance`) || 0) + ((sdb.get(`Users.${id}.Cache.Resgate`) || 0))
-
-            if (amount > 0)
-                dbarray.push({ id: id, amount: amount })
         }
 
         if (dbarray.length < 1) {

@@ -56,7 +56,7 @@ module.exports = {
                 ${e.Check} | Ticket sorteado!\n
                 ${e.Deny} | O ticket prêmiado pertence a um usuário que não está em nenhum servidor em que eu estou.\n
                 ${e.Loading} | Deletando todos os dados deste usuário...`).then(msg => {
-                    sdb.delete(`Users.${TicketPremiado}`); db.delete(`${TicketPremiado}`); db.delete(`Xp_${TicketPremiado}`); db.delete(`level_${TicketPremiado}`); db.delete(`Bitcoin_${TicketPremiado}`);
+                    sdb.delete(`Users.${TicketPremiado}`); db.delete(`${TicketPremiado}`); db.delete(`level_${TicketPremiado}`); db.delete(`Bitcoin_${TicketPremiado}`);
                     setTimeout(() => {
                         msg.edit(`${e.Check} | Sorteio iniciado!\n
                 ${e.Check} | ${TicketsCompradosAoTodo} 🎫 Tickets contabilizados\n

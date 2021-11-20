@@ -54,7 +54,7 @@ module.exports = {
         if ((Picareta.Usos || 0) <= 0)
             return message.reply(`${e.Deny} | **Picareta Danificada!** | Restaure ela na \`${prefix}loja\``)
 
-        db.subtract(`Xp_${message.author.id}`, 2)
+        sdb.subtract(`Users.${message.author.id}.Xp`, 2)
         sdb.subtract(`Users.${message.author.id}.Slot.Aguas`, 1)
         sdb.subtract(`Users.${message.author.id}.Slot.Picareta.Usos`, 1)
         rand === 1 ? SomePrizes() : NormalFarm(minerios)
