@@ -23,7 +23,7 @@ module.exports = {
         let user = message.mentions.users.first() || message.member
 
         if (user.id === client.user.id) {
-            db.subtract(`Balance_${message.author.id}`, 40);
+            sdb.subtract(`Users.${message.author.id}.Balance`, 40);
             return message.reply(`${e.Deny} | Por tentar me bater, você perdeu 40 ${Moeda(message)}, baka!`)
         }
 

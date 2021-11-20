@@ -41,9 +41,9 @@ module.exports = {
                 amountxp = (amountxp + XpVipBonus)
             }
 
-            db.add(`Bank_${message.author.id}`, amountcoins)
+            sdb.add(`Users.${message.author.id}.Bank`, amountcoins)
             db.add(`Xp_${message.author.id}`, amountxp)
-            db.add(`Balance_${message.author.id}`, Bonus1)
+            sdb.add(`Users.${message.author.id}.Balance`, Bonus1)
             db.add(`Xp_${message.author.id}`, Bonus2)
             sdb.set(`Users.${message.author.id}.Timeouts.Monthly`, Date.now())
 
@@ -70,7 +70,7 @@ module.exports = {
                 prizexp = amountxp + BonusVipXp
             }
 
-            db.add(`Bank_${message.author.id}`, amountcoins)
+            sdb.add(`Users.${message.author.id}.Bank`, amountcoins)
             db.add(`Xp_${message.author.id}`, amountxp)
             sdb.set(`Users.${message.author.id}.Timeouts.Monthly`, Date.now())
 

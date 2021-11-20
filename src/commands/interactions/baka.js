@@ -28,7 +28,7 @@ module.exports = {
     if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
     if (user.id === client.user.id) {
-      db.subtract(`Balance_${message.author.id}`, 60);
+      sdb.subtract(`Users.${message.author.id}.Balance`, 60);
       sdb.set(`Users.${message.author.id}.Baka`, true)
       message.reply(`${e.Deny} | Você que é baka! To magoada, peguei 60 ${Moeda(message)} emprestadas pra comprar sorvetes, bye bye!`)
       return setTimeout(() => { sdb.delete(`Users.${message.author.id}.Baka`) }, 15000)

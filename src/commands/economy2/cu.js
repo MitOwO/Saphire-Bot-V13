@@ -50,7 +50,7 @@ module.exports = {
 
                         if (result === "win") {
                             sdb.delete(`Request.${message.author.id}`)
-                            db.add(`Balance_${message.author.id}`, din)
+                            sdb.add(`Users.${message.author.id}.Balance`, din)
                             sdb.set(`Users.${message.author.id}.Timeouts.Cu`, Date.now())
                             PushTrasaction(
                                 message.author.id,
@@ -59,7 +59,7 @@ module.exports = {
                             return msg.edit(`${e.Check} | ${message.author}, o cliente anônimo gostou dos serviços e te pagou +${din}${Moeda(message)}`).catch(() => { })
                         } else {
                             sdb.delete(`Request.${message.author.id}`)
-                            db.subtract(`Balance_${message.author.id}`, din)
+                            sdb.subtract(`Users.${message.author.id}.Balance`, din)
                             sdb.set(`Users.${message.author.id}.Timeouts.Cu`, Date.now())
                             PushTrasaction(
                                 message.author.id,

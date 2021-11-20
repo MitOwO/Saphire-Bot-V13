@@ -21,8 +21,8 @@ module.exports = {
         let user = await client.users.cache.get(u.id)
 
         let { bal, bank, oculto, cache, avatar, name, TimeBolsa, Bolsa, control } = {
-            bal: db.get(`Balance_${user.id}`)?.toFixed(0) || 0,
-            bank: db.get(`Bank_${user.id}`)?.toFixed(0) || 0,
+            bal: sdb.get(`Users.${user.id}.Balance`)?.toFixed(0) || 0,
+            bank: sdb.get(`Users.${user.id}.Bank`)?.toFixed(0) || 0,
             oculto: sdb.get(`Users.${user.id}.Perfil.BankOcult`),
             cache: sdb.get(`Users.${user.id}.Cache.Resgate`)?.toFixed(0) || 0,
             avatar: user?.displayAvatarURL({ dynamic: true }),
