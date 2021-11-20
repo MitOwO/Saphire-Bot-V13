@@ -19,17 +19,14 @@ module.exports = {
         if (user.id === client.user.id) return message.reply(`Olha, eu agradeço... Mas você já viu meu \`${prefix}perfil @Saphire\`?`)
         if (user.bot) return message.reply(`${e.Deny} | Sem likes para bots.`)
 
-        if (rptimeout !== null && 1800000 - (Date.now() - rptimeout) > 0) {
-            let time = ms(1800000 - (Date.now() - rptimeout))
+        let time = ms(1800000 - (Date.now() - rptimeout))
+        if (rptimeout !== null && 1800000 - (Date.now() - rptimeout) > 0)
             return message.reply(`${e.Nagatoro} | Calminha aí Princesa! \`${time.minutes}m, e ${time.seconds}s\``)
-        } else {
 
-            let cp = db.get(`Likes_${user.id}`) + 1 || 0
+        const likes = sdb.add(`Users.${user.id}.Likes`, 1)
+        sdb.set(`Users.${message.author.id}.Timeouts.Rep`, Date.now())
 
-            db.add(`Likes_${user.id}`, 1)
-            sdb.set(`Users.${message.author.id}.Timeouts.Rep`, Date.now())
+        message.reply(`${e.Check} | Você deu um like para ${user.username}.\nAgora, ${user.username} possui um total de ${e.Like} ${likes} likes.`)
 
-            message.reply(`${e.Check} Você deu um like para ${user.username}.\nAgora, ${user.username} possui um total de ${e.Like} ${cp} likes.`)
-        }
     }
 }

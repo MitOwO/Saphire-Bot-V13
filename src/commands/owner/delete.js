@@ -82,11 +82,8 @@ module.exports = {
 
             sdb.delete(`Users.${user.id}`)
             db.delete(`${user.id}`)
-            db.delete(`Bank_${user.id}`)
-            db.delete(`Balance_${user.id}`)
             db.delete(`Xp_${user.id}`)
             db.delete(`level_${user.id}`)
-            db.delete(`Likes_${user.id}`)
             db.delete(`Bitcoin_${user.id}`)
             return message.reply(`${e.Check} Todos os dados de ${user.tag} foram deletados.`)
         }
@@ -101,7 +98,7 @@ module.exports = {
         }
 
         if (['banco', 'bank'].includes(args[0]?.toLowerCase())) {
-            db.delete(`Bank_${user.id}`)
+            sdb.delete(`Users.${user.id}.Bank`)
             return message.reply(`${e.Check} | Feito!`)
         }
 
@@ -116,8 +113,8 @@ module.exports = {
         }
 
         if (['money', 'coins', 'moedas', 'dinheiro'].includes(args[0]?.toLowerCase())) {
-            db.delete(`Bank_${user.id}`)
-            db.delete(`Balance_${user.id}`)
+            sdb.delete(`Users.${user.id}.Bank`)
+            sdb.delete(`Users.${user.id}.Balance`)
             sdb.delete(`Users.${user.id}.Cache.Resgate`)
             return message.reply(`${e.Check} | Feito!`)
         }

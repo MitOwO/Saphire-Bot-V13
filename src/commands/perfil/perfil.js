@@ -21,9 +21,9 @@ module.exports = {
         let color, money, marry, level, likes, titulo, status, signo, sexo, niver, job, vip, estrela = 'Indefinido', TopGlobalMoney, TopGlobalLevel, TopGlobalLikes, LevelData, LikesData, MoneyData, OfficialTitle, Moderator, Developer, BugHunter, OfficialDesigner, HalloweenTitle, parca1, parca2, parca3, parca4, parca5, NoParcas, family1, family2, family3, NoFamily
 
         color = Colors(user)
-        money = (db.get(`Balance_${user.id}`) || 0) + (db.get(`Bank_${user.id}`) || 0) + (sdb.get(`Users.${user.id}.Cache.Resgate`) || 0)
+        money = (sdb.get(`Users.${user.id}.Balance`) || 0) + (sdb.get(`Users.${user.id}.Bank`) || 0) + (sdb.get(`Users.${user.id}.Cache.Resgate`) || 0)
         level = db.get(`level_${user.id}`) || 0
-        likes = db.get(`Likes_${user.id}`) || 0
+        likes = sdb.get(`Users.${user.id}.Likes`) || 0
 
         if (sdb.get(`Users.${user.id}.Perfil.BankOcult`) && message.author.id !== (user.id || config.ownerId))
             money = '||Oculto||'
@@ -163,19 +163,35 @@ module.exports = {
             TopGlobalLevel = Ranking === 1 ? `\n${e.RedStar} **Top Global Level**` : ''
         }
 
-        LikesData = db.all().filter(i => i.ID.startsWith("Likes_")).sort((a, b) => b.data - a.data)
-        if (LikesData.length < 1) {
+        let usersdb = Object.keys(sdb.get('Users')),
+            likesarray = [],
+            dbarray = []
+
+        for (const id of usersdb) {
+            let likes = sdb.get(`Users.${id}.Likes`) || 0
+
+            if (likes > 0)
+                likesarray.push({ id: id, amount: likes })
+        }
+
+        if (likesarray.length < 1) {
             TopGlobalLikes = ''
         } else {
-            let Ranking = LikesData.map(m => m.ID).indexOf(`Likes_${user.id}`) + 1 || 0
+            let Ranking = likesarray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
             TopGlobalLikes = Ranking === 1 ? `\n${e.Like} **Top Global Likes**` : ''
         }
 
-        MoneyData = db.all().filter(i => i.ID.startsWith("Bank_")).sort((a, b) => b.data - a.data)
-        if (MoneyData.length < 1) {
+        for (const id of usersdb) {
+            let amount = (sdb.get(`Users.${id}.Bank`) || 0) + (sdb.get(`Users.${id}.Balance`) || 0) + ((sdb.get(`Users.${id}.Cache.Resgate`) || 0))
+
+            if (amount > 0)
+                dbarray.push({ id: id, amount: amount })
+        }
+
+        if (dbarray.length < 1) {
             TopGlobalMoney = ''
         } else {
-            let Ranking = MoneyData.map(m => m.ID).indexOf(`Bank_${user.id}`) + 1 || 0
+            let Ranking = dbarray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
             TopGlobalMoney = Ranking === 1 ? `\n${e.MoneyWings} **Top Global Money**` : ''
         }
 

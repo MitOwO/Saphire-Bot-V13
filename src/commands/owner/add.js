@@ -65,7 +65,7 @@ module.exports = {
         function AddBank() {
             if (!amount) return message.channel.send(`-> \`${prefix}add bank <@user/id> <quantia>\``)
             if (isNaN(amount)) return message.channel.send(`${e.Deny} | **${amount}** | Não é um número.`)
-            db.add(`Bank_${user.id}`, amount)
+            sdb.add(`Users.${user.id}.Bank`, amount)
             return message.channel.send(`${e.Check} | Feito.`)
         }
 
