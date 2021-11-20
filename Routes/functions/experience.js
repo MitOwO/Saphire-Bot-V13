@@ -17,13 +17,13 @@ async function xp(message) {
 
     const XpAdd = Math.floor(Math.random() * 3) + 1
     if (XpAdd <= 0) XpAdd++
-    db.add(`Xp_${message.author.id}`, XpAdd)
+    sdb.add(`Users.${message.author.id}.Xp`, XpAdd)
     db.set(`XpSystem.${message.author.id}`, Date.now())
     let level = db.get(`level_${message.author.id}`) || 1
-    let xp = db.get(`Xp_${message.author.id}`) + 1
+    let xp = sdb.get(`Users.${message.author.id}.Xp`) + 1
     let xpNeeded = level * 550;
     if (xpNeeded < xp) {
-        db.subtract(`Xp_${message.author.id}`, level * 550)
+        sdb.subtract(`Users.${message.author.id}.Xp`, level * 550)
         let newLevel = db.add(`level_${message.author.id}`, 1)
         let canal = await message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.XPChannel`))
         if (db.get(`XpSystem.${message.author.id}`) && !canal) {

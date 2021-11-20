@@ -28,7 +28,7 @@ async function NewLoteryGiveaway(LoteriaUsers, message) {
             setTimeout(() => {
                 return msg.edit(`${e.Loading} | O usuário prêmiado não está em nenhum servidor junto comigo. Deletando usuário do meu banco de dados...`).then(msg => {
                     setTimeout(() => {
-                        sdb.delete(`Users.${TicketPremiado}`); db.delete(`${TicketPremiado}`); db.delete(`Xp_${TicketPremiado}`); db.delete(`level_${TicketPremiado}`); db.delete(`Bitcoin_${TicketPremiado}`);
+                        sdb.delete(`Users.${TicketPremiado}`); db.delete(`${TicketPremiado}`); db.delete(`level_${TicketPremiado}`); db.delete(`Bitcoin_${TicketPremiado}`);
                         msg.edit(`${e.Check} | Usuário deletado com sucesso!\n${e.Loading} | Removendo todos os tickets do usuário para realizar um novo sorteio...`).then(() => {
                             setTimeout(() => {
                                 lotery.pull(`Loteria.Users`, `${TicketPremiado}`)
