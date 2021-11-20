@@ -34,7 +34,6 @@ module.exports = {
             let Timeouts = sdb.get(`Users.${message.author.id}.Timeouts`)
             sdb.set(`Users.${message.author.id}`, { Timeouts: Timeouts })
             db.delete(`${message.author.id}`)
-            db.delete(`Xp_${message.author.id}`)
             db.delete(`level_${message.author.id}`)
             msg.edit(`${e.Check} | ${message.author}, todos os seus dados foram apagado com sucesso.\nData da Exclusão: \`${Data()}\``)
         }
