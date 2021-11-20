@@ -53,7 +53,7 @@ module.exports = {
                         } else {
                             sdb.set(`Users.${message.author.id}.Timeouts.Preso`, Date.now())
                             return message.channel.send(`${e.Loading} | Fugindo da detenção...`).then(msg => {
-                                setTimeout(() => { db.subtract(`Balance_${message.author.id}`, amount); msg.edit(`${e.Deny} | ${message.author} tentou fugir da cadeia e foi pego!\n${e.PandaProfit} -${amount} ${Moeda(message)}`).catch(() => { }) })
+                                setTimeout(() => { sdb.subtract(`Users.${message.author.id}.Balance`, amount); msg.edit(`${e.Deny} | ${message.author} tentou fugir da cadeia e foi pego!\n${e.PandaProfit} -${amount} ${Moeda(message)}`).catch(() => { }) })
                             })
                         }
 

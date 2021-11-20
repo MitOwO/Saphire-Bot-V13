@@ -84,10 +84,10 @@ module.exports = {
             if (sdb.get(`Users.${User.id}.Timeouts.Rep`) !== null && 1800000 - (Date.now() - sdb.get(`Users.${User.id}.Timeouts.Rep`)) > 0)
                 return message.channel.send(`${e.Nagatoro} | ${User}, calminha aí Princesa! \`${time.minutes}m, e ${time.seconds}s\``)
 
-            db.add(`Likes_${user.id}`, 1)
+            const likes = sdb.add(`Users.${user.id}.Likes`, 1)
             sdb.set(`Users.${User.id}.Timeouts.Rep`, Date.now())
 
-            message.channel.send(`${e.Check} | ${User} deu um like para ${user.tag}.\nAgora, ${user.tag} possui um total de ${e.Like} ${db.get(`Likes_${user.id}`)} likes.`)
+            message.channel.send(`${e.Check} | ${User} deu um like para ${user.tag}.\nAgora, ${user.tag} possui um total de ${e.Like} ${likes} likes.`)
         }
 
     }

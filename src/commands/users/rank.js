@@ -65,8 +65,8 @@ module.exports = {
             for (const id of USERS) {
 
                 const { Bal, Bank, Resgate } = {
-                    Bal: db.get(`Balance_${id}`) || 0,
-                    Bank: db.get(`Bank_${id}`) || 0,
+                    Bal: sdb.get(`Users.${id}.Balance`) || 0,
+                    Bank: sdb.get(`Users.${id}.Bank`) || 0,
                     Resgate: sdb.get(`Users.${id}.Cache.Resgate`) || 0
                 }
 
@@ -76,20 +76,10 @@ module.exports = {
 
             let Sorted = UsersMoney.sort((a, b) => b.bal - a.bal)
             let AuthorRank = Sorted.findIndex(author => author.id === message.author.id) + 1 || "N/A"
-            if (UsersMoney.length > 15) UsersMoney.length = 15
+            if (UsersMoney.length > 10) UsersMoney.length = 10
             let rank = Sorted.map((a, i) => {
-                return `> ${Medals(i)} **${client.users.cache.get(a.id)?.tag || 'Usuário não encontrado'}** - *\`${a.id}\`*\n> ${a.bal} ${Moeda(message)}`
+                return `**${Medals(i)} ${client.users.cache.get(a.id)?.tag || 'Usuário não encontrado'}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal} ${Moeda(message)}\n`
             }).join('\n')
-
-            function Medals(i) {
-                const Medals = {
-                    1: '🥇',
-                    2: '🥈',
-                    3: '🥉'
-                }
-
-                return Medals[i + 1] || `${i + 1}.`
-            }
 
             if (!UsersMoney.length) rank = 'Não há ninguém no ranking'
 
@@ -107,82 +97,104 @@ module.exports = {
 
         async function RankCarteira() {
 
-            let data = db.all().filter(i => i.ID.startsWith("Balance_")).sort((a, b) => b.data - a.data)
-            if (data.length < 1) return message.reply("Sem ranking por enquanto")
-            let myrank = data.map(m => m.ID).indexOf(`Balance_${message.author.id}`) + 1 || "N/A"
-            data.length = 10
-            let lb = []
-            for (let i in data) {
-                let id = data[i].ID.split("_")[1]
-                let user = await client.users.cache.get(id)
-                user = user ? user.tag : "Usuário não encontrado"
-                let rank = data.indexOf(data[i]) + 1
-                let bank = db.get(`Bank_${id}`) || 0
-                let balance = data[i].data
-                lb.push({ user: { id, tag: user }, rank, balance, bank, })
+            let users = Object.keys(sdb.get('Users')),
+                UsersArray = []
+
+            for (const id of users) {
+                let Money = sdb.get(`Users.${id}.Balance`) || 0
+
+                if (Money > 0)
+                    UsersArray.push({ id: id, money: Money })
             }
 
-            let loteria = lotery.get('Loteria.Prize')?.toFixed(0) || 0
-            const embedxp = new MessageEmbed()
+            if (!UsersArray.length) rank = 'Não há ninguém no ranking'
+
+            let RankingSorted = UsersArray.sort((a, b) => b.money - a.money),
+                Rank = RankingSorted.slice(0, 10),
+                RankMapped = Rank.map((user, i) => `**${Medals(i)} ${client.users.cache.get(user.id)?.tag || 'Usuário não encontrado'}**\n🆔 \`${user.id}\`\n${e.Bells} ${user.money} ${Moeda(message)}\n`).join('\n'),
+                loteria = lotery.get('Loteria.Prize')?.toFixed(0) || 0,
+                embedxp = new MessageEmbed(),
+                myrank = RankingSorted.findIndex(author => author.id === message.author.id) + 1 || "N/A"
+
+            embedxp
                 .setColor('YELLOW')
-                .setTitle(`👑 Ranking - Global Money`)
-            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}`) })
-            embedxp.setFooter(`Seu ranking: ${myrank} | Rank Base: Carteira`)
-            embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
+                .setTitle(`👑 Ranking - Global Money | Carteira`)
+                .setDescription(`${RankMapped}`)
+                .addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
+                .setFooter(`Seu ranking: ${myrank} | Rank Base: Carteira`)
             return message.reply({ embeds: [embedxp] })
 
         }
 
         async function RankLikes() {
-            let data = db.all().filter(i => i.ID.startsWith("Likes_")).sort((a, b) => b.data - a.data)
-            if (data.length < 1) return message.reply("Sem ranking por enquanto")
-            let myrank = data.map(m => m.ID).indexOf(`Likes_${message.author.id}`) + 1 || "N/A"
-            data.length = 10
-            let lb = []
-            for (let i in data) {
-                let id = data[i].ID.split("_")[1]
-                let user = await client.users.cache.get(id)
-                user = user ? user.tag : "Usuário não encontrado"
-                let rank = data.indexOf(data[i]) + 1
-                let level = db.get(`Likes_${id}`)
-                let xp = data[i].data
-                lb.push({ user: { id, tag: user }, rank, level, xp, })
+
+            let users = Object.keys(sdb.get('Users')),
+                UsersArray = []
+
+            for (const id of users) {
+                let Likes = sdb.get(`Users.${id}.Likes`) || 0
+
+                if (Likes > 0)
+                    UsersArray.push({ id: id, like: Likes })
             }
 
-            const embedrep = new MessageEmbed()
+            if (!UsersArray.length) rank = 'Não há ninguém no ranking'
+
+            let RankingSorted = UsersArray.sort((a, b) => b.like - a.like),
+                Rank = RankingSorted.slice(0, 10),
+                RankMapped = Rank.map((user, i) => `**${Medals(i)} ${client.users.cache.get(user.id)?.tag || 'Usuário não encontrado'}**\n🆔 \`${user.id}\`\n${e.Like} ${user.like}\n`).join('\n'),
+                embedxp = new MessageEmbed(),
+                myrank = RankingSorted.findIndex(author => author.id === message.author.id) + 1 || "N/A"
+
+            embedxp
                 .setColor('YELLOW')
-                .setTitle(`👑 Ranking - Likes`)
-            lb.forEach(d => { embedrep.addField(`${d.rank}. ${d.user.tag}`, `${e.Like} ${d.level} Likes`) })
-            embedrep.setFooter(`Seu ranking: ${myrank}`)
-            return message.reply({ embeds: [embedrep] })
+                .setTitle(`👑 Ranking - Global Money | Likes`)
+                .setDescription(`${RankMapped}`)
+                .setFooter(`Seu ranking: ${myrank} | Rank Base: Likes`)
+            return message.reply({ embeds: [embedxp] })
 
         }
 
         async function RankInvert() {
 
-            let data = db.all().filter(i => i.ID.startsWith("Balance_")).sort((a, b) => a.data - b.data)
-            if (data.length < 1) return message.reply("Sem ranking por enquanto")
-            let myrank = data.map(m => m.ID).indexOf(`Balance_${message.author.id}`) + 1 || "N/A"
-            data.length = 10
-            let lb = []
-            for (let i in data) {
-                let id = data[i].ID.split("_")[1]
-                let user = await client.users.cache.get(id)
-                user = user ? user.tag : "Usuário não encontrado"
-                let rank = data.indexOf(data[i]) + 1
-                let bank = db.get(`Bank_${id}`) || 0
-                let balance = data[i].data
-                lb.push({ user: { id, tag: user }, rank, balance, bank, })
+            let USERS, UsersMoney = []
+
+            try {
+                USERS = Object.keys(sdb.get('Users'))
+            } catch (err) {
+                return message.reply(`${e.Info} | Não há nenhum usuário na minha database por enquanto.`)
             }
 
-            let loteria = lotery.get('Loteria.Prize')?.toFixed(0) || 0
-            const embedxp = new MessageEmbed()
-                .setColor('YELLOW')
-                .setTitle(`👑 Ranking - Global Money | Invertido`)
-            lb.forEach(d => { embedxp.addField(`${d.rank}. ${d.user.tag}`, `🆔 *\`${d.user.id}\`*\n${e.Bells} ${d.balance} ${Moeda(message)}`) })
-            embedxp.setFooter(`Seu ranking: ${myrank} | Rank Base: Carteira`)
-            embedxp.addField(`${e.PandaProfit} Loteria ${client.user.username}`, `Prêmio Atual: ${loteria} ${Moeda(message)}`)
-            return message.reply({ embeds: [embedxp] })
+            for (const id of USERS) {
+
+                const { Bal, Bank, Resgate } = {
+                    Bal: sdb.get(`Users.${id}.Balance`) || 0,
+                    Bank: sdb.get(`Users.${id}.Bank`) || 0,
+                    Resgate: sdb.get(`Users.${id}.Cache.Resgate`) || 0
+                }
+
+                let Total = Bal + Bank + Resgate
+                UsersMoney.push({ id: id, bal: Total })
+            }
+
+            let Sorted = UsersMoney.sort((a, b) => a.bal - b.bal)
+            let AuthorRank = Sorted.findIndex(author => author.id === message.author.id) + 1 || "N/A"
+            if (UsersMoney.length > 10) UsersMoney.length = 10
+            let rank = Sorted.map((a, i) => {
+                return `**${Medals(i)} ${client.users.cache.get(a.id)?.tag || 'Usuário não encontrado'}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal} ${Moeda(message)}\n`
+            }).join('\n')
+
+            if (!UsersMoney.length) rank = 'Não há ninguém no ranking'
+
+            return message.channel.send({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor('YELLOW')
+                        .setTitle(`👑 Ranking - Global Money | Invertido`)
+                        .setDescription(`O ranking abaixo representa a soma total entre carteira, banco e cache.\n \n${rank}`)
+                        .setFooter(`Seu ranking: ${AuthorRank}`)
+                ]
+            })
 
         }
 
@@ -203,15 +215,7 @@ module.exports = {
             const rank = ClansArray.slice(0, 10).sort((a, b) => b.donation - a.donation).map((clan, i) => ` \n> ${Medals(i)} **${clan.name}** - \`${clan.key}\`\n> ${clan.donation} ${Moeda(message)}\n`).join('\n')
             let MyClanRank = ClansArray.findIndex(clans => clans.name === AtualClan) + 1 || 'N/A'
 
-            function Medals(i) {
-                const Medals = {
-                    1: '🥇',
-                    2: '🥈',
-                    3: '🥉'
-                }
 
-                return Medals[i + 1] || `${i + 1}.`
-            }
 
             return message.reply(
                 {
@@ -240,6 +244,16 @@ module.exports = {
                         .addField('Ranking Clans', `\`${prefix}rank clan\``)
                 ]
             })
+        }
+
+        function Medals(i) {
+            const Medals = {
+                1: '🥇',
+                2: '🥈',
+                3: '🥉'
+            }
+
+            return Medals[i + 1] || `${i + 1}.`
         }
 
     }

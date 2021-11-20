@@ -104,7 +104,7 @@ module.exports = {
                 return message.reply(`${e.Deny} | Você já pertence a um clan.`)
 
             let ClanName = args.slice(1).join(' '),
-                Money = db.get(`Balance_${message.author.id}`) || 0,
+                Money = sdb.get(`Users.${message.author.id}.Balance`) || 0,
                 ID = Pass()
 
             function Pass() {
@@ -139,7 +139,7 @@ module.exports = {
             })
             LogRegister(`🛡️ ${message.author.tag} criou o clan **${ClanName}**`)
             sdb.set(`Users.${message.author.id}.Clan`, `${ClanName}`)
-            db.subtract(`Balance_${message.author.id}`, 5000000)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 5000000)
 
             PushTrasaction(
                 message.author.id,
@@ -547,7 +547,7 @@ module.exports = {
                 return message.reply(`${e.Deny} | Você precisa estar em um clan para usar este comando.`)
 
             let amount = parseInt(args[1]?.replace(/k/g, '000')) || 0
-            let money = parseInt(db.get(`Balance_${message.author.id}`)) || 0
+            let money = parseInt(sdb.get(`Users.${message.author.id}.Balance`)) || 0
 
             if (['all', 'tudo'].includes(args[1]?.toLowerCase())) amount = money
 
@@ -561,7 +561,7 @@ module.exports = {
                 return message.reply(`${e.Deny} | Você pode doar no mínimo 1 ${Moeda(message)}`)
 
             Clan.add(`Clans.${key}.Donation`, amount)
-            db.subtract(`Balance_${message.author.id}`, amount)
+            sdb.subtract(`Users.${message.author.id}.Balance`, amount)
 
             PushTrasaction(
                 message.author.id,
@@ -751,7 +751,7 @@ module.exports = {
                 return message.reply(`${e.Deny} | Apenas o dono do clan pode usar este comando.`)
 
             let NewName = args.slice(1).join(' ')
-            let money = db.get(`Balance_${message.author.id}`) || 0
+            let money = sdb.get(`Users.${message.author.id}.Balance`) || 0
 
             if (money < 1000000)
                 return message.reply(`${e.Info} | Você precisa de pelo menos 1 Milhão de ${Moeda(message)} para trocar o nome do clan.`)
@@ -797,7 +797,7 @@ module.exports = {
                     Clan.set(`Clans.${key}.Name`, NewName)
                     LogRegister(`${e.ModShield} O nome do clan foi alterado de **${OldName}** para **${NewName}**`)
 
-                    db.subtract(`Balance_${message.author.id}`, 1000000)
+                    sdb.subtract(`Users.${message.author.id}.Balance`, 1000000)
                     msg.edit(`${e.Check} | Você trocou o nome do seu Clan com sucesso!`).catch()
                     RequestControl = true
                     collector.stop()
