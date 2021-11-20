@@ -91,22 +91,26 @@ module.exports = {
                         sdb.delete(`Users.${id}`)
                         sdb.pull(`Titulos.Halloween`, id)
                         Transactions.delete(`Transactions.${id}`)
-                    }
 
-                    for (const item of array) {
+                    } else {
 
-                        try {
+                        sdb.set(`Users.${id}.Name`, client.users.cache.get(id).tag)
 
-                            if (!sdb.get(`Users.${id}.${item}`))
-                                sdb.delete(`Users.${id}.${item}`)
+                        for (const item of array) {
 
-                            const keys = Object.keys(sdb.get(`Users.${id}.${item}`) || {})
+                            try {
 
-                            if (keys?.length < 1)
-                                sdb.delete(`Users.${id}.${item}`)
+                                if (!sdb.get(`Users.${id}.${item}`))
+                                    sdb.delete(`Users.${id}.${item}`)
 
-                        } catch (err) { }
+                                const keys = Object.keys(sdb.get(`Users.${id}.${item}`) || {})
 
+                                if (keys?.length < 1)
+                                    sdb.delete(`Users.${id}.${item}`)
+
+                            } catch (err) { }
+
+                        }
                     }
 
                 }
