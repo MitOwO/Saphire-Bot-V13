@@ -42,10 +42,6 @@ async function RegisterUser(message) {
 
         const RegisterObj = {
             Name: message.author.tag,
-            // Balance: {
-            //     Bal: db.get(`Balance_${message.author.id}`) || 0,
-            //     Bank: db.get(`Bank_${message.author.id}`) || 0
-            // },
             Timeouts: {
                 Preso: db.get(`${message.author.id}.Timeouts.Preso`) || undefined,
                 Bug: db.get(`${message.author.id}.Timeouts.Bug`) || undefined,
@@ -157,6 +153,8 @@ async function RegisterUser(message) {
             NoReact: db.get(`${message.author.id}.NoReact`) || undefined,
             Baka: db.get(`${message.author.id}.Baka`) || undefined,
             Bolsa: db.get(`${message.author.id}.Bolsa`) || undefined,
+            Balance: db.get(`Balance_${message.author.id}`),
+            Bank: db.get(`Bank_${message.author.id}`)
 
         }
 
@@ -195,6 +193,8 @@ async function RegisterUser(message) {
         db.delete(`Client.AfkSystem.${message.author.id}`)
         db.delete(`Vip_${message.author.id}`)
         db.delete(`Request.${message.author.id}`)
+        db.delete(`Bank_${message.author.id}`)
+        db.delete(`Balance_${message.author.id}`)
         msg.delete().catch(() => { })
 
     }).catch(err => {

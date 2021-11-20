@@ -1,5 +1,5 @@
 const { e } = require('../../database/emojis.json')
-const { sdb, db } = require('./database')
+const { sdb } = require('./database')
 
 async function React(message) {
 
@@ -14,10 +14,10 @@ async function React(message) {
     function NewReactInteraction() {
         sdb.set('Client.Timeouts.React', Date.now())
 
-        db.add(`Balance_${message.author.id}`, 100)
+        sdb.add(`Users.${message.author.id}.Balance`, 100)
 
         return message.react(e.Coin).catch(() => {
-            db.subtract(`Balance_${message.author.id}`, 100)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 100)
             sdb.delete('Client.Timeouts.React')
             return
         })

@@ -11,10 +11,10 @@ const { PushTrasaction } = require('./transctionspush')
 
 function Error(message, err) {
 
-    if (err.code === 10008) // Unknown message
+    if (err.code === '10008') // Unknown message
         return
 
-    if (err.code === 50013)
+    if (err.code === '50013')
         return message.channel.send(`${e.Info} | Eu não tenho permissão suficiente para executar este comando.`).catch(() => { })
 
     let prefix = ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix
@@ -53,7 +53,7 @@ function Error(message, err) {
 
     function Block() {
         sdb.set(`ComandoBloqueado.${cmd}`, `${err?.message || 'Indefinido'}`)
-        db.add(`Balance_${message.author.id}`, 1000)
+        sdb.add(`Users.${message.author.id}.Balance`, 1000)
         PushTrasaction(
             message.author.id,
             `💰 Recebeu 1000 Moedas por descobrir um bug`

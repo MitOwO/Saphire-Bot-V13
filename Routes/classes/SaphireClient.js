@@ -37,7 +37,7 @@ class SaphireClient extends Client {
     }
 
     async off() {
-        super.destroy()
+        super.destroy().catch()
     }
 
     BotRole(guild) {

@@ -15,11 +15,11 @@ const { PushTrasaction } = require('./transctionspush')
 function BuyingAway(message, prefix, args, args1) {
 
     let vip = Vip(`${message.author.id}`)
-    let money = db.get(`Balance_${message.author.id}`) || 0
+    let money = sdb.get(`Users.${message.author.id}.Balance`) || 0
 
     function NoMoney(x) { message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`) }
     function JaPossui() { message.reply(`${e.Info} | Você já possui este item.`) }
-    function AddLoteria(x) { db.add(`Loteria.Prize`, x) }
+    function AddLoteria(x) { lotery.add(`Loteria.Prize`, x) }
 
     // Itens - BuyItem(NameDB, ItemName, Price)
     if (['vara de pesca', 'vara', 'pesca'].includes(args[0]?.toLowerCase())) return BuyItem('Vara', 'Vara de Pesca', 180)
@@ -52,7 +52,7 @@ function BuyingAway(message, prefix, args, args1) {
         if (sdb.get(`Users.${message.author.id}.Perfil.Estrela.Um`)) return JaPossui()
         if (sdb.get(`Users.${message.author.id}.Perfil.Estrela.Dois`) || sdb.get(`Users.${message.author.id}.Perfil.Estrela.Tres`) || sdb.get(`Users.${message.author.id}.Perfil.Estrela.Quatro`) || sdb.get(`Users.${message.author.id}.Perfil.Estrela.Cinco`)) return JaPossui()
         if (money >= 1000000) {
-            db.subtract(`Balance_${message.author.id}`, 1000000)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 1000000)
             AddLoteria(500000)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Um`, true)
             return message.reply(`${e.Check} | ${message.author} comprou a ⭐ \`Estrela 1\`\n${e.PandaProfit} | -1000000 ${Moeda(message)}`)
@@ -66,7 +66,7 @@ function BuyingAway(message, prefix, args, args1) {
         if (sdb.get(`Users.${message.author.id}.Perfil.Estrela.Tres`) || sdb.get(`Users.${message.author.id}.Perfil.Estrela.Quatro`) || sdb.get(`Users.${message.author.id}.Perfil.Estrela.Cinco`)) return JaPossui()
 
         if (money >= 2000000) {
-            db.subtract(`Balance_${message.author.id}`, 2000000)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 2000000)
             AddLoteria(1000000)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Dois`, true)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Um`, false)
@@ -80,7 +80,7 @@ function BuyingAway(message, prefix, args, args1) {
         if (!sdb.get(`Users.${message.author.id}.Perfil.Estrela.Dois`)) return message.reply(`${e.Deny} | Você precisa da Estrela 2 para comprar a Estrela 3.`)
         if (sdb.get(`Users.${message.author.id}.Perfil.Estrela.Quatro`) || sdb.get(`Users.${message.author.id}.Perfil.Estrela.Cinco`)) return JaPossui()
         if (money >= 3000000) {
-            db.subtract(`Balance_${message.author.id}`, 3000000)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 3000000)
             AddLoteria(300000)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Tres`, true)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Dois`, false)
@@ -94,7 +94,7 @@ function BuyingAway(message, prefix, args, args1) {
         if (!sdb.get(`Users.${message.author.id}.Perfil.Estrela.Tres`)) return message.reply(`${e.Deny} | Você precisa da Estrela 3 para comprar a Estrela 4.`)
         if (sdb.get(`Users.${message.author.id}.Perfil.Estrela.Cinco`)) return JaPossui()
         if (money >= 4000000) {
-            db.subtract(`Balance_${message.author.id}`, 4000000)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 4000000)
             AddLoteria(2000000)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Quatro`, true)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Tres`, false)
@@ -108,7 +108,7 @@ function BuyingAway(message, prefix, args, args1) {
         if (sdb.get(`Users.${message.author.id}.Perfil.Estrela.Cinco`)) return JaPossui()
         if (!sdb.get(`Users.${message.author.id}.Perfil.Estrela.Quatro`)) return message.reply(`${e.Deny} | Você precisa da Estrela 4 para comprar a Estrela 5.`)
         if (money >= 5000000) {
-            db.subtract(`Balance_${message.author.id}`, 5000000)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 5000000)
             AddLoteria(2500000)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Cinco`, true)
             sdb.set(`Users.${message.author.id}.Perfil.Estrela.Quatro`, false)
@@ -152,12 +152,12 @@ function BuyingAway(message, prefix, args, args1) {
         if (amount > 300)
             return message.reply(`${e.Deny} | A quantidade de tickets não pode ser maior que 300.`)
 
-        if (db.get(`Balance_${message.author.id}`) < amount * 10)
+        if ((sdb.get(`Users.${message.author.id}.Balance`) || 0) < amount * 10)
             return message.reply(`${e.Deny} | Você precisa de pelo menos **${amount * 10} ${Moeda(message)}** na carteira para comprar ${amount} 🎫 Tickets da Loteria.`)
 
         return message.reply(`${e.Loading} | Alocando tickets`).then(msg => {
 
-            db.subtract(`Balance_${message.author.id}`, amount * 10)
+            sdb.subtract(`Users.${message.author.id}.Balance`, amount * 10)
             db.set(`Users.${message.author.id}.Tickets`, true)
 
             for (i; i < amount; i++) {
@@ -181,7 +181,7 @@ function BuyingAway(message, prefix, args, args1) {
         sdb.get(`Users.${message.author.id}.Slot.${NameDB}`) ? JaPossui() : (money >= Price ? BuyItemFunction() : NoMoney(Price))
 
         function BuyItemFunction() {
-            db.subtract(`Balance_${message.author.id}`, Price); AddLoteria(Price / 2)
+            sdb.subtract(`Users.${message.author.id}.Balance`, Price); AddLoteria(Price / 2)
             sdb.set(`Users.${message.author.id}.Slot.${NameDB}`, true)
             PushTrasaction(
                 message.author.id,
@@ -195,7 +195,7 @@ function BuyingAway(message, prefix, args, args1) {
         sdb.get(`Users.${message.author.id}.Perfil.${NameDB}`) ? JaPossui() : (money >= Price ? BuyItemFunction() : NoMoney(Price))
 
         function BuyItemFunction() {
-            db.subtract(`Balance_${message.author.id}`, Price); AddLoteria(Price / 2)
+            sdb.subtract(`Users.${message.author.id}.Balance`, Price); AddLoteria(Price / 2)
             sdb.set(`Users.${message.author.id}.Perfil.${NameDB}`, true)
             PushTrasaction(
                 message.author.id,
@@ -209,7 +209,7 @@ function BuyingAway(message, prefix, args, args1) {
         sdb.get(`Users.${message.author.id}.Color.Perm`) ? JaPossui() : (money >= 2000000 ? BuyItemFunction() : NoMoney(2000000))
 
         function BuyItemFunction() {
-            db.subtract(`Balance_${message.author.id}`, 2000000); AddLoteria(1000000)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 2000000); AddLoteria(1000000)
             sdb.set(`Users.${message.author.id}.Color.Perm`, true)
             PushTrasaction(
                 message.author.id,
@@ -237,7 +237,7 @@ function BuyingAway(message, prefix, args, args1) {
 
         function BuyItens() {
             sdb.add(`Users.${message.author.id}.Slot.${NomeTec}`, quantia)
-            db.subtract(`Balance_${message.author.id}`, quantia * Price)
+            sdb.subtract(`Users.${message.author.id}.Balance`, quantia * Price)
             AddLoteria((quantia * Price) / 2)
             PushTrasaction(
                 message.author.id,
@@ -250,7 +250,7 @@ function BuyingAway(message, prefix, args, args1) {
             let i = 0
             do {
                 sdb.add(`Users.${message.author.id}.Slot.${NomeTec}`, 1)
-                db.subtract(`Balance_${message.author.id}`, Price)
+                sdb.subtract(`Users.${message.author.id}.Balance`, Price)
                 AddLoteria(Price / 2)
                 i++
             } while (sdb.get(`Users.${message.author.id}.Slot.${NomeTec}`) <= Limit)

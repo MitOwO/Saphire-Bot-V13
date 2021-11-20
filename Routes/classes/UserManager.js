@@ -24,15 +24,15 @@ class UserManager {
         this.baka = sdb.get(`Users.${this.id}.Baka`)
         this.blacklist = db.get(`Blacklist_${this.id}`)
         this.balance = {
-            bal: db.get(`Balance_${this.id}`) || 0,
-            bank: db.get(`Bank_${this.id}`) || 0,
+            bal: sdb.get(`Users.${this.id}.Balance`) || 0,
+            bank: sdb.get(`Users.${this.id}.Bank`) || 0,
             resgate: sdb.get(`Users.${this.id}.Cache.Resgate`) || 0
         }
     }
 
     addBalance(value) {
         try {
-            db.add(`Balance_${this.id}`, value)
+            sdb.add(`Users.${this.id}.Balance`, value)
         } catch (err) {
             Error(this.message, err)
         }
@@ -40,7 +40,7 @@ class UserManager {
 
     subtractBalance(value) {
         try {
-            db.subtract(`Balance_${this.id}`, value)
+            sdb.subtract(`Users.${this.id}.Balance`, value)
         } catch (err) {
             Error(this.message, err)
         }
@@ -48,7 +48,7 @@ class UserManager {
 
     addBank(value) {
         try {
-            db.add(`Bank_${this.id}`, value)
+            sdb.add(`Users.${this.id}.Bank`, value)
         } catch (err) {
             Error(this.message, err)
         }
@@ -56,7 +56,7 @@ class UserManager {
 
     subtractBank(value) {
         try {
-            db.subtract(`Bank_${this.id}`, value)
+            sdb.subtract(`Users.${this.id}.Bank`, value)
         } catch (err) {
             Error(this.message, err)
         }
