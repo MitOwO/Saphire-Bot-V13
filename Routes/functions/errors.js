@@ -11,15 +11,15 @@ const { PushTrasaction } = require('./transctionspush')
 
 function Error(message, err) {
 
-    if (err.code === '10008') // Unknown message
+    if (err.code === 10008) // Unknown message
         return
 
-    if (err.code === '50013')
+    if (err.code === 50013) // Missing Permissions
         return message.channel.send(`${e.Info} | Eu não tenho permissão suficiente para executar este comando.`).catch(() => { })
 
-    let prefix = ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix
-    const args = message.content.slice(prefix.length).trim().split(/ +/g)
-    const cmd = args.shift().toLowerCase()
+    let prefix = ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix,
+        args = message.content.slice(prefix.length).trim().split(/ +/g),
+        cmd = args.shift().toLowerCase()
 
     Send();
     Block();
@@ -36,7 +36,7 @@ function Error(message, err) {
 
         async function SendError() {
 
-            await client.users.cache.get(config.ownerId)?.send({
+            return await client.users.cache.get(config.ownerId)?.send({
                 embeds: [
                     new MessageEmbed()
                         .setColor('RED')
@@ -45,8 +45,6 @@ function Error(message, err) {
                         .setFooter(`Error Code: ${err.code || 0}`)
                 ]
             }).catch(() => { })
-
-            return
 
         }
     }
@@ -58,7 +56,7 @@ function Error(message, err) {
             message.author.id,
             `💰 Recebeu 1000 Moedas por descobrir um bug`
         )
-        message.channel.send(`${e.Warn} Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.PandaProfit} +1000 ${Moeda(message)}`).catch(() => { })
+        return message.channel.send(`${e.Warn} Ocorreu um erro neste comando. Mas não se preocupe! Eu já avisei meu criador e ele vai arrumar isso rapidinho.\n${e.PandaProfit} +1000 ${Moeda(message)}`).catch(() => { })
     }
 }
 
