@@ -27,15 +27,13 @@ module.exports = {
                 .setColor(color),
             msg = await message.reply({ embeds: [Embed.setDescription(`${e.Loading} | Construindo perfil...`)] }),
             money = sdb.get(`Users.${user.id}.Perfil.BankOcult`) && (message.author.id !== user.id || message.author.id !== config.ownerId)
-                ? (sdb.get(`Users.${user.id}.Balance`) || 0) + (sdb.get(`Users.${user.id}.Bank`) || 0) + (sdb.get(`Users.${user.id}.Cache.Resgate`) || 0)
-                : '||Oculto||',
+                ? '||Oculto||'
+                : (sdb.get(`Users.${user.id}.Balance`) || 0) + (sdb.get(`Users.${user.id}.Bank`) || 0) + (sdb.get(`Users.${user.id}.Cache.Resgate`) || 0),
             marry = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Marry`))
                 ? await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Marry`)).tag
                 : "Solteiro(a)",
             level = db.get(`level_${user.id}`) || 0,
             likes = sdb.get(`Users.${user.id}.Likes`) || 0,
-            niver,
-            job,
             vip = Vip(`${user.id}`) ? `${e.VipStar}` : '📃',
             estrela = 'Indefinido',
             TopGlobalMoney,
@@ -111,8 +109,8 @@ module.exports = {
             sexo = sdb.get(`Users.${user.id}.Perfil.Sexo`)
                 ? `⠀\n${sdb.get(`Users.${user.id}.Perfil.Sexo`)}`
                 : `⠀\n${e.Deny} Sem sexo definido`,
-            Aniversario = sdb.get(`Users.${user.id}.Perfil.Aniversario`),
-            Trabalho = sdb.get(`Users.${user.id}.Perfil.Trabalho`),
+            niver = sdb.get(`Users.${user.id}.Perfil.Aniversario`) ? `⠀\n🎉 ${sdb.get(`Users.${user.id}.Perfil.Aniversario`)}` : `⠀\n${e.Deny} Sem aniversário definido`,
+            job = sdb.get(`Users.${user.id}.Perfil.Trabalho`) ? `⠀\n👷 ${sdb.get(`Users.${user.id}.Perfil.Trabalho`)}` : `⠀\n${e.Deny} Sem profissão definida`,
             Clan = sdb.get(`Users.${user.id}.Clan`) || 'Não possui',
             usersdb = Object.keys(sdb.get('Users') || {}),
             likesarray = [],
@@ -125,9 +123,6 @@ module.exports = {
             marry = "Solteiro(a)"
             message.channel.send(`${e.Info} | Eu não achei o perceiro*(a)* deste perfil em nenhum dos meus servidores. Então, eu forcei o divórcio entre o casal.`)
         }
-
-        niver = Aniversario ? `⠀\n🎉 ${Aniversario}` : `⠀\n${e.Deny} Sem aniversário definido`
-        job = Trabalho ? `⠀\n👷 ${Trabalho}` : `⠀\n${e.Deny} Sem profissão definida`
 
         if (Estrela.Um) estrela = `${e.Star}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
         if (Estrela.Dois) estrela = `${e.Star}${e.Star}${e.GrayStar}${e.GrayStar}${e.GrayStar}`

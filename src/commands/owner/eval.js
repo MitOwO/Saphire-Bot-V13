@@ -1,5 +1,5 @@
 const { f } = require('../../../database/frases.json')
-const { Clan, sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery, CommandsLog, DatabaseObj: { e }, ServerDb, DatabaseObj } = require('../../../Routes/functions/database')
+const { Clan, sdb, db, BgLevel, BgWall, conf, emojis, nomes, lotery, CommandsLog, DatabaseObj: { e }, ServerDb, DatabaseObj, Frases } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'eval',
