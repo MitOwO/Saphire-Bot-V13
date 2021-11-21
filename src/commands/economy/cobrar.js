@@ -24,12 +24,12 @@ module.exports = {
             .addField('Comando', `\`${prefix}cobrar @user quantia\``)
             .setFooter(`A ${client.user.username} não se responsabiliza por dinheiro perdido ou mal usado.`)
 
-        let Quantia = args[1]
-        if (!args[1]) Quantia = args[0]
+        let Quantia = parseInt(args[1]?.replace(/k/g, '000'))
+        if (!args[1]) Quantia = parseInt(args[0]?.replace(/k/g, '000'))
         if (member.id === message.author.id) return message.reply({ embeds: [cobre] })
         if (member.id === client.user.id) return message.reply('Sai pra lá, eu não to devendo ninguém.')
         if (!Quantia) return message.reply(`${e.Deny} | E a quantia? Tenta assim: \`${prefix}cobrar @user quantia\``)
-        if (isNaN(parseInt(Quantia))) return message.reply(`${e.Deny} | **${Quantia}** | Não é um número.`)
+        if (isNaN(Quantia)) return message.reply(`${e.Deny} | **${Quantia}** | Não é um número.`).catch(() => { })
         if (parseInt(Quantia) <= 0) { return message.reply('Diga um valor maior que 0') }
 
         let UserMoney = sdb.get(`Users.${member.id}.Balance`)
@@ -64,7 +64,6 @@ module.exports = {
                 Recusou(msg)
             });
 
-
         }).catch(err => {
             Error(message, err)
             message.channel.send(`${e.Deny} | Houve um erro ao executar o comando de cobrança.\n\`${err}\``)
@@ -74,7 +73,7 @@ module.exports = {
             sdb.subtract(`Users.${member.id}.Balance`, Quantia)
             sdb.add(`Users.${message.author.id}.Balance`, Quantia)
             TransactionsPush(
-                user.id,
+                member.id,
                 message.author.id,
                 `💸 Pagou a cobrança de ${Quantia || 0} Moedas a ${message.author.tag}`,
                 `💰 Recebeu a cobrança de ${Quantia || 0} Moedas feita a ${user.user.tag}`

@@ -20,23 +20,18 @@ module.exports = {
         if (!u.id) return message.reply(`${e.Deny} | Eu não achei ninguém ${e.SaphireCry}`)
         let user = await client.users.cache.get(u.id)
 
-        let { bal, bank, oculto, cache, avatar, name, TimeBolsa, Bolsa, control } = {
-            bal: sdb.get(`Users.${user.id}.Balance`)?.toFixed(0) || 0,
-            bank: sdb.get(`Users.${user.id}.Bank`)?.toFixed(0) || 0,
-            oculto: sdb.get(`Users.${user.id}.Perfil.BankOcult`),
-            cache: sdb.get(`Users.${user.id}.Cache.Resgate`)?.toFixed(0) || 0,
-            avatar: user?.displayAvatarURL({ dynamic: true }),
-            name: user.username || user.user.username,
-            control: true
-        }
+        let TimeBolsa = ms(172800000 - (Date.now() - (sdb.get(`Users.${user.id}.Timeouts.Bolsa`)))),
+            Bolsa = `${parseInt(sdb.get(`Users.${user.id}.Cache.BolsaLucro`)) || 0} ${Moeda(message)}`,
+            bal = parseInt(sdb.get(`Users.${user.id}.Balance`)) || 0,
+            bank = parseInt(sdb.get(`Users.${user.id}.Bank`)) || 0,
+            oculto = parseInt(sdb.get(`Users.${user.id}.Perfil.BankOcult`)),
+            cache = parseInt(sdb.get(`Users.${user.id}.Cache.Resgate`)) || 0,
+            avatar = user?.displayAvatarURL({ dynamic: true }),
+            name = user.username || user.user.username,
+            control = true
 
-
-        TimeBolsa = ms(172800000 - (Date.now() - (sdb.get(`Users.${user.id}.Timeouts.Bolsa`))))
-        if (sdb.get(`Users${user.id}.Timeouts.Bolsa`) !== null && 172800000 - (Date.now() - sdb.get(`Users.${user.id}.Timeouts.Bolsa`)) > 0) {
+        if (sdb.get(`Users${user.id}.Timeouts.Bolsa`) !== null && 172800000 - (Date.now() - sdb.get(`Users.${user.id}.Timeouts.Bolsa`)) > 0)
             Bolsa = `${e.Loading} \`${TimeBolsa.days}d ${TimeBolsa.hours}h ${TimeBolsa.minutes}m e ${TimeBolsa.seconds}s\``
-        } else {
-            Bolsa = `${sdb.get(`Users.${user.id}.Cache.BolsaLucro`)?.toFixed(0) || 0} ${Moeda(message)}`
-        }
 
         const embed = new MessageEmbed()
             .setColor(Colors(user))
@@ -56,8 +51,8 @@ module.exports = {
             .addField('📊 Bolsa de Valores', `||Ocultado||`)
             .setFooter(`Dúvidas? ${prefix}bal info`)
 
-        const Initial = oculto ? OcultEmbed : embed
-        const msg = await message.reply({ embeds: [Initial] })
+        const Initial = oculto ? OcultEmbed : embed,
+            msg = await message.reply({ embeds: [Initial] })
 
         msg.react('❌').catch(() => { })
 
@@ -67,13 +62,12 @@ module.exports = {
             filter: (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id; },
             time: 30000,
             errors: ['time']
-        });
-
-        const OcultCollector = msg.createReactionCollector({
-            filter: (reaction, u) => { return reaction.emoji.name === '👁️' && u.id === user.id || u.id === config.ownerId; },
-            time: 30000,
-            errors: ['time']
-        });
+        }),
+            OcultCollector = msg.createReactionCollector({
+                filter: (reaction, u) => { return reaction.emoji.name === '👁️' && u.id === user.id || u.id === config.ownerId; },
+                time: 30000,
+                errors: ['time']
+            });
 
         collector.on('collect', () => {
             msg.delete().catch(() => { })

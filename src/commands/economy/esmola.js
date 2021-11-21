@@ -26,7 +26,7 @@ module.exports = {
       sdb.set(`Users.${message.author.id}.Timeouts.Esmola`, Date.now())
       sdb.set(`Request.${message.author.id}`, `${msg.url}`)
       for (const emoji of ['🪙', '❌']) {
-        msg.react(emoji).catch()
+        msg.react(emoji).catch(() => { })
       }
 
       const filter = (reaction, user) => { return ['🪙', '❌'].includes(reaction.emoji.name) && user.id === user.id; };

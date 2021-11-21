@@ -35,10 +35,10 @@ module.exports = {
         let money = sdb.get(`Users.${message.author.id}.Balance`) || 0
         if (money <= 0) return message.reply(`${e.Deny} | Você não possui dinheiro na carteira. Que tal um \`${prefix}pix\`.`)
 
-        let quantia = args[1]?.replace(/k/g, '000')
-        !isNaN(quantia) ? (quantia = quantia) : (quantia = args[0]?.replace(/k/g, '000'))
-        if (message.guild.members.cache.get(args[0])) quantia = args[1]?.replace(/k/g, '000') || 0
-        if (message.guild.members.cache.get(args[1])) quantia = args[0]?.replace(/k/g, '000') || 0
+        let quantia = parseInt(args[1]?.replace(/k/g, '000'))
+        !isNaN(quantia) ? quantia = quantia : quantia = parseInt(args[0]?.replace(/k/g, '000'))
+        if (message.guild.members.cache.get(args[0])) quantia = parseInt(args[1]?.replace(/k/g, '000')) || 0
+        if (message.guild.members.cache.get(args[1])) quantia = parseInt(args[0]?.replace(/k/g, '000')) || 0
         if (['all', 'tudo'].includes(args[0]?.toLowerCase()) || ['all', 'tudo'].includes(args[1]?.toLowerCase())) quantia = money
         if (!quantia) return message.reply(`${e.Deny} | Só faltou dizer o valor do pagamento`)
         if (isNaN(quantia)) return message.reply(`${e.Deny} | **${quantia}** | A quantia deve ser um número.`)

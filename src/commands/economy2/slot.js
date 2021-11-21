@@ -197,7 +197,7 @@ module.exports = {
 
             if (embeds.length > 1) {
                 for (const emoji of ['◀️', '▶️', '❌']) {
-                    msg.react(emoji).catch()
+                    msg.react(emoji).catch(() => { })
                 }
             }
 
@@ -211,12 +211,12 @@ module.exports = {
 
                 if (reaction.emoji.name === '◀️') {
                     control--
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control++
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control++
                 }
 
                 if (reaction.emoji.anme === '▶️') {
                     control++
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control--
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control--
                 }
 
                 if (reaction.emoji.name === '❌') { collector.stop() }

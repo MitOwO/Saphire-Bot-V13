@@ -33,7 +33,7 @@ module.exports = {
         if (embeds.length === 1) return
 
         for (const i of ['◀️', '▶️', '❌']) {
-            msg.react(i).catch()
+            msg.react(i).catch(() => { })
         }
 
         const CancelFilter = (reaction, user) => ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
@@ -47,11 +47,11 @@ module.exports = {
             reaction.emoji.name === '▶️'
                 ? (() => {
                     EmbedsControl++
-                    return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl--
+                    return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { }) : EmbedsControl--
                 })()
                 : (() => {
                     EmbedsControl--
-                    return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch() : EmbedsControl++
+                    return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { }) : EmbedsControl++
                 })()
 
         })
@@ -104,21 +104,21 @@ module.exports = {
                 });
 
             for (const emoji of ['✅', '❌'])
-                msg.react(emoji).catch()
+                msg.react(emoji).catch(() => { })
 
             collector.on('collect', (reaction) => {
                 return reaction.emoji.name === '✅' ? DeleteAllData(msg) : collector.stop()
             })
 
             collector.on('end', () => {
-                return msg.edit(`${e.Deny} | Comando cancelado`).catch()
+                return msg.edit(`${e.Deny} | Comando cancelado`).catch(() => { })
             })
 
         }
 
         function DeleteAllData(msg) {
             Transactions.delete(`Transactions.${message.author.id}`)
-            return msg.edit(`${e.Check} | Todas as suas transações foram deletadas.`).catch()
+            return msg.edit(`${e.Check} | Todas as suas transações foram deletadas.`).catch(() => { })
         }
 
         function TransactionsInfo() {

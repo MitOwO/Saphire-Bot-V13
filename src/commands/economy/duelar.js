@@ -189,7 +189,7 @@ module.exports = {
         }
 
         function ValueAll() {
-            sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0)
+            sdb.add(`Users.${message.author.id}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.Resgate`)) || 0)
             sdb.set(`Users.${message.author.id}.Cache.Resgate`, 0)
 
             return sdb.get(`Users.${message.author.id}.Balance`)

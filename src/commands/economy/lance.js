@@ -96,7 +96,7 @@ module.exports = {
 
             return message.channel.send(`${e.MoneyWings} ${message.author} lançou ${prize} ${Moeda(message)} no chat.\n✅ Encerrar | 💸 Participar | ❌ Sair`).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
-                for (const e of ['✅', '💸', '❌']) msg.react(e).catch()
+                for (const e of ['✅', '💸', '❌']) msg.react(e).catch(() => { })
 
                 PushTrasaction(
                     message.author.id,
@@ -145,7 +145,7 @@ module.exports = {
                     if (UsersLance.length <= 1) {
 
                         msg.delete().catch(() => { })
-                        ssdb.add(`Users.${message.author.id}.Balance`, prize)
+                        sdb.add(`Users.${message.author.id}.Balance`, prize)
                         sdb.delete(`Users.${message.author.id}.Cache.LancePrize`)
                         return message.channel.send(`${e.Deny} | Lance cancelado por falta de participantes (Min: 2 players). Dinheiro retornado a carteira. `)
 

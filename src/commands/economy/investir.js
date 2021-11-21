@@ -17,22 +17,24 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let Empresa, Invest, Pass, Bolsa, Money, Chance, Lucro, TimeBolsa, Result, Valor
-
-        Bolsa = sdb.get(`Users.${message.author.id}.Bolsa`)?.toFixed(0) || 0
-        Money = sdb.get(`Users.${message.author.id}.Balance`)?.toFixed(0) || 0
-        Pass = PassCode(30)
-        Valor = parseInt(args[1]) || false
+        let Empresa,
+            Invest,
+            Pass = PassCode(30),
+            Bolsa = parseInt(sdb.get(`Users.${message.author.id}.Bolsa`)?.toFixed(0)) || 0,
+            Money = parseInt(sdb.get(`Users.${message.author.id}.Balance`)?.toFixed(0)) || 0,
+            Chance,
+            Lucro,
+            TimeBolsa = ms(172800000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Bolsa`))),
+            Result,
+            Valor = parseInt(args[1]) || false
 
         if (!args[0]) return InitialEmbed()
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return BolsaInfo()
         if (['me', 'eu'].includes(args[0]?.toLowerCase())) return BolsaMeInfo()
 
-        TimeBolsa = ms(172800000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Bolsa`)))
         if (sdb.get(`Users.${message.author.id}.Timeouts.Bolsa`) !== null && 172800000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Bolsa`)) > 0) {
             return message.reply(`${e.Loading} Investimento em andamento. Tente novamente em: \`${TimeBolsa.days}d ${TimeBolsa.hours}h ${TimeBolsa.minutes}m e ${TimeBolsa.seconds}s\``)
         } else { sdb.delete(`Users.${message.author.id}.Timeouts.Bolsa`) }
-
 
         if (Valor && isNaN(args[1])) return message.reply(`${e.Deny} | **${args[1]}** | Não é um número.`)
         if (['resgate', 'resgatar'].includes(args[0]?.toLowerCase())) return NewResgate()
@@ -81,7 +83,7 @@ module.exports = {
 
             Valor ? Invest = Valor : Invest = Invest
 
-            sdb.subtract(`Users.${message.author.id}.Balance`, Invest)
+            sdb.subtract(`Users.${message.author.id}.Balance`, parseInt(Invest))
             sdb.add(`Users.${message.author.id}.Cache.Bolsa`, parseInt(Invest))
 
             return message.reply(`${e.QuestionMark} | Pedido: Investir **${Invest?.toFixed(0)} ${Moeda(message)}** na empresa **${Empresa}**
@@ -92,15 +94,19 @@ module.exports = {
                 const collector = message.channel.createMessageCollector({ filter, time: 60000 });
 
                 collector.on('collect', m => {
-                    if (m.content === Pass) {
-                        SetNewInvestiment(msg, Invest)
-                        msg.delete().catch(() => { })
-                    } else {
-                        collector.stop()
-                        sdb.add(`Users.${message.author.id}.Balance`, sdb.get(`Users.${message.author.id}.Cache.Bolsa`) || 0)
-                        sdb.set(`Users.${message.author.id}.Cache.Bolsa`, 0)
-                        msg.edit(`${e.Deny} | Investimento cancelado.`).catch(() => { })
-                    }
+
+                    m.content === Pass
+                        ? (() => {
+                            msg.delete().catch(() => { })
+                            return SetNewInvestiment(msg, Invest)
+                        })()
+                        : (() => {
+                            collector.stop()
+                            sdb.add(`Users.${message.author.id}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.Bolsa`) || 0))
+                            sdb.set(`Users.${message.author.id}.Cache.Bolsa`, 0)
+                            return msg.edit(`${e.Deny} | Investimento cancelado.`).catch(() => { })
+                        })()
+
                 });
 
                 setTimeout(() => {
@@ -118,7 +124,7 @@ module.exports = {
             sdb.set(`Users.${message.author.id}.Timeouts.Bolsa`, Date.now())
             sdb.set(`Users.${message.author.id}.Cache.BolsaValue`, Invest)
             sdb.set(`Users.${message.author.id}.Cache.BolsaEmpresa`, Empresa)
-            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, Result)
+            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, parseInt(Result) || 0)
 
             PushTrasaction(
                 message.author.id,
