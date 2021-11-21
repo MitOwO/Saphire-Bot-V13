@@ -69,9 +69,9 @@ module.exports = {
             for (const id of USERS) {
 
                 const { Bal, Bank, Resgate } = {
-                    Bal: sdb.get(`Users.${id}.Balance`) || 0,
-                    Bank: sdb.get(`Users.${id}.Bank`) || 0,
-                    Resgate: sdb.get(`Users.${id}.Cache.Resgate`) || 0
+                    Bal: parseInt(sdb.get(`Users.${id}.Balance`)) || 0,
+                    Bank: parseInt(sdb.get(`Users.${id}.Bank`)) || 0,
+                    Resgate: parseInt(sdb.get(`Users.${id}.Cache.Resgate`)) || 0
                 }
 
                 let Total = Bal + Bank + Resgate
@@ -105,7 +105,7 @@ module.exports = {
                 UsersArray = []
 
             for (const id of users) {
-                let Money = sdb.get(`Users.${id}.Balance`) || 0
+                let Money = parseInt(sdb.get(`Users.${id}.Balance`)) || 0
 
                 if (Money > 0)
                     UsersArray.push({ id: id, money: Money })
@@ -172,9 +172,9 @@ module.exports = {
             for (const id of USERS) {
 
                 const { Bal, Bank, Resgate } = {
-                    Bal: sdb.get(`Users.${id}.Balance`) || 0,
-                    Bank: sdb.get(`Users.${id}.Bank`) || 0,
-                    Resgate: sdb.get(`Users.${id}.Cache.Resgate`) || 0
+                    Bal: parseInt(sdb.get(`Users.${id}.Balance`)) || 0,
+                    Bank: parseInt(sdb.get(`Users.${id}.Bank`)) || 0,
+                    Resgate: parseInt(sdb.get(`Users.${id}.Cache.Resgate`)) || 0
                 }
 
                 let Total = Bal + Bank + Resgate

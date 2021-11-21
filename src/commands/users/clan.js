@@ -169,8 +169,8 @@ module.exports = {
 
             const msg = await message.channel.send(`${e.QuestionMark} | ${user}, você está sendo convidado por ${message.author.tag} para entrar no clan **${AtualClan}**.\nVocê aceita o convite?`)
 
-            msg.react('✅').catch()
-            msg.react('❌').catch()
+            msg.react('✅').catch(() => { })
+            msg.react('❌').catch(() => { })
 
             const collector = msg.createReactionCollector({
                 filter: (reaction, u) => ['✅', '❌'].includes(reaction.emoji.name) && u.id === user.id,
@@ -197,7 +197,7 @@ module.exports = {
 
             collector.on('end', () => {
                 if (!RequestControl)
-                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
 
                 return
             })
@@ -225,8 +225,8 @@ module.exports = {
 
             const msg = await message.reply(`${e.QuestionMark} | **Clan: ${AtualClan}** | Você confirma a expulsão do membro **${User.tag}**?`)
 
-            msg.react('✅').catch()
-            msg.react('❌').catch()
+            msg.react('✅').catch(() => { })
+            msg.react('❌').catch(() => { })
 
             const collector = msg.createReactionCollector({
                 filter: (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === message.author.id },
@@ -242,7 +242,7 @@ module.exports = {
                     Clan.pull(`Clans.${key}.Admins`, User.id)
                     LogRegister(`⬅️ **${User.tag}** foi expulso pelo Adm **${message.author.tag}**`)
                     sdb.delete(`Users.${User.id}.Clan`)
-                    msg.edit(`${e.Check} | ${User.tag} foi expulso do Clan **${AtualClan}** pelo Admin \`${message.author.tag}\``).catch()
+                    msg.edit(`${e.Check} | ${User.tag} foi expulso do Clan **${AtualClan}** pelo Admin \`${message.author.tag}\``).catch(() => { })
                     RequestControl = true
                     collector.stop()
 
@@ -255,7 +255,7 @@ module.exports = {
 
             collector.on('end', () => {
                 if (!RequestControl)
-                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
 
                 return
             })
@@ -316,7 +316,7 @@ module.exports = {
 
             if (embeds.length > 1) {
                 for (const emoji of ['◀️', '▶️', '❌']) {
-                    msg.react(emoji).catch()
+                    msg.react(emoji).catch(() => { })
                 }
             }
 
@@ -404,7 +404,7 @@ module.exports = {
 
             if (embeds.length > 1) {
                 for (const emoji of ['◀️', '▶️', '❌']) {
-                    msg.react(emoji).catch()
+                    msg.react(emoji).catch(() => { })
                 }
             }
 
@@ -418,12 +418,12 @@ module.exports = {
 
                 if (reaction.emoji.name === '◀️') {
                     control--
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control++
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control++
                 }
 
                 if (reaction.emoji.name === '▶️') {
                     control++
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch() : control--
+                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control--
                 }
 
                 if (reaction.emoji.name === '❌') {
@@ -498,8 +498,8 @@ module.exports = {
 
             const msg = await message.reply(`${e.QuestionMark} | Você confirma deletar o clan **${AtualClan}**?`)
 
-            msg.react('✅').catch()
-            msg.react('❌').catch()
+            msg.react('✅').catch(() => { })
+            msg.react('❌').catch(() => { })
 
             const collector = msg.createReactionCollector({
                 filter: (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === message.author.id },
@@ -518,7 +518,7 @@ module.exports = {
                     }
 
                     Clan.delete(`Clans.${key}`)
-                    msg.edit(`${e.Check} | O Clan **${AtualClan}** foi deletado com sucesso!`).catch()
+                    msg.edit(`${e.Check} | O Clan **${AtualClan}** foi deletado com sucesso!`).catch(() => { })
                     RequestControl = true
                     collector.stop()
 
@@ -534,7 +534,7 @@ module.exports = {
 
             collector.on('end', () => {
                 if (!RequestControl)
-                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
 
                 return
             })
@@ -644,8 +644,8 @@ module.exports = {
 
             const msg = await message.reply(`${e.QuestionMark} | Você confirma sair do clan **${AtualClan}**?`)
 
-            msg.react('✅').catch()
-            msg.react('❌').catch()
+            msg.react('✅').catch(() => { })
+            msg.react('❌').catch(() => { })
 
             const collector = msg.createReactionCollector({
                 filter: (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === message.author.id },
@@ -661,7 +661,7 @@ module.exports = {
                     Clan.pull(`Clans.${key}.Admins`, message.author.id)
                     LogRegister(`⬅️ **${message.author.tag}** saiu do clan`)
                     sdb.delete(`Users.${message.author.id}.Clan`)
-                    msg.edit(`${e.Check} | Você saiu do Clan **${AtualClan}**!`).catch()
+                    msg.edit(`${e.Check} | Você saiu do Clan **${AtualClan}**!`).catch(() => { })
                     RequestControl = true
                     collector.stop()
 
@@ -678,7 +678,7 @@ module.exports = {
 
             collector.on('end', () => {
                 if (!RequestControl)
-                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
 
                 return
             })
@@ -701,8 +701,8 @@ module.exports = {
 
             const msg = await message.reply(`${e.QuestionMark} | Você confirma transferir a posso do clan **${AtualClan}** para **${user.user.tag}**?`)
 
-            msg.react('✅').catch()
-            msg.react('❌').catch()
+            msg.react('✅').catch(() => { })
+            msg.react('❌').catch(() => { })
 
             const collector = msg.createReactionCollector({
                 filter: (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === message.author.id },
@@ -717,8 +717,8 @@ module.exports = {
                     Clan.set(`Clans.${key}.Owner`, user.id)
                     if (!Admins?.includes(user.id)) Clan.push(`Clans.${key}.Admins`, user.id)
                     if (!Admins?.includes(message.author.id)) Clan.push(`Clans.${key}.Admins`, message.author.id)
-                    LogRegister(`${e.ModShield} **${message.author.tag}** transferiu a posse do servidor para **${user.user.tag}**`)
-                    msg.edit(`${e.Check} | Você transferiu a posse do Clan **${AtualClan}** para ${user.user.tag} com sucesso! Por padrão, você ainda é um administrador.`).catch()
+                    LogRegister(`${e.ModShield} **${message.author.tag}** transferiu a posse do clan para **${user.user.tag}**`)
+                    msg.edit(`${e.Check} | Você transferiu a posse do Clan **${AtualClan}** para ${user.user.tag} com sucesso! Por padrão, você ainda é um administrador.`).catch(() => { })
                     RequestControl = true
                     collector.stop()
 
@@ -735,7 +735,7 @@ module.exports = {
 
             collector.on('end', () => {
                 if (!RequestControl)
-                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
 
                 return
             })
@@ -775,8 +775,8 @@ module.exports = {
 
             const msg = await message.reply(`${e.QuestionMark} | Você confirma trocar o nome do clan de **${AtualClan}** para **${NewName}**?`)
 
-            msg.react('✅').catch()
-            msg.react('❌').catch()
+            msg.react('✅').catch(() => { })
+            msg.react('❌').catch(() => { })
 
             const collector = msg.createReactionCollector({
                 filter: (reaction, u) => { return ['✅', '❌'].includes(reaction.emoji.name) && u.id === message.author.id },
@@ -798,7 +798,7 @@ module.exports = {
                     LogRegister(`${e.ModShield} O nome do clan foi alterado de **${OldName}** para **${NewName}**`)
 
                     sdb.subtract(`Users.${message.author.id}.Balance`, 1000000)
-                    msg.edit(`${e.Check} | Você trocou o nome do seu Clan com sucesso!`).catch()
+                    msg.edit(`${e.Check} | Você trocou o nome do seu Clan com sucesso!`).catch(() => { })
                     RequestControl = true
                     collector.stop()
 
@@ -815,7 +815,7 @@ module.exports = {
 
             collector.on('end', () => {
                 if (!RequestControl)
-                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch()
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
 
                 return
             })
@@ -899,7 +899,7 @@ module.exports = {
 
             if (embeds.length > 1) {
                 for (const emoji of ['◀️', '▶️', '❌']) {
-                    msg.react(emoji).catch()
+                    msg.react(emoji).catch(() => { })
                 }
             }
 
@@ -954,7 +954,7 @@ module.exports = {
                 })
 
             for (const emoji of ['✅', '❌'])
-                msg.react(emoji).catch()
+                msg.react(emoji).catch(() => { })
 
             collector.on('collect', (reaction, user) => {
 
