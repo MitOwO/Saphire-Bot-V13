@@ -27,7 +27,7 @@ module.exports = {
 
             const msg = await message.reply(`${e.QuestionMark} | Iniciar o reboot?`)
             for (const emoji of ['✅', '❌']) {
-                msg.react(emoji).catch()
+                msg.react(emoji).catch(() => { })
             }
 
             const collector = msg.createReactionCollector({
@@ -69,9 +69,9 @@ module.exports = {
 
         async function RebootUsers() {
 
-            let keys, i = 0
-
-            const array = ["Timeouts", "Cache", "Color", "Perfil.Family", "Perfil.Marry", "Perfil.Estrela", "Perfil", "Slot.Medalha", "Slot.Machado", "Slot.Picareta", "Slot"]
+            let keys,
+                i = 0,
+                array = ["Timeouts", "Cache", "Color", "Perfil.Family", "Perfil.Marry", "Perfil.Estrela", "Perfil", "Slot.Medalha", "Slot.Machado", "Slot.Picareta", "Slot"]
 
             try {
                 keys = Object.keys(sdb.get('Users') || {})
@@ -86,15 +86,9 @@ module.exports = {
 
                 for (const id of keys) {
 
-                    if (!await client.users.cache.get(id)) {
-                        i++
-                        sdb.delete(`Users.${id}`)
-                        sdb.pull(`Titulos.Halloween`, id)
-                        Transactions.delete(`Transactions.${id}`)
+                    const user = client.users.cache.get(id)
 
-                    } else {
-
-                        sdb.set(`Users.${id}.Name`, client.users.cache.get(id).tag)
+                    user ? (() => {
 
                         for (const item of array) {
 
@@ -111,7 +105,13 @@ module.exports = {
                             } catch (err) { }
 
                         }
-                    }
+                    })()
+                        : (() => {
+                            i++
+                            sdb.delete(`Users.${id}`)
+                            sdb.pull(`Titulos.Halloween`, id)
+                            Transactions.delete(`Transactions.${id}`)
+                        })()
 
                 }
 

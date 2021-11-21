@@ -59,7 +59,7 @@ module.exports = {
 
         if (embed.length > 1) {
             for (const emoji of ['⬅️', '➡️', '❌']) {
-                msg.react(emoji).catch()
+                msg.react(emoji).catch(() => { })
             }
         }
 
@@ -71,18 +71,18 @@ module.exports = {
 
             if (reaction.emoji.name === '⬅️') {
                 control--
-                return embed[control] ? msg.edit({ embeds: [embed[control]] }).catch() : control++
+                return embed[control] ? msg.edit({ embeds: [embed[control]] }).catch(() => { }) : control++
             }
 
             if (reaction.emoji.name === '➡️') {
                 control++
-                return embed[control] ? msg.edit({ embeds: [embed[control]] }).catch() : control--
+                return embed[control] ? msg.edit({ embeds: [embed[control]] }).catch(() => { }) : control--
             }
 
         });
 
         collector.on('end', () => {
-            msg.reactions.removeAll().catch()
+            msg.reactions.removeAll().catch(() => { })
             return msg.edit(`${e.Deny} | Comando cancelado.`)
         });
 

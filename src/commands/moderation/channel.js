@@ -164,13 +164,14 @@ module.exports = {
 
                             return message.reply(`${e.Warn} | Ocorreu um erro na exclusão do canal.\n \n\`${err}\``)
                         })
+                        return msg.edit(`${e.Check} | Canal deletado com sucesso!`).catch(() => { })
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Request cancelada.`)
+                        return msg.edit(`${e.Deny} | Request cancelada.`).catch(() => { })
                     }
                 }).catch(() => {
                     sdb.delete(`Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Request cancelada por tempo expirado.`)
+                    return msg.edit(`${e.Deny} | Request cancelada por tempo expirado.`).catch(() => { })
                 })
             })
         }

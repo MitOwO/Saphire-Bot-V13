@@ -1,8 +1,9 @@
-const { DatabaseObj } = require('../../../Routes/functions/database')
-const { e, config, N } = DatabaseObj
-const Moeda = require('../../../Routes/functions/moeda')
-const Colors = require('../../../Routes/functions/colors')
-const Vip = require('../../../Routes/functions/vip')
+const
+    { DatabaseObj } = require('../../../Routes/functions/database'),
+    { e, config, N } = DatabaseObj,
+    Moeda = require('../../../Routes/functions/moeda'),
+    Colors = require('../../../Routes/functions/colors'),
+    Vip = require('../../../Routes/functions/vip')
 
 module.exports = {
     name: 'perfil',
@@ -14,31 +15,56 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let u = message.mentions.members.first() || message.mentions.repliedUser || await client.users.cache.get(args[0]) || message.author
-        if (!u.id) return message.reply(`${e.Deny} | Eu não achei ninguém com esse ID.`)
-        let user = await client.users.cache.get(u.id)
-
-        let color, money, marry, level, likes, titulo, status, signo, sexo, niver, job, vip, estrela = 'Indefinido', TopGlobalMoney, TopGlobalLevel, TopGlobalLikes, LevelData, LikesData, MoneyData, OfficialTitle, Moderator, Developer, BugHunter, OfficialDesigner, HalloweenTitle, parca1, parca2, parca3, parca4, parca5, NoParcas, family1, family2, family3, NoFamily
-
-        color = Colors(user)
-        money = (sdb.get(`Users.${user.id}.Balance`) || 0) + (sdb.get(`Users.${user.id}.Bank`) || 0) + (sdb.get(`Users.${user.id}.Cache.Resgate`) || 0)
-        level = db.get(`level_${user.id}`) || 0
-        likes = sdb.get(`Users.${user.id}.Likes`) || 0
-
-        if (sdb.get(`Users.${user.id}.Perfil.BankOcult`) && message.author.id !== (user.id || config.ownerId))
-            money = '||Oculto||'
-
-        const PerfilObj = {
-            Marry: sdb.get(`Users.${user.id}.Perfil.Marry`),
-            Titulo: sdb.get(`Users.${user.id}.Perfil.Titulo`),
-            TitlePerm: sdb.get(`Users.${user.id}.Perfil.TitlePerm`),
-            Status: sdb.get(`Users.${user.id}.Perfil.Status`),
-            Signo: sdb.get(`Users.${user.id}.Perfil.Signo`),
-            Sexo: sdb.get(`Users.${user.id}.Perfil.Sexo`),
-            Aniversario: sdb.get(`Users.${user.id}.Perfil.Aniversario`),
-            Trabalho: sdb.get(`Users.${user.id}.Perfil.Trabalho`),
-            Clan: sdb.get(`Users.${user.id}.Clan`) || 'Não possui',
-            Estrela: {
+        let
+            u = message.mentions.members.first() || message.mentions.repliedUser || await client.users.cache.get(args[0]) || message.author,
+            user = await client.users.cache.get(u?.id)
+                ? await client.users.cache.get(u?.id)
+                : (() => {
+                    return msg.edit(`${e.Deny} | Usuário não encontrado.`)
+                })(),
+            color = Colors(user),
+            Embed = new MessageEmbed()
+                .setColor(color),
+            msg = await message.reply({ embeds: [Embed.setDescription(`${e.Loading} | Construindo perfil...`)] }),
+            money = sdb.get(`Users.${user.id}.Perfil.BankOcult`) && (message.author.id !== user.id || message.author.id !== config.ownerId)
+                ? (sdb.get(`Users.${user.id}.Balance`) || 0) + (sdb.get(`Users.${user.id}.Bank`) || 0) + (sdb.get(`Users.${user.id}.Cache.Resgate`) || 0)
+                : '||Oculto||',
+            marry = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Marry`))
+                ? await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Marry`)).tag
+                : "Solteiro(a)",
+            level = db.get(`level_${user.id}`) || 0,
+            likes = sdb.get(`Users.${user.id}.Likes`) || 0,
+            niver,
+            job,
+            vip = Vip(`${user.id}`) ? `${e.VipStar}` : '📃',
+            estrela = 'Indefinido',
+            TopGlobalMoney,
+            TopGlobalLevel,
+            TopGlobalLikes,
+            OfficialTitle = sdb.get(`Users.${user.id}.Perfil.OfficialTitles`)
+                ? `\n${sdb.get(`Users.${user.id}.Perfil.OfficialTitles`)}`
+                : '',
+            Moderator = sdb.get(`Client.Moderadores.${user.id}`)
+                ? `\n${e.ModShield} **Official Moderator**`
+                : '',
+            Developer = sdb.get(`Client.Developer.${user.id}`)
+                ? `\n${e.OwnerCrow} **Official Developer**`
+                : '',
+            BugHunter = sdb.get(`Client.BugHunter.${user.id}`)
+                ? `\n${e.Gear} **Bug Hunter**`
+                : '',
+            OfficialDesigner = sdb.get(`Client.OfficialDesigner.${user.id}`)
+                ? `\n${e.SaphireFeliz} **Designer Official**`
+                : '',
+            HalloweenTitle = sdb.get(`Titulos.Halloween`)?.includes(user.id)
+                ? `\n🎃 **Halloween 2021**`
+                : '',
+            Marry = sdb.get(`Users.${user.id}.Perfil.Marry`),
+            Titulo = sdb.get(`Users.${user.id}.Perfil.Titulo`),
+            titulo = sdb.get(`Users.${user.id}.Perfil.TitlePerm`)
+                ? `🔰 ${Titulo || 'Sem título definido'}`
+                : `${e.Deny} Não possui título`,
+            Estrela = {
                 Um: sdb.get(`Users.${user.id}.Perfil.Estrela.Um`),
                 Dois: sdb.get(`Users.${user.id}.Perfil.Estrela.Dois`),
                 Tres: sdb.get(`Users.${user.id}.Perfil.Estrela.Tres`),
@@ -46,106 +72,62 @@ module.exports = {
                 Cinco: sdb.get(`Users.${user.id}.Perfil.Estrela.Cinco`),
                 Seis: sdb.get(`Users.${user.id}.Perfil.Estrela.Seis`),
             },
-            Parcas: {
-                Um: sdb.get(`Users.${user.id}.Perfil.Parcas.Um`),
-                Dois: sdb.get(`Users.${user.id}.Perfil.Parcas.Dois`),
-                Tres: sdb.get(`Users.${user.id}.Perfil.Parcas.Tres`),
-                Quatro: sdb.get(`Users.${user.id}.Perfil.Parcas.Quatro`),
-                Cinco: sdb.get(`Users.${user.id}.Perfil.Parcas.Cinco`),
-            },
-            Family: {
-                Um: sdb.get(`Users.${user.id}.Perfil.Family.Um`),
-                Dois: sdb.get(`Users.${user.id}.Perfil.Family.Dois`),
-                Tres: sdb.get(`Users.${user.id}.Perfil.Family.Tres`),
-            },
-        }
-
-        let { Marry, Titulo, TitlePerm, Estrela, Parcas, Family, Status, Signo, Sexo, Aniversario, Trabalho, Clan } = PerfilObj
+            parca1 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Um`))
+                ? `\n1. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Um`)).tag}`
+                : '',
+            parca2 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Dois`))
+                ? `\n2. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Dois`)).tag}`
+                : '',
+            parca3 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Tres`))
+                ? `\n3. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Tres`)).tag}`
+                : '',
+            parca4 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Quatro`))
+                ? `\n4. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Quatro`)).tag}`
+                : '',
+            parca5 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Cinco`))
+                ? `\n5. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Parcas.Cinco`)).tag}`
+                : '',
+            NoParcas = !parca1 && !parca2 && !parca3 && !parca4 && !parca5
+                ? 'Nenhum parça ainda'
+                : '',
+            family1 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Family.Um`))
+                ? `\n1. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Family.Um`)).tag}`
+                : '',
+            family2 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Family.Dois`))
+                ? `\n2. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Family.Dois`)).tag}`
+                : '',
+            family3 = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Family.Tres`))
+                ? `\n3. ${await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Family.Tres`)).tag}`
+                : '',
+            NoFamily = !family1 && !family2 && !family3
+                ? 'Nenhum membro na família'
+                : '',
+            status = sdb.get(`Users.${user.id}.Perfil.Status`)
+                ? sdb.get(`Users.${user.id}.Perfil.Status`)
+                : `${user.username} não conhece o comando \`${prefix}setstatus\``,
+            signo = sdb.get(`Users.${user.id}.Perfil.Signo`)
+                ? `⠀\n${sdb.get(`Users.${user.id}.Perfil.Signo`)}`
+                : `⠀\n${e.Deny} Sem signo definido`,
+            sexo = sdb.get(`Users.${user.id}.Perfil.Sexo`)
+                ? `⠀\n${sdb.get(`Users.${user.id}.Perfil.Sexo`)}`
+                : `⠀\n${e.Deny} Sem sexo definido`,
+            Aniversario = sdb.get(`Users.${user.id}.Perfil.Aniversario`),
+            Trabalho = sdb.get(`Users.${user.id}.Perfil.Trabalho`),
+            Clan = sdb.get(`Users.${user.id}.Clan`) || 'Não possui',
+            usersdb = Object.keys(sdb.get('Users') || {}),
+            likesarray = [],
+            dbarray = [],
+            xparray = []
 
         if (Marry && !await client.users.cache.get(Marry)) {
             sdb.delete(`Users.${Marry}`)
             sdb.set(`Users.${user.id}.Perfil.Marry`, false)
+            marry = "Solteiro(a)"
             message.channel.send(`${e.Info} | Eu não achei o perceiro*(a)* deste perfil em nenhum dos meus servidores. Então, eu forcei o divórcio entre o casal.`)
         }
-        marry = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Marry`))
-        marry = marry ? marry.tag : "Solteiro(a)"
 
-        family1 = await client.users.cache.get(Family.Um)
-        family2 = await client.users.cache.get(Family.Dois)
-        family3 = await client.users.cache.get(Family.Tres)
-
-        if (Family.Um && !family1) {
-            sdb.delete(`Users.${Family.Um}`)
-            sdb.set(`Users.${user.id}.Perfil.Family.Um`, false)
-        }
-
-        if (Family.Dois && !family2) {
-            sdb.delete(`Users.${Family.Dois}`)
-            sdb.set(`Users.${user.id}.Perfil.Family.Dois`, false)
-        }
-
-        if (Family.Tres && !family3) {
-            sdb.delete(`Users.${Family.Tres}`)
-            sdb.set(`Users.${user.id}.Perfil.Family.Tres`, false)
-        }
-
-        family1 ? family1 = `\n1. ${family1.tag}` : family1 = ''
-        family2 ? family2 = `\n2. ${family2.tag}` : family2 = ''
-        family3 ? family3 = `\n3. ${family3.tag}` : family3 = ''
-
-        if (!Family.Um && !Family.Dois && !Family.Tres) {
-            NoFamily = 'Nenhum membro na família'
-        } else { NoFamily = '' }
-
-        parca1 = await client.users.cache.get(Parcas.Um)
-        parca2 = await client.users.cache.get(Parcas.Dois)
-        parca3 = await client.users.cache.get(Parcas.Tres)
-        parca4 = await client.users.cache.get(Parcas.Quatro)
-        parca5 = await client.users.cache.get(Parcas.Cinco)
-
-        if (!Parcas.Um && !Parcas.Dois && !Parcas.Tres && !Parcas.Quatro && !Parcas.Cinco) {
-            NoParcas = 'Nenhum parça ainda'
-        } else { NoParcas = '' }
-
-        if (Parcas.Um && !parca1) {
-            sdb.delete(`Users.${Parcas.Um}`)
-            sdb.delete(`Users.${user.id}.Perfil.Parcas.Um`)
-        }
-
-        if (Parcas.Dois && !parca2) {
-            sdb.delete(`Users.${Parcas.Dois}`)
-            sdb.delete(`Users.${user.id}.Perfil.Parcas.Dois`)
-        }
-
-        if (Parcas.Tres && !parca3) {
-            sdb.delete(`Users.${Parcas.Tres}`)
-            sdb.delete(`Users.${user.id}.Perfil.Parcas.Tres`)
-        }
-
-        if (Parcas.Quatro && !parca4) {
-            sdb.delete(`Users.${Parcas.Quatro}`)
-            sdb.delete(`Users.${user.id}.Perfil.Parcas.Quatro`)
-        }
-
-        if (Parcas.Cinco && !parca5) {
-            sdb.delete(`Users.${Parcas.Cinco}`)
-            sdb.delete(`Users.${user.id}.Perfil.Parcas.Cinco`)
-        }
-
-        parca1 = parca1 ? `\n1. ${parca1.tag}` : ''
-        parca2 = parca2 ? `\n2. ${parca2.tag}` : ''
-        parca3 = parca3 ? `\n3. ${parca3.tag}` : ''
-        parca4 = parca4 ? `\n4. ${parca4.tag}` : ''
-        parca5 = parca5 ? `\n5. ${parca5.tag}` : ''
-
-        titulo = TitlePerm ? `🔰 ${Titulo || 'Sem título definido'}` : `${e.Deny} Não possui título`
-
-        status = Status ? Status : `${user.username} não conhece o comando \`${prefix}setstatus\``
-        signo = Signo ? `⠀\n${Signo}` : `⠀\n${e.Deny} Sem signo definido`
-        sexo = Sexo ? `⠀\n${Sexo}` : `⠀\n${e.Deny} Sem sexo definido`
         niver = Aniversario ? `⠀\n🎉 ${Aniversario}` : `⠀\n${e.Deny} Sem aniversário definido`
         job = Trabalho ? `⠀\n👷 ${Trabalho}` : `⠀\n${e.Deny} Sem profissão definida`
-        vip = Vip(`${user.id}`) ? `${e.VipStar}` : '📃'
 
         if (Estrela.Um) estrela = `${e.Star}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
         if (Estrela.Dois) estrela = `${e.Star}${e.Star}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
@@ -154,11 +136,6 @@ module.exports = {
         if (Estrela.Cinco) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
         if (Estrela.Seis) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
         if (!Estrela.Um && !Estrela.Dois && !Estrela.Tres && !Estrela.Quatro && !Estrela.Cinco && !Estrela.Seis) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
-
-        let usersdb = Object.keys(sdb.get('Users')),
-            likesarray = [],
-            dbarray = [],
-            xparray = []
 
         for (const id of usersdb) {
             let XpUser = db.get(`level_${id}`) || 0,
@@ -195,15 +172,6 @@ module.exports = {
             let Ranking = dbarray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
             TopGlobalMoney = Ranking === 1 ? `\n${e.MoneyWings} **Top Global Money**` : ''
         }
-
-        OfficialTitle = sdb.get(`Users.${user.id}.Perfil.OfficialTitles`) || false
-        OfficialTitle ? OfficialTitle = `\n${sdb.get(`Users.${user.id}.Perfil.OfficialTitles`)}` : OfficialTitle = ''
-
-        Moderator = sdb.get(`Client.Moderadores.${user.id}`) ? `\n${e.ModShield} **Official Moderator**` : ''
-        Developer = sdb.get(`Client.Developer.${user.id}`) ? `\n${e.OwnerCrow} **Official Developer**` : ''
-        BugHunter = sdb.get(`Client.BugHunter.${user.id}`) ? `\n${e.Gear} **Bug Hunter**` : ''
-        OfficialDesigner = sdb.get(`Client.OfficialDesigner.${user.id}`) ? `\n${e.SaphireFeliz} **Designer Official**` : ''
-        HalloweenTitle = sdb.get(`Titulos.Halloween`)?.includes(user.id) ? `\n🎃 **Halloween 2021**` : ''
 
         if (user.id === client.user.id) {
             const perfil = new MessageEmbed()
@@ -243,8 +211,7 @@ module.exports = {
             return message.reply({ embeds: [perfil] })
         }
 
-        const perfilembed = new MessageEmbed()
-            .setColor(color)
+        Embed
             .setDescription(`${vip} **Perfil de ${user.username}**${Developer}${OfficialDesigner}${Moderator}${HalloweenTitle}${BugHunter}${OfficialTitle}${TopGlobalLevel}${TopGlobalLikes}${TopGlobalMoney}\n${estrela}`)
             .addFields(
                 {
@@ -269,15 +236,15 @@ module.exports = {
                 },
                 {
                     name: '📝 Status',
-                    value: status
+                    value: `${status}`
                 },
                 {
                     name: '🛡️ Clan',
-                    value: Clan
+                    value: `${Clan}`
                 }
             )
             .setThumbnail(user.displayAvatarURL({ dynamic: true }))
 
-        message.reply({ embeds: [perfilembed] })
+        return msg.edit({ embeds: [Embed] }).catch()
     }
 }

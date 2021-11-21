@@ -50,11 +50,11 @@ module.exports = {
 
             })
 
-            return msg.edit(`${e.Check} | Sincronização de database concluida!`).catch()
+            return msg.edit(`${e.Check} | Sincronização de database concluida!`).catch(() => { })
 
         }
 
-        return msg.edit(`${e.Check} | Sincronização de database concluida!`).catch()
+        return msg.edit(`${e.Check} | Sincronização de database concluida!`).catch(() => { })
 
     }
 }

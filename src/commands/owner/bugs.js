@@ -10,13 +10,16 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let bugs = Object.entries(sdb.get('ComandoBloqueado') || [])
+        let bugs = sdb.get('ComandosBloqueados') || []
         if (!bugs.length) return message.reply(`${e.Check} | Nenhum bug na lista.`)
 
-        const Embed = new MessageEmbed()
-            .setColor('#246FE0')
-            .setTitle(`${e.Gear} Lista de Bugs`)
-            .setDescription(`${bugs.map(([a, b]) => `**${a}**\n\`${b}\``).join('\n')}`)
+        const BugsMapped = bugs.map(bug => `**${bug.cmd}**\n\`${bug.error}\``).join('\n'),
+            Embed = new MessageEmbed()
+                .setColor(client.blue)
+                .setTitle(`${e.Gear} Lista de Bugs`)
+                .setDescription(`${BugsMapped}`)
+                .setFooter(`${bugs.length || 0} Bugs`)
+
         return message.channel.send({ embeds: [Embed] })
     }
 }
