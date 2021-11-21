@@ -26,9 +26,9 @@ module.exports = {
 
         if (!args[0]) return message.reply({ embeds: [BingoEmbed] })
 
-        let quantia = parseInt(args[0])
-        if (['all', 'tudo'].includes(args[0].toLowerCase())) quantia = money
-        if (isNaN(quantia)) return message.reply(`${e.Deny} | **${quantia}** | Não é um número`)
+        let quantia = parseInt(args[0].replace(/k/g, '000'))
+        if (['all', 'tudo'].includes(args[0]?.toLowerCase())) quantia = money
+        if (isNaN(quantia)) return message.reply(`${e.Deny} | O valor não é um número`)
         if (quantia > money || quantia <= 0) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro na carteira.`)
 
         sdb.add(`Users.${message.author.id}.Cache.BingoPrize`, quantia)

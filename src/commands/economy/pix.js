@@ -43,16 +43,21 @@ module.exports = {
             msg.react('✅').catch(() => { }) // Check
             msg.react('❌').catch(() => { }) // X
 
-            const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
-            msg.awaitReactions({ filter, max: 1, time: 20000, errors: ['time'] }).then(collected => {
+            msg.awaitReactions({
+                filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                max: 1,
+                time: 20000,
+                errors: ['time']
+            }).then(collected => {
                 const reaction = collected.first()
                 sdb.delete(`Request.${message.author.id}`)
 
-                if (reaction.emoji.name === '✅') { NewPix(msg) } else { PixCancel(msg) }
+                return reaction.emoji.name === '✅' ? NewPix(msg) : PixCancel(msg)
             }).catch(() => {
                 sdb.delete(`Request.${message.author.id}`)
                 PixTimeout(msg)
             })
+            
         })
 
         function NewPix(msg) {
@@ -64,19 +69,19 @@ module.exports = {
                 `💸 Enviou ${sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0} Moedas para ${user.tag} via pix`
             )
             msg.edit(`${e.Pix} | Transação PIX efetuada com sucesso!\n${e.PandaProfit} Stats\n${message.author.tag} -${sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0} ${Moeda(message)}\n${user.username} +${sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0} ${Moeda(message)}`).catch(() => { })
-            sdb.set(`Users.${message.author.id}.Cache.Pix`, 0)
+            sdb.delete(`Users.${message.author.id}.Cache.Pix`)
         }
 
         function PixCancel(msg) {
             sdb.add(`Users.${message.author.id}.Bank`, (sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0))
-            sdb.set(`Users.${message.author.id}.Cache.Pix`, 0)
+            sdb.delete(`Users.${message.author.id}.Cache.Pix`)
 
             return msg.edit(`${e.Deny} | Transação PIX cancelada.`)
         }
 
         function PixTimeout(msg) {
             sdb.add(`Users.${message.author.id}.Bank`, (sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0))
-            sdb.set(`Users.${message.author.id}.Cache.Pix`, 0)
+            sdb.delete(`Users.${message.author.id}.Cache.Pix`)
 
             return msg.edit(`${e.Deny} | Transação PIX cancelada por tempo expirado.`)
         }

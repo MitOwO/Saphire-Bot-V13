@@ -1,7 +1,7 @@
-const { e } = require('../../../database/emojis.json')
-const Colors = require('../../../Routes/functions/colors')
-const Error = require('../../../Routes/functions/errors')
-const { BgLevel, DatabaseObj } = require('../../../Routes/functions/database')
+const
+    { e } = require('../../../database/emojis.json'),
+    Colors = require('../../../Routes/functions/colors'),
+    { DatabaseObj } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'slot',
@@ -13,11 +13,10 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.member || message.mentions.repliedUser
-        if (!u.id) return message.reply(`${e.Deny} | Eu não encontrei ninguém com esse ID...`)
-        let user = await client.users.cache.get(u.id)
-        avatar = user?.displayAvatarURL({ dynamic: true })
-        color = Colors(user)
+        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || await client.users.cache.get(args[1]) || message.mentions.repliedUser || message.author
+        let user = await client.users.cache.get(u.id),
+            avatar = user?.displayAvatarURL({ dynamic: true }),
+            color = Colors(user)
 
         let { Cores, Um, Dois, Tres, Quatro, Cinco, Seis, Helpier, TitlePerm, Peixes, Iscas, Comidas, Cartas, Aguas, Fichas, Camarao, Diamante, Minerios, Ossos, Apple, Rosas, Arma, Anel, Picareta, Machado, Balaclava, Remedio, Vara, Faca, Loli, Cachorro, Dogname, Medalha, Bola, Fossil, DiamanteNegro, Mamute } = {
             TitlePerm: sdb.get(`Users.${user.id}.Perfil.TitlePerm`),
@@ -93,9 +92,7 @@ module.exports = {
         if (Medalha.Acess) cachorro = '', bola = '', remedio = ''
         nada = !Helpier && !balaclava && !arma && !picareta && !vara && !machado && cartas <= 0 ? 'Não há nada aqui' : ''
         nada2 = !sdb.get(`Users.${user.id}.Color.Perm`) && !title && !faca && !loli && !fossil && !mamute && !diamante && !Medalha.Medalha && !bola && !cachorro && !remedio ? 'Não há nada aqui' : ''
-
         LevelBgAtual = !sdb.get(`Users.${user.id}.Slot.Walls.Set`) ? 'Padrão: bg0' : 'Indefinido'
-
         Um ? star = `${e.Star}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}` : star = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
         Dois ? star = `${e.Star}${e.Star}${e.GrayStar}${e.GrayStar}${e.GrayStar}` : star = star
         Tres ? star = `${e.Star}${e.Star}${e.Star}${e.GrayStar}${e.GrayStar}` : star = star
@@ -145,13 +142,14 @@ module.exports = {
 
         async function SlotBackgrouds() {
 
-            let BgArray = []
-            const WallpaperDB = DatabaseObj.LevelWallpapers
-            let keys
-            let control = 0
+            let BgArray = [],
+                WallpaperDB = DatabaseObj.LevelWallpapers,
+                keys,
+                control = 0,
+                WhoAreTheUser = message.author.id === user.id ? 'Você' : 'Este usuário'
 
             if (sdb.get(`Client.BackgroundAcess.${user.id}`))
-                return message.reply(`${e.Info} | ${message.author.id === user.id ? 'Você' : 'Este usuário'} possui todos os wallpapers.`)
+                return message.reply(`${e.Info} | ${WhoAreTheUser} possui todos os wallpapers.`)
 
             try {
                 keys = Object.keys(sdb.get(`Users.${user.id}.Slot.Walls.Bg`))?.sort((a, b) => a.slice(2) - b.slice(2))
@@ -159,21 +157,20 @@ module.exports = {
                 return message.reply(`${e.Info} | Nenhum wallpaper por aqui.`)
             }
 
-            for (const wall of keys) {
+            for (const wall of keys)
                 BgArray.push({ code: wall, name: WallpaperDB[wall].Name })
-            }
 
             function EmbedGenerator() {
-                let amount = 10
-                let Page = 1
-                const embeds = [];
-                let length = parseInt(BgArray.length / 10) + 1
-                const title = message.author.id === user.id ? '🖼️ Seus Level\'s Backgrounds' : `🖼️ ${user.username} Level's Backgrounds`
+                let amount = 10,
+                    Page = 1,
+                    embeds = [],
+                    length = BgArray.length / 10 < 1 ? 1 : parseInt(BgArray.length / 10) + 1,
+                    title = message.author.id === user.id ? '🖼️ Seus Level\'s Backgrounds' : `🖼️ ${user.username} Level's Backgrounds`
 
                 for (let i = 0; i < BgArray.length; i += 10) {
 
-                    const current = BgArray.slice(i, amount)
-                    const description = current.map(wall => `> \`${wall.code}\`: ${wall.name}`).join("\n")
+                    const current = BgArray.slice(i, amount),
+                        description = current.map(wall => `> \`${wall.code}\`: ${wall.name}`).join("\n")
 
                     embeds.push({
                         color: color,
@@ -192,34 +189,30 @@ module.exports = {
                 return embeds;
             }
 
-            const embeds = EmbedGenerator()
-            const msg = await message.reply({ embeds: [embeds[0]] })
+            const embeds = EmbedGenerator(),
+                msg = await message.reply({ embeds: [embeds[control]] }),
+                collector = msg.createReactionCollector({
+                    filter: (reaction, user) => ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                    idle: 30000
+                })
 
-            if (embeds.length > 1) {
-                for (const emoji of ['◀️', '▶️', '❌']) {
+            if (embeds.length > 1)
+                for (const emoji of ['◀️', '▶️', '❌'])
                     msg.react(emoji).catch(() => { })
-                }
-            }
-
-            const collector = msg.createReactionCollector({
-                filter: (reaction, user) => { return ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
-                idle: 30000,
-                errors: ['idle']
-            });
 
             collector.on('collect', (reaction, user) => {
 
-                if (reaction.emoji.name === '◀️') {
-                    control--
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control++
-                }
+                if (reaction.emoji.name === '❌') return collector.stop()
 
-                if (reaction.emoji.anme === '▶️') {
-                    control++
-                    embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control--
-                }
-
-                if (reaction.emoji.name === '❌') { collector.stop() }
+                reaction.emoji.name === '◀️'
+                    ? (() => {
+                        control--
+                        embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control++
+                    })()
+                    : (() => {
+                        control++
+                        embeds[control] ? msg.edit({ embeds: [embeds[control]] }).catch(() => { }) : control--
+                    })()
 
             });
 
@@ -236,7 +229,7 @@ module.exports = {
                 .setAuthor(`Inventário de ${user.username}`, avatar)
                 .setDescription(`${star}`)
                 .addField('Itens Comprados', `${nada}${arma}${anel}${balaclava}${Helpier}${picareta}${machado}${vara}${cartas}`)
-                .setFooter(`${prefix}buy | ${prefix}vender | ${prefix}slot vip | ${prefix}slot pet`)
+                .setFooter(`${prefix}buy | ${prefix}vender | ${prefix}slot vip | ${prefix}slot pet | ${prefix}slot bg`)
             if (!medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${nada2}${cores}${title}${faca}${loli}${fossil}${mamute}${diamante}${cachorro}${bola}${remedio}`) }
             if (medalha) { NormalSlotEmbed.addField('Itens Obtidos', `${nada2}${cores}${title}${faca}${loli}${fossil}${mamute}${diamante}${medalha}${dogname}`) }
             NormalSlotEmbed.addField('Mantimentos', `🐟 ${Peixes || 0} Peixes\n🥘 ${Comidas || 0} Comidas\n🪱 ${Iscas || 0} Iscas\n🥤 ${Aguas || 0} Águas\n🎟️ ${Fichas || 0} Fichas\n🍤 ${Camarao || 0} Camarões\n🦴 ${Ossos || 0} Ossos\n🌹 ${Rosas || 0} Rosas\n🍎 ${Apple || 0} Maças\n🪨 ${Minerios || 0} Minérios\n💎 ${Diamante || 0} Diamantes`)

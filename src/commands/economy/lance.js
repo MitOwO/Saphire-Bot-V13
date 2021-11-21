@@ -79,7 +79,7 @@ module.exports = {
         }
 
         if (quantia < 500) return message.reply(`${e.Deny} | Quantia mínima para lances é de 500 ${Moeda(message)}`)
-        if (isNaN(quantia)) return message.reply(`${e.Deny} | **${quantia}** | Não é um número`)
+        if (isNaN(quantia)) return message.reply(`${e.Deny} | O valor não é um número`)
         if (args[1]) return message.reply(`${e.Deny} | Por favor, use \`${prefix}lance [quantia/all/resgate]\` ou \`${prefix}lance\`, nada além disso, ok?`)
         if ((sdb.get(`Users.${message.author.id}.Balance`) || 0) < quantia) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro.`)
 
