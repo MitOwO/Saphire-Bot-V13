@@ -87,7 +87,8 @@ client.on('messageCreate', async message => {
         if (!reg.test(cmd))
             return message.reply(`${e.Deny} | Este comando contém caracteres bloqueados pelo meu sistema.`)
 
-        if (sdb.has(`ComandoBloqueado.${cmd}`)) return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
+        if (sdb.get(`ComandosBloqueados`)?.find(cmds => cmds.cmd === cmd))
+            return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
 
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd))
         if (command) {
