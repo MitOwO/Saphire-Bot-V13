@@ -22,7 +22,10 @@ client.once("ready", async () => {
     client.user.setStatus(`${Status}`)
 
     console.log('Event Ready | OK!')
-    await client.channels.cache.get(config.LogChannelId)?.send(`⏱️ Initial Ping: \`${client.ws.ping}ms\`\n${e.Check} Login: \`${Data()}\``)
+    const msg = await client.channels.cache.get(config.LogChannelId)?.send(`⏱️ Initial Ping: \`${client.ws.ping}ms\`\n${e.Check} Login: \`${Data()}\``)
+    setTimeout(() => {
+        msg.delete().catch(() => { })
+    }, 5000)
 
     // if (!sdb.get(`MuteSystem`))
     //     sdb.set(`MuteSystem`, {})

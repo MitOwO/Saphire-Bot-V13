@@ -61,16 +61,22 @@ client.on('messageCreate', async message => {
     // Block Bot Commands
     BlockCommandsBot(message)
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/g)
-    const cmd = args.shift().toLowerCase()
+    const args = message.content.slice(prefix.length).trim().split(/ +/g),
+        cmd = args.shift().toLowerCase(),
+        length = args.join(' ').length > 1500,
+        limited = rateLimiter.take(AuthorId)
+
+    if (length) return message.reply(`${e.Deny} | O limite máximo mensagens em comando é de 1500 caracteres.`)
 
     if (message.author.bot || !message.content.startsWith(prefix) || cmd.length == 0) return
 
     if (sdb.get('Client.Rebooting.ON')) return message.reply(`${e.Loading} Relogando...\n${sdb.get('Client.Rebooting.Features')} `)
 
+    if (sdb.get(`ComandosBloqueados`)?.find(cmds => cmds.cmd === cmd))
+        return message.reply(`${e.BongoScript} | Este comando foi bloqueado porque algum Bug/Erro ou pelo meu criador.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
+
     if (baka) return message.reply(`${e.SaphireRaivaFogo} | Saaai, você me chamou de BAAAKA`)
 
-    let limited = rateLimiter.take(AuthorId);
     if (limited) return message.react('⏱️').catch(() => { message.reply('⏱️ | Calminha!') })
 
     try {
@@ -86,9 +92,6 @@ client.on('messageCreate', async message => {
         const reg = /^[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i
         if (!reg.test(cmd))
             return message.reply(`${e.Deny} | Este comando contém caracteres bloqueados pelo meu sistema.`)
-
-        if (sdb.get(`ComandosBloqueados`)?.find(cmds => cmds.cmd === cmd))
-            return message.reply(`${e.BongoScript} Este comando foi bloqueado porque houve algum Bug/Erro.\nQuer fazer algúm reporte? Use \`${prefix}bug\``)
 
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd))
         if (command) {
