@@ -52,7 +52,7 @@ function Error(message, err) {
     }
 
     function Block() {
-        sdb.set(`ComandoBloqueado.${cmd}`, `${err?.message || 'Indefinido'}`)
+        sdb.push('ComandosBloqueados', { cmd: cmd, error: err?.message || 'Indefinido' })
         sdb.add(`Users.${message.author.id}.Balance`, 1000)
         PushTrasaction(
             message.author.id,

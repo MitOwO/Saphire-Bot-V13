@@ -32,7 +32,7 @@ class UserManager {
 
     addBalance(value) {
         try {
-            sdb.add(`Users.${this.id}.Balance`, value)
+            sdb.add(`Users.${this.id}.Balance`, parseInt(value))
         } catch (err) {
             Error(this.message, err)
         }
@@ -40,7 +40,7 @@ class UserManager {
 
     subtractBalance(value) {
         try {
-            sdb.subtract(`Users.${this.id}.Balance`, value)
+            sdb.subtract(`Users.${this.id}.Balance`, parseInt(value))
         } catch (err) {
             Error(this.message, err)
         }
@@ -48,7 +48,7 @@ class UserManager {
 
     addBank(value) {
         try {
-            sdb.add(`Users.${this.id}.Bank`, value)
+            sdb.add(`Users.${this.id}.Bank`, parseInt(value))
         } catch (err) {
             Error(this.message, err)
         }
@@ -56,7 +56,7 @@ class UserManager {
 
     subtractBank(value) {
         try {
-            sdb.subtract(`Users.${this.id}.Bank`, value)
+            sdb.subtract(`Users.${this.id}.Bank`, parseInt(value))
         } catch (err) {
             Error(this.message, err)
         }
