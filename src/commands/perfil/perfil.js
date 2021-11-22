@@ -32,7 +32,7 @@ module.exports = {
             marry = await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Marry`))
                 ? await client.users.cache.get(sdb.get(`Users.${user.id}.Perfil.Marry`)).tag
                 : "Solteiro(a)",
-            level = db.get(`level_${user.id}`) || 0,
+            level = sdb.get(`Users.${user.id}.Level`) || 0,
             likes = sdb.get(`Users.${user.id}.Likes`) || 0,
             vip = Vip(`${user.id}`) ? `${e.VipStar}` : '📃',
             estrela = 'Indefinido',
@@ -133,7 +133,7 @@ module.exports = {
         if (!Estrela.Um && !Estrela.Dois && !Estrela.Tres && !Estrela.Quatro && !Estrela.Cinco && !Estrela.Seis) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
 
         for (const id of usersdb) {
-            let XpUser = db.get(`level_${id}`) || 0,
+            let XpUser = sdb.get(`Users.${id}.Level`) || 0,
                 likes = sdb.get(`Users.${id}.Likes`) || 0,
                 amount = (sdb.get(`Users.${id}.Bank`) || 0) + (sdb.get(`Users.${id}.Balance`) || 0) + ((sdb.get(`Users.${id}.Cache.Resgate`) || 0))
 

@@ -1,4 +1,4 @@
-const { lotery, DatabaseObj } = require('../../../Routes/functions/database')
+const { lotery, DatabaseObj, Clan } = require('../../../Routes/functions/database')
 const { e, config } = DatabaseObj
 const Vip = require('../../../Routes/functions/vip')
 
@@ -37,7 +37,7 @@ module.exports = {
             message.channel.send(`${e.Loading} | Deletando todo o banco de dados referente a classe **Experiência**`).then(async msg => {
                 await client.users.cache.forEach(user => {
                     i++
-                    db.delete(`level_${user.id}`)
+                    sdb.delete(`Users.${user.id}.Level`)
                     sdb.delete(`Users.${user.id}.Xp`)
                 })
                 message.channel.send(`${e.Check} | O Sistema de Experiência deletou ${i || 0} usuários com sucesso.`)
@@ -82,7 +82,6 @@ module.exports = {
 
             sdb.delete(`Users.${user.id}`)
             db.delete(`${user.id}`)
-            db.delete(`level_${user.id}`)
             db.delete(`Bitcoin_${user.id}`)
             return message.reply(`${e.Check} Todos os dados de ${user.tag} foram deletados.`)
         }
@@ -135,8 +134,20 @@ module.exports = {
 
         if (['xp', 'level'].includes(args[0]?.toLowerCase())) {
             sdb.delete(`Users.${user.id}.Xp`)
-            db.delete(`level_${user.id}`)
+            sdb.delete(`Users.${user.id}.Level`)
             return message.reply(`${e.Check} | Feito!`)
+        }
+
+        if (['clan'].includes(args[0]?.toLowerCase())) {
+
+            if (!args[1])
+                return message.reply(`${e.Info} | Forneça um Clan-KeyCode para a exclução.`)
+
+            if (!Clan.get(`Clans.${args[1]}`))
+                return message.reply(`${e.Deny} | Este clan não existe.`)
+
+            Clan.delete(`Clans.${args[1]}`)
+            return message.reply(`${e.Check} | Clan deletado com sucesso!`)
         }
 
         if (['marry', 'casal', 'casamento'].includes(args[0]?.toLowerCase())) {

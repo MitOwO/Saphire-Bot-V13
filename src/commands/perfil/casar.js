@@ -28,8 +28,8 @@ module.exports = {
         if (!args[0]) return message.reply({ embeds: [noargs] })
 
         if (!user) return message.reply(`${e.Info} | @marca, responda a mensagem ou me fala o ID da pessoa que você quer se casar.`)
-        let level = db.get(`level_${user.id}`) || 0
-        let levelauthor = db.get(`level_${message.author.id}`) || 0
+        let level = sdb.get(`Users.${user.id}.Level`) || 0
+        let levelauthor = sdb.get(`Users.${message.author.id}.Level`) || 0
         if (level < 7 || levelauthor < 7) { return message.reply(`${e.Deny} | O casal deve estar acima do level 7 para se casar.`) }
         if (!anel) return message.reply(`${e.Deny} | Você precisa de um 💍 \`Anel de Casamento\` para se casar.`)
 
