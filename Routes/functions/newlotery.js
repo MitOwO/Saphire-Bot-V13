@@ -11,14 +11,13 @@ const { PushTrasaction } = require('./transctionspush')
 
 async function NewLoteryGiveaway(LoteriaUsers, message) {
 
-    let TicketsCompradosAoTodo = LoteriaUsers.length || 0
-    let TicketPremiado = LoteriaUsers[Math.floor(Math.random() * LoteriaUsers.length)]
-    let TicketsComprados = 0
-    let Prize = Loteria.Prize?.toFixed(0) || 0
+    let TicketsCompradosAoTodo = LoteriaUsers.length || 0,
+     TicketPremiado = LoteriaUsers[Math.floor(Math.random() * LoteriaUsers.length)],
+     TicketsComprados = 0,
+     Prize = Loteria.Prize?.toFixed(0) || 0
 
-    if (LoteriaUsers.length <= 0) {
+    if (LoteriaUsers.length <= 0)
         return message.channel.send(`${e.Deny} | Sorteio da loteria cancelado por falta de participantes.`).then(() => { NewLotery() }).catch(err => { Error(message, err) })
-    }
 
     let tag = await client.users.cache.get(TicketPremiado)
 
@@ -28,7 +27,7 @@ async function NewLoteryGiveaway(LoteriaUsers, message) {
             setTimeout(() => {
                 return msg.edit(`${e.Loading} | O usuário prêmiado não está em nenhum servidor junto comigo. Deletando usuário do meu banco de dados...`).then(msg => {
                     setTimeout(() => {
-                        sdb.delete(`Users.${TicketPremiado}`); db.delete(`${TicketPremiado}`); db.delete(`level_${TicketPremiado}`); db.delete(`Bitcoin_${TicketPremiado}`);
+                        sdb.delete(`Users.${TicketPremiado}`); db.delete(`${TicketPremiado}`); db.delete(`Bitcoin_${TicketPremiado}`);
                         msg.edit(`${e.Check} | Usuário deletado com sucesso!\n${e.Loading} | Removendo todos os tickets do usuário para realizar um novo sorteio...`).then(() => {
                             setTimeout(() => {
                                 lotery.pull(`Loteria.Users`, `${TicketPremiado}`)
