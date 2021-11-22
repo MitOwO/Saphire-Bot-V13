@@ -102,8 +102,8 @@ module.exports = {
                         })()
                         : (() => {
                             collector.stop()
-                            sdb.add(`Users.${message.author.id}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.Bolsa`) || 0))
-                            sdb.set(`Users.${message.author.id}.Cache.Bolsa`, 0)
+                            sdb.add(`Users.${message.author.id}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.Bolsa`) || 1))
+                            sdb.delete(`Users.${message.author.id}.Cache.Bolsa`)
                             return msg.edit(`${e.Deny} | Investimento cancelado.`).catch(() => { })
                         })()
 
@@ -120,11 +120,11 @@ module.exports = {
             Result = parseInt(Invest + Math.floor(Math.random() * (Invest * `0.${Lucro}`))) || 0
             if (Math.floor(Math.random() * 100) > Chance) Result = 0
 
-            sdb.set(`Users.${message.author.id}.Cache.Bolsa`, 0)
+            sdb.delete(`Users.${message.author.id}.Cache.Bolsa`)
             sdb.set(`Users.${message.author.id}.Timeouts.Bolsa`, Date.now())
             sdb.set(`Users.${message.author.id}.Cache.BolsaValue`, Invest)
             sdb.set(`Users.${message.author.id}.Cache.BolsaEmpresa`, Empresa)
-            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, parseInt(Result) || 0)
+            sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, parseInt(Result) || 1)
 
             PushTrasaction(
                 message.author.id,

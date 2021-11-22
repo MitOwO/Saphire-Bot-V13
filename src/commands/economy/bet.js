@@ -130,15 +130,15 @@ module.exports = {
 
                     const BetEmbedCancel = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description}\n \n${e.Deny} Essa aposta foi cancelada por não haver participantes suficientes`)
                     msg.edit({ embeds: [BetEmbedCancel] }).catch(() => { Erro() })
-                    sdb.add(`Users.${message.author.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0))
+                    sdb.add(`Users.${message.author.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 1))
                     PushTrasaction(
                         message.author.id,
-                        `💰 Recebeu de volta ${(sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0)} Moedas no comando bet`
+                        `💰 Recebeu de volta ${(sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 1)} Moedas no comando bet`
                     )
                     sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
                     sdb.delete(`Users.${message.author.id}.Cache.BetPrize`)
                     sdb.delete(`Users.${message.author.id}.Cache.Bet`)
-                    return message.channel.send(`${e.Deny} | ${message.author}, aposta cancelada.\n${e.PandaProfit} | ${sdb.get(`Users.${message.author.id}.Balance`) || 0} ${Moeda(message)} estão na sua carteira. Use \`${prefix}dep all\` para depositar o dinheiro e não ser roubado*(a)*.`)
+                    return message.channel.send(`${e.Deny} | ${message.author}, aposta cancelada.\n${e.PandaProfit} | ${sdb.get(`Users.${message.author.id}.Balance`) || 1} ${Moeda(message)} estão na sua carteira. Use \`${prefix}dep all\` para depositar o dinheiro e não ser roubado*(a)*.`)
 
                 } else {
 
