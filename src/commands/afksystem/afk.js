@@ -17,7 +17,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
         let Motivo = args.join(" ") || 'Sem recado definido.'
-        if (Motivo.length > 150) return message.reply(`${e.Deny} | O seu motivo não pode passar de 150 caracteres.`)
+        if (Motivo.length > 500) return message.reply(`${e.Deny} | O seu motivo não pode passar de 500 caracteres.`)
 
         let BlockWords = ['undefined', 'false', 'null', 'nan']
         for (const word of BlockWords) {
@@ -59,6 +59,7 @@ module.exports = {
             })
 
             AfkGlobal.on('collect', (reaction, user) => {
+
                 sdb.set(`Users.${message.author.id}.AfkSystem`, `${Motivo}`)
                 sdb.delete(`Request.${message.author.id}`);
                 return message.reply(`${e.Planet} | Deixa comigo! Vou avisar em todos os servidores que você está offline. ${e.Menhera}`)
