@@ -22,7 +22,7 @@ module.exports = {
 
     function DenyCantada() {
 
-      if (['all', 'tudo'].includes(args[0]?.toLowerCase()))
+      if (['all', 'tudo'].includes(args[1]?.toLowerCase()))
         return DeleteAllCantadas()
 
       if (!IsMod(message.author.id))
@@ -103,7 +103,7 @@ module.exports = {
         let amount = 10,
           Page = 1,
           embeds = [],
-          length = CantadasEmEspera.length / 10 < 1 ? 1 : parseInt(CantadasEmEspera.length / 10) + 1
+          length = CantadasEmEspera.length / 10 <= 1 ? 1 : parseInt(CantadasEmEspera.length / 10) + 1
 
         for (let i = 0; i < CantadasEmEspera.length; i += 10) {
 
@@ -112,7 +112,7 @@ module.exports = {
 
           embeds.push({
             color: client.blue,
-            title: `🔄 Cantadas em espera | ${Page / length}`,
+            title: `🔄 Cantadas em espera | ${Page}/${length}`,
             description: `${description}`,
             footer: {
               text: `${CantadasEmEspera.length} Cantadas contabilizadas`

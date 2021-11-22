@@ -32,7 +32,7 @@ module.exports = {
 
             for (const id of users) {
                 let Exp = sdb.get(`Users.${id}.Xp`) || 0,
-                    Level = db.get(`level_${id}`) || 0,
+                    Level = sdb.get(`Users.${id}.Level`) || 0,
                     XpNeeded = Exp * 550
 
                 if (Exp > 0)

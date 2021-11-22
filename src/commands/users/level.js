@@ -1,9 +1,10 @@
-const { BgLevel, DatabaseObj } = require('../../../Routes/functions/database')
-const { e, config } = DatabaseObj
-const simplydjs = require('simply-djs')
-const Error = require('../../../Routes/functions/errors')
-const color = require('../../../Routes/functions/colors')
-const ms = require("parse-ms")
+const
+    { BgLevel, DatabaseObj } = require('../../../Routes/functions/database'),
+    { e, config } = DatabaseObj,
+    simplydjs = require('simply-djs'),
+    Error = require('../../../Routes/functions/errors'),
+    color = require('../../../Routes/functions/colors'),
+    ms = require("parse-ms")
 
 module.exports = {
     name: 'level',
@@ -16,21 +17,43 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.mentions.repliedUser || message.author
-        let user = await client.users.cache.get(u.id)
+        if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return LevelInfo()
 
-        const { level, exp, xpNeeded, rank, LevelWallpapers, TimeDB } = {
-            level: db.get(`level_${user.id}`) || 0,
-            exp: sdb.get(`Users.${user.id}.Xp`) || 0,
-            xpNeeded: (db.get(`level_${user.id}`) || 0) * 550,
-            rank: db.all().filter(i => i.ID.startsWith("level_")).sort((a, b) => b.data - a.data).map(x => x.ID).indexOf(`level_${user.id}`) + 1,
-            LevelWallpapers: BgLevel.get('LevelWallpapers'),
-            TimeDB: sdb.get(`Users.${message.author.id}.Timeouts.LevelImage`) || 0,
-        }
+        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.mentions.repliedUser || message.author,
+            user = await client.users.cache.get(u.id),
+            level = sdb.get(`Users.${user.id}.Level`) || 0,
+            exp = sdb.get(`Users.${user.id}.Xp`) || 0,
+            xpNeeded = level * 550,
+            rank = (() => {
+
+                let users = Object.keys(sdb.get('Users') || {}),
+                    UsersArray = []
+
+                return users.length > 0
+                    ? (() => {
+
+                        for (const id of users) {
+                            let Exp = sdb.get(`Users.${id}.Xp`) || 0,
+                                Level = sdb.get(`Users.${id}.Level`) || 0
+
+                            if (Exp > 0)
+                                UsersArray.push({ id: id, level: Level })
+                        }
+
+                        if (!UsersArray.length) return 0
+
+                        return UsersArray
+                            .sort((a, b) => b.level - a.level)
+                            .findIndex(author => author.id === user.id) + 1 || 0
+
+                    })()
+                    : 0
+
+            })(),
+            LevelWallpapers = BgLevel.get('LevelWallpapers'),
+            TimeDB = sdb.get(`Users.${message.author.id}.Timeouts.LevelImage`) || 0
 
         if (user.bot) return message.reply(`${e.Deny} | Bots não possuem experiência.`)
-
-        if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return LevelInfo()
 
         let Timing = ms(5000 - (Date.now() - TimeDB))
         if (TimeDB !== null && 5000 - (Date.now() - TimeDB) > 0)
@@ -38,13 +61,13 @@ module.exports = {
 
         if (['set', 'wall', 'wallpaper', 'fundo', 'bg', 'background', 'capa'].includes(args[0]?.toLowerCase())) {
 
-            let Cooldown = sdb.get(`Users.${message.author.id}.Timeouts.LevelTrade`) || 0
-            let Time = ms(180000 - (Date.now() - Cooldown))
-            let minutos = Time.minutes > 0 ? `${Time.minutes} minutos e` : ''
+            let Cooldown = sdb.get(`Users.${message.author.id}.Timeouts.LevelTrade`) || 0,
+                Time = ms(180000 - (Date.now() - Cooldown)),
+                minutos = Time.minutes > 0 ? `${Time.minutes} minutos e` : '',
+                option = args[1]?.toLowerCase()
+
             if (Cooldown !== null && 180000 - (Date.now() - Cooldown) > 0)
                 return message.reply(`⏱️ | Espere mais **${minutos} ${Time.seconds} segundos** para trocar de wallpaper`)
-
-            let option = args[1]?.toLowerCase()
 
             if (!option)
                 return message.reply(`${e.Info} | Selecione o background dizendo o **código** dele. Você pode ver seus backgrounds usando \`${prefix}slot bg\``)
