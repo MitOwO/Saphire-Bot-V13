@@ -14,33 +14,116 @@ module.exports = {
   run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
     if (['send', 'enviar'].includes(args[0]?.toLowerCase())) return SendNewCantada()
-    if (['list', 'lista', 'all'].includes(args[0]?.toLowerCase())) return ListOfCantadas()
+    if (['list', 'lista'].includes(args[0]?.toLowerCase())) return ListOfCantadas()
     if (['accept', 'aprovar', 'aceitar'].includes(args[0]?.toLowerCase())) return AcceptNewCantada()
-    if (['deny', 'desaprovar', 'cancelar', 'excluir', 'delete', 'deletar'].includes(args[0]?.toLowerCase())) return DenyCantada()
+    if (['deny', 'desaprovar', 'cancelar', 'excluir', 'delete', 'deletar', 'remove', 'remover', 'apagar'].includes(args[0]?.toLowerCase())) return DenyCantada()
     if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return CantadasInfo()
+    if (['todos', 'all'].includes(args[0]?.toLowerCase())) return AllCantadas()
     return InitialEmbedCantadas()
+
+    async function AllCantadas() {
+
+      if (!IsMod(message.author.id))
+        return message.reply(`${e.Deny} | Este sub-comando é exclusivo apenas para moderadores da Saphire's Team.`)
+
+      let CantadasDB = Frases.get('f.Cantadas') || [],
+        CantadasEmEspera = [],
+        Control = 0,
+        Emojis = ['⬅️', '➡️', '❌']
+
+      if (!CantadasDB || !CantadasDB.length) return message.reply(`${e.Info} | Não há nenhuma cantada na lista de espera.`)
+
+      for (const C of CantadasDB)
+        CantadasEmEspera.push({ Author: C.Author, Cantada: C.Cantada })
+
+      function EmbedGenerator() {
+
+        let amount = 10,
+          Page = 1,
+          embeds = [],
+          length = CantadasEmEspera.length / 10 <= 1 ? 1 : parseInt(CantadasEmEspera.length / 10) + 1
+
+        for (let i = 0; i < CantadasEmEspera.length; i += 10) {
+
+          const current = CantadasEmEspera.slice(i, amount)
+          const description = current.map(Cantada => `**Enviada por**: ${client.users.cache.get(Cantada.Author)?.tag || 'Indefinido'} *\`${Cantada.Author}\`*\n**Cantada:** ${Cantada.Cantada}\n------------`).join('\n')
+
+          embeds.push({
+            color: client.blue,
+            title: `${e.FirePo} Cantadas na Database | ${Page}/${length}`,
+            description: `${description}`,
+            footer: {
+              text: `${CantadasEmEspera.length} Cantadas contabilizadas`
+            },
+          })
+
+          Page++
+          amount += 10
+
+        }
+
+        return embeds;
+      }
+
+      let Embeds = EmbedGenerator(),
+        msg = await message.reply({ embeds: [Embeds[0]] }),
+        collector = msg.createReactionCollector({
+          filter: (reaction, user) => Emojis.includes(reaction.emoji.name) && user.id === message.author.id,
+          idle: 30000
+        });
+
+      if (Embeds.length > 1)
+        for (const e of Emojis)
+          msg.react(e).catch(() => { })
+
+      collector.on('collect', (reaction) => {
+
+        if (reaction.emoji.name === '❌')
+          return collector.stop()
+
+        reaction.emoji.name === '⬅️'
+          ? (() => {
+
+            Control--
+            return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control++
+
+          })()
+          : (() => {
+
+            Control++
+            return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control--
+
+          })()
+
+      })
+
+      collector.on('end', () => {
+        msg.reactions.removeAll().catch(() => { })
+        return msg.edit(`${e.Deny} | Comando cancelado`).catch(() => { })
+      })
+
+    }
 
     function DenyCantada() {
 
-      if (['all', 'tudo'].includes(args[1]?.toLowerCase()))
-        return DeleteAllCantadas()
-
       if (!IsMod(message.author.id))
         return message.reply(`${e.Deny} | Este sub-comando é exclusivo para os \`${prefix}mods\` da Saphire's Team.`)
+
+      if (['all', 'tudo'].includes(args[1]?.toLowerCase()))
+        return DeleteAllCantadas()
 
       let CantadasDB = sdb.get('Client.Cantadas'),
         CantadasCodes = Object.keys(CantadasDB || {}),
         Code = args[1]
 
       if (!CantadasCodes.includes(Code))
-        return message.reply(`${e.Deny} | Este Cantada-KeyCode não existe na lista de espera.`)
+        return RemoveCantada()
 
       let Cantada = {
         Cantada: `${CantadasDB[Code].Cantada}`,
         Author: `${CantadasDB[Code].Author}`
       }
 
-      Frases.push('f.Cantadas', Cantada)
       sdb.delete(`Client.Cantadas.${Code}`)
 
       client.users.cache.get(Cantada.Author)?.send(`${e.Deny} | A sua cantada não foi aceita.\n${e.Info} | Conteúdo: ${Cantada.Cantada}`).catch(() => { })
@@ -52,6 +135,29 @@ module.exports = {
 
         sdb.delete(`Client.Cantadas`)
         return message.reply(`${e.Check} | Todas as cantadas da lista de espera foram deletadas com sucesso.`)
+      }
+
+      async function RemoveCantada() {
+
+        const AllCantadas = Frases.get('f.Cantadas') || [],
+          Cantada = AllCantadas.find(cantada => cantada.Cantada === args.slice(1).join(' ')),
+          NewSetArray = []
+
+        if (AllCantadas.length === 0)
+          return message.reply(`${e.Deny} | Nenhuma cantada no banco de dados.`)
+
+        if (!Cantada)
+          return message.reply(`${e.Deny} | Não encontrei essa cantada no banco de dados.`)
+
+        const msg = await message.reply(`${e.Loading} | Deletando...`)
+
+        for (const ctd of AllCantadas)
+          if (ctd.Cantada !== Cantada.Cantada)
+            NewSetArray.push(ctd)
+
+        Frases.set('f.Cantadas', [...NewSetArray])
+        return msg.edit(`${e.Check} | A cantada **\`${Cantada.Cantada}\`** foi deletada com sucesso!`)
+
       }
 
     }
@@ -263,8 +369,12 @@ module.exports = {
                 value: `\`${prefix}cantada send <Sua cantada>\` - Envie sua cantada`
               },
               {
+                name: `${e.FirePo} Todas as cantadas no banco de dados`,
+                value: `\`${prefix}cantadas all\``
+              },
+              {
                 name: `${e.ModShield} Moderadores Saphire's Team`,
-                value: `\`${prefix}cantada list\` - Lista de cantadas enviadas pelos membros\n\`${prefix}cantada accept C-KeyCode\` - Aceita cantadas da lista\n\`${prefix}cantada delete C-KeyCode/all\` - Deleta cantadas da lista ou todas(all)`
+                value: `\`${prefix}cantada list\` - Lista de cantadas enviadas pelos membros\n\`${prefix}cantada accept C-KeyCode\` - Aceita cantadas da lista\n\`${prefix}cantada delete C-KeyCode/all/<Cantada>\` - Deleta cantadas da lista ou todas(all)`
               }
             )
         ]

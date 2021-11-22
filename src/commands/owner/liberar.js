@@ -32,7 +32,6 @@ module.exports = {
             if (cmd.cmd !== Command.cmd)
                 sdb.push('ComandosBloqueados', cmd)
 
-
         return message.reply(`${e.Check} | O comando \`${args[0]}\` foi liberado com sucesso!`)
 
     }
