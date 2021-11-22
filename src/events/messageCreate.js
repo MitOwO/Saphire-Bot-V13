@@ -66,7 +66,7 @@ client.on('messageCreate', async message => {
         length = args.join(' ').length > 1500,
         limited = rateLimiter.take(AuthorId)
 
-    if (length) return message.reply(`${e.Deny} | O limite máximo mensagens em comando é de 1500 caracteres.`)
+    if (length) return message.reply(`${e.Deny} | O limite máximo de caracteres nas mensagens são de 1500 caracteres.`)
 
     if (message.author.bot || !message.content.startsWith(prefix) || cmd.length == 0) return
 
