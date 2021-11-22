@@ -111,7 +111,7 @@ module.exports = {
                             },
                             {
                                 name: 'Mensagem',
-                                value: `${e.Tada} ${message.author} alcançou o level ${db.get(`level_${message.author.id}`) || 1} ${e.RedStar}`
+                                value: `${e.Tada} ${message.author} alcançou o level ${sdb.get(`Users.${message.author.id}.Level`) || 1} ${e.RedStar}`
                             },
                             {
                                 name: 'Observações',
