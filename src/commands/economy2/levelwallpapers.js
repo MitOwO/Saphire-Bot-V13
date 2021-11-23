@@ -27,12 +27,12 @@ module.exports = {
 
             if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-            let wallpaper = BgLevel.get(`LevelWallpapers.${key}`),
-                ObjKey = Object.keys(LevelWallpapers || {}),
-                key = ObjKey[Math.floor(Math.random() * ObjKey)],
+            let ObjKey = Object.keys(LevelWallpapers),
+                key = ObjKey[Math.floor(Math.random() * ObjKey.length)],
+                wallpaper = BgLevel.get(`LevelWallpapers.${key}`),
                 amount = Object.values(LevelWallpapers).length
 
-            const WallPaperEmbed = new MessageEmbed().setColor(Colors(message.member)).setDescription(`Nome: ${wallpaper.Name}\nPreço: ${wallpaper.Price} ${Moeda(message)}\nVip: ${wallpaper.Price - (wallpaper.Price * 0.3)} ${Moeda(message)}\nCode: ${key}`).setImage(wallpaper.Image).setFooter(`Compre: ${prefix}buy bg ${key} | Wallpapers totais: ${amount}`)
+            const WallPaperEmbed = new MessageEmbed().setColor(Colors(message.member)).setDescription(`Nome: ${wallpaper?.Name || 'Indefinido'}\nPreço: ${wallpaper?.Price || 'Indefinido'} ${Moeda(message)}\nVip: ${(wallpaper?.Price || 0) - ((wallpaper?.Price || 0) * 0.3)} ${Moeda(message)}\nCode: ${key}`).setImage(wallpaper.Image).setFooter(`Compre: ${prefix}buy bg ${key} | Wallpapers totais: ${amount}`)
 
             return message.reply({ content: `Para ver algum wallpaper em especifico, use \`${prefix}levelwallpapers <code>\`. Caso queira ver todos, use \`${prefix}lvlwall all\` ou use \`${prefix}lvlwall server\`.`, embeds: [WallPaperEmbed] }).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
