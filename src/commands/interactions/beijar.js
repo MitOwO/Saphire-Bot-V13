@@ -27,7 +27,7 @@ module.exports = {
 
         if (user.id === client.user.id) return message.reply(`${e.SaphireTimida} | Beija eu naaaum.`)
 
-        if (user.id === message.author.id) { return message.reply(`${e.SaphireQ} | Beijar você mesmo é meio impossível, não?`) }
+        if (user.id === message.author.id) return message.reply(`${e.SaphireQ} | Beijar você mesmo é meio impossível, não?`)
 
         const embed = new MessageEmbed()
             .setColor('#246FE0')

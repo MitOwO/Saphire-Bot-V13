@@ -37,7 +37,6 @@ module.exports = {
             case 'bughunter': SetNewBugHunter(); break;
             case 'designer': SetNewDesigner(); break;
             case 'estrela6': case 'star6': AddNewSixthStar(); break;
-            case 'mod': case 'moderador': SetNewSystemModerator(); break;
             case 'dev': case 'developer': SetNewDeveloper(); break;
             case 'helpier': case 'ajudante': AddNewHelpier(); break;
             case 'halloween': case 'h': AddNewTitleHalloween(); break;
@@ -88,20 +87,6 @@ module.exports = {
             if (isNaN(amount)) return message.channel.send(`${e.Deny} | **${amount}** | Não é um número.`)
             sdb.add('Client.ComandosUsados', amount)
             return message.channel.send(`${e.Check} | ${sdb.get('Client.ComandosUsados')}`)
-        }
-
-        function SetNewSystemModerator() {
-            if (sdb.get(`Client.Moderadores.${user.id}`) === user.id)
-                return message.channel.send(`${e.Info} | ${user.username} já é um moderador*(a)*.`)
-
-            sdb.set(`Client.Moderadores.${user.id}`, user.id)
-            user.send(`Parabéns! Você agora é um **${e.ModShield} Official Moderator** no meu sistema.`).catch(err => {
-                if (err.code === 50007)
-                    return message.reply(`${e.Deny} | Não foi possível contactar este usuário.`)
-
-                Error(message, err)
-            })
-            return message.channel.send(`${e.Check} | ${user.username} agora é um moderador*(a)*.`)
         }
 
         function AddTimeVip() {
