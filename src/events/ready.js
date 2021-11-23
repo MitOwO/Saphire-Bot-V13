@@ -1,4 +1,4 @@
-const { DatabaseObj, sdb, CommandsLog } = require('../../Routes/functions/database')
+const { db, DatabaseObj, sdb, CommandsLog } = require('../../Routes/functions/database')
 const { e, config } = DatabaseObj
 const client = require('../../index')
 const Data = require('../../Routes/functions/data')
@@ -8,15 +8,15 @@ client.once("ready", async () => {
     sdb.delete('Client.Rebooting')
     sdb.delete('Request')
     sdb.delete('BetRequest')
+    db.delete(`Aposta`)
 
     CommandsLog.clear()
 
-    let Array2 = ['Procurando Nemo', 'Vingadores', 'Bob Esponja', 'Barbie Girl']
-    let ActivityRandom = Array2[Math.floor(Math.random() * Array2.length)]
-
-    let Activity = sdb.get('Client.Status.SetActivity') || ActivityRandom
-    let Action = sdb.get('Client.Status.SetAction') || 'WATCHING'
-    let Status = sdb.get('Client.Status.setStatus') || 'idle'
+    let Array2 = ['Procurando Nemo', 'Vingadores', 'Bob Esponja', 'Barbie Girl'],
+        ActivityRandom = Array2[Math.floor(Math.random() * Array2.length)],
+        Activity = sdb.get('Client.Status.SetActivity') || ActivityRandom,
+        Action = sdb.get('Client.Status.SetAction') || 'WATCHING',
+        Status = sdb.get('Client.Status.setStatus') || 'idle'
 
     client.user.setActivity(`${Activity}`, { type: `${Action}` })
     client.user.setStatus(`${Status}`)
