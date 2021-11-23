@@ -1,7 +1,9 @@
-const { e } = require('../../../database/emojis.json')
-const { f } = require('../../../database/frases.json')
-const { ServerDb } = require('../../../Routes/functions/database')
-const Error = require('../../../Routes/functions/errors')
+const
+    { e } = require('../../../database/emojis.json'),
+    { f } = require('../../../database/frases.json'),
+    { ServerDb } = require('../../../Routes/functions/database'),
+    Error = require('../../../Routes/functions/errors'),
+    Data = require('../../../Routes/functions/data')
 
 module.exports = {
     name: 'afk',
@@ -20,10 +22,9 @@ module.exports = {
         if (Motivo.length > 500) return message.reply(`${e.Deny} | O seu motivo não pode passar de 500 caracteres.`)
 
         let BlockWords = ['undefined', 'false', 'null', 'nan']
-        for (const word of BlockWords) {
+        for (const word of BlockWords)
             if (Motivo.toLowerCase() === word)
                 return message.channel.send(`${e.Deny} | ${message.author}, somente a palavra **${word}** é proibida neste comando. Escreva algo mais.`)
-        }
 
         const AfkInfoEmbed = new MessageEmbed()
             .setColor('#246FE0')
@@ -34,52 +35,48 @@ module.exports = {
 
         return message.reply(`${e.Planet} | AFK Global System`).then(async msg => {
             sdb.set(`Request.${message.author.id}`, `${msg.url}`)
-            msg.react('✅').catch(() => { }) // AFK Server
-            msg.react('🌎').catch(() => { }) // AFK Global
-            msg.react('❓').catch(() => { }) // AFK Info
-            msg.react('❌').catch(() => { }) // Cancelar
 
-            let FilterServer = (reaction, user) => { return reaction.emoji.name === '✅' && user.id === message.author.id };
-            let AfkServer = msg.createReactionCollector({ filter: FilterServer, max: 1, errors: ['max'] })
+            for (const emoji of ['✅', '🌎', '❓', '❌']) msg.react(emoji).catch(() => { })
 
-            let FilterGlobal = (reaction, user) => { return reaction.emoji.name === '🌎' && user.id === message.author.id };
-            let AfkGlobal = msg.createReactionCollector({ filter: FilterGlobal, max: 1, errors: ['max'] })
-
-            let FilterInfo = (reaction, user) => { return reaction.emoji.name === '❓' && user.id === message.author.id };
-            let AfkInfo = msg.createReactionCollector({ filter: FilterInfo, max: 1, errors: ['max'] })
-
-            let FilterCancel = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id };
-            let Cancel = msg.createReactionCollector({ filter: FilterCancel, time: 15000, max: 1, errors: ['max', 'time'] })
-
-            AfkServer.on('collect', (reaction, user) => {
-                ServerDb.set(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`, `${Motivo}`)
-                sdb.delete(`Request.${message.author.id}`);
-                return message.reply(`${e.Check} | Pode deixar! Vou avisar a todos nesse servidor que te chamarem que você está offline. ${e.SaphireFeliz}`)
-
+            let collector = msg.createReactionCollector({
+                filter: (reaction, user) => ['✅', '🌎', '❓', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                max: 1,
+                time: 15000
             })
 
-            AfkGlobal.on('collect', (reaction, user) => {
+            collector.on('collect', (reaction, user) => {
 
-                sdb.set(`Users.${message.author.id}.AfkSystem`, `${Motivo}`)
-                sdb.delete(`Request.${message.author.id}`);
-                return message.reply(`${e.Planet} | Deixa comigo! Vou avisar em todos os servidores que você está offline. ${e.Menhera}`)
+                switch (reaction.emoji.name) {
+                    case '❌':
+                        collector.stop()
+                        break;
+                    case '✅':
+                        ServerDb.set(`Servers.${message.guild.id}.AfkSystem.${message.author.id}`, `\`${Data()}\` | ${Motivo}`)
+                        sdb.delete(`Request.${message.author.id}`)
+                        message.reply(`${e.Check} | Pode deixar! Vou avisar a todos nesse servidor que te chamarem que você está offline. ${e.SaphireFeliz}`)
+                        break;
+                    case '🌎':
+                        sdb.set(`Users.${message.author.id}.AfkSystem`, `\`${Data()}\` | ${Motivo}`)
+                        sdb.delete(`Request.${message.author.id}`)
+                        message.reply(`${e.Planet} | Deixa comigo! Vou avisar em todos os servidores que você está offline. ${e.Menhera}`)
+                        break;
+                    case '❓':
+                        sdb.delete(`Request.${message.author.id}`)
+                        message.reply({ embeds: [AfkInfoEmbed] })
+                        break;
+                    default:
+                        collector.stop()
+                        break;
+                }
+                
             })
 
-            AfkInfo.on('collect', () => {
-                sdb.delete(`Request.${message.author.id}`);
-                return message.reply({ embeds: [AfkInfoEmbed] })
-            })
-
-            Cancel.on('collect', () => CancelarRequest())
-            AfkServer.on('end', () => CancelarRequest())
-            AfkGlobal.on('end', () => CancelarRequest())
-            AfkInfo.on('end', () => CancelarRequest())
-            Cancel.on('end', () => CancelarRequest())
-
-            function CancelarRequest() {
-                sdb.delete(`Request.${message.author.id}`);
+            collector.on('end', () => {
+                sdb.delete(`Request.${message.author.id}`)
                 msg.delete().catch(() => { })
-            }
+            })
+
+
         }).catch(err => {
             Error(message, err)
             sdb.delete(`Request.${message.author.id}`)
