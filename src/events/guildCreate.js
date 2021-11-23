@@ -24,7 +24,7 @@ client.on("guildCreate", async (guild) => {
     SendAdder();
 
     // Registra o servidor no banco de dados
-    RegisterServer(guild)
+    if (!ServerDb.get(`Servers.${guild.id}`)) RegisterServer(guild)
 
     async function Hello() {
         let FirstMessageChannel = await guild.channels.cache.find(channel => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has(Permissions.FLAGS.SEND_MESSAGES))
@@ -32,19 +32,18 @@ client.on("guildCreate", async (guild) => {
     }
 
     async function WarnGuildCreate() {
-        let owner = await guild.fetchOwner()
-        let CanalDeConvite = await guild.channels.cache.find(channel => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has(Permissions.FLAGS.CREATE_INSTANT_INVITE))
-        const channel = await client.channels.cache.get(config.guildCreateChannelId)
+        let owner = await guild.fetchOwner(),
+            CanalDeConvite = await guild.channels.cache.find(channel => channel.type === 'GUILD_TEXT' && channel.permissionsFor(guild.me).has(Permissions.FLAGS.CREATE_INSTANT_INVITE)),
+            channel = await client.channels.cache.get(config.guildCreateChannelId),
+            Register
+
         if (!channel) return await client.users.cache.get(`${config.ownerId}`).send(`${e.Deny} | Um servidor me adicionou, porém não tem o canal de envio. Servidor: ${guild.name} \`${guild.id}\`.\n\`Linha Code: 32\``).catch(err => { })
 
-        let Register
-        if (!ServerDb.get(`Servers.${guild.id}`)) {
-            Register = `${e.Deny} | Registro no banco de dados indefinido.`
-        } else {
-            Register = `${e.Deny} | Registro no banco de dados concluido!.`
-        }
+        !ServerDb.get(`Servers.${guild.id}`)
+            ? Register = `${e.Deny} | Registro no banco de dados indefinido.`
+            : Register = `${e.Check} | Registro no banco de dados concluido!`
 
-        const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription('Registro no banco de dados concluido!').addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
+        const Embed = new MessageEmbed().setColor('GREEN').setTitle(`${e.Loud} Um servidor me adicionou`).setDescription(`${Register}`).addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
 
         async function WithChannel() {
             CanalDeConvite.createInvite({ maxAge: 0 }).then(ChannelInvite => {

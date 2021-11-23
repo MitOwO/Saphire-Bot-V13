@@ -1,41 +1,41 @@
-const Super = require('../../Routes/classes/SupremacyClass')
-const data = require('../../Routes/functions/data')
-const { MessageEmbed, Permissions } = require('discord.js')
-const client = require('../../index')
-const { N } = require('../../database/nomes.json')
-const { config } = require('../../database/config.json')
-const { e } = require('../../database/emojis.json')
-const { f } = require('../../database/frases.json')
-const { RateLimiter } = require('discord.js-rate-limiter')
-const rateLimiter = new RateLimiter(1, 1500)
-const { sdb, db, CommandsLog, ServerDb } = require('../../Routes/functions/database')
-const BlockCommandsBot = require('../../Routes/functions/blockcommands')
-const { RegisterUser, RegisterServer, UpdateUserName } = require("../../Routes/functions/register")
-const React = require('../../Routes/functions/reacts')
-const xp = Super.xp
-const AfkSystem = require('../../Routes/functions/AfkSystem')
-const RequestAutoDelete = require('../../Routes/functions/Request')
-const Blacklisted = require('../../Routes/functions/blacklist')
-const ServerBlocked = require('../../Routes/functions/blacklistserver')
-const Error = require('../../Routes/functions/errors')
-const ServerManager = require('../../Routes/classes/ServerManager')
-const parsems = require('parse-ms')
-const LogCmd = require('../../database/logcommands.json')
+const
+    Super = require('../../Routes/classes/SupremacyClass'),
+    data = require('../../Routes/functions/data'),
+    { MessageEmbed, Permissions } = require('discord.js'),
+    client = require('../../index'),
+    { N } = require('../../database/nomes.json'),
+    { config } = require('../../database/config.json'),
+    { e } = require('../../database/emojis.json'),
+    { f } = require('../../database/frases.json'),
+    { RateLimiter } = require('discord.js-rate-limiter'),
+    rateLimiter = new RateLimiter(1, 1500),
+    { sdb, db, CommandsLog, ServerDb } = require('../../Routes/functions/database'),
+    BlockCommandsBot = require('../../Routes/functions/blockcommands'),
+    { RegisterUser, RegisterServer, UpdateUserName } = require("../../Routes/functions/register"),
+    React = require('../../Routes/functions/reacts'),
+    xp = Super.xp,
+    AfkSystem = require('../../Routes/functions/AfkSystem'),
+    RequestAutoDelete = require('../../Routes/functions/Request'),
+    Blacklisted = require('../../Routes/functions/blacklist'),
+    ServerBlocked = require('../../Routes/functions/blacklistserver'),
+    Error = require('../../Routes/functions/errors'),
+    parsems = require('parse-ms'),
+    LogCmd = require('../../database/logcommands.json')
 
 client.on('messageCreate', async message => {
 
     if (!message.guild || !message.channel.permissionsFor(message.guild.me).has(Permissions.FLAGS.SEND_MESSAGES) || !message.channel.permissionsFor(message.guild.me).has(Permissions.FLAGS.VIEW_CHANNEL) || !message.guild.me.permissions.has(Permissions.FLAGS.SEND_MESSAGES) || !message.guild.me.permissions.has(Permissions.FLAGS.VIEW_CHANNEL))
         return
 
-    const { prefix, request, baka, blacklist, blacklistServers, Tsundere, AuthorId } = {
-        prefix: ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix,
-        request: sdb.get(`Request.${message.author.id}`),
-        baka: sdb.get(`Users.${message.author.id}.Baka`),
-        blacklist: db.get(`Blacklist_${message.author.id}`),
-        blacklistServers: db.get(`BlacklistServers_${message.guild.id}`),
-        Tsundere: ServerDb.get(`Servers.${message.guild.id}.Tsundere`),
-        AuthorId: message.author.id
-    }
+    const
+        prefix = ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix,
+        request = false,
+        // request = sdb.get(`Request.${message.author.id}`),
+        baka = sdb.get(`Users.${message.author.id}.Baka`),
+        blacklist = db.get(`Blacklist_${message.author.id}`),
+        blacklistServers = db.get(`BlacklistServers_${message.guild.id}`),
+        Tsundere = ServerDb.get(`Servers.${message.guild.id}.Tsundere`),
+        AuthorId = message.author.id
 
     if (!sdb.get(`Users.${AuthorId}.Name`)) RegisterUser(message)
     if (!ServerDb.has(`Servers.${message.guild.id}`)) RegisterServer(message.guild)
@@ -66,9 +66,8 @@ client.on('messageCreate', async message => {
         length = args.join(' ').length > 1500,
         limited = rateLimiter.take(AuthorId)
 
-    if (length) return message.reply(`${e.Deny} | O limite máximo de caracteres nas mensagens são de 1500 caracteres.`)
-
     if (message.author.bot || !message.content.startsWith(prefix) || cmd.length == 0) return
+    if (length) return message.reply(`${e.Deny} | O limite máximo de caracteres nas mensagens são de 1500 caracteres.`)
 
     if (sdb.get('Client.Rebooting.ON')) return message.reply(`${e.Loading} Relogando...\n${sdb.get('Client.Rebooting.Features')} `)
 

@@ -1,4 +1,4 @@
-const { DatabaseObj, sdb, db, lotery, CommandsLog } = require('../../Routes/functions/database')
+const { DatabaseObj, sdb, CommandsLog } = require('../../Routes/functions/database')
 const { e, config } = DatabaseObj
 const client = require('../../index')
 const Data = require('../../Routes/functions/data')
