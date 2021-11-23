@@ -27,7 +27,9 @@ function AfkSystem(message) {
     if (user) {
         if (sdb.has(`Users.${user.id}.AfkSystem`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${sdb.get(`Users.${user.id}.AfkSystem`)}`)
         if (ServerDb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) return message.reply(`${e.Afk} | ${user.username} está offline. --> ✍️ | ${ServerDb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`)
-    } else { return }
+    }
+    
+    return
 }
 
 module.exports = AfkSystem
