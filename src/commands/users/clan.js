@@ -19,11 +19,10 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let { Clans, AtualClan, user } = {
-            Clans: Clan.get('Clans') || {},
-            AtualClan: sdb.get(`Users.${message.author.id}.Clan`),
-            user: message.mentions.members.first() || message.guild.members.cache.get(args[1]),
-        },
+        let
+            Clans = Clan.get('Clans') || {},
+            AtualClan = sdb.get(`Users.${message.author.id}.Clan`),
+            user = message.mentions.members.first() || message.guild.members.cache.get(args[1]) || message.guild.members.cache.get(args[0]) || message.mentions.repliedUser,
             keys = Object.keys(Clans),
             key,
             RequestControl,

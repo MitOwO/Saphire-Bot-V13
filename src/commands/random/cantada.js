@@ -1,6 +1,7 @@
 const
   { Frases, DatabaseObj: { e, config, f } } = require('../../../Routes/functions/database'),
-  PassCode = require('../../../Routes/functions/PassCode')
+  PassCode = require('../../../Routes/functions/PassCode'),
+  IsMod = require('../../../Routes/functions/ismod')
 
 module.exports = {
   name: 'cantadas',
@@ -114,7 +115,8 @@ module.exports = {
 
       let CantadasDB = sdb.get('Client.Cantadas'),
         CantadasCodes = Object.keys(CantadasDB || {}),
-        Code = args[1]
+        Code = args[1],
+        Reason = args.slice(2).join(' ') || 'Nenhuma observação'
 
       if (!CantadasCodes.includes(Code))
         return RemoveCantada()
@@ -126,7 +128,7 @@ module.exports = {
 
       sdb.delete(`Client.Cantadas.${Code}`)
 
-      client.users.cache.get(Cantada.Author)?.send(`${e.Deny} | A sua cantada não foi aceita.\n${e.Info} | Conteúdo: ${Cantada.Cantada}`).catch(() => { })
+      client.users.cache.get(Cantada.Author)?.send(`${e.Deny} | A sua cantada não foi aceita.\n${e.Info} | Conteúdo: ${Cantada.Cantada}\n💬 | ${Reason}`).catch(() => { })
       return message.reply(`${e.Check} | A cantada \`${Code}\` foi deletada com sucesso!`)
 
       function DeleteAllCantadas() {
@@ -340,16 +342,6 @@ module.exports = {
         Cantada = `${Random.Cantada}\n${client.users.cache.get(Random.Author)?.tag || 'Autor*(a)* não encontrado'}`
 
       return Cantada
-    }
-
-    function IsMod(id) {
-
-      if (id === config.ownerId)
-        return true
-
-      return sdb.get(`Client.Moderadores.${id}`)
-        ? true
-        : false
     }
 
     function CantadasInfo() {
