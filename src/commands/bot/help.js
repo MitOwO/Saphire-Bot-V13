@@ -1,16 +1,16 @@
-const { readdirSync } = require("fs")
-const { MessageSelectMenu, MessageActionRow } = require("discord.js")
-const { f } = require('../../../database/frases.json')
-const Error = require('../../../Routes/functions/errors')
-const { DatabaseObj } = require("../../../Routes/functions/database")
-const { e, config } = DatabaseObj
+const
+    { readdirSync } = require("fs"),
+    { MessageSelectMenu, MessageActionRow } = require("discord.js"),
+    { f } = require('../../../database/frases.json'),
+    Error = require('../../../Routes/functions/errors'),
+    { DatabaseObj } = require("../../../Routes/functions/database"),
+    { e, config } = DatabaseObj
 
 module.exports = {
     name: 'help',
     aliases: ['comandos', 'comando', 'commands', 'h', 'ajuda', 'socorro', 'info', 'comands'],
     usage: '<help> [NomeDoComando]',
     category: 'bot',
-
     ClientPermissions: 'EMBED_LINKS',
     emoji: `${e.Info}`,
     description: 'Central de Ajuda',
@@ -28,9 +28,8 @@ module.exports = {
             .addField(`${e.Info} Perguntas frequentes`, `Comando: \`${prefix}faq\`\nEstá com alguma dúvida? Veja as perguntas mais feitas de uma forma simples e explicativa.`)
             .addField('🛰️ Global System Notification', `Ative o \`${prefix}logs\` no servidor e aproveite do meu sistema avançado de notificação. Eu vou te avisar desde os bans/kicks até Autoroles com permissões editadas.`)
             .addField(`${e.SaphireTimida} Saphire`, `Você pode [me adicionar](${SaphireInviteLink}) no seu servidor e também pode entrar no [meu servidor](${config.ServerLink}) pra interagir ou tirar algumas dúvida.`)
-            .addField(`${e.TopGG} Top.gg`, `[Votar](${config.TopGGLink}/vote) na ${client.user.username}.`)
-
             .setFooter('Este painel se fechará após 1 minuto de inatividade')
+        // .addField(`${e.TopGG} Top.gg`, `[Votar](${config.TopGGLink}/vote) na ${client.user.username}.`)
 
         const painel = new MessageActionRow()
             .addComponents(new MessageSelectMenu()

@@ -27,23 +27,20 @@ module.exports = {
 
             if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-            let wallpaper, key, amount
-
-            try {
-                key = Object.keys(LevelWallpapers)[Math.floor(Math.random() * Object.keys(LevelWallpapers).length)]
-                wallpaper = BgLevel.get(`LevelWallpapers.${key}`)
+            let wallpaper = BgLevel.get(`LevelWallpapers.${key}`),
+                ObjKey = Object.keys(LevelWallpapers || {}),
+                key = ObjKey[Math.floor(Math.random() * ObjKey)],
                 amount = Object.values(LevelWallpapers).length
-            } catch (err) { Error(message, err) }
 
             const WallPaperEmbed = new MessageEmbed().setColor(Colors(message.member)).setDescription(`Nome: ${wallpaper.Name}\nPreço: ${wallpaper.Price} ${Moeda(message)}\nVip: ${wallpaper.Price - (wallpaper.Price * 0.3)} ${Moeda(message)}\nCode: ${key}`).setImage(wallpaper.Image).setFooter(`Compre: ${prefix}buy bg ${key} | Wallpapers totais: ${amount}`)
 
-            return message.reply({ content: `Para ver algum wallpaper em especifico, use \`${prefix}levelwallpapers <code>\`. Caso queira ver todos. Use \`${prefix}lvlwall server\`.`, embeds: [WallPaperEmbed] }).then(msg => {
+            return message.reply({ content: `Para ver algum wallpaper em especifico, use \`${prefix}levelwallpapers <code>\`. Caso queira ver todos, use \`${prefix}lvlwall all\` ou use \`${prefix}lvlwall server\`.`, embeds: [WallPaperEmbed] }).then(msg => {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('🔄').catch(() => { }) // 1º Embed
                 msg.react('❌').catch(() => { })
 
-                let TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id };
-                let TradeWallpaper = msg.createReactionCollector({ filter: TradeFilter, idle: 60000 })
+                let TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id },
+                    TradeWallpaper = msg.createReactionCollector({ filter: TradeFilter, idle: 60000 })
 
                 TradeWallpaper.on('collect', (reaction, user) => {
 

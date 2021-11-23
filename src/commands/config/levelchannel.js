@@ -45,12 +45,12 @@ module.exports = {
 
                     if (reaction.emoji.name === '✅') {
                         sdb.delete(`Request.${message.author.id}`)
-                        ServerDb.set(`Servers.${message.guild.id}.XPChannel`)
-                        msg.edit(`${e.Check} | O canal de notificações de level up foi desabilitado.`).catch(() => { })
+                        ServerDb.delete(`Servers.${message.guild.id}.XPChannel`)
+                        return msg.edit(`${e.Check} | O canal de notificações de level up foi desabilitado.`).catch(() => { })
 
                     } else {
                         sdb.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                        return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
                     }
                 }).catch(() => {
                     sdb.delete(`Request.${message.author.id}`)

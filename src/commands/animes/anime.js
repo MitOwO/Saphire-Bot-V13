@@ -6,7 +6,7 @@ const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'anime',
-    aliases: ['search', 'searchanime', 'animes'],
+    aliases: ['searchanime', 'animes'],
     category: 'animes',
     ClientPermissions: 'EMBED_LINKS',
     emoji: `🔍`,

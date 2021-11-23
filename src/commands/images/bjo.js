@@ -22,6 +22,10 @@ module.exports = {
         if (!user2) return message.reply(`${e.Info} | Tenta assim: \`${prefix}bjo @user1 @user2\``)
         let avatar2 = user2.displayAvatarURL({ format: 'png' })
 
+        if (sdb.get(`Users.${message.author.id}.NoReact`)) return message.reply(`${e.Deny} | Você está com o \`${prefix}noreact\` ativado.`)
+        if (sdb.get(`Users.${user1.id}.NoReact`)) return message.reply(`${e.Deny} | ${user1.tag} está com o \`${prefix}noreact\` ativado.`)
+        if (sdb.get(`Users.${user2.id}.NoReact`)) return message.reply(`${e.Deny} | ${user2.tag} está com o \`${prefix}noreact\` ativado.`)
+
         if (user1.id === user2.id)
             return message.reply(`${e.Info} | Tenta assim: \`${prefix}bjo @user1 @user2\``)
 
