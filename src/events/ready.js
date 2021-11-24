@@ -1,7 +1,8 @@
-const { db, DatabaseObj, sdb, CommandsLog } = require('../../Routes/functions/database')
-const { e, config } = DatabaseObj
-const client = require('../../index')
-const Data = require('../../Routes/functions/data')
+const
+    { db, DatabaseObj, sdb, CommandsLog } = require('../../Routes/functions/database'),
+    { e, config } = DatabaseObj,
+    client = require('../../index'),
+    Data = require('../../Routes/functions/data')
 
 client.once("ready", async () => {
 
@@ -27,13 +28,38 @@ client.once("ready", async () => {
         msg.delete().catch(() => { })
     }, 5000)
 
-    // if (!sdb.get(`MuteSystem`))
-    //     sdb.set(`MuteSystem`, {})
+    setInterval(() => {
 
-    // sdb.get(`MuteSystem`)
+        let UsersID = Object.keys(sdb.get('Users')),
+            likesarray = [],
+            dbarray = [],
+            xparray = []
 
-    // setInterval(() => {
+        for (const id of UsersID) {
 
-    // }, 5000)
+            let XpUser = sdb.get(`Users.${id}.Level`) || 0,
+                likes = sdb.get(`Users.${id}.Likes`) || 0,
+                amount = (sdb.get(`Users.${id}.Bank`) || 0) + (sdb.get(`Users.${id}.Balance`) || 0) + ((sdb.get(`Users.${id}.Cache.Resgate`) || 0))
+
+            if (amount > 0)
+                dbarray.push({ id: id, amount: amount })
+
+            if (XpUser > 0)
+                xparray.push({ id: id, amount: XpUser })
+
+            if (likes > 0)
+                likesarray.push({ id: id, amount: likes })
+
+        }
+
+        let RankingLevel = xparray.sort((a, b) => b.amount - a.amount),
+            RankingLikes = likesarray.sort((a, b) => b.amount - a.amount),
+            RankingMoney = dbarray.sort((a, b) => b.amount - a.amount)
+
+        sdb.set('Client.TopGlobalLevel', RankingLevel[0].id)
+        sdb.set('Client.TopGlobalLikes', RankingLikes[0].id)
+        sdb.set('Client.TopGlobalMoney', RankingMoney[0].id)
+
+    }, 300000)
 
 })

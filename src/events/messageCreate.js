@@ -29,13 +29,13 @@ client.on('messageCreate', async message => {
 
     const
         prefix = ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix,
-        request = false,
-        // request = sdb.get(`Request.${message.author.id}`),
+        request = false, // sdb.get(`Request.${message.author.id}`),
         baka = sdb.get(`Users.${message.author.id}.Baka`),
         blacklist = db.get(`Blacklist_${message.author.id}`),
         blacklistServers = db.get(`BlacklistServers_${message.guild.id}`),
         Tsundere = ServerDb.get(`Servers.${message.guild.id}.Tsundere`),
-        AuthorId = message.author.id
+        AuthorId = message.author.id,
+        BasePerms = ['READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS', 'EMBED_LINKS', 'ADD_REACTIONS']
 
     if (!sdb.get(`Users.${AuthorId}.Name`)) RegisterUser(message)
     if (!ServerDb.has(`Servers.${message.guild.id}`)) RegisterServer(message.guild)
@@ -51,8 +51,19 @@ client.on('messageCreate', async message => {
         AfkSystem(message)
     }
 
-    if (!message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY) || !message.guild.me.permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS) || !message.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS) || !message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS))
-        return message.author.bot ? null : message.channel.send(`Eu não tenho permissão suficiente para executar este comando. Pode conferir se eu tenho as 3 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo.)\`**`).catch(() => { })
+    const Perms = {
+        READ_MESSAGE_HISTORY: 'Ler histórico de mensagens',
+        USE_EXTERNAL_EMOJIS: 'Usar emojis externos',
+        EMBED_LINKS: 'Enviar links',
+        ADD_REACTIONS: 'Adicionar reações'
+    }
+
+    for (const perm of BasePerms)
+        if (!message.guild.me.permissions.has(Permissions.FLAGS[perm]))
+            return message.author.bot ? null : message.channel.send(`| \`${Perms[perm] || 'Mas o que é isso?'}\` | Eu não tenho permissão suficiente para executar este comando.\nPode conferir se eu tenho as 4 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo), Adicionar reações\`**`).catch(() => { })
+
+    // if (!message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY) || !message.guild.me.permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS) || !message.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS) || !message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS))
+    //     return message.author.bot ? null : message.channel.send(`Eu não tenho permissão suficiente para executar este comando. Pode conferir se eu tenho as 3 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo.)\`**`).catch(() => { })
     // return message.channel.send(`Hey, ${message.author}! Eu preciso das permissões "\`Ver histórico de mensagens\`, \`Usar emojis externos\` \`Adicionar Reações\` e \`Enviar links\`" para que eu possa usar meu sistema de interação, respostas, emojis e informações.`)
 
     if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id))
@@ -104,10 +115,15 @@ client.on('messageCreate', async message => {
                 Time: data() || 'Indefinido'
             })
 
-            let time = parsems(1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`)))
-            let timeImage = parsems(10000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`)))
-            if (!message.member.permissions.has(command.UserPermissions || [])) return message.reply(`${e.Hmmm} | Você não tem permissão para usar este comando.\nPermissão necessária: \`${command.UserPermissions || []}\``)
-            if (!message.guild.me.permissions.has(command.ClientPermissions || [])) return message.reply(`${e.SadPanda} | Eu preciso da permissão \`${command.ClientPermissions || []}\` para continuar com este comando.`)
+            let time = parsems(1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`))),
+                timeImage = parsems(10000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`))),
+                ClientPermisitonsRequired = command.ClientPermissions || [],
+                UserPermitionsRequired = command.UserPermissions || [],
+                ClientPermissionsMapped = ClientPermisitonsRequired.map(perm => config.Perms[perm]).join(', ')
+                UserPermissionsMapped = UserPermitionsRequired.map(perm => config.Perms[perm]).join(', ')
+
+            if (!message.member.permissions.has(UserPermitionsRequired)) return message.reply(`${e.Hmmm} | Você não tem permissão para usar este comando.\n${e.Info} | Permissão*(ões)* necessária*(s)*: **\`${UserPermissionsMapped}\`**`)
+            if (!message.guild.me.permissions.has(ClientPermisitonsRequired)) return message.reply(`${e.SadPanda} | Eu preciso da*s* permissão*(ões)* **\`${ClientPermissionsMapped}\`** para continuar com este comando.`)
             if (command.category === 'owner' && AuthorId !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
             if (command.category === 'economy' && sdb.get(`Users.${AuthorId}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`)) > 0) { return message.reply(`${e.Cadeia} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``) }
             if (command.category === 'images') {
