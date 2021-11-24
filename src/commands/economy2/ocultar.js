@@ -4,8 +4,7 @@ module.exports = {
     name: 'ocultar',
     aliases: ['ocult'],
     category: 'economy2',
-    
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.Coin}`,
     usage: '<ocultar> [off]',
     description: 'Oculte o dinheiro do seu banco para todos',

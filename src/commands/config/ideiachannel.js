@@ -7,7 +7,7 @@ module.exports = {
     name: 'ideiachannel',
     aliases: ['setideiachannel', 'canaldeideias'],
     category: 'config',
-    UserPermissions: 'MANAGE_GUILD',
+    UserPermissions: ['MANAGE_GUILD'],
     ClientPermissions: ['ADD_REACTIONS', 'EMBED_LINKS'],
     emoji: `${e.ModShield}`,
     usage: '<ideichannel> [#channel]',

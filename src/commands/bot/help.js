@@ -11,7 +11,7 @@ module.exports = {
     aliases: ['comandos', 'comando', 'commands', 'h', 'ajuda', 'socorro', 'info', 'comands'],
     usage: '<help> [NomeDoComando]',
     category: 'bot',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.Info}`,
     description: 'Central de Ajuda',
 

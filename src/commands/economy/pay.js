@@ -9,7 +9,7 @@ module.exports = {
     name: 'pagar',
     aliases: ['pay', 'transferir'],
     category: 'economy',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.Coin}`,
     usage: '<pay> <@user> <quantia/all>',
     description: 'Pague outras pessoas',

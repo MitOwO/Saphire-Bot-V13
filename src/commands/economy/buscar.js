@@ -7,7 +7,7 @@ module.exports = {
     name: 'buscar',
     aliases: ['bus', 'busca'],
     category: 'economy',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: '🔦',
     usage: '<buscar>',
     description: 'Ajude a Princesa Kaya',

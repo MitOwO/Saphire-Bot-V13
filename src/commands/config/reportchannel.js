@@ -6,7 +6,7 @@ module.exports = {
     name: 'reportchannel',
     aliases: ['setreportchannel'],
     category: 'config',
-    UserPermissions: 'MANAGE_GUILD',
+    UserPermissions: ['MANAGE_GUILD'],
     ClientPermissions: ['SEND_MESSAGES', 'ADD_REACTIONS'],
     emoji: `${e.ModShield}`,
     usage: '<reportchannel> [#canal]',

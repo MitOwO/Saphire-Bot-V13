@@ -6,7 +6,7 @@ module.exports = {
     aliases: ['servidres', 'package'],
     category: 'bot',
     
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.CatJump}`,
     usage: '<servers>',
     description: 'Meus servidores',

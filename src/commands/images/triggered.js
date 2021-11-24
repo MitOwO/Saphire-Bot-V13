@@ -7,7 +7,7 @@ module.exports = {
     name: 'triggered',
     aliases: ['trigger', 'trig'],
     category: 'images',
-    ClientPermissions: 'ATTACH_FILES',
+    ClientPermissions: ['ATTACH_FILES'],
     emoji: `${e.Trig}`,
     usage: '<trig> [@user]',
     description: 'Triggeeeeered!',

@@ -8,7 +8,7 @@ module.exports = {
     name: 'pig',
     aliases: ['porco'],
     category: 'economy',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.Pig}`,
     usage: '<pig> [coins/status]',
     description: 'Tente obter toda a grana do porquinho',

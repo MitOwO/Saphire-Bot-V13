@@ -5,7 +5,7 @@ module.exports = {
     name: 'invite',
     aliases: ['inv', 'convite'],
     category: 'util',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: '📨',
     usage: '<invite>',
     description: 'Me convide para seu servidor',

@@ -8,7 +8,7 @@ module.exports = {
     name: 'setmoeda',
     aliases: ['nomemoeda', 'editmoeda', 'setmoedaname'],
     category: 'config',
-    UserPermissions: 'MANAGE_GUILD',
+    UserPermissions: ['MANAGE_GUILD'],
     emoji: `${e.ModShield}`,
     usage: '<setmoeda> [emoji] [NomeDaMoeda]',
     description: 'Configure a moeda do jeito que você quiser',

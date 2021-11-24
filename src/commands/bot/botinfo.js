@@ -8,7 +8,7 @@ module.exports = {
   name: "botinfo",
   aliases: ['stats', 'botstats', 'bi'],
   category: 'bot',
-  ClientPermissions: 'EMBED_LINKS',
+  ClientPermissions: ['EMBED_LINKS'],
   emoji: `${e.Info}`,
   description: "Estatisticas do bot",
   run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {

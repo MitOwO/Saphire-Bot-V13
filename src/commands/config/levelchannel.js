@@ -7,7 +7,7 @@ module.exports = {
     name: 'levelchannel',
     aliases: ['setlevelchannel', 'setlevel', 'xpchannel'],
     category: 'config',
-    UserPermissions: 'MANAGE_GUILD',
+    UserPermissions: ['MANAGE_GUILD'],
     ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.ModShield}`,
     usage: '<levelchannel> [on/off]',

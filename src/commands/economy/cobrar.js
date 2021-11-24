@@ -8,7 +8,7 @@ module.exports = {
     name: 'cobrar',
     aliases: ['mepaga', 'pagueme'],
     category: 'economy',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.Coin}`,
     usage: '<cobrar> <@user> <quantia>',
     description: 'Cobre os que te devem',

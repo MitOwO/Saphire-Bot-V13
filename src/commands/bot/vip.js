@@ -5,7 +5,7 @@ const { f } = require('../../../database/frases.json')
 module.exports = {
     name: 'vip',
     category: 'bot',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.VipStar}`,
     usage: '<vip>',
     description: 'Informações sobre o vip',

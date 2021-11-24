@@ -8,7 +8,7 @@ module.exports = {
     name: 'autorole',
     aliases: ['autorolestats'],
     category: 'config',
-    UserPermissions: 'MANAGE_ROLES',
+    UserPermissions: ['MANAGE_ROLES'],
     ClientPermissions: ['MANAGE_ROLES', 'ADD_REACTIONS'],
     emoji: `${e.Verify}`,
     usage: '<autorole> <1/2> <role> | <status> | <1/2> <off>',

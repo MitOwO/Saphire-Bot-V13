@@ -9,7 +9,7 @@ module.exports = {
     name: 'bet',
     aliases: ['apostar', 'aposta'],
     category: 'economy',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: '💵',
     usage: '<bet> <quantia>',
     description: 'Aposte dinheiro no chat',

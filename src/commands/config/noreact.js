@@ -5,7 +5,7 @@ module.exports = {
     name: 'noreact',
     aliases: ['semreação', 'nomentions', 'nmarca', 'nomention'],
     category: 'config',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.Deny}`,
     usage: '<noreact>',
     description: 'Bloqueie todos de usarem comandos de interação com você',

@@ -8,8 +8,7 @@ module.exports = {
     name: 'cu',
     aliases: ['anus', 'bunda', 'traseiro', 'popo'],
     category: 'economy2',
-    
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.Warn}`,
     usage: '<cu>',
     description: 'Você daria seu traseiro por dinheiro?',

@@ -7,7 +7,7 @@ module.exports = {
     name: 'prefix',
     aliases: ['setprefix'],
     category: 'bot',
-    UserPermissions: 'MANAGE_GUILD',
+    UserPermissions: ['MANAGE_GUILD'],
     ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.ModShield}`,
     usage: '<NovoPrefix> | <reset>',

@@ -149,7 +149,7 @@ module.exports = {
                 WhoAreTheUser = message.author.id === user.id ? 'Você' : 'Este usuário'
 
             if (sdb.get(`Client.BackgroundAcess.${user.id}`))
-                return message.reply(`${e.Info} | ${WhoAreTheUser} possui todos os wallpapers.`)
+                return message.reply(`${e.Info} | ${WhoAreTheUser} possui todos os wallpapers. Tente usar \`${prefix}lvlwall all\``)
 
             try {
                 keys = Object.keys(sdb.get(`Users.${user.id}.Slot.Walls.Bg`))?.sort((a, b) => a.slice(2) - b.slice(2))

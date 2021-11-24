@@ -6,7 +6,7 @@ module.exports = {
     name: 'donate',
     aliases: ['doar', 'doação'],
     category: 'bot',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.MoneyWings}`,
     usage: '<donate>',
     description: 'Quer me dar um dinheirinho?',

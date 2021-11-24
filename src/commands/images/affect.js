@@ -6,7 +6,7 @@ module.exports = {
   name: 'affect',
   aliases: ['afeta'],
   category: 'images',
-  ClientPermissions: 'ATTACH_FILES',
+  ClientPermissions: ['ATTACH_FILES'],
   emoji: '🤰',
   usage: '<affect> [@user]',
   description: 'Isso não afeta o bebê',

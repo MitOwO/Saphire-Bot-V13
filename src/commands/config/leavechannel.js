@@ -7,7 +7,7 @@ module.exports = {
     name: 'leavechannel',
     aliases: ['setleave', 'setleavechannel'],
     category: 'config',
-    UserPermissions: 'MANAGE_CHANNELS',
+    UserPermissions: ['MANAGE_CHANNELS'],
     ClientPermissions: ['SEND_MESSAGES', 'ADD_REACTIONS'],
     emoji: `${e.Loud}`,
     usage: '<leavechannel> [#channel] | [off]',

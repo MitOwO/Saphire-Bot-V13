@@ -9,7 +9,7 @@ module.exports = {
     name: 'lance',
     aliases: ['lançar'],
     category: 'economy',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.MoneyWings}`,
     usage: '<lance> <quantia>',
     description: 'Lance dinheiro no chat',

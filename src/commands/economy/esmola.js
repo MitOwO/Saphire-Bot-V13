@@ -8,7 +8,7 @@ module.exports = {
   name: 'esmola',
   aliases: ['mendigar'],
   category: 'economy',
-  ClientPermissions: 'ADD_REACTIONS',
+  ClientPermissions: ['ADD_REACTIONS'],
   emoji: `${e.Coin}`,
   usage: '<esmola>',
   description: 'Mendigue dinheiro no chat',
