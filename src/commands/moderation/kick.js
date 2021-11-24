@@ -7,7 +7,7 @@ module.exports = {
     name: 'kick',
     aliases: ['expulsar', 'retirar'],
     category: 'moderation',
-    UserPermissions: 'KICK_MEMBERS',
+    UserPermissions: ['KICK_MEMBERS'],
     ClientPermissions: ['KICK_MEMBERS', 'ADD_REACTIONS'],
     emoji: `${e.ModShield}`,
     usage: '<kick> <@user> [ID]',

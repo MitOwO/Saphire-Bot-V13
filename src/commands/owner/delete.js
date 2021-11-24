@@ -6,7 +6,7 @@ module.exports = {
     name: 'delete',
     aliases: ['del', 'deletar'],
     usage: '<item/class/Cache> [@user]',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.OwnerCrow}`,
     description: 'permite meu criador deletar qualquer coisa de qualquer um dentro do meu sistema',
 

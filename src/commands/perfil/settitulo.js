@@ -5,7 +5,7 @@ module.exports = {
     name: 'settitulo',
     aliases: ['titulo', 'settitle', 'title', 'título'],
     category: 'perfil',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: '🔰',
     usage: '<setitulo> <Seu Título>',
     description: 'Escolha um título grandioso',

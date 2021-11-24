@@ -8,7 +8,7 @@ module.exports = {
     name: 'familia',
     aliases: ['family', 'família'],
     category: 'perfil',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: '👩‍👩‍👧‍👧',
     usage: '<family> <1/2/3> <@user/id>',
     description: 'Entre pra uma família',

@@ -3,9 +3,9 @@ const { e } = require('../../../database/emojis.json')
 module.exports = {
     name: 'sync',
     aliases: ['sincronizar', 'sinc'],
-    category: '',
-    UserPermissions: 'MANAGE_CHANNELS',
-    ClientPermissions: 'MANAGE_CHANNELS',
+    category: 'moderation',
+    UserPermissions: ['MANAGE_CHANNELS'],
+    ClientPermissions: ['MANAGE_CHANNELS'],
     emoji: `${e.ModShield}`,
     usage: '<sync> [#channel]',
     description: 'Sincronize o canal com a categoria',

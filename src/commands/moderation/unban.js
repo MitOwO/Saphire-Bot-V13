@@ -7,7 +7,7 @@ module.exports = {
     name: 'unban',
     aliases: ['desbanir', 'desban', 'ub'],
     category: 'moderation',
-    UserPermissions: 'BAN_MEMBERS',
+    UserPermissions: ['BAN_MEMBERS'],
     ClientPermissions: ['BAN_MEMBERS', 'EMBED_LINKS', 'ADD_REACTIONS'],
     emoji: `${e.ModShield}`,
     usage: '<unban> <id>',

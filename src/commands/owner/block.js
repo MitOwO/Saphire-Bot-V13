@@ -4,7 +4,7 @@ module.exports = {
     name: 'block',
     aliases: ['nosend'],
     category: 'owner',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.OwnerCrow}`,
     usage: '<block> <ID> | <remove>',
     description: 'Permite meu criador des/bloquear usuários que abusam dos comandos gif/sendcantada/etc',

@@ -5,7 +5,7 @@ module.exports = {
     name: 'safari',
     aliases: ['zoo'],
     category: 'perfil',
-    ClientPermissions: 'MANAGE_CHANNELS',
+    ClientPermissions: ['MANAGE_CHANNELS'],
     emoji: '🦁',
     usage: 'zoo',
     description: 'Caçe e adote bichinhos',

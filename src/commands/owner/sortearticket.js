@@ -5,7 +5,7 @@ const Moeda = require('../../../Routes/functions/moeda')
 module.exports = {
     name: 'sortearticket',
     category: 'owner',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: '🎫',
     usage: '<sortearticket>',
     description: 'Sorteia o prêmio da loteria',

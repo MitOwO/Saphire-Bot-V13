@@ -6,7 +6,7 @@ module.exports = {
     name: 'unlockcommands',
     aliases: ['unblockcommands'],
     category: 'moderation',
-    UserPermissions: 'MANAGE_CHANNELS',
+    UserPermissions: ['MANAGE_CHANNELS'],
     ClientPermissions: ['ADD_REACTIONS'],
     emoji: '🔓',
     usage: '<unlockcommands> <channel>',

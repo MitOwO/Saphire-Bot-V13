@@ -8,7 +8,7 @@ module.exports = {
     name: 'parca',
     aliases: ['parças', 'amigos', 'parça', 'amigo'],
     category: 'perfil',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: 'c',
     usage: '<parças> <1/2/3/4/5> <@user/id>',
     description: 'Junte seus parças no seu perfil',
@@ -21,7 +21,7 @@ module.exports = {
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return SendInfo()
         if (['separar', 'delete', 'deletar', 'excluir'].includes(args[0]?.toLowerCase())) return DeleteParcaPosition()
 
-        if (!args[0] || args[0] > 5 || args[0] < 1)
+        if (!args[0] || isNaN(args[0]) || args[0] > 5 || args[0] < 1)
             return message.reply(`${e.Deny} | Você tem que dizer qual é a posição! Se tiver dúvidas, use \`${prefix}parça info\``)
 
         let number = {
@@ -30,7 +30,7 @@ module.exports = {
             3: 'Tres',
             4: 'Quatro',
             5: 'Cinco'
-        }[args[0]]
+        }[parseInt(args[0])]
 
         user ? CheckAndSetParca() : message.reply(`${e.Deny} | Você tem que dizer qual é o @membro! Se tiver dúvidas, use \`${prefix}parça info\``)
 
@@ -39,7 +39,7 @@ module.exports = {
             if (sdb.get(`Users.${message.author.id}.Perfil.Marry`) === user.id) return message.reply(`${e.Info} | ${user.user.username} é seu cônjuge.`)
             if ((sdb.get(`Users.${message.author.id}.Perfil.Family.Um`) || sdb.get(`Users.${message.author.id}.Perfil.Family.Dois`) || sdb.get(`Users.${message.author.id}.Perfil.Family.Tres`)) === user.id) return message.reply(`${e.Info} | Você já é familiar de ${user.user.username}`)
             if (sdb.get(`Users.${user.id}.Perfil.Parcas.${number}`)) return message.reply(`${e.Info} | ${user.user.username} já tem um parça na posição ${number}.`)
-            if (sdb.get(`Users.${message.author.id}.Perfil.Parcas.${number}`)) return message.reply(`${e.Info} | ${GetUser(sdb.get(`Users.${message.author.id}.Perfil.Parcas.${number}`), number)} é seu parça na posição ${number}`)
+            if (sdb.get(`Users.${message.author.id}.Perfil.Parcas.${number}`)) return message.reply(`${e.Info} | ${GetUser(sdb.get(`Users.${message.author.id}.Perfil.Parcas.${number}`))} é seu parça na posição ${number}`)
             if (user.id === message.author.id) return message.reply(`${e.Deny} | Você não pode ser parça de você mesmo.`)
             if (user.id === client.user.id) return message.reply(`${e.Deny} | Sorry... Não posso ter parças.`)
             if (user.user.bot) return message.reply(`${e.Deny} | Sorry... Nada de bots.`)
@@ -84,7 +84,7 @@ module.exports = {
             let User = await client.users.cache.get(id)
 
             if (!User) {
-                sdb.set(`Users.${message.author.id}.Perfil.Parcas.${number}`, false)
+                sdb.delete(`Users.${message.author.id}.Perfil.Parcas.${number}`)
                 sdb.delete(`Users.${id}`)
             }
 
@@ -126,7 +126,7 @@ module.exports = {
                 3: 'Tres',
                 4: 'Quatro',
                 5: 'Cinco'
-            }[args[1]]
+            }[parseInt(args[1])]
 
             if (!sdb.get(`Users.${message.author.id}.Perfil.Parcas.${position}`))
                 return message.reply(`${e.Deny} | Você não tem nenhum parça na posição ${position}`)

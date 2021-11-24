@@ -5,8 +5,7 @@ module.exports = {
   name: 'ship',
   aliases: ['shippar', 'shipp'],
   category: 'interactions',
-  
-  ClientPermissions: 'EMBED_LINKS',
+  ClientPermissions: ['EMBED_LINKS'],
   emoji: '💞',
   usage: '<ship> [@user/@user]',
   description: 'Veja o amor, sinta o amor',

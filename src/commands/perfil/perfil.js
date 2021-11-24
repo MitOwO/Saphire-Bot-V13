@@ -111,15 +111,11 @@ module.exports = {
                 : `⠀\n${e.Deny} Sem sexo definido`,
             niver = sdb.get(`Users.${user.id}.Perfil.Aniversario`) ? `⠀\n🎉 ${sdb.get(`Users.${user.id}.Perfil.Aniversario`)}` : `⠀\n${e.Deny} Sem aniversário definido`,
             job = sdb.get(`Users.${user.id}.Perfil.Trabalho`) ? `⠀\n👷 ${sdb.get(`Users.${user.id}.Perfil.Trabalho`)}` : `⠀\n${e.Deny} Sem profissão definida`,
-            Clan = sdb.get(`Users.${user.id}.Clan`) || 'Não possui',
-            usersdb = Object.keys(sdb.get('Users') || {}),
-            likesarray = [],
-            dbarray = [],
-            xparray = []
+            Clan = sdb.get(`Users.${user.id}.Clan`) || 'Não possui'
 
         if (Marry && !await client.users.cache.get(Marry)) {
             sdb.delete(`Users.${Marry}`)
-            sdb.set(`Users.${user.id}.Perfil.Marry`, false)
+            sdb.delete(`Users.${user.id}.Perfil.Marry`)
             marry = "Solteiro(a)"
             message.channel.send(`${e.Info} | Eu não achei o perceiro*(a)* deste perfil em nenhum dos meus servidores. Então, eu forcei o divórcio entre o casal.`)
         }
@@ -132,41 +128,9 @@ module.exports = {
         if (Estrela.Seis) estrela = `${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}${e.Star}`
         if (!Estrela.Um && !Estrela.Dois && !Estrela.Tres && !Estrela.Quatro && !Estrela.Cinco && !Estrela.Seis) estrela = `${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}${e.GrayStar}`
 
-        for (const id of usersdb) {
-            let XpUser = sdb.get(`Users.${id}.Level`) || 0,
-                likes = sdb.get(`Users.${id}.Likes`) || 0,
-                amount = (sdb.get(`Users.${id}.Bank`) || 0) + (sdb.get(`Users.${id}.Balance`) || 0) + ((sdb.get(`Users.${id}.Cache.Resgate`) || 0))
-
-            if (amount > 0)
-                dbarray.push({ id: id, amount: amount })
-
-            if (XpUser > 0)
-                xparray.push({ id: id, amount: XpUser })
-
-            if (likes > 0)
-                likesarray.push({ id: id, amount: likes })
-        }
-
-        if (xparray.length < 1) {
-            TopGlobalLevel = ''
-        } else {
-            let Ranking = xparray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
-            TopGlobalLevel = Ranking === 1 ? `\n${e.RedStar} **Top Global Level**` : ''
-        }
-
-        if (likesarray.length < 1) {
-            TopGlobalLikes = ''
-        } else {
-            let Ranking = likesarray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
-            TopGlobalLikes = Ranking === 1 ? `\n${e.Like} **Top Global Likes**` : ''
-        }
-
-        if (dbarray.length < 1) {
-            TopGlobalMoney = ''
-        } else {
-            let Ranking = dbarray.sort((a, b) => b.amount - a.amount).findIndex(author => author.id === user.id) + 1 || 0
-            TopGlobalMoney = Ranking === 1 ? `\n${e.MoneyWings} **Top Global Money**` : ''
-        }
+        TopGlobalLevel = sdb.get('Client.TopGlobalLevel') === user.id ? `\n${e.RedStar} **Top Global Level**` : ''
+        TopGlobalLikes = sdb.get('Client.TopGlobalLikes') === user.id ? `\n${e.Like} **Top Global Likes**` : ''
+        TopGlobalMoney = sdb.get('Client.TopGlobalMoney') === user.id ? `\n${e.MoneyWings} **Top Global Money**` : ''
 
         if (user.id === client.user.id) {
             const perfil = new MessageEmbed()

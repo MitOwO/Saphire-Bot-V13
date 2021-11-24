@@ -6,7 +6,7 @@ module.exports = {
     name: 'setsexo',
     aliases: ['sexo', 'gênero',  'genero', 'setgenero', 'setgênero'],
     category: 'perfil',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: '🌛',
     usage: '<setsexo>',
     description: 'Defina seu sexo no perfil',

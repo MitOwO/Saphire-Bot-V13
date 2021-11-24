@@ -7,8 +7,8 @@ module.exports = {
     aliases: ['excluiremoji', 'apagaremoji', 'removeremoji', 'deleteemoji', 'emojidelete', 'emojidel'],
     category: 'moderation',
     emoji: `${e.ModShield}`,
-    UserPermissions: 'MANAGE_EMOJIS_AND_STICKERS',
-    ClientPermissions: 'MANAGE_EMOJIS_AND_STICKERS',
+    UserPermissions: ['MANAGE_EMOJIS_AND_STICKERS'],
+    ClientPermissions: ['MANAGE_EMOJIS_AND_STICKERS'],
     usage: 'delemoji <emoji> <emoji> <emoji> <emoji>',
     description: 'Delete Emojis do Servidor',
 

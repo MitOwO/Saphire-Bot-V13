@@ -3,6 +3,7 @@ const { f } = require('../../../database/frases.json')
 const { Permissions } = require('discord.js')
 const Error = require('../../../Routes/functions/errors')
 const Colors = require('../../../Routes/functions/colors')
+const { config } = require('../../../database/config.json')
 
 // #246FE0 - Azul Saphire
 module.exports = {
@@ -301,16 +302,19 @@ module.exports = {
         function RoleInfo() {
             if (!Role) return message.channel.send(`${e.Info} | @Marque, diga o ID ou o nome do cargo para que eu possa pegar as informações.`)
 
-            let permissions = Role.permissions.toArray()
-            let RoleSize = Role.members.size || 0
-            let RoleId = Role.id || 'Indefinido'
-            let RoleHex = Role.hexColor || 'Indefinido'
-            let RoleHoist = Role.hoist ? `${e.Check} Sim` : `${e.Deny} Não`
-            let RoleMention = Role.mentionable ? `${e.Check} Sim` : `${e.Deny} Não`
-            let RoleName = Role.name || 'Indefinido'
+            let permissions = Role.permissions.toArray() || [],
+                permsArray = [],
+                RoleSize = Role.members.size || 0,
+                RoleId = Role.id || 'Indefinido',
+                RoleHex = Role.hexColor || 'Indefinido',
+                RoleHoist = Role.hoist ? `${e.Check} Sim` : `${e.Deny} Não`,
+                RoleMention = Role.mentionable ? `${e.Check} Sim` : `${e.Deny} Não`,
+                RoleName = Role.name || 'Indefinido',
+                data = Role.createdAt,
+                RoleData = (data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear() + " ás " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's') || 'Indefinido'
 
-            let data = Role.createdAt
-            let RoleData = (data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear() + " ás " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's') || 'Indefinido'
+            for (const perm of permissions)
+                permsArray.push(config.Perms[perm])
 
             const RoleEmbed = new MessageEmbed()
                 .setColor(RoleHex)
@@ -346,7 +350,7 @@ module.exports = {
                     },
                     {
                         name: `${e.ModShield} Permissões`,
-                        value: permissions.join(' | ').replace(/_/g, ' ').toLowerCase() || 'Nenhuma'
+                        value: permsArray.join(' | ') || 'Nenhuma'
                     }
                 )
             return message.channel.send({ embeds: [RoleEmbed] })

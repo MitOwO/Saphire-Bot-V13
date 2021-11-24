@@ -8,8 +8,8 @@ module.exports = {
     aliases: ['emojiadd', 'adicionaremoji', 'addemote', 'emotecreate', 'steal', 'stealemoji'],
     category: 'moderation',
     emoji: `${e.ModShield}`,
-    UserPermissions: 'MANAGE_EMOJIS_AND_STICKERS',
-    ClientPermissions: 'MANAGE_EMOJIS_AND_STICKERS',
+    UserPermissions: ['MANAGE_EMOJIS_AND_STICKERS'],
+    ClientPermissions: ['MANAGE_EMOJIS_AND_STICKERS'],
     usage: 'addemoji <emoji> <emoji> <emoji> <emoji>',
     description: 'Adicione Emojis no Servidor',
 

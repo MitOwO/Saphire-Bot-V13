@@ -6,8 +6,7 @@ module.exports = {
     name: 'tapão',
     aliases: ['slaap', 'tapao'],
     category: 'interactions',
-    
-    ClientPermissions: 'ATTACH_FILES',
+    ClientPermissions: ['ATTACH_FILES'],
     emoji: '🖐️',
     usage: '<tapão> [@user]',
     description: 'Tapão',

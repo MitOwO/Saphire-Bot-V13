@@ -5,7 +5,7 @@ module.exports = {
     name: 'disconnect',
     aliases: ['dc', 'kickvoice', 'desconectar'],
     category: 'moderation',
-    ClientPermissions: 'MOVE_MEMBERS',
+    ClientPermissions: ['MOVE_MEMBERS'],
     emoji: `${e.ModShield}`,
     usage: '<disconnect> <@user/id>',
     description: 'Tire alguém da chamada',

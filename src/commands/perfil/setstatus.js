@@ -5,7 +5,7 @@ module.exports = {
     name: 'setstatus',
     aliases: ['status'],
     category: 'perfil',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: '✍️',
     usage: '<setstatus> <Seu Novo Status>',
     description: 'Defina seu status no perfil',

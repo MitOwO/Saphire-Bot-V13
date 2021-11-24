@@ -6,7 +6,7 @@ module.exports = {
     name: 'lockcommands',
     aliases: ['nocommands', 'blockcommands', 'bloquearcomandos', 'blockbots'],
     category: 'moderation',
-    UserPermissions: 'MANAGE_CHANNELS',
+    UserPermissions: ['MANAGE_CHANNELS'],
     ClientPermissions: ['MANAGE_MESSAGES', 'ADD_REACTIONS'],
     emoji: '🔒',
     usage: '<lockcommands> <channel>',
