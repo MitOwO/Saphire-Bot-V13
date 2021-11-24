@@ -8,7 +8,7 @@ module.exports = {
     name: 'anime',
     aliases: ['searchanime', 'animes'],
     category: 'animes',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `🔍`,
     usage: '<nome do anime>',
     description: 'Pesquisa de Animes',
