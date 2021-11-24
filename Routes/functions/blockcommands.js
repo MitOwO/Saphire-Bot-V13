@@ -21,7 +21,9 @@ async function BlockCommandsBot(Message) {
         const msg = await message.channel.send(`${e.Deny} | Comandos de bots foram bloqueados neste canal.`)
         return setTimeout(() => { msg.delete().catch(() => { }) }, 4500)
 
-    } else { return }
+    }
+    
+    return
 }
 
 module.exports = BlockCommandsBot
