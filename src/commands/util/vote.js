@@ -5,7 +5,7 @@ module.exports = {
     name: 'vote',
     aliases: ['pull', 'votação', 'voto'],
     category: 'util',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.Upvote}`,
     usage: '<vote> <Conteúdo a ser votado>',
     description: 'Abra facilmente uma votação no chat',

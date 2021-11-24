@@ -8,7 +8,7 @@ module.exports = {
     aliases: ['emoti', 'emoticon', 'emoje'],
     category: 'random',
     emoji: '😀',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     usage: 'emoji <emoji> <emoji> <emoji> <emoji>',
     description: 'Veja os emojis maiores',
 

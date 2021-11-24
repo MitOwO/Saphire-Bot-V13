@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['cor', 'hex', 'cores', 'codhex'],
     category: 'random',
     
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: '🎨',
     usage: '<color> <ColorName>/<#hex>',
     description: `Cores em #HEX. Use \`cor\` para mais informações.`,

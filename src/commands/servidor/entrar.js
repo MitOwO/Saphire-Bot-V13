@@ -5,8 +5,7 @@ module.exports = {
     name: 'entrar',
     aliases: ['selecionar', 'seletor', 'escolher', 'Team'],
     category: 'servidor',
-    
-    ClientPermissions: 'MANAGE_ROLES',
+    ClientPermissions: ['MANAGE_ROLES'],
     emoji: '@',
     usage: '<entrar>',
     description: 'Pegue um cargo aleatório',

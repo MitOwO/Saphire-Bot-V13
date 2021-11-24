@@ -6,7 +6,7 @@ module.exports = {
     aliases: ['weather', 'tempo'],
     category: 'util',
     
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `🌥️`,
     usage: '<clima> <SiglaDaCidade/Pais> | <Nome da Cidade>',
     description: 'Veja o tempo da sua cidade',

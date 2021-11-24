@@ -7,7 +7,7 @@ module.exports = {
     name: 'rank',
     aliases: ['podio', 'ranking'],
     category: 'level',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: '🏆',
     usage: '<rank> [money/level/reputação]',
     description: 'Confira os Top 10 Globais',

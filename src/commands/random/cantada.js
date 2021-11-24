@@ -7,7 +7,7 @@ module.exports = {
   name: 'cantadas',
   aliases: ['cantada'],
   category: 'random',
-  ClientPermissions: 'ADD_REACTIONS',
+  ClientPermissions: ['ADD_REACTIONS'],
   emoji: '💌',
   usage: '<cantada>',
   description: 'Veja cantadas muito "boas"',

@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['ui'],
     category: 'util',
     
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.Info}`,
     usage: '<userinfo> [@user]',
     description: 'Informações de usuários no Discord',

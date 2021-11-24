@@ -5,7 +5,7 @@ module.exports = {
     name: 'translate',
     aliases: ['t', 'tradutor'],
     category: 'util',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.Translate}`,
     usage: '<t> <sigla> <texto para traduzir>',
     description: 'Traduza palavras e textos de qualquer língua',

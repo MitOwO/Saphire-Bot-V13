@@ -6,7 +6,7 @@ module.exports = {
     aliases: ['cvd  '],
     category: 'util',
     
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: ':microbe:',
     usage: '<covid [SiglaDoPais] (Br/Usa/Pt/Ar)>',
     description: 'Contagem da Covid-19 Mundial',

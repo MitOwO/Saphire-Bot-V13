@@ -4,8 +4,7 @@ module.exports = {
     name: 'patnezuko',
     aliases: ['nezukopat'],
     category: 'random',
-    
-    ClientPermissions: 'USE_EXTERNAL_EMOJIS',
+    ClientPermissions: ['USE_EXTERNAL_EMOJIS'],
     emoji: `${e.PatNezuko}`,
     usage: '<patnezuko>',
     description: 'Carinho na Nezuko-chan',

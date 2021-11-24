@@ -4,7 +4,7 @@ module.exports = {
     name: 'howbig',
     aliases: ['tamanho'],
     category: 'random',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: '🍆',
     usage: '<howbig> [@user]',
     description: 'Confira o tamanho do brinquedo',

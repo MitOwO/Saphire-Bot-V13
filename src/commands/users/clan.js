@@ -38,8 +38,8 @@ module.exports = {
 
         let ClanKey = Clan.get(`Clans.${key}`),
             Admins = ClanKey?.Admins,
-            Admin = Admins?.includes(message.author.id),
             Owner = ClanKey?.Owner === message.author.id,
+            Admin = Owner || Admins?.includes(message.author.id),
             Name = ClanKey?.Name,
             Donation = ClanKey?.Donation,
             Members = ClanKey?.Members,

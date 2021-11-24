@@ -7,7 +7,7 @@ module.exports = {
     name: 'fuga',
     aliases: ['fugir'],
     category: 'random',
-    ClientPermissions: 'ADD_REACTIONS',
+    ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.PandaBag}`,
     usage: '<fugir>',
     description: 'Tente fugir da prisão',

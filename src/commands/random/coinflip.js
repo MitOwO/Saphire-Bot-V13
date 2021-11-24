@@ -4,7 +4,7 @@ module.exports = {
     name: 'coinflip',
     aliases: ['caracoroa', 'caraoucoroa'],
     category: 'random',
-    ClientPermissions: 'EMBED_LINKS',
+    ClientPermissions: ['EMBED_LINKS'],
     emoji: `${e.Coin}`,
     usage: '<coinflip> <cara/coroa>',
     description: 'Cara ou coroa?',
