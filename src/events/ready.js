@@ -1,15 +1,17 @@
 const
-    { db, DatabaseObj, sdb, CommandsLog } = require('../../Routes/functions/database'),
+    { db, DatabaseObj, sdb, CommandsLog, lotery } = require('../../Routes/functions/database'),
     { e, config } = DatabaseObj,
     client = require('../../index'),
-    Data = require('../../Routes/functions/data')
+    Data = require('../../Routes/functions/data'),
+    MuteSystem = require('../../Routes/functions/mutesystem')
 
 client.once("ready", async () => {
 
     sdb.delete('Client.Rebooting')
     sdb.delete('Request')
     sdb.delete('BetRequest')
-    db.delete(`Aposta`)
+    db.delete('Aposta')
+    lotery.delete('Buying')
 
     CommandsLog.clear()
 
@@ -24,6 +26,7 @@ client.once("ready", async () => {
 
     console.log('Event Ready | OK!')
     const msg = await client.channels.cache.get(config.LogChannelId)?.send(`⏱️ Initial Ping: \`${client.ws.ping}ms\`\n${e.Check} Login: \`${Data()}\``)
+
     setTimeout(() => {
         msg.delete().catch(() => { })
     }, 5000)
@@ -61,5 +64,9 @@ client.once("ready", async () => {
         sdb.set('Client.TopGlobalMoney', RankingMoney[0].id)
 
     }, 300000)
+
+    setInterval(() => {
+        MuteSystem()
+    }, 5000)
 
 })
