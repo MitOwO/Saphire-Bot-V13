@@ -21,13 +21,14 @@ module.exports = {
             user = await client.users.cache.get(u.id),
             tickets = lotery.get('Loteria.Users') || [],
             Prize = lotery.get('Loteria.Prize'),
-            i = 0
+            i = 0,
+            WhoAre = user.id === message.author.id ? 'Você' : user.username
 
         for (const ts of tickets)
             if (ts === user.id)
                 i++
 
-        return message.channel.send(`${e.PandaProfit} | ${user.username} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(3)}% de chance de ganhar.\n🌐 | ${tickets?.length}/15000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${Prize?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${lotery.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`)
+        return message.channel.send(`${e.PandaProfit} | ${WhoAre} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(3)}% de chance de ganhar.\n🌐 | ${tickets?.length}/15000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${Prize?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${lotery.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`)
 
         function LockLotery() {
             lotery.get('Loteria.Close') ? message.channel.send(`${e.Info} | A loteria já está trancada.`) : Lock()
