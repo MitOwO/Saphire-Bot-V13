@@ -48,6 +48,9 @@ class ServerManager {
         if (ReturnAMessageTrueOrFalse) {
             return message.reply(`${e.Check} | Cargo deletado da minha database com sucesso.`)
         }
+
+        return
+
     }
 
 }
