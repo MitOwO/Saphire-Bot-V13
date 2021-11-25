@@ -37,7 +37,7 @@ module.exports = {
                 },
                 {
                     name: 'Loteria',
-                    value: `🎫 \`Ticket Loteria\` 10 ${Moeda(message)}\nPrêmio Atual: ${sdb.get(`Loteria.Prize`) ? parseInt(sdb.get(`Loteria.Prize`))?.toFixed(0) : 0} ${Moeda(message)}`
+                    value: `🎫 \`Ticket Loteria\` 10 ${Moeda(message)}\nPrêmio Atual: ${lotery.get(`Loteria.Prize`) ? parseInt(sdb.get(`Loteria.Prize`))?.toFixed(0) : 0} ${Moeda(message)}`
                 },
                 {
                     name: 'Perfil',
