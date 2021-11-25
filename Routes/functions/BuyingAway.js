@@ -14,8 +14,9 @@ const { PushTrasaction } = require('./transctionspush')
 
 function BuyingAway(message, prefix, args, args1) {
 
-    let vip = Vip(`${message.author.id}`)
-    let money = sdb.get(`Users.${message.author.id}.Balance`) || 0
+    let vip = Vip(`${message.author.id}`),
+        money = sdb.get(`Users.${message.author.id}.Balance`) || 0,
+        reg = /^\d+$/
 
     function NoMoney(x) { message.channel.send(`${e.Deny} | ${message.author}, você precisa de pelo menos ${x} ${Moeda(message)} na carteira para comprar este item.`) }
     function JaPossui() { message.reply(`${e.Info} | Você já possui este item.`) }
@@ -116,32 +117,29 @@ function BuyingAway(message, prefix, args, args1) {
         } else { NoMoney(5000000) }
     }
 
-    function BuyTickets() {
+    async function BuyTickets() {
 
         if (lotery.get('Loteria.Close'))
             return message.reply(`${e.Deny} | A loteria não está aberta.`)
 
-        let time = ms(300000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Loteria`)))
+        let time = ms(300000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Loteria`))),
+            count = 0,
+            amount = args[1],
+            i = 0,
+            TicketsArray = []
+
         if (sdb.get(`Users.${message.author.id}.Timeouts.Loteria`) !== null && 300000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Loteria`)) > 0)
             return message.reply(`${e.Loading} Volte em: \`${time.minutes}m e ${time.seconds}s\``)
-
-        if (db.get(`Users.${message.author.id}.Tickets`))
-            return
 
         if (!lotery.get('Loteria.Users'))
             lotery.set('Loteria.Users', [])
 
-        let count = 0
-        for (const ticket of lotery.get('Loteria.Users')) {
+        for (const ticket of lotery.get('Loteria.Users'))
             if (ticket === message.author.id)
                 count++
-        }
 
         if (count >= 2000)
             return message.reply(`${e.Deny} | Você já atingiu o limite máximo de 2000 tickets comprados.`)
-
-        let amount = parseInt(args[1])
-        let i = 0
 
         if (args[2])
             return message.reply(`${e.Deny} | Por favor, use o comando somente com os argumentos necessários. \`${prefix}buy tickets <Quantidade>\``)
@@ -149,31 +147,32 @@ function BuyingAway(message, prefix, args, args1) {
         if (!args[1] || isNaN(amount))
             return message.reply(`${e.Info} | Você precisa dizer a quantia de tickets que você deseja comprar. O limite por compra é de 300 tickets. Lembrando que cada ticket custa 10 ${Moeda(message)}.`)
 
-        if (amount > 300)
+        if (!reg.test(amount))
+            return message.reply(`${e.Deny} | A quantidade informada possui virgulas ou pontos. Tente usar **somente** números inteiros que não contenha qualquer caracter que não seja 0~9`)
+
+        if (parseInt(amount) > 300)
             return message.reply(`${e.Deny} | A quantidade de tickets não pode ser maior que 300.`)
 
         if ((sdb.get(`Users.${message.author.id}.Balance`) || 0) < amount * 10)
             return message.reply(`${e.Deny} | Você precisa de pelo menos **${amount * 10} ${Moeda(message)}** na carteira para comprar ${amount} 🎫 Tickets da Loteria.`)
 
-        return message.reply(`${e.Loading} | Alocando tickets`).then(msg => {
+        const msg = await message.reply(`${e.Loading} | Alocando tickets`)
 
-            sdb.subtract(`Users.${message.author.id}.Balance`, amount * 10)
-            db.set(`Users.${message.author.id}.Tickets`, true)
+        sdb.subtract(`Users.${message.author.id}.Balance`, amount * 10)
 
-            for (i; i < amount; i++) {
-                db.push(`Loteria.${message.author.id}`, message.author.id)
-            }
+        for (i; i < amount; i++)
+            TicketsArray.push(message.author.id)
 
-            db.delete(`Users.${message.author.id}.Tickets`)
-            sdb.set(`Users.${message.author.id}.Timeouts.Loteria`, Date.now())
-            lotery.add('Loteria.Prize', (i * 10))
-            lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...db.get(`Loteria.${message.author.id}`)])
-            msg.edit(`${e.Check} | Você comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio da loteria para **${lotery.get('Loteria.Prize') || 0} ${Moeda(message)}**.`).catch(() => { })
+        sdb.set(`Users.${message.author.id}.Timeouts.Loteria`, Date.now())
+        lotery.add('Loteria.Prize', i * 10)
+        lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
+        msg.edit(`${e.Check} | Você comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio da loteria para **${lotery.get('Loteria.Prize') || 0} ${Moeda(message)}**.`).catch(() => { })
 
-            if (lotery.get('Loteria.Users').length >= 15000)
-                return NewLoteryGiveaway(lotery.get('Loteria.Users'), message)
+        if (lotery.get('Loteria.Users').length >= 15000)
+            return NewLoteryGiveaway(lotery.get('Loteria.Users'), message)
 
-        }).catch(err => { Error(message, err) })
+        return
+
     }
 
     // 100% Funcional - Permite comprar todos itens de utilidade única
