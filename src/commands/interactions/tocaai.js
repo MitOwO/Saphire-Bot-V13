@@ -9,7 +9,7 @@ module.exports = {
     ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS'],
     emoji: '🤝',
     usage: '<tocaai> <@user>',
-    description: 'Comprimentos sempre são legais',
+    description: 'Cumprimentos sempre são legais',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 

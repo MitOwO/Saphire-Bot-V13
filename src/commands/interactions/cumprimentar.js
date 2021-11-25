@@ -3,13 +3,14 @@ const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 
 module.exports = {
-    name: 'lutar',
-    aliases: ['fight', 'brigar', 'briga', 'luta'],
+    name: 'cumprimentar',
+    aliases: ['bv', 'bemvindo', 'bemvinda', 'bem-vindo', 'bem-vinda', 'welcome', 'saudar', 'acenar', 'oi'],
     category: 'interactions',
+    
     ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS'],
-    emoji: 'vs',
-    usage: '<lutar> <@user>',
-    description: 'Treta, treta',
+    emoji: '👋',
+    usage: '<cumprimentar> <@user>',
+    description: 'Cumprimente alguém',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
@@ -18,20 +19,29 @@ module.exports = {
         let NoReactAuthor = sdb.get(`Users.${message.author.id}.NoReact`)
         if (NoReactAuthor) return message.reply(`${e.Deny} | Você está com o \`${prefix}noreact\` ativado.`)
 
-        let rand = g.Lutar[Math.floor(Math.random() * g.Lutar.length)]
+        let rand = g.Cumprimentar[Math.floor(Math.random() * g.Cumprimentar.length)]
         let user = message.mentions.users.first() || message.member
 
-        if (user.id === client.user.id) return message.reply(`${e.Drinking} | Vou nem responder, eu ganharia facilmente...`)
-
-        if (user.id === message.author.id) { return message.reply(`Você é estranho... Quer um psicólogo?`) }
+        if (user.id === client.user.id) {
+            return message.reply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor('#246FE0')
+                        .setDescription(`👋 | Oieee`)
+                        .setImage(rand)
+                ]
+            })
+        }
+        if (user.id === message.author.id) return message.reply(`${e.Deny} | Só faltou @alguém`)
 
         let NoReact = sdb.get(`Users.${user.id}.NoReact`)
         if (NoReact) return message.reply(`${e.Deny} | Este usuário está com o \`${prefix}noreact\` ativado.`)
 
         const embed = new MessageEmbed()
             .setColor('#246FE0')
-            .setDescription(`${message.author} está lutando contra ${user}`)
+            .setDescription(`👋 | ${message.author} está acenando pra você ${user}`)
             .setImage(rand)
+            .setFooter('🔁 retribuir')
 
         return message.reply({ embeds: [embed] }).then(msg => {
             sdb.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -44,7 +54,7 @@ module.exports = {
 
                 if (reaction.emoji.name === '🔁') {
                     sdb.delete(`Request.${message.author.id}`)
-                    const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`${message.author} e ${user} estão lutando`).setImage(g.Lutar[Math.floor(Math.random() * g.Lutar.length)])
+                    const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`👋 ${user} acenou de volta ${message.author} 👋`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Cumprimentar[Math.floor(Math.random() * g.Cumprimentar.length)])
                     msg.edit({ embeds: [TradeEmbed] }).catch(() => { })
                 }
 

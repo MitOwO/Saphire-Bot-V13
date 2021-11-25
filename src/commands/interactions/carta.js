@@ -13,13 +13,13 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        const { cartas, user, Mensagem, Server, Timer } = {
-            cartas: sdb.get(`Users.${message.author.id}.Slot.Cartas`) || 0,
-            user: message.mentions.members.first() || message.guild.members.cache.get(args[0]),
-            Mensagem: args.slice(1).join(' ') || 'Nope!',
-            Server: message.guild.name || "Nome indefinido",
-            Timer: sdb.get(`Users.${message.author.id}.Timeouts.Letter`) || 0
-        }
+        let
+            cartas = sdb.get(`Users.${message.author.id}.Slot.Cartas`) || 0,
+            user = message.mentions.members.first() || message.guild.members.cache.get(args[0]),
+            Mensagem = args.slice(1).join(' ') || 'Nope!',
+            Server = message.guild.name || "Nome indefinido",
+            Timer = sdb.get(`Users.${message.author.id}.Timeouts.Letter`) || 0,
+            LetterTimer = ms(900000 - (Date.now() - Timer))
 
         if (!args[0])
             return message.reply({
@@ -40,22 +40,20 @@ module.exports = {
                 ]
             })
 
-        let LetterTimer = ms(900000 - (Date.now() - Timer))
-        if (Timer !== null && 900000 - (Date.now() - Timer) > 0) {
+        if (Timer !== null && 900000 - (Date.now() - Timer) > 0)
             return message.reply(`${e.Loading} Calma calma, ainda falta \`${LetterTimer.minutes}m e ${LetterTimer.seconds}s\``)
-        } 
 
         if (cartas < 1)
             return message.reply(`${e.Deny} | Você não possui cartas, compre algumas na \`${prefix}loja\``)
 
+        if (!user)
+            return message.reply(`${e.Deny} | **\`Usuário não encontrado\`** | Mencione um usuário ou diga o ID para que eu posso enviar a sua carta.\n\`${prefix}carta <@user/id> A sua mensagem em diante\``)
+
         if (Mensagem.length < 10 || Mensagem.length > 1024)
             return message.reply(`${e.Deny} | A mensagem deve estar entre **10~1500 caracteres**`)
 
-        if (!user)
-            return message.reply(`${e.Deny} | Mencione um usuário ou diga o ID para que eu posso enviar a sua carta.\n\`${prefix}carta <@user/id> A sua mensagem em diante\``)
-
         if (user.user.bot || user.id === message.author.id)
-             return message.reply(`${e.Deny} | Você não pode mandar cartas para você mesmo ou bots.`)
+            return message.reply(`${e.Deny} | Você não pode mandar cartas para você mesmo ou bots.`)
 
         sdb.subtract(`Users.${message.author.id}.Slot.Cartas`, 1)
 

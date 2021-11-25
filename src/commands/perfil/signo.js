@@ -13,7 +13,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setColor('#9266CC')
             .setTitle('Diga qual é seu signo.')
-            .setDescription(`♈ Áries\n♉ Touro\n♊ Gêmeos\n♋ Câncer\n♌ Leão\n♍ Virgem\n♎ Libra\n♏ Escorpião\n♐ Sargitário\n♑ Capricórnio\n♒ Aquário\n♓ Peixes\n${e.Deny} Cancelar`)
+            .setDescription(`♈ Áries\n♉ Touro\n♊ Gêmeos\n♋ Câncer\n♌ Leão\n♍ Virgem\n♎ Libra\n♏ Escorpião\n♐ Sagitário\n♑ Capricórnio\n♒ Aquário\n♓ Peixes\n${e.Deny} Cancelar`)
             .setFooter('Responda em 15 segundos')
 
         let aries = "♈ Áries"

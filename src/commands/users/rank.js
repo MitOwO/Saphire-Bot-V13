@@ -33,7 +33,7 @@ module.exports = {
             for (const id of users) {
                 let Exp = sdb.get(`Users.${id}.Xp`) || 0,
                     Level = sdb.get(`Users.${id}.Level`) || 0,
-                    XpNeeded = Exp * 550
+                    XpNeeded = Level * 550
 
                 if (Exp > 0)
                     UsersArray.push({ id: id, xp: Exp, XpNeeded: XpNeeded, level: Level })
