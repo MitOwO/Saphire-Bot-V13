@@ -46,7 +46,7 @@ module.exports = {
 
 
         if (['lotery', 'loteria'].includes(args[0]?.toLowerCase())) {
-            lotery.delete('Loteria')
+            lotery.clear()
             return message.reply(`${e.Check} | Feito!`)
         }
 

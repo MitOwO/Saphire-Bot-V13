@@ -1,9 +1,10 @@
-const { e } = require('../../../database/emojis.json')
-const { f } = require('../../../database/frases.json')
-const { Permissions } = require('discord.js')
-const Error = require('../../../Routes/functions/errors')
-const Colors = require('../../../Routes/functions/colors')
-const { config } = require('../../../database/config.json')
+const
+    { e } = require('../../../database/emojis.json'),
+    { f } = require('../../../database/frases.json'),
+    { Permissions } = require('discord.js'),
+    Error = require('../../../Routes/functions/errors'),
+    Colors = require('../../../Routes/functions/colors'),
+    { config } = require('../../../database/config.json')
 
 // #246FE0 - Azul Saphire
 module.exports = {
@@ -303,7 +304,7 @@ module.exports = {
             if (!Role) return message.channel.send(`${e.Info} | @Marque, diga o ID ou o nome do cargo para que eu possa pegar as informações.`)
 
             let permissions = Role.permissions.toArray() || [],
-                permsArray = [],
+                PermissionsFormated = permissions.map(perm => config.Perms[perm]) || false,
                 RoleSize = Role.members.size || 0,
                 RoleId = Role.id || 'Indefinido',
                 RoleHex = Role.hexColor || 'Indefinido',
@@ -312,9 +313,6 @@ module.exports = {
                 RoleName = Role.name || 'Indefinido',
                 data = Role.createdAt,
                 RoleData = (data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear() + " ás " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's') || 'Indefinido'
-
-            for (const perm of permissions)
-                permsArray.push(config.Perms[perm])
 
             const RoleEmbed = new MessageEmbed()
                 .setColor(RoleHex)
@@ -350,7 +348,7 @@ module.exports = {
                     },
                     {
                         name: `${e.ModShield} Permissões`,
-                        value: permsArray.join(' | ') || 'Nenhuma'
+                        value: PermissionsFormated?.join(' | ') || 'Nenhuma'
                     }
                 )
             return message.channel.send({ embeds: [RoleEmbed] })
