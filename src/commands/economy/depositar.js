@@ -11,9 +11,9 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        const reg = /^\d+$/
-        let money = sdb.get(`Users.${message.author.id}.Balance`) || 0
-        let Amount
+        let reg = /^\d+$/,
+            money = sdb.get(`Users.${message.author.id}.Balance`) || 0,
+            Amount
 
         if (!args[0]) return message.reply(`${e.Deny} | Tenta assim...\n\`${prefix}dep [quantia]/[all]\``)
         if (args[1]) return message.reply(`${e.Deny} | Apenas a quantia que você deseja depositar, tudo bem?`)
@@ -23,8 +23,8 @@ module.exports = {
         return Dep(Amount)
 
         function Dep(Amount) {
-            
-            if (Amount <= 0 ) return message.reply(`${e.Deny} | Você não tem nada para depositar.`)
+
+            if (Amount <= 0) return message.reply(`${e.Deny} | Você não tem nada para depositar.`)
             if (isNaN(Amount)) return message.reply(`${e.Deny} | **${Amount}** | O valor que você digitou não é um número ou é menor que 1.`)
             if (money <= 0 || money < Amount) return message.reply(`${e.Deny} | Você não tem **${Amount} ${Moeda(message)}** para depositar.`)
 

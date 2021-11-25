@@ -1,15 +1,16 @@
-const { f } = require('../../../database/frases.json')
-const { MessageSelectMenu, MessageActionRow } = require("discord.js")
-const { BgLevel, lotery, DatabaseObj } = require('../../../Routes/functions/database')
-const { e } = DatabaseObj
-const ms = require('parse-ms')
-const BuyingAway = require('../../../Routes/functions/BuyingAway')
-const Moeda = require('../../../Routes/functions/moeda')
-const Colors = require('../../../Routes/functions/colors')
-const Error = require('../../../Routes/functions/errors')
-const NewLoteryGiveaway = require('../../../Routes/functions/newlotery')
-const Vip = require('../../../Routes/functions/vip')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const
+    { f } = require('../../../database/frases.json'),
+    { MessageSelectMenu, MessageActionRow } = require("discord.js"),
+    { BgLevel, lotery, DatabaseObj } = require('../../../Routes/functions/database'),
+    { e } = DatabaseObj,
+    ms = require('parse-ms'),
+    BuyingAway = require('../../../Routes/functions/BuyingAway'),
+    Moeda = require('../../../Routes/functions/moeda'),
+    Colors = require('../../../Routes/functions/colors'),
+    Error = require('../../../Routes/functions/errors'),
+    NewLoteryGiveaway = require('../../../Routes/functions/newlotery'),
+    Vip = require('../../../Routes/functions/vip'),
+    { PushTrasaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'comprar',
@@ -21,8 +22,9 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let vip = Vip(`${message.author.id}`)
-        let color = Colors(message.member)
+        let vip = Vip(`${message.author.id}`),
+            color = Colors(message.member),
+            args1 = args[1]
 
         const LojaEmbed = new MessageEmbed()
             .setColor(color)
@@ -63,7 +65,6 @@ module.exports = {
             .addField('Itens Coletaveis', 'Itens coletaveis são aqueles que você consegue nos mini-games, você pode vende-los para conseguir mais dinheiro.\n \n🍤 `Camarões` - Baú do Tesouro `' + prefix + 'pescar`\n🐟 `Peixes` - Baú do Tesouro `' + prefix + 'pescar`\n🌹 `Rosas` - Floresta Cammum `' + prefix + 'floresta`\n🍎 `Maças` - Floresta Cammum `' + prefix + 'floresta`\n🦴 `Ossos` - Mineração `' + prefix + 'minerar`\n🪨 `Minérios` - Mineração `' + prefix + 'minerar`\n💎 `Diamantes` - Mineração `' + prefix + 'minerar`')
             .addField('Permissões', `Permissões libera comandos bloqueados\n \n🔰 \`Título\` Mude o título no perfil \`${prefix}titulo <Novo Título>\`\n🎨 \`Cores\` Mude as cores das suas mensagens \`${prefix}setcolor <#CódigoHex>\``)
 
-        let args1 = args[1]
         if (['bg', 'wall', 'wallpapers', 'fundo', 'capa'].includes(args[0]?.toLowerCase())) return BuyBackground()
         if (args[0]) return BuyingAway(message, prefix, args, args1)
 
@@ -228,7 +229,7 @@ module.exports = {
                         case 'RestaurarMachado': RestaurarMachado(); break;
                         case 'Picareta': Picareta(); break;
                         case 'RestaurarPicareta': RestaurarPicareta(); break;
-                        case 'Ticket': sdb.get(`Users.${message.author.id}.Tickets`) ? Return() : Ticket(); break;
+                        case 'Ticket': Ticket(); break;
                         case 'Roleta': Roleta(); break;
                         case 'Carta': Cartas(); break;
                         case 'Comida': Comidas(); break;
@@ -241,11 +242,12 @@ module.exports = {
                         case 'Close': sdb.delete(`Request.${message.author.id}`); msg.edit({ components: [] }).catch(() => { }); break;
                         default: msg.edit({ components: [PainelLoja] }).catch(() => { }); break;
                     }
-                    
+
                 })
+
                 function Itens() { msg.edit({ embeds: [itens] }).catch(() => { }) }
                 function Embed() { msg.edit({ embeds: [LojaEmbed] }).catch(() => { }) }
-                function Return() { return }
+
             })
         }
 
@@ -399,17 +401,16 @@ module.exports = {
         }
 
         function Ticket() {
-            if (sdb.get(`Users.${message.author.id}.Tickets`))
+            if (lotery.get(`Buying.${message.author.id}`))
                 return
 
             if (lotery.get('Loteria.Close'))
                 return message.reply(`${e.Deny} | A loteria não está aberta.`)
 
             let count = 0
-            for (const ticket of lotery.get('Loteria.Users') || []) {
+            for (const ticket of lotery.get('Loteria.Users') || [])
                 if (ticket === message.author.id)
                     count++
-            }
 
             if (count >= 2000)
                 return message.reply(`${e.Deny} | Você já atingiu o limite máximo de 2000 tickets comprados.`)
@@ -418,34 +419,30 @@ module.exports = {
         }
 
         async function AddNewTickets() {
-            if (db.get(`Users.${message.author.id}.Tickets`))
+            if (lotery.get(`Buying.${message.author.id}`))
                 return
 
-            db.set(`Users.${message.author.id}.Tickets`, true)
-            sdb.subtract(`Users.${message.author.id}.Balance`, 1000); AddLoteria(1000);
-            PushData(1000)
-            await message.channel.send(`${e.Loading} | Alocando tickets...`).then(msg => {
-                let i = 0, TicketsArray = []
-                do {
-                    i++
-                    TicketsArray.push(message.author.id)
-                } while (i <= 100 - 1)
-                if (lotery.get('Loteria.Users')?.length <= 0) { sdb.set('Loteria.Users', []) }
+            lotery.set(`Buying.${message.author.id}`, true)
+            sdb.subtract(`Users.${message.author.id}.Balance`, 1000); AddLoteria(1000); PushData(1000)
+            let msg = await message.channel.send(`${e.Loading} | Alocando tickets...`),
+                TicketsArray = [],
+                i = 0
 
-                lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
-                db.delete(`Loteria.${message.author.id}`)
+            for (i; i < 100; i++)
+                TicketsArray.push(message.author.id)
 
-                msg.edit(`${e.Check} | ${message.author} comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${sdb.get('Loteria.Prize')?.toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -1000 ${Moeda(message)}`).catch(() => { })
-                setTimeout(() => { sdb.set(`Users.${message.author.id}.Tickets`, false) }, 1500)
-                if (lotery.get('Loteria.Users').length >= 15000) {
-                    lotery.set('Loteria.Close', true)
-                    return NewLoteryGiveaway(lotery.get('Loteria.Users'), message)
-                }
-            }).catch(err => {
-                Error(message, err)
-                db.set(`Users.${message.author.id}.Tickets`, false)
-                message.channel.send(`${e.Deny} | Ocorreu um erro ao alocar os Tickets.\n\`${err}\``)
-            })
+            if (lotery.get('Loteria.Users')?.length <= 0)
+                sdb.set('Loteria.Users', [])
+
+            lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
+            
+            msg.edit(`${e.Check} | ${message.author} comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${sdb.get('Loteria.Prize')?.toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -1000 ${Moeda(message)}`).catch(() => { })
+            setTimeout(() => { lotery.delete(`Buying.${message.author.id}`) }, 1500)
+
+            if (lotery.get('Loteria.Users').length >= 15000) {
+                return NewLoteryGiveaway(lotery.get('Loteria.Users'), message)
+            }
+            return
         }
 
         function Roleta() {
@@ -508,7 +505,7 @@ module.exports = {
             }
         }
 
-        function AddLoteria(value) { lotery.add('Loteria.Prize', value) }
+        function AddLoteria(value) { return lotery.add('Loteria.Prize', value) }
 
         function BuyBackground() {
 

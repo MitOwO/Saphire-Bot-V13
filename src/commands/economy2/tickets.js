@@ -17,23 +17,23 @@ module.exports = {
             if (['unlock', 'abrir', 'destravar', 'open'].includes(args[0]?.toLowerCase())) return UnlockLotery()
         }
 
-        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.repliedUser || message.author
-        let user = await client.users.cache.get(u.id)
-        let tickets = lotery.get('Loteria.Users') || []
+        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.repliedUser || message.author,
+            user = await client.users.cache.get(u.id),
+            tickets = lotery.get('Loteria.Users') || [],
+            Prize = lotery.get('Loteria.Prize'),
+            i = 0
 
-        let i = 0
-        for (const ts of tickets) {
+        for (const ts of tickets)
             if (ts === user.id)
                 i++
-        }
 
-        return message.channel.send(`${e.PandaProfit} | ${user.username} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(3)}% de chance de ganhar.\n🌐 | ${tickets?.length}/15000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${lotery.get('Loteria.Prize')?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${lotery.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`)
+        return message.channel.send(`${e.PandaProfit} | ${user.username} comprou ${i} 🎫 tickets da loteria\n💰 | ${parseInt(((i / tickets?.length) * 100) || 0).toFixed(3)}% de chance de ganhar.\n🌐 | ${tickets?.length}/15000 🎫 tickets comprados ao todo\n${e.MoneyWings} | ${Prize?.toFixed(0) || 0} ${Moeda(message)} acumulados\n🏆 | Último vencedor(a): ${lotery.get('Loteria.LastWinner') || 'Ninguém | 0'} ${Moeda(message)}`)
 
         function LockLotery() {
             lotery.get('Loteria.Close') ? message.channel.send(`${e.Info} | A loteria já está trancada.`) : Lock()
 
             function Lock() {
-                lotery.set('Loteria.Close', true);
+                lotery.set('Loteria.Close', true)
                 return message.channel.send(`${e.Check} | A loteria foi trancada com sucesso!`)
             }
         }
