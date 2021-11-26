@@ -1,4 +1,4 @@
-const { DatabaseObj, ServerDb } = require('../../Routes/functions/database')
+const { DatabaseObj, ServerDb, sdb } = require('../../Routes/functions/database')
 const { e } = DatabaseObj
 const client = require('../../index')
 const { Permissions, MessageEmbed } = require('discord.js')
@@ -46,8 +46,7 @@ client.on('guildMemberRemove', async (member) => {
 
     async function LeaveMember() {
         let LeaveChannel = ServerDb.get(`Servers.${member.guild.id}.LeaveChannel`)
-        const canal = await member.guild.channels.cache.get(LeaveChannel)
-        if (!canal) return
-        canal.send(`${e.Leave} | ${member.user.username} saiu do servidor.`).catch(() => { })
+        sdb.delete(`Client.MuteSystem.${member.guild.id}.${member.id}`)
+        return await member.guild.channels.cache.get(LeaveChannel)?.send(`${e.Leave} | ${member.user.username} saiu do servidor.`).catch(() => { })
     }
 })
