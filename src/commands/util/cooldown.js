@@ -37,6 +37,7 @@ module.exports = {
             Vip: {
                 DateNow: sdb.get(`Users.${user.id}.Timeouts.Vip.DateNow`) || null,
                 TimeRemaing: sdb.get(`Users.${user.id}.Timeouts.Vip.TimeRemaing`) || 0,
+                Permanent: sdb.get(`Users.${user.id}.Timeouts.Vip.Permanent`)
             }
         }
 
@@ -147,9 +148,13 @@ module.exports = {
 
         // Timeout Vip
         let TimeVip = ms(Vip.TimeRemaing - (Date.now() - Vip.DateNow))
-        if (Vip.DateNow !== null && Vip.TimeRemaing - (Date.now() - Vip.DateNow) > 0) {
-            TVip = `${e.VipStar} \`${TimeVip.days}d ${TimeVip.hours}h ${TimeVip.minutes}m e ${TimeVip.seconds}s\``
-        } else { sdb.delete(`Users.${user.id}.Timeouts.Vip`); TVip = `${e.GrayStar} \`Vip Indisponível\`` }
+        if (Vip.Permanent) {
+            TVip = `${e.VipStar} \`Permanente\``
+        } else {
+            if (Vip.DateNow !== null && Vip.TimeRemaing - (Date.now() - Vip.DateNow) > 0) {
+                TVip = `${e.VipStar} \`${TimeVip.days}d ${TimeVip.hours}h ${TimeVip.minutes}m e ${TimeVip.seconds}s\``
+            } else { sdb.delete(`Users.${user.id}.Timeouts.Vip`); TVip = `${e.GrayStar} \`Vip Indisponível\`` }
+        }
 
         if (['global', 'globais', 'saphire'].includes(args[0]?.toLowerCase()))
             return SendCooldownsSaphire()

@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let u = message.mentions.members.first() || message.mentions.repliedUser || await client.users.cache.get(args[0]) || client.users.cache.get(args[1]) || message.author
+        let u = message.mentions.users.first() || message.mentions.repliedUser || await client.users.cache.get(args[0]) ||await  client.users.cache.get(args[1]) || message.author
         let user = await client.users.cache.get(u.id)
 
         const User = new UserManager(message, user)
@@ -91,7 +91,9 @@ module.exports = {
 
         function AddTimeVip() {
 
-            if (!args[1]) return message.reply(`${e.Info} | Formato deste sub-comando: \`${prefix}add vip 4d\``)
+            if (!args[1]) return message.reply(`${e.Info} | Formato deste sub-comando: \`${prefix}add vip 4d\` ou \`${prefix}add vip permanent\``)
+
+            if (['permanent', 'permanente', 'forever'].includes(args[1]?.toLowerCase())) return SetVipPermanent()
 
             if (!['s', 'm', 'h', 'd', 'y'].includes(args[1].slice(-1)))
                 return message.reply(`${e.Deny} | Tempo inválido!`)
@@ -99,6 +101,15 @@ module.exports = {
             const Time = ms(`${args[1]}`)
 
             sdb.add(`Users.${user.id}.Timeouts.Vip.TimeRemaing`, Time)
+
+            function SetVipPermanent() {
+
+                if (sdb.get(`Users.${user.id}.Timeouts.Vip.Permanent`))
+                    return message.reply(`${e.Info} | Este usuário possui o Vip Permanente.`)
+
+                sdb.set(`Users.${user.id}.Timeouts.Vip.Permanent`, true)
+                return message.reply(`${e.Check} | Feito!`)
+            }
 
             return message.reply(`${e.Check} | Feito!`)
 
