@@ -14,7 +14,7 @@ class ServerManager {
         this.Moeda = Moeda
         this.MuteSystem = {
             RoleDB: ServerDb.get(`Servers.${guild.id}.Roles.Muted`),
-            DeleteRoleDb: sdb.delete(`Servers.${guild.id}.Roles.Muted`),
+            DeleteRoleDb: () => { sdb.delete(`Servers.${guild.id}.Roles.Muted`) },
             Role: async () => { return await guild.roles.cache.get(this.RoleDB()) }
         }
         this.Autorole = {

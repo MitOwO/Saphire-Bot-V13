@@ -50,21 +50,16 @@ async function CheckIfThisUserIsMuted(Guild, userId) {
         Role = Guild.roles.cache.get(ServerDb.get(`Servers.${Guild.id}.Roles.Muted`))
 
     if (!Role) {
-        client.users.cache.get('451619591320371213').send('Sem Role')
         sdb.delete(`Client.MuteSystem.${Guild.id}`)
         ServerDb.delete(`Servers.${Guild.id}.Roles.Muted`)
         return Notify(Guild.id, 'Sistema de Mute Desabilitado', 'Eu não encontrei o cargo de Mute presente na minha database neste servidor. Eu deletei todo o histórico de mute deste servidor.')
     }
 
-    if (!Guild) {
-        client.users.cache.get('451619591320371213').send('Sem Guild')
+    if (!Guild)
         return sdb.delete(`Client.MuteSystem.${Guild.id}`)
-    }
 
-    if (!Member) {
-        client.users.cache.get('451619591320371213').send('Sem Member')
+    if (!Member)
         return sdb.delete(`Client.MuteSystem.${Guild.id}.${userId}`)
-    }
 
     if (!IsMuted) {
 
