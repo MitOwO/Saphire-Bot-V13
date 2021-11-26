@@ -436,7 +436,7 @@ module.exports = {
 
             lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
             
-            msg.edit(`${e.Check} | ${message.author} comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${sdb.get('Loteria.Prize')?.toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -1000 ${Moeda(message)}`).catch(() => { })
+            msg.edit(`${e.Check} | ${message.author} comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${lotery.get('Loteria.Prize')?.toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -1000 ${Moeda(message)}`).catch(() => { })
             setTimeout(() => { lotery.delete(`Buying.${message.author.id}`) }, 1500)
 
             if (lotery.get('Loteria.Users').length >= 15000) {
