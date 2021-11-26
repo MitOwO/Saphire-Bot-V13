@@ -10,8 +10,8 @@ module.exports = {
     name: 'mute',
     aliases: ['mutar', 'silence'],
     category: 'moderation',
-    UserPermissions: ['MANAGE_ROLES'],
-    ClientPermissions: ['MANAGE_ROLES'],
+    UserPermissions: ['MANAGE_ROLES', 'MANAGE_CHANNELS'],
+    ClientPermissions: ['ADMINISTRATOR'],
     emoji: '🔇',
     usage: '<mute> <@user> [Tempo] [Motivo]',
     description: 'Mutar membros do servidor',
@@ -141,7 +141,6 @@ module.exports = {
                 }
             })
 
-
             message.guild.channels.cache.filter(c => c.type === 'GUILD_VOICE').forEach(async channel => {
                 try {
                     await channel.permissionOverwrites.create(role, { SPEAK: false, CONNECT: false })
@@ -220,9 +219,9 @@ module.exports = {
                         embeds.push({
                             color: client.blue,
                             title: `${e.ModShield} | Mute System List - ${Page}/${length}`,
-                            description: `${description}`,
+                            description: `Usuários mutados permanentemente não aparecem nesta lista.\n \n${description}`,
                             footer: {
-                                text: `${MembersId.length} usuário*(s)* mutado*(s)*`
+                                text: `${MembersId.length} usuários mutados`
                             },
                         })
 
@@ -433,7 +432,7 @@ module.exports = {
                             },
                             {
                                 name: '🔄 Atualize o Mute System',
-                                value: `\`${prefix}mute refresh\` - Aqui você atualiza as configurações di cargo mute em todos os canais do servidor.`
+                                value: `\`${prefix}mute refresh\` - Aqui você atualiza as configurações do cargo mute em todos os canais do servidor.`
                             },
                             {
                                 name: '🆕 Auto Atualização',
@@ -442,6 +441,10 @@ module.exports = {
                             {
                                 name: '📑 Canal Log',
                                 value: `\`${prefix}logs\` - Neste canal, mandarei todos os detalhes do mute. Você pode deixar este canal público ou privado alterando as permissões dele.\nClaro, não vá me privar dele, né?.`
+                            },
+                            {
+                                name: '📝 Lista de mutados',
+                                value: `\`${prefix}mute list\` - Lista dos mutados e quanto tempo cada um falta para o desmute.`
                             },
                             {
                                 name: `⬆️ ${client.user.username} Role`,
