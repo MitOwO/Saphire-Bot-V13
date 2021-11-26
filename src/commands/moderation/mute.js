@@ -37,25 +37,39 @@ module.exports = {
         if (['del', 'remove', 'delete'].includes(args[0]?.toLowerCase())) return DeleteMuteCommand()
         if (['refresh', 'atualizar', 'att'].includes(args[0]?.toLowerCase())) return RefreshMutedRoleConfiguration()
         if (['config'].includes(args[0]?.toLowerCase())) return SetAndConfigMutedRole()
+        if (['list', 'lista', 'members', 'users', 'membros'].includes(args[0]?.toLowerCase())) return MuteList()
         if (!role) return SetAndConfigMutedRole()
         if (!role.editable) return message.reply(`${e.Deny} | Eu não tenho permissão suficiente para gerenciar o Cargo **${role}**.`)
 
         function DeleteMuteCommand() {
 
             return RoleDB
-                ? (() => {
+                ? (async () => {
                     ServerDb.delete(`Servers.${message.guild.id}.Roles.Muted`)
+
+                    let UsersId = Object.keys(sdb.get(`Client.MuteSystem.${message.guild.id}`) || {})
+
+                    if (UsersId.length > 0) {
+
+                        for (const id of UsersId) {
+
+                            let member = await message.guild.members.cache.get(id)
+
+                            if (member)
+                                member.roles.remove(role).catch(() => { })
+
+                        }
+
+                    }
+
                     sdb.delete(`Client.MuteSystem.${message.guild.id}`)
-                    return message.reply(`${e.Check} | O cargo Muted foi deletado da minha database e todo o histórico de mute deste servidor também.`)
+                    return message.reply(`${e.Check} | O cargo ${role.name} e todo o histórico de mute deste servidor foram deletados da minha database. *O cargo permanece no servidor.*`)
                 })()
                 : message.reply(`${e.Deny} | Não há nenhum cargo mute configurado na minha database para este servidor.`)
 
         }
 
         async function SetAndConfigMutedRole() {
-
-            if (!role && RoleDB)
-                server.MuteSystem.DeleteRoleDb()
 
             let Role = message.mentions.roles.first()
 
@@ -140,6 +154,110 @@ module.exports = {
             return message.reply(`${e.Check} | O cargo foi atualizado com sucesso em todos os canais do servidor!`)
         }
 
+        async function MuteList() {
+
+            let MembersId = Object.keys(sdb.get(`Client.MuteSystem.${message.guild.id}`) || {})
+
+            if (MembersId.length === 0)
+                return message.reply(`${e.Info} | A lista de usuários mutados no meu sistema deste servidor está vazia.`)
+
+            let Embeds = EmbedGenerator(),
+                Control = 0
+
+            const msg = await message.reply({ embeds: [Embeds[0]] }),
+                collector = msg.createReactionCollector({
+                    filter: (reaction, user) => ['⬅️', '➡️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                    time: 30000
+                })
+
+            if (Embeds.length > 1)
+                for (const emoji of ['⬅️', '➡️', '❌'])
+                    msg.react(emoji).catch(() => { })
+
+            collector.on('collect', (reaction) => {
+
+                switch (reaction.emoji.name) {
+                    case '❌': collector.stop(); break;
+                    case '⬅️': Left(); break;
+                    case '➡️': Right(); break;
+                    default: collector.stop(); break;
+                }
+
+                function Left() {
+
+                    Control--
+                    return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control++
+
+                }
+
+                function Right() {
+
+                    Control++
+                    return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control--
+
+                }
+
+            })
+
+            collector.on('end', () => {
+                return msg.edit({ content: `${e.Deny} | Comando cancelado` }).catch(() => { })
+            })
+
+            function EmbedGenerator() {
+
+                let amount = 10,
+                    Page = 1,
+                    embeds = [],
+                    length = MembersId.length / 10 <= 1 ? 1 : parseInt((MembersId.length / 10) + 1)
+
+                for (let i = 0; i < MembersId.length; i += 10) {
+
+                    let current = MembersId.slice(i, amount),
+                        description = current.map(id => `${FindAndVerifyUser(id)}`).join('\n')
+
+                    if (current.length > 0) {
+
+                        embeds.push({
+                            color: client.blue,
+                            title: `${e.ModShield} | Mute System List - ${Page}/${length}`,
+                            description: `${description}`,
+                            footer: {
+                                text: `${MembersId.length} usuário*(s)* mutado*(s)*`
+                            },
+                        })
+
+                        Page++
+                        amount += 10
+
+                    }
+
+                }
+
+                return embeds;
+            }
+
+            function FindAndVerifyUser(id) {
+
+                const UserTag = message.guild.members.cache.get(id)?.user.tag,
+                    MuteUser = sdb.get(`Client.MuteSystem.${message.guild.id}.${id}`)
+
+                if (!UserTag || !MuteUser) {
+                    sdb.delete(`Client.MuteSystem.${message.guild.id}.${id}`)
+                    return 'Indefinido'
+                }
+
+                let TimeRemaing = parsems(MuteUser.Timeout - (Date.now() - MuteUser.DateSet)),
+                    TimeFormated
+
+                MuteUser.DateSet !== null && MuteUser.Timeout - (Date.now() - MuteUser.DateSet) > 0
+                    ? TimeFormated = `${e.Loading} \`${TimeRemaing.days} dias, ${TimeRemaing.hours} horas, ${TimeRemaing.minutes} minutos e ${TimeRemaing.seconds} secundos\``
+                    : TimeFormated = 'Tempo indefinido'
+
+                return `${UserTag} - ${TimeFormated}`
+            }
+
+        }
+
         let member = message.mentions.members.first() || await message.guild.members.cache.get(args[0])
         if (!member) return message.reply(`${e.Deny} | Você não me disse quem é pra mutar. Tenta assim : \`${prefix}mute @user Tempo Razão\``)
 
@@ -171,10 +289,13 @@ module.exports = {
 
         }
 
-        let Tempo = isNaN(TimeMs) ? 'Tempo não especificado.' : parsems(TimeMs),
-            TempoFormated = `${Tempo.days} dias, ${Tempo.hours} horas, ${Tempo.minutes} minutos e ${Tempo.seconds} segundos`,
-            MensagemDeMute = !isNaN(TimeMs) ? `${e.QuestionMark} | Você confirma o mute de ${member} por **${TempoFormated}**?` : `${e.QuestionMark} | Você confirma o mute de ${member} por tempo indertemidado?`,
+        let Tempo = isNaN(TimeMs) ? null : parsems(TimeMs),
+            TempoFormated = Tempo ? `${Tempo.days} dias, ${Tempo.hours} horas, ${Tempo.minutes} minutos e ${Tempo.seconds} segundos` : 'Indeterminado',
+            MensagemDeMute = Tempo ? `${e.QuestionMark} | Você confirma o mute de ${member} por **${TempoFormated}**?` : `${e.QuestionMark} | Você confirma o mute de ${member} por tempo indertemidado?`,
             reason = args.slice(2)?.join(" ") || `Motivo não especificado por ${message.author.username}.`
+
+        if (reason > 1000)
+            return message.reply(`${e.Deny} | A razão do mute não pode ultrapassar **1000 caracteres**`)
 
         const MuteEmbed = new MessageEmbed()
             .setColor('#8B0000')
@@ -209,45 +330,48 @@ module.exports = {
 
         if (member.roles.cache.has(role.id)) {
 
-            return message.reply(`${e.QuestionMark} | Remutar este usuário?`).then(msg => {
+            return (async () => {
+
+                const msg = await message.reply(`${e.QuestionMark} | Remutar este usuário?`)
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(() => { }) // Check
                 msg.react('❌').catch(() => { }) // X
 
-                const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
-
-                msg.awaitReactions({ filter, max: 1, time: 15000, errors: ['time'] }).then(collected => {
-                    const reaction = collected.first()
-
-                    if (reaction.emoji.name === '✅') {
-                        sdb.delete(`Request.${message.author.id}`)
-
-                        if (!isNaN(TimeMs))
-                            sdb.set(`Client.MuteSystem.${message.guild.id}.${member.id}`, {
-                                Timeout: TimeMs,
-                                DateSet: Date.now()
-                            })
-
-                        member.roles.add(role).catch(err => {
-                            sdb.delete(`Client.MuteSystem.${message.guild.id}.${member.id}`)
-                            return message.channel.send(`${e.Warn} | Ocorreu um erro ao mutar este usuário.\n\`${err}\``)
-                        })
-
-                        return message.reply(`${e.Check} | Usuário remutado com sucesso!`)
-
-                    } else {
-                        sdb.delete(`Request.${message.author.id}`)
-                        msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
-                    }
-                }).catch(() => {
-                    sdb.delete(`Request.${message.author.id}`)
-                    msg.edit(`${e.Deny} | Comando cancelado por tempo expirado.`).catch(() => { })
+                const collector = msg.createReactionCollector({
+                    filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+                    max: 1,
+                    time: 15000
                 })
 
-            }).catch(err => {
-                Error(message, err)
-                message.channel.send(`${e.SaphireCry} | Ocorreu um erro durante o processo. Por favor, reporte o ocorrido usando \`${prefix}bug\`\n\`${err}\``)
-            })
+                    .on('collect', (reaction) => {
+
+                        return reaction.emoji.name === '✅'
+                            ? (() => {
+                                sdb.delete(`Request.${message.author.id}`)
+
+                                if (!isNaN(TimeMs))
+                                    sdb.set(`Client.MuteSystem.${message.guild.id}.${member.id}`, {
+                                        Timeout: TimeMs,
+                                        DateSet: Date.now()
+                                    })
+
+                                member.roles.add(role).catch(err => {
+                                    sdb.delete(`Client.MuteSystem.${message.guild.id}.${member.id}`)
+                                    return message.channel.send(`${e.Warn} | Ocorreu um erro ao mutar este usuário.\n\`${err}\``)
+                                })
+
+                                message.reply(`${e.Check} | Usuário remutado com sucesso!`)
+                                logchannel?.send({ embeds: [MuteEmbed] }).catch(() => { })
+                            })()
+                            : collector.stop()
+
+                    })
+
+                    .on('end', () => {
+                        sdb.delete(`Request.${message.author.id}`)
+                        return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    })
+            })()
 
         }
 
@@ -257,39 +381,40 @@ module.exports = {
         msg.react('✅').catch(() => { }) // Check
         msg.react('❌').catch(() => { }) // X
 
-        const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
+        const collector = msg.createReactionCollector({
+            filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+            time: 15000,
+        })
 
-        msg.awaitReactions({ filter, max: 1, time: 15000, errors: ['time'] }).then(collected => {
-            const reaction = collected.first()
+            .on('collect', (reaction) => {
 
-            if (reaction.emoji.name === '✅') {
-                sdb.delete(`Request.${message.author.id}`)
+                if (reaction.emoji.name === '✅') {
 
-                if (!isNaN(TimeMs))
-                    sdb.set(`Client.MuteSystem.${message.guild.id}.${member.id}`, {
-                        Timeout: TimeMs,
-                        DateSet: Date.now()
+                    sdb.delete(`Request.${message.author.id}`)
+
+                    if (!isNaN(TimeMs))
+                        sdb.set(`Client.MuteSystem.${message.guild.id}.${member.id}`, {
+                            Timeout: TimeMs,
+                            DateSet: Date.now()
+                        })
+
+                    member.roles.add(role).catch(err => {
+                        return message.channel.send(`${e.Warn} | Ocorreu um erro ao mutar este usuário.\n\`${err}\``)
                     })
 
-                member.roles.add(role).catch(err => {
-                    return message.channel.send(`${e.Warn} | Ocorreu um erro ao mutar este usuário.\n\`${err}\``)
-                })
+                    logchannel?.send({ embeds: [MuteEmbed] }).catch(() => { })
 
-                if (logchannel)
-                    logchannel?.send({ embeds: [MuteEmbed] })
+                    let ReplyMessage = logchannel ? `${e.Check} | Mute efetuado com sucesso! Mais detalhes em ${logchannel}` : `${e.Check} | Mute efetuado com sucesso! Ative \`${prefix}logs\` para receber mais informações.`
+                    message.reply(`${ReplyMessage}`)
+                    return collector.stop()
 
-                let ReplyMessage = logchannel ? `${e.Check} | Mute efetuado com sucesso! Mais detalhes em ${logchannel}` : `${e.Check} | Mute efetuado com sucesso! Ative \`${prefix}logs\` para receber mais informações.`
-                return message.reply(`${ReplyMessage}`)
+                }
+            })
 
-            } else {
+            .on('end', () => {
                 sdb.delete(`Request.${message.author.id}`)
-                msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
-            }
-
-        }).catch(() => {
-            sdb.delete(`Request.${message.author.id}`)
-            msg.edit(`${e.Deny} | Comando cancelado por tempo expirado.`).catch(() => { })
-        })
+                return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+            })
 
         function InfoEmbed() {
             return message.reply({
