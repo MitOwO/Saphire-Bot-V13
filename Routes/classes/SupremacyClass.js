@@ -12,6 +12,7 @@ class RodyBrozy {
 
     UserManager = require('./UserManager')
     SaphireClient = require('./SaphireClient')
+    slashCommands = new Collection()
     MessageEmbed = new MessageEmbed()
     Permissions = Permissions
     rateLimiter = new RateLimiter(2, 1500)
