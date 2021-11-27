@@ -50,7 +50,7 @@ module.exports = {
                 },
                 {
                     name: `${e.Tada} Canal de Sorteios`,
-                    value: GetChannel('GiveawayChannel')
+                    value: GetChannel('Giveaways.Channel')
                 },
                 {
                     name: '🔦 Canal de Busca',

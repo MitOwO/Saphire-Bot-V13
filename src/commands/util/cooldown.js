@@ -1,6 +1,6 @@
-const { e } = require('../../../database/emojis.json')
-const Colors = require('../../../Routes/functions/colors')
-const ms = require('parse-ms')
+const Colors = require('../../../Routes/functions/colors'),
+    ms = require('parse-ms'),
+    { DatabaseObj: { e } } = require('../../../Routes/functions/database')
 
 // #246FE0 - Azul Saphire
 module.exports = {
@@ -169,7 +169,7 @@ module.exports = {
                     value: TVip || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${e.Cadeia} Preso`,
+                    name: `${e.PepePreso} Preso`,
                     value: TPreso || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
