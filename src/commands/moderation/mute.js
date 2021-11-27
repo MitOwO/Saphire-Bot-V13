@@ -356,10 +356,11 @@ module.exports = {
 
                                 member.roles.add(role).catch(err => {
                                     sdb.delete(`Client.MuteSystem.${message.guild.id}.${member.id}`)
+                                    msg.delete().catch(() => { })
                                     return message.channel.send(`${e.Warn} | Ocorreu um erro ao mutar este usuário.\n\`${err}\``)
                                 })
 
-                                message.reply(`${e.Check} | Usuário remutado com sucesso!`)
+                                return msg.edit(`${e.Check} | Usuário remutado com sucesso!`).catch(() => { })
                                 logchannel?.send({ embeds: [MuteEmbed] }).catch(() => { })
                             })()
                             : collector.stop()
@@ -380,14 +381,20 @@ module.exports = {
         msg.react('✅').catch(() => { }) // Check
         msg.react('❌').catch(() => { }) // X
 
+        let TrueOrFalse = false
+
         const collector = msg.createReactionCollector({
             filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
-            time: 15000,
+            time: 15000
         })
-
             .on('collect', (reaction) => {
 
+                if (reaction.emoji.name === '❌')
+                    return collector.stop()
+
                 if (reaction.emoji.name === '✅') {
+
+                    TrueOrFalse = true
 
                     sdb.delete(`Request.${message.author.id}`)
 
@@ -398,21 +405,23 @@ module.exports = {
                         })
 
                     member.roles.add(role).catch(err => {
+                        msg.delete().catch(() => { })
                         return message.channel.send(`${e.Warn} | Ocorreu um erro ao mutar este usuário.\n\`${err}\``)
                     })
 
                     logchannel?.send({ embeds: [MuteEmbed] }).catch(() => { })
 
                     let ReplyMessage = logchannel ? `${e.Check} | Mute efetuado com sucesso! Mais detalhes em ${logchannel}` : `${e.Check} | Mute efetuado com sucesso! Ative \`${prefix}logs\` para receber mais informações.`
-                    message.reply(`${ReplyMessage}`)
-                    return collector.stop()
-
+                    return msg.edit(`${ReplyMessage}`).catch(() => { })
                 }
+
             })
 
             .on('end', () => {
                 sdb.delete(`Request.${message.author.id}`)
-                return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+
+                if (!TrueOrFalse)
+                    return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
             })
 
         function InfoEmbed() {

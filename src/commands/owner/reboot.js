@@ -69,57 +69,47 @@ module.exports = {
 
         async function RebootUsers() {
 
-            let keys,
+            let keys = Object.keys(sdb.get('Users') || {}),
                 i = 0,
                 array = ["Timeouts", "Cache", "Color", "Perfil.Family", "Perfil.Marry", "Perfil.Estrela", "Perfil", "Slot.Medalha", "Slot.Machado", "Slot.Picareta", "Slot"]
 
-            try {
-                keys = Object.keys(sdb.get('Users') || {})
-            } catch (err) {
-                Error(message, err)
-            }
+            if (keys.length === 0)
+                return message.reply(`${e.Info} | Nenhum usuário na database.`)
 
-            return message.channel.send(`${e.Loading} | Atualizando os usuários no banco de dados...`).then(async msg => {
+            const msg = await message.channel.send(`${e.Loading} | Atualizando os usuários no banco de dados...`)
 
-                sdb.set('Client.Rebooting', { ON: true, Features: 'Relogando usuários no banco de dados...' })
-                lotery.set('Loteria.Close', true)
+            for (const id of keys) {
 
-                for (const id of keys) {
+                const user = client.users.cache.get(`${id}`)
 
-                    const user = client.users.cache.get(id)
+                if (!user) {
 
-                    user ? (() => {
+                    i++
+                    sdb.delete(`Users.${id}`)
+                    Transactions.delete(`Transactions.${id}`)
 
-                        for (const item of array) {
+                    if (sdb.get(`Titulos.Halloween`).includes(id))
+                        sdb.pull(`Titulos.Halloween`, id)
 
-                            try {
+                } else {
 
-                                if (!sdb.get(`Users.${id}.${item}`))
-                                    sdb.delete(`Users.${id}.${item}`)
+                    for (const item of array) {
 
-                                const keys = Object.keys(sdb.get(`Users.${id}.${item}`) || {})
+                        if (!sdb.get(`Users.${id}.${item}`))
+                            sdb.delete(`Users.${id}.${item}`)
 
-                                if (keys?.length < 1)
-                                    sdb.delete(`Users.${id}.${item}`)
+                        const keys = Object.keys(sdb.get(`Users.${id}.${item}`) || {})
 
-                            } catch (err) { }
+                        if (keys?.length < 1)
+                            sdb.delete(`Users.${id}.${item}`)
 
-                        }
-                    })()
-                        : (() => {
-                            i++
-                            sdb.delete(`Users.${id}`)
-                            sdb.pull(`Titulos.Halloween`, id)
-                            Transactions.delete(`Transactions.${id}`)
-                        })()
-
+                    }
                 }
 
-                sdb.delete('Client.Rebooting')
-                lotery.set('Loteria.Close', false)
-                return msg.edit(`${e.Check} | Todos os usuários foram atualizados na database.\n${e.Info} | ${i} usuários foram deletados da minha database`).catch(() => { })
+            }
 
-            }).catch(err => { Error(message, err) })
+            return msg.edit(`${e.Check} | Todos os usuários foram atualizados na database.\n${e.Info} | ${i} usuários foram deletados da minha database`).catch(() => { })
+
         }
 
         async function RebootGuild() {
