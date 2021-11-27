@@ -16,7 +16,6 @@ client.on("guildDelete", async (guild) => {
             .addField('Servidor', `${guild.name} *\`(${guild.id})\`*`)
             .addField('Status', `**Dono:** ${owner.user.tag} *\`(${owner.user.id})\`*\n**Membros:** ${guild.memberCount}`)
 
-
     await client.channels.cache.get(config.LogChannelId)?.send(`${e.Deny} | O servidor **${guild.name}** foi excluído com sucesso!`).catch(() => { })
     return await client.channels.cache.get(config.guildDeleteChannelId)?.send({ embeds: [Embed] }).catch(() => { })
 })

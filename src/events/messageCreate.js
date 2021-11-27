@@ -3,13 +3,10 @@ const
     data = require('../../Routes/functions/data'),
     { MessageEmbed, Permissions } = require('discord.js'),
     client = require('../../index'),
-    { N } = require('../../database/nomes.json'),
     { config } = require('../../database/config.json'),
-    { e } = require('../../database/emojis.json'),
-    { f } = require('../../database/frases.json'),
     { RateLimiter } = require('discord.js-rate-limiter'),
     rateLimiter = new RateLimiter(1, 1500),
-    { sdb, db, CommandsLog, ServerDb } = require('../../Routes/functions/database'),
+    { sdb, db, CommandsLog, ServerDb, DatabaseObj: { e, N, f } } = require('../../Routes/functions/database'),
     BlockCommandsBot = require('../../Routes/functions/blockcommands'),
     { RegisterUser, RegisterServer, UpdateUserName } = require("../../Routes/functions/register"),
     React = require('../../Routes/functions/reacts'),
@@ -125,7 +122,7 @@ client.on('messageCreate', async message => {
             if (!message.member.permissions.has(UserPermitionsRequired)) return message.reply(`${e.Hmmm} | Você não tem permissão para usar este comando.\n${e.Info} | Permissão*(ões)* necessária*(s)*: **\`${UserPermissionsMapped}\`**`)
             if (!message.guild.me.permissions.has(ClientPermisitonsRequired)) return message.reply(`${e.SadPanda} | Eu preciso da*s* permissão*(ões)* **\`${ClientPermissionsMapped}\`** para continuar com este comando.`)
             if (command.category === 'owner' && AuthorId !== config.ownerId) return message.reply(`${e.OwnerCrow} | Este é um comando restrito da classe: Owner/Desenvolvedor`)
-            if (command.category === 'economy' && sdb.get(`Users.${AuthorId}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`)) > 0) { return message.reply(`${e.Cadeia} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``) }
+            if (command.category === 'economy' && sdb.get(`Users.${AuthorId}.Timeouts.Preso`) !== null && 1500000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.Preso`)) > 0) { return message.reply(`${e.PepePreso} Você está preso! Liberdade em: \`${time.minutes}m e ${time.seconds}s\``) }
             if (command.category === 'images') {
                 if (sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`) !== null && 10000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`)) > 0)
                     return message.reply(`⏱️ | Os comandos de imagens são diferenciados, vai com calma! \`${timeImage.seconds} segundos\``)

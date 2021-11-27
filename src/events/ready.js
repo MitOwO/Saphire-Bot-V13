@@ -65,8 +65,6 @@ client.once("ready", async () => {
 
     }, 300000)
 
-    setInterval(() => {
-        MuteSystem()
-    }, 5000)
+    setInterval(() => MuteSystem(), 5000)
 
 })

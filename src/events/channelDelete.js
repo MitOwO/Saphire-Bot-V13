@@ -31,6 +31,6 @@ client.on('channelDelete', async (channel) => {
 
     function DeletedChannel(ChannelDB, CanalFunction) {
         ServerDb.delete(`Servers.${channel.guild.id}.${ChannelDB}`)
-        Notify(channel.guild.id, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
+        return Notify(channel.guild.id, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **${CanalFunction}** foi deletado.`)
     }
 })
