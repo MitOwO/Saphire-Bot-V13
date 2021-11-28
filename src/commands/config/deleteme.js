@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const Data = require('../../../Routes/functions/data')
 const PassCode = require('../../../Routes/functions/PassCode')
+const { Transactions, Reminders } = require('../../../Routes/functions/database')
 
 module.exports = {
     name: 'deleteme',
@@ -33,6 +34,8 @@ module.exports = {
             respondido = true
             let Timeouts = sdb.get(`Users.${message.author.id}.Timeouts`)
             sdb.set(`Users.${message.author.id}`, { Timeouts: Timeouts })
+            Transactions.delete(`Transactions.${id}`)
+            Reminders.delete(`Reminders.${id}`)
             db.delete(`${message.author.id}`)
             msg.edit(`${e.Check} | ${message.author}, todos os seus dados foram apagado com sucesso.\nData da Exclusão: \`${Data()}\``)
         }
