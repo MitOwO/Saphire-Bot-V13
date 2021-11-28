@@ -87,6 +87,7 @@ module.exports = {
                     i++
                     sdb.delete(`Users.${id}`)
                     Transactions.delete(`Transactions.${id}`)
+                    Reminders.delete(`Reminders.${id}`)
 
                     if (sdb.get(`Titulos.Halloween`).includes(id))
                         sdb.pull(`Titulos.Halloween`, id)

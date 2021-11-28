@@ -1,4 +1,4 @@
-const { lotery, DatabaseObj, Clan } = require('../../../Routes/functions/database')
+const { lotery, DatabaseObj, Clan, Transactions, Reminders } = require('../../../Routes/functions/database')
 const { e, config } = DatabaseObj
 const Vip = require('../../../Routes/functions/vip')
 
@@ -81,6 +81,8 @@ module.exports = {
                 return message.reply(`${e.Info} | Este usuário não existe na minha database.`)
 
             sdb.delete(`Users.${user.id}`)
+            Transactions.delete(`Transactions.${user.id}`)
+            Reminders.delete(`Reminders.${user.id}`)
             db.delete(`${user.id}`)
             db.delete(`Bitcoin_${user.id}`)
             return message.reply(`${e.Check} Todos os dados de ${user.tag} foram deletados.`)

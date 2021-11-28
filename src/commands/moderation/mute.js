@@ -335,6 +335,7 @@ module.exports = {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                 msg.react('✅').catch(() => { }) // Check
                 msg.react('❌').catch(() => { }) // X
+                let Control = false
 
                 const collector = msg.createReactionCollector({
                     filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
@@ -360,8 +361,9 @@ module.exports = {
                                     return message.channel.send(`${e.Warn} | Ocorreu um erro ao mutar este usuário.\n\`${err}\``)
                                 })
 
-                                return msg.edit(`${e.Check} | Usuário remutado com sucesso!`).catch(() => { })
+                                Control = true
                                 logchannel?.send({ embeds: [MuteEmbed] }).catch(() => { })
+                                return msg.edit(`${e.Check} | Usuário remutado com sucesso!`).catch(() => { })
                             })()
                             : collector.stop()
 
@@ -369,7 +371,7 @@ module.exports = {
 
                     .on('end', () => {
                         sdb.delete(`Request.${message.author.id}`)
-                        return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                        return Control ? null : msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
                     })
             })()
 
