@@ -3,9 +3,10 @@ const
     { e, config } = DatabaseObj,
     client = require('../../index'),
     Data = require('../../Routes/functions/data'),
-    MuteSystem = require('../../Routes/functions/mutesystem')
+    MuteSystem = require('../../Routes/functions/mutesystem'),
+    ReminderSystem = require('../../Routes/functions/remindersystem')
 
-client.once("ready", async () => {
+client.on("ready", async () => {
 
     sdb.delete('Client.Rebooting')
     sdb.delete('Request')
@@ -33,10 +34,13 @@ client.once("ready", async () => {
 
     setInterval(() => {
 
-        let UsersID = Object.keys(sdb.get('Users')),
+        let UsersID = Object.keys(sdb.get('Users') || {}),
             likesarray = [],
             dbarray = [],
             xparray = []
+
+        if (UsersID.length === 0)
+            return
 
         for (const id of UsersID) {
 
@@ -65,6 +69,9 @@ client.once("ready", async () => {
 
     }, 300000)
 
-    setInterval(() => MuteSystem(), 5000)
+    setInterval(() => {
+        MuteSystem()
+        ReminderSystem()
+    }, 3000)
 
 })

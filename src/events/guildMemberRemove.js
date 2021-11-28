@@ -20,8 +20,9 @@ client.on('guildMemberRemove', async (member) => {
         const channel = await client.channels.cache.get(ServerDb.get(`Servers.${member.guild.id}.LogChannel`))
         if (!channel) return
 
-        const fetchedLogs = await member.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_KICK' })
-        const banLog = fetchedLogs.entries.first()
+        const fetchedLogs = await member.guild.fetchAuditLogs({ limit: 1, type: 'MEMBER_KICK' }),
+            banLog = fetchedLogs.entries.first()
+
         if (!banLog) return
         const { executor, target, reason } = banLog
         if (!banLog || !executor) return
@@ -45,8 +46,9 @@ client.on('guildMemberRemove', async (member) => {
     }
 
     async function LeaveMember() {
-        let LeaveChannel = ServerDb.get(`Servers.${member.guild.id}.LeaveChannel`)
+        let LeaveChannel = ServerDb.get(`Servers.${member.guild.id}.LeaveChannel.Canal`)
         sdb.delete(`Client.MuteSystem.${member.guild.id}.${member.id}`)
         return await member.guild.channels.cache.get(LeaveChannel)?.send(`${e.Leave} | ${member.user.username} saiu do servidor.`).catch(() => { })
     }
+
 })
