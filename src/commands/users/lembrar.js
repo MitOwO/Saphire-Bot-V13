@@ -82,9 +82,9 @@ module.exports = {
                     ChannelId: message.channel.id
                 })
 
-                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias, ` : '',
-                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas, ` : '',
-                    minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos, ` : '',
+                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
+                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
+                    minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
                     segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
 
                 return msg.edit(`${e.Check} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Dias}${Horas}${minutos}${segundos}**`).catch((err) => {
@@ -153,9 +153,9 @@ module.exports = {
                     ChannelId: message.channel.id
                 })
 
-                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias, ` : '',
-                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas, ` : '',
-                    Minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos, ` : '',
+                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
+                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
+                    Minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
                     Segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
 
                 return msg.edit(`${e.Check} | Tudo bem! Eu vou te lembrar de | **${ReminderMessage}** | em **${Dias}${Horas}${Minutos}${Segundos}**`).catch((err) => {
@@ -209,9 +209,9 @@ module.exports = {
                     ChannelId: message.channel.id
                 })
 
-                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias, ` : '',
-                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas, ` : '',
-                    Minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos, ` : '',
+                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
+                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
+                    Minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
                     Segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
 
                 return msg.edit(`${e.Check} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Dias}${Horas}${Minutos}${Segundos}**`).catch((err) => {
