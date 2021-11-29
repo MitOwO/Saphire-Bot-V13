@@ -189,8 +189,14 @@ module.exports = {
         }
 
         function ValueAll() {
-            sdb.add(`Users.${message.author.id}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.Resgate`)) || 0)
-            sdb.set(`Users.${message.author.id}.Cache.Resgate`, 0)
+            let All = parseInt(sdb.get(`Users.${message.author.id}.Cache.Resgate`))
+
+            if (All > 0) {
+
+                sdb.add(`Users.${message.author.id}.Balance`, All)
+                sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
+                
+            }
 
             return sdb.get(`Users.${message.author.id}.Balance`)
         }
