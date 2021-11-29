@@ -43,10 +43,59 @@ module.exports = {
 
             const Args = m.content.trim().split(/ +/g)
 
+            if (Args[3]) return AllTime()
             if (Args[2]) return HoursMinutesSeconds()
             if (Args[1]) return TwoArguments()
             if (Args[0]) return OnlyOneArgument()
             return msg.edit(`${e.Deny} | Comando cancelado por uso irregular/desconhecido.`).catch(() => { })
+
+            function AllTime() {
+
+                let Days = Args[0],
+                    Hour = Args[1],
+                    Minutes = Args[2],
+                    Seconds = Args[3]
+
+                if (!Days.slice(-1).includes('d') || !Hour.slice(-1).includes('h') || !Minutes.slice(-1).includes('m') || !Seconds.slice(-1).includes('s'))
+                    return message.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m 3s\``)
+
+                let Dias = Days.replace(/d/g, ''),
+                    Hora = Hour.replace(/h/g, ''),
+                    Minutos = Minutes.replace(/m/g, ''),
+                    Segundos = Seconds.replace(/s/g, ''),
+                    DefinedTime,
+                    ParseTime
+
+                if (isNaN(Dias) || isNaN(Hora) || isNaN(Minutos) || isNaN(Segundos))
+                    return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m 3s\``)
+
+                if (Dias < 1 ||Hora < 1 || Minutos < 1, Segundos < 1)
+                    return message.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
+
+                try {
+                    DefinedTime = ms(Days) + ms(Hour) + ms(Minutes) + ms(Seconds)
+                    ParseTime = parsems(DefinedTime)
+                } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
+
+                CollectControl = true
+
+                Reminders.set(`Reminders.${message.author.id}.${ReminderCode}`, {
+                    RemindMessage: ReminderMessage,
+                    Time: DefinedTime,
+                    DateNow: Date.now(),
+                    ChannelId: message.channel.id
+                })
+
+                let dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
+                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
+                    minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
+                    segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
+
+                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${dias}${Horas}${minutos}${segundos}**`).catch((err) => {
+                    return Error(message, err)
+                })
+
+            }
 
             function HoursMinutesSeconds() {
 
