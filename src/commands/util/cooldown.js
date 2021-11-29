@@ -149,10 +149,10 @@ module.exports = {
         // Timeout Vip
         let TimeVip = ms(Vip.TimeRemaing - (Date.now() - Vip.DateNow))
         if (Vip.Permanent) {
-            TVip = `${e.VipStar} \`Permanente\``
+            TVip = `\`Permanente\``
         } else {
             if (Vip.DateNow !== null && Vip.TimeRemaing - (Date.now() - Vip.DateNow) > 0) {
-                TVip = `${e.VipStar} \`${TimeVip.days}d ${TimeVip.hours}h ${TimeVip.minutes}m e ${TimeVip.seconds}s\``
+                TVip = `${e.Loading} \`${TimeVip.days}d ${TimeVip.hours}h ${TimeVip.minutes}m e ${TimeVip.seconds}s\``
             } else { sdb.delete(`Users.${user.id}.Timeouts.Vip`); TVip = `${e.GrayStar} \`Vip Indisponível\`` }
         }
 
@@ -165,7 +165,7 @@ module.exports = {
             .setDescription('Aqui você pode conferir todos os timeouts.')
             .addFields(
                 {
-                    name: `Vip`,
+                    name: `${e.VipStar} Vip`,
                     value: TVip || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
@@ -181,51 +181,51 @@ module.exports = {
                     value: TBolsa || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}mensal`,
+                    name: `${e.CashAndCash} ${prefix}mensal`,
                     value: TMonth || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}semanal`,
+                    name: `${e.BagMoney2} ${prefix}semanal`,
                     value: TWeek || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}daily`,
+                    name: `${e.MoneyWings} ${prefix}daily`,
                     value: TDaily || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}work`,
+                    name: `${e.PepeRich} ${prefix}work`,
                     value: TWork || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}pig`,
+                    name: `${e.Pig} ${prefix}pig`,
                     value: TPig || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}cu`,
+                    name: `${e.PepeOk} ${prefix}cu`,
                     value: TCu || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}roleta`,
+                    name: `🎫 ${prefix}roleta`,
                     value: TRoleta || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}crime`,
+                    name: `${e.PepeCrime} ${prefix}crime`,
                     value: TCrime || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}assaltar`,
+                    name: `${e.PandaBag} ${prefix}assaltar`,
                     value: TAssalto || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}roubar`,
+                    name: `${e.PandaBag} ${prefix}roubar`,
                     value: TRob || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}bitcoin`,
+                    name: `${e.BitCoin} ${prefix}bitcoin`,
                     value: TBit || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
                 {
-                    name: `${prefix}like`,
+                    name: `${e.Like} ${prefix}like`,
                     value: TLikes || `\`Você não deveria ver essa mensagem... Usa "${prefix}bug", por favor?\``
                 },
             )

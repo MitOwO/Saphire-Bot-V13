@@ -40,7 +40,6 @@ module.exports = {
             Admins = ClanKey?.Admins,
             Owner = ClanKey?.Owner === message.author.id,
             Admin = Owner || Admins?.includes(message.author.id),
-            Name = ClanKey?.Name,
             Donation = ClanKey?.Donation,
             Members = ClanKey?.Members,
             Argument = args[0] || 'NoArgs'
@@ -290,6 +289,16 @@ module.exports = {
                                 MemberTag = client.users.cache.get(member)?.tag.replace(/`/g, '') || "Membro não encontrado",
                                 MemberId = client.users.cache.get(member)?.id || "N/A"
 
+                            if (MemberTag === "Membro não encontrado") {
+                                Clan.pull(`Clans.${K}.Members`, member)
+                                Clan.pull(`Clans.${K}.Admins`, member)
+                                MemberTag = 'Usuário deletado'
+                                MemberId = ''
+                                MemberBust = e.Deny
+                                ModShield = ''
+                                Coroa = ''
+                            }
+
                             return `${Coroa}${ModShield}${MemberBust}${MemberTag} \`${MemberId}\``
                         }).join("\n")
 
@@ -464,7 +473,7 @@ module.exports = {
                     return message.reply(`${e.Deny} | Este usuário já é um administrador.`)
 
                 Clan.push(`Clans.${key}.Admins`, user.id)
-                LogRegister(`${e.ModShield} **${user.user.tag}** foi promivido para Administrador`)
+                LogRegister(`${e.ModShield} **${user.user.tag}** foi promovido para Administrador`)
                 return message.reply(`${e.Check} | ${user.user.tag} foi promovido para ${e.ModShield} **Administrador*(a)*** no clan **${AtualClan}**`)
 
             }
