@@ -8,27 +8,42 @@ const { Message, Permissions } = require('discord.js')
 
 function AfkSystem(message) {
 
-    if (!message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY))
+    if (!message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS))
         return
 
-    const GuildId = message.guild.id
+    const GuildId = message.guild.id,
+        user = message.mentions.users.first() || message.mentions.repliedUser
 
     if (ServerDb.get(`Servers.${GuildId}.AfkSystem.${message.author.id}`)) {
         ServerDb.delete(`Servers.${GuildId}.AfkSystem.${message.author.id}`)
-        return message.react(`${e.Check}`).catch(() => { return message.channel.send(`${e.Check} | ${message.author}, o modo AFK Local foi desativado.`).catch(() => { }) })
+        const count = ServerDb.get(`Servers.${GuildId}.AfkSystem.${message.author.id}Notification`)
+        ServerDb.delete(`Servers.${GuildId}.AfkSystem.${message.author.id}Notification`)
+
+        if (count > 0) return message.channel.send(`${e.Notification} | Hey, ${message.author}. Enquanto você estava offline, você recebeu ${count} menções no servidor. Lembre-se de conferir as notificações.`).catch(() => { })
+        return message.react(`${e.Check}`).catch(() => { })
+
     }
 
     if (sdb.get(`Users.${message.author.id}.AfkSystem`)) {
         sdb.delete(`Users.${message.author.id}.AfkSystem`)
-        return message.react(`${e.Planet}`).catch(() => { return message.channel.send(`${e.Check} | ${message.author}, o modo AFK Global foi desativado.`).catch(() => { }) })
+        const count = sdb.get(`Users.${message.author.id}.AfkSystemNotification`)
+        if (count > 0) return message.channel.send(`${e.Notification} | Hey, ${message.author}. Enquanto você estava offline, você recebeu ${count} menções nos servidores. Lembre-se de conferir as notificações.`).catch(() => { })
+        return message.react(`${e.Planet}`).catch(() => { })
     }
 
-    let user = message.mentions.users.first() || message.mentions.repliedUser
     if (user) {
-        if (sdb.has(`Users.${user.id}.AfkSystem`)) return message.channel.send(`${e.Afk} | ${message.author}, ${user.username} está offline. --> ✍️ | ${sdb.get(`Users.${user.id}.AfkSystem`)}`)
-        if (ServerDb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) return message.channel.send(`${e.Afk} | ${message.author}, ${user.username} está offline. --> ✍️ | ${ServerDb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`)
+
+        if (sdb.has(`Users.${user.id}.AfkSystem`)) {
+            sdb.add(`Users.${user.id}.AfkSystemNotification`, 1)
+            return message.channel.send(`${e.Afk} | ${message.author}, ${user.username} está offline desde ${sdb.get(`Users.${user.id}.AfkSystem`)}`).catch(() => { })
+        }
+
+        if (ServerDb.has(`Servers.${GuildId}.AfkSystem.${user.id}`)) {
+            ServerDb.add(`Servers.${GuildId}.AfkSystem.${user.id}Notification`, 1)
+            return message.channel.send(`${e.Afk} | ${message.author}, ${user.username} está offline desde ${ServerDb.get(`Servers.${GuildId}.AfkSystem.${user.id}`)}`).catch(() => { })
+        }
     }
-    
+
     return
 }
 
