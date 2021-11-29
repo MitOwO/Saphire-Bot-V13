@@ -4,7 +4,10 @@ const { config } = require('../../database/config.json')
 const client = require('../../index')
 
 process.on('unhandledRejection', async (reason) => {
-    
+
+    if (reason.code === 10008 || reason.code === 50035)
+        return
+
     await client.users.cache.get(`${config.ownerId}`)?.send({
         embeds: [
             new MessageEmbed()
@@ -18,6 +21,10 @@ process.on('unhandledRejection', async (reason) => {
 })
 
 process.on('uncaughtExceptionMonitor', async (error, origin) => {
+
+    if (error.code === 10008)
+
+        return
 
     await client.users.cache.get(`${config.ownerId}`)?.send({
         embeds: [

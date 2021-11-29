@@ -35,9 +35,14 @@ async function MuteSystem() {
                                     sdb.delete(`Users.${user}`)
                             })()
 
+                            continue
+
                     }
                 })()
         }
+
+        continue
+
     }
 
 }
@@ -65,7 +70,7 @@ async function CheckIfThisUserIsMuted(Guild, userId) {
 
         let LogChannel = Guild.channels.cache.get(ServerDb.get(`Servers.${Guild.id}.LogChannel`))
 
-        Member.roles.cache.has(Role?.id)
+        return Member.roles.cache.has(Role?.id)
             ? (() => {
                 Member.roles.remove(Role, 'Fim do mute').catch(() => { })
                 sdb.delete(`Client.MuteSystem.${Guild.id}.${userId}`)
@@ -76,6 +81,8 @@ async function CheckIfThisUserIsMuted(Guild, userId) {
             })()
 
     }
+
+    return
 
 }
 
