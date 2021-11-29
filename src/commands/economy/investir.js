@@ -102,7 +102,7 @@ module.exports = {
                         })()
                         : (() => {
                             collector.stop()
-                            sdb.add(`Users.${message.author.id}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.Bolsa`) || 1))
+                            parseInt(sdb.get(`Users.${message.author.id}.Cache.Bolsa`)) > 1 ? sdb.add(`Users.${message.author.id}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.Bolsa`))) : null
                             sdb.delete(`Users.${message.author.id}.Cache.Bolsa`)
                             return msg.edit(`${e.Deny} | Investimento cancelado.`).catch(() => { })
                         })()

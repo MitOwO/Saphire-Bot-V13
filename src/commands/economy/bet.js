@@ -20,43 +20,55 @@ module.exports = {
         if (db.get(`Aposta.${message.author.id}`))
             return message.reply(`${e.Deny} | Você já está com uma aposta aberta. Aqui esta o link: ${db.get(`Aposta.${message.author.id}`)}`)
 
-        const Embed = new MessageEmbed()
-            .setColor(Colors(message.member))
-            .setTitle('💵 Comando Aposta')
-            .setDescription(`Você pode apostar ${Moeda(message)} com todos no chat.`)
-            .addField(`${e.Gear} Emojis`, `✅ Force o final da aposta\n💸 Entre na aposta\n❌ Sair da aposta`)
-            .addField(`${e.On} Comando`, `\`${prefix}bet [quantia]\` Aposte uma quantia`)
+        if (!args[0]) return message.reply({
+            embeds: [
+                new MessageEmbed()
+                    .setColor(Colors(message.member))
+                    .setTitle('💵 Comando Aposta')
+                    .setDescription(`Você pode apostar ${Moeda(message)} com todos no chat.`)
+                    .addField(`${e.Gear} Emojis`, `✅ Force o final da aposta\n💸 Entre na aposta\n❌ Sair da aposta`)
+                    .addField(`${e.On} Comando`, `\`${prefix}bet [quantia] [LimiteDePlayers]\` Aposte uma quantia`)
+            ]
+        })
 
-        if (!args[0]) return message.reply({ embeds: [Embed] })
+        let quantia = parseInt(args[0].replace(/k/g, '000')),
+            Money = parseInt(sdb.get(`Users.${message.author.id}.Balance`)) || 0,
+            BetUsers = [],
+            LimitUsers = parseInt(args[1]) || 30
 
-        let quantia = parseInt(args[0].replace(/k/g, '000'))
-        if (['all', 'tudo'].includes(args[0]?.toLowerCase())) quantia = parseInt(sdb.get(`Users.${message.author.id}.Balance`))
-        if (isNaN(quantia)) return message.reply(`${e.Deny} | **${args[0]}** | Não é um número`)
-        if (args[1]) return message.reply(`${e.Deny} | Por favor, use \`${prefix}bet [quantia/all]\` ou \`${prefix}bet\`, nada além disso, ok?`)
-        if (parseInt(sdb.get(`Users.${message.author.id}.Balance`)) < quantia || quantia <= 0) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro na carteira.`)
-        let BetUsers = []
-        function BetUsersEmbed() { return BetUsers?.length >= 1 ? BetUsers.map((id) => `<@${id}>`).join('\n') : 'Ninguém' }
+        if (['all', 'tudo'].includes(args[0]?.toLowerCase())) quantia = parseInt(Money)
+        if (isNaN(quantia)) return message.reply(`${e.Deny} | A quantia dada não é um número`)
+        if (Money < quantia || quantia < 1) return message.reply(`${e.Deny} | Você não tem todo esse dinheiro na carteira.`)
+        if (LimitUsers > 30 || LimitUsers < 2) return message.reply(`${e.Deny} | O limite de participantes deve estar entre 2~30.`)
 
-        const BetEmbed = new MessageEmbed().setColor('GREEN').setThumbnail('https://imgur.com/k5NKfe8.gif').setTitle(`${message.member.displayName} iniciou uma nova aposta`).setFooter('Limite máximo: 30 participantes')
+        function BetUsersEmbed() { return BetUsers?.length >= 1 ? BetUsers.map(id => `<@${id}>`).join('\n') : 'Ninguém' }
 
-        if (parseInt(sdb.get(`Users.${message.author.id}.Balance`)) >= quantia) {
-            sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
-            sdb.subtract(`Users.${message.author.id}.Balance`, quantia)
-            PushTrasaction(
-                message.author.id,
-                `💰 Apostou ${quantia || 0} Moedas no comando bet`
-            )
-            BetUsers.push(message.author.id)
-            return BetInit()
-        } else {
-            return message.reply(`${e.Deny} | Você está usando o comando errado... Tenta \`${prefix}bet\``)
-        }
+        const BetEmbed = new MessageEmbed()
+            .setColor('GREEN')
+            .setThumbnail('https://imgur.com/k5NKfe8.gif')
+            .setTitle(`${message.member.displayName} iniciou uma nova aposta`)
+            .setFooter(`Limite máximo: ${LimitUsers} participantes`)
+
+        return Money >= quantia
+            ? (() => {
+                sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
+                sdb.subtract(`Users.${message.author.id}.Balance`, quantia)
+                PushTrasaction(
+                    message.author.id,
+                    `💰 Apostou ${quantia || 0} Moedas no comando bet`
+                )
+                BetUsers.push(message.author.id)
+                return BetInit()
+            })()
+            : (() => {
+                return message.reply(`${e.Deny} | Você está usando o comando errado... Tenta \`${prefix}bet\``)
+            })()
 
         async function BetInit() {
 
             BetEmbed
                 .setDescription(`Valor da aposta: ${quantia} ${Moeda(message)}\n**Participantes**\n${BetUsersEmbed()}\n \n💰 Prêmio acumulado: ${(BetUsers?.length || 0) * quantia}`)
-                .addField('⠀', `✅ Encerrar | 💸 Apostar | ❌ Sair da aposta`)
+                .addField('Funções dos Emojis', `✅ Encerrar | 💸 Apostar | ❌ Sair da aposta`)
 
             const msg = await message.channel.send({ embeds: [BetEmbed] })
             sdb.set(`Request.${message.author.id}`, `${msg.url}`)
@@ -67,14 +79,14 @@ module.exports = {
                 time: 120000
             });
 
-            for (const emoji of ['✅', '💸', '❌']) {
+            for (const emoji of ['✅', '💸', '❌'])
                 msg.react(emoji).catch(() => { })
-            }
 
             collector.on('collect', (reaction, user) => {
 
                 if (reaction.emoji.name === '✅' && user.id === message.author.id) {
                     sdb.delete(`Request.${message.author.id}`)
+                    db.delete(`Aposta.${message.author.id}`)
                     collector.stop()
                 }
 
@@ -94,13 +106,16 @@ module.exports = {
                     BetUsers.push(user.id)
 
                     BetEmbed.setDescription(`Valor da aposta: ${quantia} ${Moeda(message)}\n**Participantes**\n${BetUsersEmbed()}\n \n💰 Prêmio acumulado: ${(BetUsers?.length || 0) * quantia}`)
+
                     msg.edit({ embeds: [BetEmbed] }).catch(err => {
                         message.channel.send(`${e.Deny} | Houve um erro ao editar a mensagem da aposta.\n\`${err}\``)
-                        collector.stop()
+                        return collector.stop()
                     })
-                    if (BetUsers.length >= 30) {
-                        collector.stop()
-                    }
+
+                    if (BetUsers.length >= LimitUsers)
+                        return collector.stop()
+
+                    return
                 }
 
                 if (reaction.emoji.name === '❌' && user.id !== client.user.id)
@@ -118,17 +133,24 @@ module.exports = {
 
                 if (BetUsers.length <= 0) {
 
-                    const BetEmbedCancel = new MessageEmbed().setColor('RED').setTitle(`${message.member.displayName} fez uma aposta`).setThumbnail('https://imgur.com/k5NKfe8.gif').setDescription(`${BetEmbed.description}\n \n${e.Deny} Essa aposta foi cancelada por não haver participantes suficientes`)
+                    const BetEmbedCancel = new MessageEmbed()
+                        .setColor('RED')
+                        .setTitle(`${message.member.displayName} fez uma aposta`)
+                        .setThumbnail('https://imgur.com/k5NKfe8.gif')
+                        .setDescription(`${BetEmbed.description}\n \n${e.Deny} Essa aposta foi cancelada por não haver participantes suficientes`)
+
                     msg.edit({ embeds: [BetEmbedCancel] }).catch(() => { Erro() })
+
                     parseInt(sdb.get(`Users.${message.author.id}.Cache.Resgate`)) + parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) > 0
                         ? (() => {
                             sdb.add(`Users.${message.author.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0))
                             PushTrasaction(
                                 message.author.id,
-                                `💰 Recebeu de volta ${(sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)))} Moedas no comando bet`
+                                `💰 Recebeu de volta ${parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0} Moedas no comando bet`
                             )
                         })()
                         : null
+
                     sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
                     sdb.delete(`Users.${message.author.id}.Cache.BetPrize`)
                     sdb.delete(`Users.${message.author.id}.Cache.Bet`)
@@ -178,6 +200,7 @@ module.exports = {
                 sdb.delete(`Request.${message.author.id}`)
                 Error(message, err)
                 return message.channel.send(`${e.Warn} | Aconteceu algo inesperado. O dinheiro na quantia de ${quantia} ${Moeda(message)} foi adicionado ao cache de ${message.author}. O erro já foi reportado ao meu criador, mas se quiser fazer um reporte, use o comando \`${prefix}bug\`\n\`${err}\``)
+
             }
 
         }

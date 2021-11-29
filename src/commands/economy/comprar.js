@@ -37,7 +37,7 @@ module.exports = {
                 },
                 {
                     name: 'Loteria',
-                    value: `🎫 \`Ticket Loteria\` 10 ${Moeda(message)}\nPrêmio Atual: ${lotery.get(`Loteria.Prize`) ? parseInt(sdb.get(`Loteria.Prize`))?.toFixed(0) : 0} ${Moeda(message)}`
+                    value: `🎫 \`Ticket Loteria\` 10 ${Moeda(message)}\nPrêmio Atual: ${lotery.get(`Loteria.Prize`) > 0 ? parseInt(lotery.get(`Loteria.Prize`))?.toFixed(0) : 0} ${Moeda(message)}`
                 },
                 {
                     name: 'Perfil',
@@ -435,7 +435,7 @@ module.exports = {
                 sdb.set('Loteria.Users', [])
 
             lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
-            
+
             msg.edit(`${e.Check} | ${message.author} comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${lotery.get('Loteria.Prize')?.toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -1000 ${Moeda(message)}`).catch(() => { })
             setTimeout(() => { lotery.delete(`Buying.${message.author.id}`) }, 1500)
 
