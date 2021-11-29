@@ -1,23 +1,32 @@
-const { e } = require('../../../database/emojis.json')
-const { emojis } = require('../../../Routes/functions/database')
+const { emojis, DatabaseObj: { config } } = require('../../../Routes/functions/database'),
+    e = emojis.get('e')
 
 // #246FE0 - Azul Saphire
 module.exports = {
     name: 'emojis',
     aliases: ['setemoji'],
-    category: 'owner',
+    category: 'random',
     emoji: `${e.SaphireFeliz}`,
     usage: '<setemoji> <add/remove> <emoji>',
     description: 'Permite meu criador adicionar ou emojis emojis do meu banco de dados',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
+        const owner = message.author.id === config.ownerId
+
+        if (!args[0]) return AllEmojis()
+
+        if (!owner) return message.reply(`${e.OwnerCrow} | Acesso privado ao meu criador.`)
         if (['get', 'tem'].includes(args[0]?.toLowerCase())) return GetEmoji(args[1])
+        if (['set', 'new', 'novo', 'add'].includes(args[0]?.toLowerCase())) return SetNewEmoji()
+        if (['delete', 'del', 'remove', 'tirar', 'excluir'].includes(args[0]?.toLowerCase())) return DeleteEmoji(Name)
 
-        if (['set', 'new', 'novo', 'add'].includes(args[0]?.toLowerCase())) {
+        return message.reply(`${e.Info} | Argumentos: \`get, new, delete, all\``)
 
-            let Nome = args[1]
-            let Emoji = args[2]
+        function SetNewEmoji() {
+
+            let Nome = args[1],
+                Emoji = args[2]
 
             if (args[3])
                 return message.reply(`${e.Info} | Comando: \`${prefix}emojis new NomeDoEmoji Emoji\`. Nada além disso.`)
@@ -31,123 +40,108 @@ module.exports = {
             if (Nome.startsWith('<'))
                 return message.reply(`${e.Info} | Comando: \`${prefix}emojis new NomeDoEmoji Emoji\``)
 
-            return NewEmoji(Nome, Emoji)
+            emojis.set(`e.${Nome}`, Emoji)
+            return message.reply(`${e.Check} | Novo emoji inserido com sucesso no banco de dados! Emoji in DB: ${emojis.get(`e.${Nome}`)}`)
         }
 
-        if (['all', 'tudo'].includes(args[0]?.toLowerCase()))
-            return AllEmojis()
+        async function AllEmojis() {
 
-        if (['delete', 'del', 'remove', 'tirar', 'excluir'].includes(args[0]?.toLowerCase())) {
+            let EmojisName = Object.keys(emojis.get('e') || {})
 
-            let Name = args[1]
+            if (EmojisName.length === 0)
+                return message.reply(`${e.Deny} | Nenhum emoji na database.`)
 
-            if (!Name) {
+            function EmbedGenerator() {
 
-                try {
+                let amount = 15,
+                    Page = 1,
+                    embeds = [],
+                    length = EmojisName.length / 15 <= 1 ? 1 : parseInt((EmojisName.length / 15) + 1)
 
-                    let Emojis = Object.entries(emojis.get('e'))
+                for (let i = 0; i < EmojisName.length; i += 15) {
 
-                    let Page1 = Emojis?.slice(0, 50)?.map(([a, b]) => `\`${a}\`: ${b}`).join('\n') || false
-                    let Page2 = Emojis?.slice(50, 100)?.map(([a, b]) => `\`${a}\`: ${b}`).join('\n') || false
-                    let Page3 = Emojis?.slice(100, 150)?.map(([a, b]) => `\`${a}\`: ${b}`).join('\n') || false
+                    let current = EmojisName.slice(i, amount),
+                        description = current.map(emoji => `> \`${emoji}\`: ${e[emoji] || 'Não encontrado'}`).join("\n")
 
-                    function Fil() {
-                        if (Page3 && Page2 && Page1)
-                            return 1
+                    if (current.length > 0) {
 
-                        if (Page2 && Page1)
-                            return 2
+                        embeds.push({
+                            color: 'GREEN',
+                            title: `${client.user.username} Emoji List - ${Page}/${length}`,
+                            description: `${description}`,
+                            footer: {
+                                text: `${EmojisName.length} Emojis contabilizados`
+                            },
+                        })
 
-                        if (Page1)
-                            return 3
+                        Page++
+                        amount += 15
 
-                        return 0
                     }
 
-                    const embed1 = new MessageEmbed().setColor('#246FE0').setDescription(`${Page1}`)
-                    const embed2 = new MessageEmbed().setColor('#246FE0').setDescription(`${Page2}`)
-                    const embed3 = new MessageEmbed().setColor('#246FE0').setDescription(`${Page3}`)
+                }
 
-                    switch (Fil()) {
-                        case 1:
-                            message.reply({ content: `${e.Deny} | Diga o nome do emoji que deseja excluir.`, embeds: [embed1, embed2, embed3] })
-                            break;
-                        case 2:
-                            message.reply({ content: `${e.Deny} | Diga o nome do emoji que deseja excluir.`, embeds: [embed1, embed2] })
-                            break;
-                        case 3:
-                            message.reply({ content: `${e.Deny} | Diga o nome do emoji que deseja excluir.`, embeds: [embed1] })
-                            break;
-                        default:
-                            message.reply(`${e.Info} | Não há emojis no banco de dados.`)
-                            break;
+                return embeds;
+            }
+
+            let Embeds = EmbedGenerator(),
+                msg = await message.channel.send({ embeds: [Embeds[0]] }),
+                Control = 0,
+                Emojis = ['⏮️', '⬅️', '➡️', '⏭️', '❌']
+
+            if (Embeds.length > 1)
+                for (const emoji of Emojis)
+                    msg.react(emoji).catch(() => { })
+
+            const collector = msg.createReactionCollector({
+                filter: (reaction, user) => Emojis.includes(reaction.emoji.name) && user.id === message.author.id,
+                idle: 30000
+            })
+
+                .on('collect', (reaction) => {
+
+                    if (reaction.emoji.name === Emojis[4])
+                        return collector.stop()
+
+                    if (reaction.emoji.name === Emojis[0]) {
+                        if (Control === 0) return
+                        Control = 0
+                        return msg.edit({ embeds: [Embeds[Control]] }).catch(() => { })
                     }
 
-                    return
+                    if (reaction.emoji.name === Emojis[3]) {
+                        if (Control === Embeds.length - 1) return
+                        Control = Embeds.length - 1
+                        return msg.edit({ embeds: [Embeds[Control]] }).catch(() => { })
+                    }
 
-                } catch (err) {
-                    return message.reply(`${e.Warn} | Falha ao enviar os nomes dos emojis.\n\`${err}\``)
-                }
+                    return reaction.emoji.name === Emojis[1]
+                        ? (() => {
 
-            } else {
-                return DeleteEmoji(Name)
-            }
+                            Control--
+                            return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control++
 
-        }
+                        })()
+                        : (() => {
 
-        return message.reply(`${e.Info} | Argumentos: \`get, new, delete, all\``)
+                            Control++
+                            return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control--
 
-        function AllEmojis() {
+                        })()
+                })
 
-            try {
+                .on('end', () => {
+                    return msg.edit({ content: `${e.Deny} Comando cancelado` }).catch(() => { })
+                })
 
-                let Emojis = Object.entries(emojis.get('e'))
-
-                let Page1 = Emojis?.slice(0, 50)?.map(([a, b]) => `\`${a}\`: ${b}`).join('\n') || false
-                let Page2 = Emojis?.slice(50, 100)?.map(([a, b]) => `\`${a}\`: ${b}`).join('\n') || false
-                let Page3 = Emojis?.slice(100, 150)?.map(([a, b]) => `\`${a}\`: ${b}`).join('\n') || false
-
-                function Fil() {
-                    if (Page3 && Page2 && Page1) return 1
-                    if (Page2 && Page1) return 2
-                    if (Page1) return 3
-                    return 0
-                }
-
-                const embed1 = new MessageEmbed().setTitle(`${client.user.username} Emoji's Database`).setColor('#246FE0').setDescription(`${Page1}`)
-                const embed2 = new MessageEmbed().setColor('#246FE0').setDescription(`${Page2}`)
-                const embed3 = new MessageEmbed().setColor('#246FE0').setDescription(`${Page3}`)
-
-                switch (Fil()) {
-                    case 1:
-                        message.reply({ embeds: [embed1, embed2, embed3] })
-                        break;
-                    case 2:
-                        message.reply({ embeds: [embed1, embed2] })
-                        break;
-                    case 3:
-                        message.reply({ embeds: [embed1] })
-                        break;
-                    default:
-                        message.reply(`${e.Info} | Não há emojis no banco de dados.`)
-                        break;
-                }
-
-                return
-
-            } catch (err) {
-                return message.reply(`${e.Warn} | Falha ao enviar os nomes dos emojis.\n\`${err}\``)
-            }
         }
 
         function GetEmoji(Emoji) {
+
+            if (!Emoji) return message.reply(`${e.Info} | Faltou o nome do emoji.`)
+
             let emoji = emojis.get(`e.${Emoji}`)
             emoji ? message.reply(`${emoji}`) : message.reply(`${e.Deny} | Emoji não encontrado.`)
-        }
-
-        function NewEmoji(Nome, Emoji) {
-            emojis.set(`e.${Nome}`, Emoji)
-            return message.reply(`${e.Check} | Novo emoji inserido com sucesso no banco de dados! Emoji in DB: ${emojis.get(`e.${Nome}`)}`)
         }
 
         function DeleteEmoji(Name) {

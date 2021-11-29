@@ -454,6 +454,10 @@ module.exports = {
                                 value: `\`${prefix}logs\` - Neste canal, mandarei todos os detalhes do mute. Você pode deixar este canal público ou privado alterando as permissões dele.\nClaro, não vá me privar dele, né?.`
                             },
                             {
+                                name: `${e.Deny} Apague tudo`,
+                                value: `\`${prefix}mute delete\``
+                            },
+                            {
                                 name: '📝 Lista de mutados',
                                 value: `\`${prefix}mute list\` - Lista dos mutados e quanto tempo cada um falta para o desmute.`
                             },

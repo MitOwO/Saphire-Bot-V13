@@ -24,7 +24,7 @@ module.exports = {
         if (!args[0])
             return message.reply(`${e.Info} | Para desmutar alguém, você pode usar esse comando assim: \`${prefix}unmute @user/Id\``)
 
-        if (user.roles.cache.has(role.id)) {
+        if (user?.roles.cache.has(role.id)) {
             user.roles.remove(role, `${message.author.tag} ordenou o desmute.`).catch(err => {
                 return message.channel.send(`${e.Warn} | Houve um erro ao desmutar este usuário.\n\`${err}\``)
             })

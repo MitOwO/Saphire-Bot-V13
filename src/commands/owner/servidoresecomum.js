@@ -2,7 +2,7 @@ const { e } = require('../../../database/emojis.json')
 
 module.exports = {
     name: 'servidoresecomum',
-    aliases: ['scomum'],
+    aliases: ['scomum', 'servercomum', 'serveremcomum'],
     category: 'owner',
     emoji: `${e.OwnerCrow}`,
     usage: '<sc> <UserID>',
