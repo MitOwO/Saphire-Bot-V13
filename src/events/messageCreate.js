@@ -103,9 +103,9 @@ client.on('messageCreate', async message => {
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd))
         if (command) {
 
-            sdb.add('Client.ComandosUsados', 1)
+            const ComandosUsados = sdb.add('Client.ComandosUsados', 1)
             if (LogCmd.length > 15) CommandsLog.clear()
-            CommandsLog.set(`${sdb.get('Client.ComandosUsados')}`, {
+            CommandsLog.set(`${ComandosUsados}`, {
                 Author: `${message.author.tag} - ${message.author.id}` || 'Indefinido',
                 Server: `${message.guild.name} - ${message.guild.id}` || 'Indefinido',
                 Command: message.content || 'Indefinido',
@@ -149,9 +149,6 @@ client.on('messageCreate', async message => {
             }
 
         } catch (err) {
-            // let frases = [`Eu não tenho esse comando não... Que tal usar o \`${prefix}help\` ?`, `Olha... Eu não tenho esse comando não, sabe? Tenta usar o \`${prefix}help\`, lá tem todos os meus comandos.`, `Viiiish, comando desconhecido, foi mal.`, `Conheço esse comando aí não... Verifica a ortografia e tenta novamente`, `Huuum, quer usar o \`${prefix}help\` não?`]
-            // let resposta = frases[Math.floor(Math.random() * frases.length)]
-            // return message.reply(`${e.Deny} | ${resposta}`)
             Error(message, err)
         }
 
