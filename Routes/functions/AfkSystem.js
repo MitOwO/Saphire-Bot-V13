@@ -27,6 +27,8 @@ function AfkSystem(message) {
     if (sdb.get(`Users.${message.author.id}.AfkSystem`)) {
         sdb.delete(`Users.${message.author.id}.AfkSystem`)
         const count = sdb.get(`Users.${message.author.id}.AfkSystemNotification`)
+        sdb.delete(`Users.${message.author.id}.AfkSystemNotification`)
+        
         if (count > 0) return message.channel.send(`${e.Notification} | Hey, ${message.author}. Enquanto você estava offline, você recebeu ${count} menções nos servidores. Lembre-se de conferir as notificações.`).catch(() => { })
         return message.react(`${e.Planet}`).catch(() => { })
     }
