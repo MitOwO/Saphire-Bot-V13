@@ -216,10 +216,10 @@ module.exports = {
 
                             if (!file.name) return "Sem nome do comando."
 
-                            let name = file.name.replace(".js", "")
+                            let name = file.name.replace(".js", ""),
+                                des = `${client.commands.get(name).description}`,
+                                emo = `${client.commands.get(name).emoji}`
 
-                            let des = `${client.commands.get(name).description}`
-                            let emo = `${client.commands.get(name).emoji}`
                             if (emo === undefined) emo = ''
 
                             let obj = { cname: `${emo} \`${prefix}${name}\``, des, }

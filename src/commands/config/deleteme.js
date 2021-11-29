@@ -13,12 +13,11 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let Pass = PassCode(50)
-        const msg = await message.channel.send(`${e.Warn} | ${message.author}, você está prestes a apagar todos os seus dados do meu banco de dados, você deve confirmar sua ação digitando:\n**${Pass}**`)
-
-        const filter = m => m.author.id === message.author.id
-        const collector = message.channel.createMessageCollector({ filter, max: 1, time: 120000 });
-        let respondido = false
+        let Pass = PassCode(50),
+            msg = await message.channel.send(`${e.Warn} | ${message.author}, você está prestes a apagar todos os seus dados do meu banco de dados, você deve confirmar sua ação digitando:\n**${Pass}**`),
+            filter = m => m.author.id === message.author.id,
+            collector = message.channel.createMessageCollector({ filter, max: 1, time: 120000 }),
+            respondido = false
 
         collector.on('collect', m => {
             respondido = true
@@ -34,10 +33,10 @@ module.exports = {
             respondido = true
             let Timeouts = sdb.get(`Users.${message.author.id}.Timeouts`)
             sdb.set(`Users.${message.author.id}`, { Timeouts: Timeouts })
-            Transactions.delete(`Transactions.${id}`)
-            Reminders.delete(`Reminders.${id}`)
+            Transactions.delete(`Transactions.${message.author.id}`)
+            Reminders.delete(`Reminders.${message.author.id}`)
             db.delete(`${message.author.id}`)
-            msg.edit(`${e.Check} | ${message.author}, todos os seus dados foram apagado com sucesso.\nData da Exclusão: \`${Data()}\``)
+            return msg.edit(`${e.Check} | ${message.author}, todos os seus dados foram apagado com sucesso.\nData da Exclusão: \`${Data()}\``)
         }
     }
 }
