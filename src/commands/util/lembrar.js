@@ -63,8 +63,7 @@ module.exports = {
                     Hora = Hour.replace(/h/g, ''),
                     Minutos = Minutes.replace(/m/g, ''),
                     Segundos = Seconds.replace(/s/g, ''),
-                    DefinedTime,
-                    ParseTime
+                    DefinedTime
 
                 if (isNaN(Dias) || isNaN(Hora) || isNaN(Minutos) || isNaN(Segundos))
                     return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m 3s\``)
@@ -74,7 +73,6 @@ module.exports = {
 
                 try {
                     DefinedTime = ms(Days) + ms(Hour) + ms(Minutes) + ms(Seconds)
-                    ParseTime = parsems(DefinedTime)
                 } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
 
                 CollectControl = true
@@ -86,12 +84,9 @@ module.exports = {
                     ChannelId: message.channel.id
                 })
 
-                let dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
-                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
-                    minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
-                    segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
+                let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${dias}${Horas}${minutos}${segundos}**`).catch((err) => {
+                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
                     return Error(message, err)
                 })
 
@@ -109,8 +104,7 @@ module.exports = {
                 let Hora = Hour.replace(/h/g, ''),
                     Minutos = Minutes.replace(/m/g, ''),
                     Segundos = Seconds.replace(/s/g, ''),
-                    DefinedTime,
-                    ParseTime
+                    DefinedTime
 
                 if (isNaN(Hora) || isNaN(Minutos) || isNaN(Segundos))
                     return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m 3s\``)
@@ -120,7 +114,6 @@ module.exports = {
 
                 try {
                     DefinedTime = ms(Hour) + ms(Minutes) + ms(Seconds)
-                    ParseTime = parsems(DefinedTime)
                 } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
 
                 CollectControl = true
@@ -132,12 +125,9 @@ module.exports = {
                     ChannelId: message.channel.id
                 })
 
-                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
-                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
-                    minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
-                    segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
+                let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Dias}${Horas}${minutos}${segundos}**`).catch((err) => {
+                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
                     return Error(message, err)
                 })
 
@@ -155,7 +145,7 @@ module.exports = {
                 if (LastLetterFirstTime === LastLetterSecondTime)
                     return message.reply(`${e.Deny} | Os tempos não devem ser do mesmo tipo.`)
 
-                for (const i of ['h', 'm']) {
+                for (const i of ['d', 'h', 'm']) {
 
                     if (LastLetterFirstTime === i) {
                         Control1 = false
@@ -178,10 +168,9 @@ module.exports = {
                 if (Control1 || Control2)
                     return message.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m\` ou \`10m 40s\``)
 
-                let First = FirstTime.replace(/h|m/g, ''),
+                let First = FirstTime.replace(/d|h|m/g, ''),
                     Second = SecondTime.replace(/m|s/g, ''),
-                    DefinedTime,
-                    ParseTime
+                    DefinedTime
 
                 if (isNaN(First) || isNaN(Second))
                     return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m\``)
@@ -191,7 +180,6 @@ module.exports = {
 
                 try {
                     DefinedTime = ms(FirstTime) + ms(SecondTime)
-                    ParseTime = parsems(DefinedTime)
                 } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
 
                 CollectControl = true
@@ -203,12 +191,9 @@ module.exports = {
                     ChannelId: message.channel.id
                 })
 
-                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
-                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
-                    Minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
-                    Segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
+                let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Dias}${Horas}${Minutos}${Segundos}**`).catch((err) => {
+                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
                     return Error(message, err)
                 })
 
@@ -234,8 +219,7 @@ module.exports = {
                     return message.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h\``)
 
                 let Timer = Time.replace(/h|m|s|d/g, ''),
-                    DefinedTime,
-                    ParseTime
+                    DefinedTime
 
                 if (Timer < 1)
                     return message.reply(`${e.Deny} | O tempo não pode ser igual ou menor 0`)
@@ -245,7 +229,6 @@ module.exports = {
 
                 try {
                     DefinedTime = ms(Time)
-                    ParseTime = parsems(DefinedTime)
                 } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
 
                 CollectControl = true
@@ -257,12 +240,9 @@ module.exports = {
                     ChannelId: message.channel.id
                 })
 
-                let Dias = ParseTime.days > 0 ? `${ParseTime.days} dias ` : '',
-                    Horas = ParseTime.hours > 0 ? `${ParseTime.hours} horas ` : '',
-                    Minutos = ParseTime.minutes > 0 ? `${ParseTime.minutes} minutos ` : '',
-                    Segundos = ParseTime.seconds > 0 ? `${ParseTime.seconds} segundos` : ''
+                let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Dias}${Horas}${Minutos}${Segundos}**`).catch((err) => {
+                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
                     return Error(message, err)
                 })
 
@@ -439,6 +419,10 @@ module.exports = {
 
             }
 
+        }
+
+        function GetDate(data) {
+            return new Date(data + Date.now()).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
         }
 
     }
