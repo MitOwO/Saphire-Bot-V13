@@ -14,19 +14,24 @@ client.on('channelDelete', async (channel) => {
         Notify(config.guildId, 'Recurso Desabilitado', `O canal **${channel.name}** configurado como **Lotery Result At Principal Server** foi deletado.`)
 
     switch (channel.id) {
-        case ServerDb.get(`Servers.${channel.guild.id}.IdeiaChannel`): DeletedChannel('IdeiaChannel', 'Canal de Ideias/Sugestões'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.LeaveChannel`): DeletedChannel('LeaveChannel', 'Canal de Saída'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.XPChannel`): DeletedChannel('XPChannel', 'Canal de Level Up'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.ReportChannel`): DeletedChannel('ReportChannel', 'Canal de Reportes'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.LogChannel`): sdb.delete(`Servers.${channel.guild.id}.LogChannel`); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.WelcomeChannel.Canal`): DeletedChannel('WelcomeChannel', 'Canal de Boas-Vindas'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.Farm.BuscaChannel`): DeletedChannel('Farm.BuscaChannel', 'Farming Floresta Cammum'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.Farm.PescaChannel`): DeletedChannel('Farm.PescaChannel', 'Farming Pesca'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.Farm.MineChannel`): DeletedChannel('Farm.MineChannel', 'Farming Mineração'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.Blockchannels.Bots.${channel.id}`): DeletedChannel(`Blockchannels.Bots.${channel.id}`, 'Bloqueio de Comandos'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.Blockchannels.${channel.id}`): DeletedChannel(`Blockchannels.${channel.id}`, 'Bloqueio de Comandos'); break;
-        case ServerDb.get(`Servers.${channel.guild.id}.ConfessChannel`): DeletedChannel('ConfessChannel', 'Canal de Confissão'); break;
+        case GetChannel('IdeiaChannel'): DeletedChannel('IdeiaChannel', 'Canal de Ideias/Sugestões'); break;
+        case GetChannel('LeaveChannel'): DeletedChannel('LeaveChannel', 'Canal de Saída'); break;
+        case GetChannel('XPChannel'): DeletedChannel('XPChannel', 'Canal de Level Up'); break;
+        case GetChannel('ReportChannel'): DeletedChannel('ReportChannel', 'Canal de Reportes'); break;
+        case GetChannel('LogChannel'): sdb.delete(`Servers.${channel.guild.id}.LogChannel`); break;
+        case GetChannel('WelcomeChannel.Canal'): DeletedChannel('WelcomeChannel', 'Canal de Boas-Vindas'); break;
+        case GetChannel('Farm.BuscaChannel'): DeletedChannel('Farm.BuscaChannel', 'Farming Floresta Cammum'); break;
+        case GetChannel('Farm.PescaChannel'): DeletedChannel('Farm.PescaChannel', 'Farming Pesca'); break;
+        case GetChannel('Farm.MineChannel'): DeletedChannel('Farm.MineChannel', 'Farming Mineração'); break;
+        case GetChannel(`Blockchannels.Bots.${channel.id}`): DeletedChannel(`Blockchannels.Bots.${channel.id}`, 'Bloqueio de Comandos'); break;
+        case GetChannel(`Blockchannels.${channel.id}`): DeletedChannel(`Blockchannels.${channel.id}`, 'Bloqueio de Comandos'); break;
+        case GetChannel('ConfessChannel'): DeletedChannel('ConfessChannel', 'Canal de Confissão'); break;
+        case GetChannel('GiveawayChannel'): DeletedChannel('GiveawayChannel', 'Canal de Sorteios'); break;
         default: break;
+    }
+
+    function GetChannel(RouteName) {
+        return ServerDb.get(`Servers.${channel.guild.id}.${RouteName}`)
     }
 
     function DeletedChannel(ChannelDB, CanalFunction) {
