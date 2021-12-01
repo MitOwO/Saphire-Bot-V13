@@ -1,6 +1,5 @@
 const { ShardingManager } = require('discord.js')
-const { DatabaseObj } = require('./Routes/functions/database')
-const { e, config } = DatabaseObj
+const { DatabaseObj: { e, config } } = require('./Routes/functions/database')
 const client = require('./index')
 const Data = require('./Routes/functions/data')
 require("dotenv").config()
