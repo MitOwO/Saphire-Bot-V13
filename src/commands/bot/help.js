@@ -8,7 +8,7 @@ const
 
 module.exports = {
     name: 'help',
-    aliases: ['comandos', 'comando', 'commands', 'h', 'ajuda', 'socorro', 'info', 'comands'],
+    aliases: ['comandos', 'comando', 'commands', 'h', 'ajuda', 'socorro', 'info', 'comands', 'cmd', 'cmds'],
     usage: '<help> [NomeDoComando]',
     category: 'bot',
     ClientPermissions: ['EMBED_LINKS'],
