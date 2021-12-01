@@ -32,33 +32,32 @@ module.exports = {
 
         if (embeds.length === 1) return
 
-        for (const i of ['◀️', '▶️', '❌']) {
+        for (const i of ['◀️', '▶️', '❌'])
             msg.react(i).catch(() => { })
-        }
 
-        const CancelFilter = (reaction, user) => ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
-            collector = msg.createReactionCollector({ filter: CancelFilter, time: 30000, errors: ['time'] })
-
-        collector.on('collect', (reaction) => {
-
-            if (reaction.emoji.name === '❌')
-                return collector.stop()
-
-            reaction.emoji.name === '▶️'
-                ? (() => {
-                    EmbedsControl++
-                    return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { }) : EmbedsControl--
-                })()
-                : (() => {
-                    EmbedsControl--
-                    return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { }) : EmbedsControl++
-                })()
-
+        const collector = msg.createReactionCollector({
+            filter: (reaction, user) => ['◀️', '▶️', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
+            idle: 40000
         })
 
-        collector.on('end', () => {
-            return msg.edit({ content: `${e.Deny} Comando cancelado.` })
-        })
+            .on('collect', (reaction) => {
+
+                if (reaction.emoji.name === '❌')
+                    return collector.stop()
+
+                reaction.emoji.name === '▶️'
+                    ? (() => {
+                        EmbedsControl++
+                        return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { }) : EmbedsControl--
+                    })()
+                    : (() => {
+                        EmbedsControl--
+                        return embeds[EmbedsControl] ? msg.edit({ embeds: [embeds[EmbedsControl]] }).catch(() => { }) : EmbedsControl++
+                    })()
+
+            })
+
+            .on('end', () => msg.edit({ content: `${e.Deny} Comando cancelado.` }))
 
         function EmbedGenerator() {
 

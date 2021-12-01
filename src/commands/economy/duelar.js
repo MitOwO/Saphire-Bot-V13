@@ -139,10 +139,10 @@ module.exports = {
             } else {
                 let M = (sdb.get(`Users.${message.author.id}.Cache.Duelo`) || 0) / 2
                 TransactionsPush(
-                    Winner.id,
+                    user.user.id,
                     message.author.id,
                     `${e.MoneyWithWings} Perdeu ${M} em um duelo contra ${message.author.tag}`,
-                    `${e.BagMoney} Recebeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${Winner.user.tag}`,
+                    `${e.BagMoney} Recebeu ${sdb.get(`Users.${message.author.id}.Cache.Duelo`) / 2} em um duelo contra ${user.user.tag}`
                 )
             }
             sdb.delete(`Users.${message.author.id}.Cache.Duelo`)
