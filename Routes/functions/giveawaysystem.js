@@ -1,7 +1,8 @@
 const client = require('../../index'),
     { Giveaway, DatabaseObj: { e } } = require('./database'),
     { MessageEmbed } = require('discord.js'),
-    CheckAndDeleteGiveaway = require('./CheckAndDeleteGiveaway')
+    CheckAndDeleteGiveaway = require('./CheckAndDeleteGiveaway'),
+    data = require('./data')
 
 function GiveawaySystem() {
 
@@ -32,7 +33,8 @@ function GiveawaySystem() {
                 MessageLink = sorteio?.MessageLink,
                 Actived = sorteio?.Actived
 
-            // CheckAndDeleteGiveaway(guild, MessageId)
+            if (CheckAndDeleteGiveaway(guild, MessageId))
+                continue
 
             if (!sorteio) {
                 Giveaway.delete(`Giveaways.${guild}.${MessageId}`)
@@ -61,13 +63,14 @@ function GiveawaySystem() {
                     continue
                 }
 
-                let vencedoresMapped = vencedores.map(memberId => `${GetMember(Guild, memberId)}`).join('\n')
+                let vencedoresMapped = vencedores.map(memberId => `${GetMember(Guild, memberId, guild, MessageId)}`).join('\n')
 
                 Channel.send({
                     embeds: [
                         embed
-                            .setTitle(`${e.Tada} Sorteio Finalizado`)
                             .setColor('GREEN')
+                            .setTitle(`${e.Tada} Sorteio Finalizado`)
+                            .setURL(`${MessageLink}`)
                             .addFields(
                                 {
                                     name: `${e.CoroaDourada} Vencedores`,
@@ -89,6 +92,7 @@ function GiveawaySystem() {
                                     value: `[Link do Sorteio](${MessageLink})`
                                 }
                             )
+                            .setFooter('Este sorteio será deletado em 2 horas')
                     ]
 
                 }).catch(() => Giveaway.delete(`Giveaways.${guild}.${MessageId}`))
@@ -97,7 +101,7 @@ function GiveawaySystem() {
 
                     Giveaway.set(`Giveaways.${guild}.${MessageId}.Actived`, false)
                     Giveaway.set(`Giveaways.${guild}.${MessageId}.TimeToDelete`, Date.now())
-                    Giveaway.delete(`Giveaways.${guild}.${MessageId}.DateNow`)
+                    Giveaway.set(`Giveaways.${guild}.${MessageId}.TimeEnding`, data(sorteio?.TimeMs))
 
                 }
             }
@@ -141,12 +145,15 @@ function GetWinners(WinnersArray, Amount) {
     return Winners
 }
 
-function GetMember(guild, memberId) {
+function GetMember(guild, memberId, guildId, MessageId) {
     const member = guild.members.cache.get(memberId)
 
     return member
         ? `${member} *\`${member?.id || 'Id desconhecido'}\`*`
-        : `${e.Deny} Usuário não encontrado.`
+        : (() => {
+            Giveaway.pull(`Giveaways.${guildId}.${MessageId}.Participants`, memberId)
+            return `${e.Deny} Usuário não encontrado.`
+        })()
 }
 
 module.exports = GiveawaySystem
