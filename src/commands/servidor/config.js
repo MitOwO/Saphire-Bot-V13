@@ -76,7 +76,14 @@ module.exports = {
         }
 
         function GetChannel(x) {
-            return ServerDb.get(`Servers.${message.guild.id}.${x}`) ? `Ativado: <#${ServerDb.get(`Servers.${message.guild.id}.${x}`)}>` : 'Desativado'
+
+            if (!ServerDb.get(`Servers.${message.guild.id}.${x}`))
+                return 'Desativado'
+
+            let Channel = message.guild.channels.cache.get(ServerDb.get(`Servers.${message.guild.id}.${x}`))
+            if (!Channel) ServerDb.delete(`Servers.${message.guild.id}.${x}`)
+
+            return Channel ? `Ativado: ${Channel}` : 'Desativado'
         }
 
     }
