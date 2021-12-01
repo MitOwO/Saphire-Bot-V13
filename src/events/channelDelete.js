@@ -1,4 +1,4 @@
-const { sdb, DatabaseObj: { config }, ServerDb } = require('../../Routes/functions/database')
+const { sdb, DatabaseObj: { config }, ServerDb, Giveaway } = require('../../Routes/functions/database')
 const client = require('../../index')
 const Notify = require('../../Routes/functions/notify')
 
@@ -15,10 +15,10 @@ client.on('channelDelete', async (channel) => {
 
     switch (channel.id) {
         case GetChannel('IdeiaChannel'): DeletedChannel('IdeiaChannel', 'Canal de Ideias/Sugestões'); break;
-        case GetChannel('LeaveChannel'): DeletedChannel('LeaveChannel', 'Canal de Saída'); break;
+        case GetChannel('LeaveChannel.Canal'): DeletedChannel('LeaveChannel', 'Canal de Saída'); break;
         case GetChannel('XPChannel'): DeletedChannel('XPChannel', 'Canal de Level Up'); break;
         case GetChannel('ReportChannel'): DeletedChannel('ReportChannel', 'Canal de Reportes'); break;
-        case GetChannel('LogChannel'): sdb.delete(`Servers.${channel.guild.id}.LogChannel`); break;
+        case GetChannel('LogChannel'): (() => ServerDb.delete(`Servers.${channel.guild.id}.LogChannel`))(); break;
         case GetChannel('WelcomeChannel.Canal'): DeletedChannel('WelcomeChannel', 'Canal de Boas-Vindas'); break;
         case GetChannel('Farm.BuscaChannel'): DeletedChannel('Farm.BuscaChannel', 'Farming Floresta Cammum'); break;
         case GetChannel('Farm.PescaChannel'): DeletedChannel('Farm.PescaChannel', 'Farming Pesca'); break;
@@ -26,7 +26,7 @@ client.on('channelDelete', async (channel) => {
         case GetChannel(`Blockchannels.Bots.${channel.id}`): DeletedChannel(`Blockchannels.Bots.${channel.id}`, 'Bloqueio de Comandos'); break;
         case GetChannel(`Blockchannels.${channel.id}`): DeletedChannel(`Blockchannels.${channel.id}`, 'Bloqueio de Comandos'); break;
         case GetChannel('ConfessChannel'): DeletedChannel('ConfessChannel', 'Canal de Confissão'); break;
-        case GetChannel('GiveawayChannel'): DeletedChannel('GiveawayChannel', 'Canal de Sorteios'); break;
+        case GetChannel('GiveawayChannel'): Giveaway.delete(`Giveaways.${channel.guild.id}`); DeletedChannel('GiveawayChannel', 'Canal de Sorteios'); break;
         default: break;
     }
 

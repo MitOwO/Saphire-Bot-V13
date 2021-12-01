@@ -4,7 +4,8 @@ const
     client = require('../../index'),
     Data = require('../../Routes/functions/data'),
     MuteSystem = require('../../Routes/functions/mutesystem'),
-    ReminderSystem = require('../../Routes/functions/remindersystem')
+    ReminderSystem = require('../../Routes/functions/remindersystem'),
+    GiveawaySystem = require('../../Routes/functions/giveawaysystem')
 
 client.on("ready", async () => {
 
@@ -72,6 +73,7 @@ client.on("ready", async () => {
     setInterval(() => {
         MuteSystem()
         ReminderSystem()
+        // GiveawaySystem()
     }, 3000)
 
 })

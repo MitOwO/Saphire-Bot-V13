@@ -1,9 +1,7 @@
-const client = require('../../index')
-const { db } = require('../../Routes/functions/database')
+const client = require('../../index'),
+    { Giveaway } = require('../../Routes/functions/database')
 
 client.on('messageReactionAdd', async (reaction, user) => {
-
-    return
 
     if (reaction.message.partial) await reaction.message.fetch()
     if (reaction.partial) await reaction.fetch()
@@ -11,11 +9,10 @@ client.on('messageReactionAdd', async (reaction, user) => {
     if (!reaction.message.guild) return
 
     const message = reaction.message,
-        channel = message.channel
+        Sorteio = Giveaway.get(`Giveaways.${message.guild.id}.${message.id}`)
 
-    if (message.id === db.get('MessageId')) {
-        channel.send(`React Message! ${reaction.emoji}`)
-    }
+    if (Sorteio?.Actived)
+        return Giveaway.push(`Giveaways.${message.guild.id}.${message.id}.Participants`, user.id)
 
     return
 
