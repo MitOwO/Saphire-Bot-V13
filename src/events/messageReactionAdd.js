@@ -8,6 +8,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
     if (user.bot) return
     if (!reaction.message.guild) return
 
+    if (reaction.emoji.name !== '🎉') return
+
     const message = reaction.message,
         Sorteio = Giveaway.get(`Giveaways.${message.guild.id}.${message.id}`)
 

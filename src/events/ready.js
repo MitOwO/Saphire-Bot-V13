@@ -73,7 +73,7 @@ client.on("ready", async () => {
     setInterval(() => {
         MuteSystem()
         ReminderSystem()
-        // GiveawaySystem()
+        GiveawaySystem()
     }, 3000)
 
 })
