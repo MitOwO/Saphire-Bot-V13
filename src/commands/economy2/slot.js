@@ -13,59 +13,58 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || await client.users.cache.get(args[1]) || message.mentions.repliedUser || message.author
-        let user = await client.users.cache.get(u.id),
+        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || await client.users.cache.get(args[1]) || message.mentions.repliedUser || message.author,
+            user = await client.users.cache.get(u.id),
             avatar = user?.displayAvatarURL({ dynamic: true }),
-            color = Colors(user)
-
-        let { Cores, Um, Dois, Tres, Quatro, Cinco, Seis, Helpier, TitlePerm, Peixes, Iscas, Comidas, Cartas, Aguas, Fichas, Camarao, Diamante, Minerios, Ossos, Apple, Rosas, Arma, Anel, Picareta, Machado, Balaclava, Remedio, Vara, Faca, Loli, Cachorro, Dogname, Medalha, Bola, Fossil, DiamanteNegro, Mamute } = {
-            TitlePerm: sdb.get(`Users.${user.id}.Perfil.TitlePerm`),
-            Peixes: sdb.get(`Users.${user.id}.Slot.Peixes`),
-            Helpier: sdb.get(`Users.${user.id}.Timeouts.Helpier`),
-            Um: sdb.get(`Users.${user.id}.Perfil.Estrela.Um`),
-            Dois: sdb.get(`Users.${user.id}.Perfil.Estrela.Dois`),
-            Tres: sdb.get(`Users.${user.id}.Perfil.Estrela.Tres`),
-            Quatro: sdb.get(`Users.${user.id}.Perfil.Estrela.Quatro`),
-            Cinco: sdb.get(`Users.${user.id}.Perfil.Estrela.Cinco`),
-            Seis: sdb.get(`Users.${user.id}.Perfil.Estrela.Seis`),
-            Iscas: sdb.get(`Users.${user.id}.Slot.Iscas`),
-            Comidas: sdb.get(`Users.${user.id}.Slot.Comidas`),
-            Cartas: sdb.get(`Users.${user.id}.Slot.Cartas`),
-            Aguas: sdb.get(`Users.${user.id}.Slot.Aguas`),
-            Fichas: sdb.get(`Users.${user.id}.Slot.Fichas`),
-            Camarao: sdb.get(`Users.${user.id}.Slot.Camarao`),
-            Diamante: sdb.get(`Users.${user.id}.Slot.Diamante`),
-            Minerios: sdb.get(`Users.${user.id}.Slot.Minerios`),
-            Ossos: sdb.get(`Users.${user.id}.Slot.Ossos`),
-            Apple: sdb.get(`Users.${user.id}.Slot.Apple`),
-            Rosas: sdb.get(`Users.${user.id}.Slot.Rosas`),
-            Arma: sdb.get(`Users.${user.id}.Slot.Arma`),
-            Anel: sdb.get(`Users.${user.id}.Slot.Anel`),
-            Picareta: {
-                Picareta: sdb.get(`Users.${user.id}.Slot.Picareta.Picareta`),
-                Usos: sdb.get(`Users.${user.id}.Slot.Picareta.Usos`),
-            },
-            Machado: {
-                Machado: sdb.get(`Users.${user.id}.Slot.Machado.Machado`),
-                Usos: sdb.get(`Users.${user.id}.Slot.Machado.Usos`),
-            },
-            Balaclava: sdb.get(`Users.${user.id}.Slot.Balaclava`),
-            Remedio: sdb.get(`Users.${user.id}.Slot.Remedio`),
-            Vara: sdb.get(`Users.${user.id}.Slot.Vara`),
-            Faca: sdb.get(`Users.${user.id}.Slot.Faca`),
-            Loli: sdb.get(`Users.${user.id}.Slot.Loli`),
-            Cachorro: sdb.get(`Users.${user.id}.Slot.Cachorro`),
-            Dogname: sdb.get(`Users.${user.id}.Slot.Dogname`),
-            Medalha: {
-                Medalha: sdb.get(`Users.${user.id}.Slot.Medalha.Medalha`),
-                Acess: sdb.get(`Users.${user.id}.Slot.Medalha.Acess`),
-            },
-            Bola: sdb.get(`Users.${user.id}.Slot.Bola`),
-            Fossil: sdb.get(`Users.${user.id}.Slot.Fossil`),
-            DiamanteNegro: sdb.get(`Users.${user.id}.Slot.DiamanteNegro`),
-            Mamute: sdb.get(`Users.${user.id}.Slot.Mamute`),
-            Cores: sdb.get(`Users.${user.id}.Color.Perm`)
-        }
+            color = Colors(user),
+            { Cores, Um, Dois, Tres, Quatro, Cinco, Seis, Helpier, TitlePerm, Peixes, Iscas, Comidas, Cartas, Aguas, Fichas, Camarao, Diamante, Minerios, Ossos, Apple, Rosas, Arma, Anel, Picareta, Machado, Balaclava, Remedio, Vara, Faca, Loli, Cachorro, Dogname, Medalha, Bola, Fossil, DiamanteNegro, Mamute } = {
+                TitlePerm: sdb.get(`Users.${user.id}.Perfil.TitlePerm`),
+                Peixes: sdb.get(`Users.${user.id}.Slot.Peixes`),
+                Helpier: sdb.get(`Users.${user.id}.Timeouts.Helpier`),
+                Um: sdb.get(`Users.${user.id}.Perfil.Estrela.Um`),
+                Dois: sdb.get(`Users.${user.id}.Perfil.Estrela.Dois`),
+                Tres: sdb.get(`Users.${user.id}.Perfil.Estrela.Tres`),
+                Quatro: sdb.get(`Users.${user.id}.Perfil.Estrela.Quatro`),
+                Cinco: sdb.get(`Users.${user.id}.Perfil.Estrela.Cinco`),
+                Seis: sdb.get(`Users.${user.id}.Perfil.Estrela.Seis`),
+                Iscas: sdb.get(`Users.${user.id}.Slot.Iscas`),
+                Comidas: sdb.get(`Users.${user.id}.Slot.Comidas`),
+                Cartas: sdb.get(`Users.${user.id}.Slot.Cartas`),
+                Aguas: sdb.get(`Users.${user.id}.Slot.Aguas`),
+                Fichas: sdb.get(`Users.${user.id}.Slot.Fichas`),
+                Camarao: sdb.get(`Users.${user.id}.Slot.Camarao`),
+                Diamante: sdb.get(`Users.${user.id}.Slot.Diamante`),
+                Minerios: sdb.get(`Users.${user.id}.Slot.Minerios`),
+                Ossos: sdb.get(`Users.${user.id}.Slot.Ossos`),
+                Apple: sdb.get(`Users.${user.id}.Slot.Apple`),
+                Rosas: sdb.get(`Users.${user.id}.Slot.Rosas`),
+                Arma: sdb.get(`Users.${user.id}.Slot.Arma`),
+                Anel: sdb.get(`Users.${user.id}.Slot.Anel`),
+                Picareta: {
+                    Picareta: sdb.get(`Users.${user.id}.Slot.Picareta.Picareta`),
+                    Usos: sdb.get(`Users.${user.id}.Slot.Picareta.Usos`),
+                },
+                Machado: {
+                    Machado: sdb.get(`Users.${user.id}.Slot.Machado.Machado`),
+                    Usos: sdb.get(`Users.${user.id}.Slot.Machado.Usos`),
+                },
+                Balaclava: sdb.get(`Users.${user.id}.Slot.Balaclava`),
+                Remedio: sdb.get(`Users.${user.id}.Slot.Remedio`),
+                Vara: sdb.get(`Users.${user.id}.Slot.Vara`),
+                Faca: sdb.get(`Users.${user.id}.Slot.Faca`),
+                Loli: sdb.get(`Users.${user.id}.Slot.Loli`),
+                Cachorro: sdb.get(`Users.${user.id}.Slot.Cachorro`),
+                Dogname: sdb.get(`Users.${user.id}.Slot.Dogname`),
+                Medalha: {
+                    Medalha: sdb.get(`Users.${user.id}.Slot.Medalha.Medalha`),
+                    Acess: sdb.get(`Users.${user.id}.Slot.Medalha.Acess`),
+                },
+                Bola: sdb.get(`Users.${user.id}.Slot.Bola`),
+                Fossil: sdb.get(`Users.${user.id}.Slot.Fossil`),
+                DiamanteNegro: sdb.get(`Users.${user.id}.Slot.DiamanteNegro`),
+                Mamute: sdb.get(`Users.${user.id}.Slot.Mamute`),
+                Cores: sdb.get(`Users.${user.id}.Color.Perm`)
+            }
 
         let cartas, picareta, arma, anel, machado, title, balaclava, remedio, vara, faca, loli, cachorro, dogname, medalha, cores, bola, fossil, diamante, mamute, nada, nada2, star
 
