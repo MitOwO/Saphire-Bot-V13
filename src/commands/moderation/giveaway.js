@@ -81,7 +81,7 @@ module.exports = {
 
             embed
                 .setTitle(`🎉 Sorteios ${message.guild.name}`)
-                .setDescription(`Prêmio: **${Prize}**\n \nPara entrar no sorteio, reaja em 🎉. Para sair, basta remover a sua reação.`)
+                .setDescription(`Para entrar no sorteio, reaja em 🎉. Para sair, basta remover a sua reação.`)
                 .addFields(
                     {
                         name: `Prêmio`,
