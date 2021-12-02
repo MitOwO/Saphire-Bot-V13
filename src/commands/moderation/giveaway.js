@@ -84,6 +84,10 @@ module.exports = {
                 .setDescription(`Prêmio: **${Prize}**\n \nPara entrar no sorteio, reaja em 🎉. Para sair, basta remover a sua reação.`)
                 .addFields(
                     {
+                        name: `Prêmio`,
+                        value: `> ${Prize}`
+                    },
+                    {
                         name: 'Data de Término',
                         value: `> \`${Data(TimeMs)}\``,
                         inline: true

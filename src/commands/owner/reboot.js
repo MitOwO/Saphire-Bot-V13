@@ -1,7 +1,6 @@
 const { e } = require('../../../database/emojis.json')
-const { lotery, ServerDb, Transactions } = require('../../../Routes/functions/database')
+const { lotery, ServerDb, Transactions, Reminders } = require('../../../Routes/functions/database')
 const glob = require("glob")
-const Error = require('../../../Routes/functions/errors')
 
 module.exports = {
     name: 'reboot',
