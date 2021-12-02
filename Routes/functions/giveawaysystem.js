@@ -92,7 +92,7 @@ function GiveawaySystem() {
                                     value: `[Link do Sorteio](${MessageLink})`
                                 }
                             )
-                            .setFooter('Este sorteio será deletado em 2 horas')
+                            .setFooter('Este sorteio será deletado em 12 horas')
                     ]
 
                 }).catch(() => Giveaway.delete(`Giveaways.${guild}.${MessageId}`))
