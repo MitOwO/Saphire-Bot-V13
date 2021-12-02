@@ -3,7 +3,7 @@ const { Message, MessageEmbed } = require('discord.js')
 const { e, config, Loteria } = DatabaseObj
 const client = require('../../index')
 const Moeda = require('./moeda')
-const { PushTrasaction } = require('./transctionspush')
+const { PushTransaction } = require('./transctionspush')
 
 /**
  * @param { Message } message 
@@ -69,7 +69,7 @@ async function NewLoteryGiveaway(LoteriaUsers, message) {
         LoteriaChannel?.send({ embeds: [WinEmbed] })
         sdb.add(`Users.${winner.id}.Cache.Resgate`, Loteria.Prize || 0)
 
-        PushTrasaction(
+        PushTransaction(
             winner.id,
             `💰 Recebeu ${Loteria.Prize || 0} Moedas na loteria`
         )

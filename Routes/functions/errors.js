@@ -3,7 +3,7 @@ const { sdb, db, DatabaseObj, ServerDb } = require('./database')
 const { e, config } = DatabaseObj
 const client = require('../../index')
 const Moeda = require('./moeda')
-const { PushTrasaction } = require('./transctionspush')
+const { PushTransaction } = require('./transctionspush')
 
 /**
  * @param { Message } message
@@ -52,7 +52,7 @@ function Error(message, err) {
     function Block() {
         sdb.push('ComandosBloqueados', { cmd: cmd, error: err?.message || 'Indefinido' })
         sdb.add(`Users.${message.author.id}.Balance`, 1000)
-        PushTrasaction(
+        PushTransaction(
             message.author.id,
             `💰 Recebeu 1000 Moedas por descobrir um bug`
         )

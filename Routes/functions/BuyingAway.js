@@ -6,7 +6,7 @@ const Error = require('./errors')
 const NewLoteryGiveaway = require('./newlotery')
 const ms = require('parse-ms')
 const Vip = require('./vip')
-const { PushTrasaction } = require('./transctionspush')
+const { PushTransaction } = require('./transctionspush')
 
 /** 
 * @param {Message} message
@@ -182,7 +182,7 @@ function BuyingAway(message, prefix, args, args1) {
         function BuyItemFunction() {
             sdb.subtract(`Users.${message.author.id}.Balance`, Price); AddLoteria(Price / 2)
             sdb.set(`Users.${message.author.id}.Slot.${NameDB}`, true)
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} Gastou ${Price} Moedas na loja.`
             )
@@ -196,7 +196,7 @@ function BuyingAway(message, prefix, args, args1) {
         function BuyItemFunction() {
             sdb.subtract(`Users.${message.author.id}.Balance`, Price); AddLoteria(Price / 2)
             sdb.set(`Users.${message.author.id}.Perfil.${NameDB}`, true)
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} Gastou ${Price} Moedas na loja.`
             )
@@ -210,7 +210,7 @@ function BuyingAway(message, prefix, args, args1) {
         function BuyItemFunction() {
             sdb.subtract(`Users.${message.author.id}.Balance`, 2000000); AddLoteria(1000000)
             sdb.set(`Users.${message.author.id}.Color.Perm`, true)
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} Gastou 2000000 Moedas na loja.`
             )
@@ -238,7 +238,7 @@ function BuyingAway(message, prefix, args, args1) {
             sdb.add(`Users.${message.author.id}.Slot.${NomeTec}`, quantia)
             sdb.subtract(`Users.${message.author.id}.Balance`, quantia * Price)
             AddLoteria((quantia * Price) / 2)
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} Gastou ${quantia * Price} Moedas na loja.`
             )
@@ -253,7 +253,7 @@ function BuyingAway(message, prefix, args, args1) {
                 AddLoteria(Price / 2)
                 i++
             } while (sdb.get(`Users.${message.author.id}.Slot.${NomeTec}`) <= Limit)
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} Gastou ${Price * i - 1} Moedas na loja.`
             )

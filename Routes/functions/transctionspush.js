@@ -17,7 +17,7 @@ function TransactionsPush(UserOrMemberId, MessageAuthorId, FraseUser, FraseAutho
 
 }
 
-function PushTrasaction(UserId, Frase) {
+function PushTransaction(UserId, Frase) {
 
     let Data
     Transactions.get(`Transactions.${UserId}`)?.length > 0
@@ -27,4 +27,4 @@ function PushTrasaction(UserId, Frase) {
     Transactions.set(`Transactions.${UserId}`, Data)
 }
 
-module.exports = { TransactionsPush, PushTrasaction }
+module.exports = { TransactionsPush, PushTransaction }
