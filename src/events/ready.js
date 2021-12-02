@@ -13,6 +13,7 @@ client.on("ready", async () => {
     sdb.delete('Request')
     sdb.delete('BetRequest')
     db.delete('Aposta')
+    lotery.set('Loteria.Close', false)
     lotery.delete('Buying')
 
     CommandsLog.clear()
