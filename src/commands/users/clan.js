@@ -5,7 +5,7 @@ const
     PassCode = require('../../../Routes/functions/PassCode'),
     Vip = require('../../../Routes/functions/vip'),
     color = require('../../../Routes/functions/colors'),
-    { PushTrasaction } = require('../../../Routes/functions/transctionspush'),
+    { PushTransaction } = require('../../../Routes/functions/transctionspush'),
     ms = require('parse-ms'),
     Data = require('../../../Routes/functions/data')
 
@@ -139,7 +139,7 @@ module.exports = {
             sdb.set(`Users.${message.author.id}.Clan`, `${ClanName}`)
             sdb.subtract(`Users.${message.author.id}.Balance`, 5000000)
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `🛡️ Gastou 5000000 Moedas para criar o clan ${ClanName}`
             )
@@ -571,7 +571,7 @@ module.exports = {
             Clan.add(`Clans.${key}.Donation`, amount)
             sdb.subtract(`Users.${message.author.id}.Balance`, amount)
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `🛡️ Doou ${amount} Moedas para o Clan ${AtualClan}`
             )
