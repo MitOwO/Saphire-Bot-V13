@@ -148,7 +148,7 @@ function GetWinners(WinnersArray, Amount) {
 function GetMember(guild, memberId, guildId, MessageId) {
     const member = guild.members.cache.get(memberId)
 
-    return member
+    return member?.user?.tag
         ? `${member} *\`${member?.id || 'Id desconhecido'}\`*`
         : (() => {
             Giveaway.pull(`Giveaways.${guildId}.${MessageId}.Participants`, memberId)
