@@ -4,7 +4,7 @@ const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 const Vip = require('../../../Routes/functions/vip')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'weekly',
@@ -47,7 +47,7 @@ module.exports = {
             sdb.add(`Users.${message.author.id}.Xp`, Bonus2)
             sdb.set(`Users.${message.author.id}.Timeouts.Weekly`, Date.now())
 
-           PushTrasaction(
+           PushTransaction(
                 message.author.id,
                `${e.BagMoney} Recebeu ${amountcoins + Bonus1} Moedas no semanal`
             )
@@ -68,7 +68,7 @@ module.exports = {
             sdb.add(`Users.${message.author.id}.Xp`, amountxp)
             sdb.set(`Users.${message.author.id}.Timeouts.Weekly`, Date.now())
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.BagMoney} Recebeu ${amountcoins} Moedas no mensal`
             )

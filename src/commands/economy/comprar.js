@@ -10,7 +10,7 @@ const
     Error = require('../../../Routes/functions/errors'),
     NewLoteryGiveaway = require('../../../Routes/functions/newlotery'),
     Vip = require('../../../Routes/functions/vip'),
-    { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+    { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'comprar',
@@ -252,7 +252,7 @@ module.exports = {
         }
 
         function PushData(value) {
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} Gastou ${value} Moedas na loja`
             )
@@ -324,7 +324,7 @@ module.exports = {
                 let profit = (Divida - Divida) - Divida
                 message.channel.send(`${e.Check} | ${message.author} restaurou sua dívida com sucesso!\n${e.PandaProfit} | +${profit} ${Moeda(message)}`).catch(() => { })
                 sdb.delete(`Users.${message.author.id}.Balance`)
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `🔄 Restaurou a dívida.`
                 )

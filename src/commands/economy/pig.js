@@ -2,7 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const ms = require("parse-ms")
 const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'pig',
@@ -44,7 +44,7 @@ module.exports = {
                 sdb.set(`Users.${message.author.id}.Timeouts.Porquinho`, Date.now()); sdb.add('Porquinho.Money', 10000);
                 sdb.subtract(`Users.${message.author.id}.Balance`, 10000)
 
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `${e.Pig} Apostou 10000 no porquinho.`
                 )
@@ -63,7 +63,7 @@ module.exports = {
                     LastWinner: `${message.author.tag}\n*(${message.author.id})*`,
                     Money: 10000
                 })
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `${e.Pig} Ganhou ${PigMoney} quebrando o porquinho.`
                 )

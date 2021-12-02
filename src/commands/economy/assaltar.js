@@ -2,7 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const ms = require('parse-ms')
 const Error = require('../../../Routes/functions/errors')
 const Moeda = require('../../../Routes/functions/moeda')
-const { TransactionsPush, PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { TransactionsPush, PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'assaltar',
@@ -133,7 +133,7 @@ module.exports = {
                         AuthorSubtract(tratamento)
                         Timeout()
                         TargetAdd(cache)
-                        PushTrasaction(
+                        PushTransaction(
                             message.author.id,
                             `💸 Pagou ${tratamento || 0} Moedas ao hospital por levar um tiro de ${target.user.tag}`
                         )

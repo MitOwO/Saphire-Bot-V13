@@ -2,7 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'crime',
@@ -89,7 +89,7 @@ module.exports = {
                         if (reaction.emoji.name === '✅') {
                             sdb.delete(`Request.${message.author.id}`)
                             sdb.subtract(`Users.${message.author.id}.Balance`, multa)
-                            PushTrasaction(
+                            PushTransaction(
                                 message.author.id,
                                 `${e.MoneyWithWings} Pagou ${multa} Moedas de multa por cometer um crime`
                             )
@@ -136,7 +136,7 @@ module.exports = {
                 } else {
                     sdb.set(`Users.${message.author.id}.Timeouts.Preso`, Date.now());
                     sdb.subtract(`Users.${message.author.id}.Balance`, multa);
-                    PushTrasaction(
+                    PushTransaction(
                         message.author.id,
                         `${e.MoneyWithWings} Pagou ${multa} Moedas de multa por cometer um crime`
                     )
@@ -146,7 +146,7 @@ module.exports = {
 
             function add(amount) {
                 sdb.add(`Users.${message.author.id}.Balance`, amount)
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `${e.BagMoney} Recebeu ${amount} Moedas por cometer um crime`
                 )

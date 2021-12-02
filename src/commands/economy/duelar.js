@@ -3,7 +3,7 @@ const { f } = require('../../../database/frases.json')
 const Colors = require('../../../Routes/functions/colors')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
-const { PushTrasaction, TransactionsPush } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction, TransactionsPush } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'duelar',

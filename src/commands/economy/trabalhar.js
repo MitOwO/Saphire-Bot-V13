@@ -2,7 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Vip = require('../../../Routes/functions/vip')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'trabalhar',
@@ -42,7 +42,7 @@ module.exports = {
             let comvip = `Bônus ${e.VipStar} | Você trabalhou e ganhou ${work} ${Moeda(message)} e ${xp} ${e.RedStar}XP`
             let semvip = `${e.Check} | Você trabalhou e ganhou ${work} ${Moeda(message)} e ${xp} ${e.RedStar}XP\n${e.SaphireObs} | Sabia que Vips ganham bônus? \`${prefix}vip\``
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.BagMoney} Ganhou ${work} Moedas trabalhando`
             )
@@ -58,7 +58,7 @@ module.exports = {
             let comvip = `Bônus ${e.VipStar} | Você trabalhou e ganhou ${work} ${Moeda(message)}, ${xp} ${e.RedStar}XP e uma gorjeta de ${gorjeta} ${Moeda(message)}`
             let semvip = `${e.Check} | Você trabalhou e ganhou ${work} ${Moeda(message)}, ${xp} ${e.RedStar}XP e uma gorjeta de ${gorjeta} ${Moeda(message)}\n${e.SaphireObs} | Sabia que Vips ganham bônus? \`${prefix}vip\``
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.BagMoney} Ganhou ${work + gorjeta} Moedas trabalhando`
             )

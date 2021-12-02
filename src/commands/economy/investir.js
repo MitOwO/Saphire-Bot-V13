@@ -4,7 +4,7 @@ const ms = require('parse-ms')
 const colors = require('../../../Routes/functions/colors')
 const Moeda = require('../../../Routes/functions/moeda')
 const PassCode = require('../../../Routes/functions/PassCode')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 // #246FE0 - Azul Saphire
 module.exports = {
@@ -126,7 +126,7 @@ module.exports = {
             sdb.set(`Users.${message.author.id}.Cache.BolsaEmpresa`, Empresa)
             sdb.add(`Users.${message.author.id}.Cache.BolsaLucro`, parseInt(Result) || 1)
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} | Investiu ${Invest} Moedas na bolsa de valores`
             )
@@ -167,7 +167,7 @@ module.exports = {
             sdb.delete(`Users.${message.author.id}.Cache.BolsaLucro`)
             sdb.delete(`Users.${message.author.id}.Timeouts.Bolsa`)
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.BagMoney} | Recebeu ${Value} Moedas na bolsa de valores`
             )

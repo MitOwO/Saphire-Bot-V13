@@ -2,7 +2,7 @@ const ms = require("parse-ms")
 const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
   name: 'esmola',
@@ -56,7 +56,7 @@ module.exports = {
         sdb.delete(`Request.${message.author.id}`)
 
         if (count > 0) {
-          PushTrasaction(
+          PushTransaction(
             message.author.id,
             `${e.BagMoney} Recebeu ${count} Moedas de esmola`
           )

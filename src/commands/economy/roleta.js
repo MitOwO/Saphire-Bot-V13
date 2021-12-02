@@ -4,7 +4,7 @@ const { f } = require('../../../database/frases.json')
 const Colors = require('../../../Routes/functions/colors')
 const Moeda = require("../../../Routes/functions/moeda")
 const Error = require('../../../Routes/functions/errors')
-const { PushTrasaction } = require("../../../Routes/functions/transctionspush")
+const { PushTransaction } = require("../../../Routes/functions/transctionspush")
 
 module.exports = {
     name: 'roleta',
@@ -156,7 +156,7 @@ module.exports = {
         function AddMoneyVictory(prize, msg) {
             sdb.add(`Users.${message.author.id}.Cache.Resgate`, (parseInt(sdb.get(`Users.${message.author.id}.Cache.Roleta`)) || 0))
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.BagMoney} Recebeu ${parseInt(sdb.get(`Users.${message.author.id}.Cache.Roleta`)) || 0} Moedas jogando na roleta`
             )
@@ -168,7 +168,7 @@ module.exports = {
         function SubtractMoneyLose(prize, msg) {
             msg.edit(`${e.SaphireCry} | **PERDEU!** | ${message.author} jogou na roleta e perdeu **${((sdb.get(`Users.${message.author.id}.Cache.Roleta`) || 0) - prize).toFixed(0)} ${Moeda(message)}**.`).catch(() => { })
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.MoneyWithWings} Perdeu ${valor} Moedas jogando na roleta`
             )

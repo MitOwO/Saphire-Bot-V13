@@ -2,7 +2,7 @@ const { e } = require('../../../database/emojis.json')
 const { f } = require('../../../database/frases.json')
 const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'cu',
@@ -51,7 +51,7 @@ module.exports = {
                             sdb.delete(`Request.${message.author.id}`)
                             sdb.add(`Users.${message.author.id}.Balance`, din)
                             sdb.set(`Users.${message.author.id}.Timeouts.Cu`, Date.now())
-                            PushTrasaction(
+                            PushTransaction(
                                 message.author.id,
                                 `${e.BagMoney} Ganhou ${din} Moedas dando o cú`
                             )
@@ -60,7 +60,7 @@ module.exports = {
                             sdb.delete(`Request.${message.author.id}`)
                             sdb.subtract(`Users.${message.author.id}.Balance`, din)
                             sdb.set(`Users.${message.author.id}.Timeouts.Cu`, Date.now())
-                            PushTrasaction(
+                            PushTransaction(
                                 message.author.id,
                                 `${e.MoneyWithWings} Perdeu ${din} Moedas dando o cú`
                             )

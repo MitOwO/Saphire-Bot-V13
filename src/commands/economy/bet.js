@@ -3,7 +3,7 @@ const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
 const Colors = require('../../../Routes/functions/colors')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'bet',
@@ -53,7 +53,7 @@ module.exports = {
             ? (() => {
                 sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
                 sdb.subtract(`Users.${message.author.id}.Balance`, quantia)
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `💰 Apostou ${quantia || 0} Moedas no comando bet`
                 )
@@ -99,7 +99,7 @@ module.exports = {
 
                     sdb.subtract(`Users.${user.id}.Balance`, quantia)
                     sdb.add(`Users.${message.author.id}.Cache.BetPrize`, quantia)
-                    PushTrasaction(
+                    PushTransaction(
                         user.id,
                         `💰 Apostou ${quantia || 0} Moedas no comando bet`
                     )
@@ -144,7 +144,7 @@ module.exports = {
                     parseInt(sdb.get(`Users.${message.author.id}.Cache.Resgate`)) + parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) > 0
                         ? (() => {
                             sdb.add(`Users.${message.author.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Resgate`) || 0) + (parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0))
-                            PushTrasaction(
+                            PushTransaction(
                                 message.author.id,
                                 `💰 Recebeu de volta ${parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0} Moedas no comando bet`
                             )
@@ -160,7 +160,7 @@ module.exports = {
 
                     let winner = BetUsers[Math.floor(Math.random() * BetUsers.length)]
                     parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) > 0 ? sdb.add(`Users.${winner}.Balance`, parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`))) : null
-                    PushTrasaction(
+                    PushTransaction(
                         winner,
                         `💰 Recebeu ${parseInt(sdb.get(`Users.${message.author.id}.Cache.BetPrize`)) || 0} Moedas no comando bet`
                     )
@@ -180,7 +180,7 @@ module.exports = {
                 msg.edit({ embeds: [BetEmbed] }).catch(() => { })
 
                 sdb.add(`Users.${user.id}.Balance`, quantia)
-                PushTrasaction(
+                PushTransaction(
                     user.id,
                     `💰 Recebeu de volta ${quantia || 0} Moedas no comando bet`
                 )
@@ -192,7 +192,7 @@ module.exports = {
 
                 let quantia = sdb.get(`Users.${message.author.id}.Cache.BetPrize`) || 0
                 sdb.add(`Users.${message.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BetPrize`) || 0))
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `💰 Recebeu ${quantia || 0} Moedas por erro no comando bet`
                 )

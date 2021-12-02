@@ -1,7 +1,7 @@
 const ms = require("parse-ms")
 const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
-const { PushTrasaction, TransactionsPush } = require("../../../Routes/functions/transctionspush")
+const { PushTransaction, TransactionsPush } = require("../../../Routes/functions/transctionspush")
 
 module.exports = {
     name: 'roubar',
@@ -53,7 +53,7 @@ module.exports = {
             function lose() {
                 sdb.subtract(`Users.${message.author.id}.Balance`, amount);
 
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `${e.MoneyWithWings} Perdeu ${amount} Moedas ao tentar roubar ${user.tag}`
                 )

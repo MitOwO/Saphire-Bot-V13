@@ -1,7 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'bingo',
@@ -33,7 +33,7 @@ module.exports = {
 
         sdb.add(`Users.${message.author.id}.Cache.BingoPrize`, quantia)
         sdb.subtract(`Users.${message.author.id}.Balance`, quantia)
-        PushTrasaction(
+        PushTransaction(
             message.author.id,
             `💸 Inicou um bingo no valor de ${quantia || 0} Moedas`
         )
@@ -58,7 +58,7 @@ module.exports = {
                 Bingo.setTitle(`${message.author.username} fez um Bingo.`).setDescription(`🏆 ${quantia} ${Moeda(message)}\n${e.OwnerCrow} ${WinnerMsg.author} Acertou o número: ${Number}`).setFooter('Concluído')
                 msg.edit({ embeds: [Bingo] }).catch(() => { })
                 sdb.add(`Users.${WinnerMsg.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0))
-                PushTrasaction(
+                PushTransaction(
                     WinnerMsg.author.id,
                     `💰 Recebeu ${quantia || 0} Moedas jogando no bingo`
                 )
@@ -72,7 +72,7 @@ module.exports = {
                     Bingo.setColor('RED').setTitle(`${message.author.username} fez um Bingo.`).setDescription(`🏆 ${quantia} ${Moeda(message)}\n${e.Deny} Ninguém acertou o número: ${Number}`).setFooter('Concluído')
                     msg.edit({ embeds: [Bingo] }).catch(() => { })
                     sdb.add(`Users.${message.author.id}.Cache.Resgate`, (sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0))
-                    PushTrasaction(
+                    PushTransaction(
                         message.author.id,
                         `💰 Recebeu ${sdb.get(`Users.${message.author.id}.Cache.BingoPrize`) || 0} Moedas jogando no bingo`
                     )

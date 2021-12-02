@@ -1,5 +1,6 @@
 const { e } = require('../../../database/emojis.json'),
-    Moeda = require('../../../Routes/functions/moeda')
+    Moeda = require('../../../Routes/functions/moeda'),
+    { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'vender',
@@ -61,6 +62,8 @@ module.exports = {
 
             if (sdb.get(`Users.${message.author.id}.${DataBaseRoute}`) <= 0)
                 sdb.delete(`Users.${message.author.id}.${DataBaseRoute}`)
+
+            PushTransaction(message.author.id, `💰 Recebeu ${Amount * ItemPrice} Moedas vendendo ${Amount} ${ItemPluralNameToLowerCased}`)
 
             return message.reply(`${e.Check} | Você venceu ${Amount} ${Emoji} ${ItemPluralNameToLowerCased} e faturou ${Add(Amount, ItemPrice)}`)
 

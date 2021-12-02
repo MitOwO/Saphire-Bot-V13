@@ -3,7 +3,7 @@ const { f } = require('../../../database/frases.json')
 const Moeda = require('../../../Routes/functions/moeda')
 const Error = require('../../../Routes/functions/errors')
 const Colors = require('../../../Routes/functions/colors')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'lance',
@@ -98,7 +98,7 @@ module.exports = {
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
                 for (const e of ['✅', '💸', '❌']) msg.react(e).catch(() => { })
 
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `${e.MoneyWithWings} Lançou ${prize} Moedas no chat`
                 )
@@ -166,7 +166,7 @@ module.exports = {
                         return RemoveUserFromArray(ArrayUsers, winner)
 
                     sdb.add(`Users.${winner.id}.Cache.Resgate`, prize)
-                    PushTrasaction(
+                    PushTransaction(
                         winner.id,
                         `${e.BagMoney} Recebeu ${prize} Moedas de um lançamento no chat`
                     )

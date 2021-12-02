@@ -1,7 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const ms = require('parse-ms')
 const Moeda = require('../../../Routes/functions/moeda')
-const { PushTrasaction} = require('../../../Routes/functions/transctionspush')
+const { PushTransaction} = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'bitcoin',
@@ -41,7 +41,7 @@ module.exports = {
                 db.add(`Bitcoin_${message.author.id}`, 1)
                 sdb.add(`Users.${message.author.id}.Bank`, 1000000000)
 
-                PushTrasaction(
+                PushTransaction(
                     message.author.id,
                     `💰 Recebeu 1000000000 Moedas por ter adquirido um Bitcoin`
                 )

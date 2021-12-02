@@ -4,7 +4,7 @@ const ms = require("parse-ms")
 const Moeda = require('../../../Routes/functions/moeda')
 const Colors = require('../../../Routes/functions/colors')
 const Vip = require('../../../Routes/functions/vip')
-const { PushTrasaction } = require('../../../Routes/functions/transctionspush')
+const { PushTransaction } = require('../../../Routes/functions/transctionspush')
 
 module.exports = {
     name: 'daily',
@@ -49,7 +49,7 @@ module.exports = {
             let ComVip = `Bônus ${e.VipStar} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
             let NoVip = `${e.Check} | Você adquiriu +${amountcoins} ${Moeda(message)} e +${amountxp} ${e.RedStar} XP\n${e.SaphireHi} | Bônus: +${Bonus1} ${Moeda(message)} e +${Bonus2} ${e.RedStar} XP`
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.BagMoney} Recebeu ${amountcoins + Bonus1} Moedas no daily`
             )
@@ -65,7 +65,7 @@ module.exports = {
             sdb.add(`Users.${message.author.id}.Xp`, amountxp)
             sdb.set(`Users.${message.author.id}.Timeouts.Daily`, Date.now())
 
-            PushTrasaction(
+            PushTransaction(
                 message.author.id,
                 `${e.BagMoney} Recebeu ${amountcoins} Moedas no daily`
             )
