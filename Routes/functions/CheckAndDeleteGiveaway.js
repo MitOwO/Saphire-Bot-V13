@@ -2,7 +2,7 @@ const { Giveaway } = require("./database")
 
 function CheckAndDeleteGiveaway(guildId, MessageId) {
 
-    let DozeHoras = 43200000,
+    let DozeHoras = 86400000, // 1 Day
         DateNow = Giveaway.get(`Giveaways.${guildId}.${MessageId}.TimeToDelete`)
 
     if (!DateNow) return false

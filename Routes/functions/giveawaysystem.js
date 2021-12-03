@@ -92,7 +92,7 @@ function GiveawaySystem() {
                                     value: `[Link do Sorteio](${MessageLink})`
                                 }
                             )
-                            .setFooter('Este sorteio será deletado em 12 horas')
+                            .setFooter('Este sorteio será deletado em 24 horas')
                     ]
 
                 }).catch(() => Giveaway.delete(`Giveaways.${guild}.${MessageId}`))
@@ -120,7 +120,7 @@ function GetWinners(WinnersArray, Amount, guildId, MessageId) {
     if (WinnersArray.length === 0)
         return []
 
-    WinnersArray.length >= Amount
+    WinnersArray.length > Amount
         ? (() => {
 
             for (let i = 0; i < Amount; i++) {
@@ -135,7 +135,7 @@ function GetWinners(WinnersArray, Amount, guildId, MessageId) {
         : (() => {
 
             Winners.push(...WinnersArray)
-            Giveaway.push(`Giveaways.${guildId}.${MessageId}.WinnersGiveaway`, ...WinnersArray)
+            Giveaway.set(`Giveaways.${guildId}.${MessageId}.WinnersGiveaway`, [...Winners])
 
         })()
 
