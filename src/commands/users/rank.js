@@ -1,7 +1,8 @@
 const { e } = require('../../../database/emojis.json'),
     { lotery, Clan, Transactions, Reminders, DatabaseObj: { config } } = require('../../../Routes/functions/database'),
     Moeda = require('../../../Routes/functions/moeda'),
-    Colors = require('../../../Routes/functions/colors')
+    Colors = require('../../../Routes/functions/colors'),
+    DeleteUser = require('../../../Routes/functions/deleteUser')
 
 module.exports = {
     name: 'rank',
@@ -456,17 +457,6 @@ module.exports = {
             }
 
             return user
-
-        }
-
-        function DeleteUser(UserId) {
-
-            sdb.delete(`Users.${UserId}`)
-            Transactions.delete(`Transactions.${UserId}`)
-            Reminders.delete(`Reminders.${UserId}`)
-            db.delete(`${UserId}`)
-            db.delete(`Bitcoin_${UserId}`)
-            return
 
         }
 
