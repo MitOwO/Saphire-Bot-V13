@@ -54,6 +54,9 @@ module.exports = {
                 if (err.code === 10009)
                     return message.reply(`${e.Deny} | Eu não tenho permissão suficiente, poxa! Pode ativar a permissão \`GERENCIAR APELIDOS\` não? É rapidinho ${e.SaphireCry}`)
 
+                if (err.code === 50013)
+                    return message.reply(`${e.SaphireCry} | Eu não tenho poder suficiente... Poxa...`)
+
                 return message.reply(`${e.Deny} | Vish, algo deu errado aqui...\n\`${err}\``)
             })
         } else {

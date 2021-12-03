@@ -41,7 +41,7 @@ module.exports = {
 
         function DelVipCode() {
 
-            if (['all', 'tudo', 'todos'].includes(args[0]?.toLowerCase())) {
+            if (['all', 'tudo', 'todos'].includes(args[1]?.toLowerCase())) {
 
                 if (sdb.get(`Client.VipCodes`))
                     return message.reply(`${e.Info} | Nenhum código no ativo.`)

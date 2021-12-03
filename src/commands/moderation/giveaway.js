@@ -329,58 +329,179 @@ module.exports = {
 
         }
 
-        function GiveawayInfo() {
+        async function GiveawayInfo() {
 
             let MessageId = args[1]
 
-            /**
-             * ToDo: -gw info ID - Informações completas do sorteio
-             * Membros fica na última field com Embed Generator ou uma nova embed
-             */
+            MessageId ? (async () => {
 
-            return message.reply({
-                embeds: [
-                    embed
-                        .setTitle(`${e.Tada} ${client.user.username} Giveaway Manager | Info Class`)
-                        .setDescription(`Com este comando é possível fazer sorteios. E isso é bem legal.`)
-                        .addFields(
-                            {
-                                name: `:link: Atalhos`,
-                                value: `\`${prefix}giveaway\`, ${Aliases.map(cmd => `\`${prefix}${cmd}\``).join(', ')}`
-                            },
-                            {
-                                name: `${e.Star} Crie sorteios`,
-                                value: `\`${prefix}giveaway new <QuantidadeDeVencedores> <TempoDoSorteio> <O Prêmio do Sorteio>\`\n${e.Info} Exemplo: \`${prefix}giveaway create 3 10h Cargo Mod\``
-                            },
-                            {
-                                name: `${e.Deny} Delete sorteios`,
-                                value: `\`${prefix}giveaway delete <IdDoSorteio>\` ou \`${prefix}giveaway delete all\``
-                            },
-                            {
-                                name: `${e.Gear} Configure o canal ou delete tudo`,
-                                value: `\`${prefix}giveaway config [#channel]\` ou \`${prefix}giveaway config <delete>\``
-                            },
-                            {
-                                name: `🔄 Reroll`,
-                                value: `\`${prefix}giveaway reroll <IdDoSorteio> [QuantidadeDeVencedores]\``
-                            },
-                            {
-                                name: `🌀 Reset o tempo do sorteio`,
-                                value: `\`${prefix}giveaway reset <IdDoSorteio>\``
-                            },
-                            {
-                                name: `⏱️ Finalize um sorteio antes da hora`,
-                                value: `\`${prefix}giveaway finish <IdDoSorteio>\``
-                            },
-                            {
-                                name: `${e.Commands} Veja todos os sorteios e suas informações`,
-                                value: `\`${prefix}giveaway list\``
-                            }
-                        )
-                        .setFooter(`Este comando faz parte da: ${client.user.username} Hiper Commmands`)
-                ]
-            })
+                let GiveawayDatabase = Giveaway.get(`Giveaways.${message.guild.id}`),
+                    sorteio = GiveawayDatabase[MessageId]
 
+                if (!GiveawayDatabase)
+                    return message.reply(`${e.Info} | Este servidor não tem nenhum sorteio na lista.`)
+
+                if (!GiveawayDatabase[MessageId]) return message.reply(`${e.Deny} | Id inválido ou sorteio inexistente.`)
+
+                let WinnersAmount = sorteio?.Winners,
+                    Participantes = sorteio?.Participants,
+                    Sponsor = sorteio?.Sponsor,
+                    Prize = sorteio?.Prize,
+                    MessageLink = sorteio?.MessageLink,
+                    Actived = sorteio?.Actived,
+                    Vencedores = sorteio?.WinnersGiveaway || [],
+                    VencedoresMapped = Vencedores?.map(winner => {
+                        let member = message.guild.members.cache.get(winner)
+
+                        return member
+                            ? `${member.user.tag} - \`${member.id}\``
+                            : 'Membro não encontrado.'
+
+                    })?.join('\n') || 'Ninguém',
+                    description = `> :id: \`${MessageId}\`\n> 👐 Patrocinador*(a)*: ${message.guild.members.cache.get(Sponsor) || 'Não encontrado'}\n> ${e.Star} Prêmio: ${Prize}\n> 👥 Participantes: ${Participantes?.length || 0}\n> ${e.CoroaDourada} Vencedores: ${WinnersAmount}\n> ⏱️ Término: \`${sorteio?.TimeEnding || 'Indefinido'}\`\n> ${Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n> 🔗 [Sorteio Link](${MessageLink})`,
+                    Emojis = ['⬅️', '➡️', '❌'],
+                    Control = 0,
+                    Embeds = EmbedGenerator(),
+                    msg = await message.reply({ embeds: [Embeds[0]] })
+
+                if (Embeds.length === 1)
+                    return
+
+                for (const emoji of Emojis)
+                    msg.react(emoji).catch(() => { })
+
+                const collector = msg.createReactionCollector({
+                    filter: (reaction, user) => Emojis.includes(reaction.emoji.name) && user.id === message.author.id,
+                    idle: 30000
+                })
+
+                    .on('collect', (reaction) => {
+
+                        if (reaction.emoji.name === Emojis[2])
+                            return collector.stop()
+
+                        return reaction.emoji.name === Emojis[0]
+                            ? (() => {
+
+                                Control--
+                                return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control++
+
+                            })()
+                            : (() => {
+
+                                Control++
+                                return Embeds[Control] ? msg.edit({ embeds: [Embeds[Control]] }).catch(() => { }) : Control--
+
+                            })()
+
+                    })
+
+                    .on('end', () => {
+
+                        msg.edit({ content: `${e.Deny} | Comando desativado` }).catch(() => { })
+
+                    })
+
+                function EmbedGenerator() {
+
+                    let amount = 10,
+                        Page = 1,
+                        embeds = [],
+                        length = Participantes.length / 10 <= 1 ? 1 : parseInt((Participantes.length / 10) + 1),
+                        Pages = length > 1 ? `- ${Page}/${length}` : ''
+
+                    for (let i = 0; i < Participantes.length; i += 10) {
+
+                        let current = Participantes.slice(i, amount),
+                            GiveawayMembersMapped = current.map(Participante => {
+
+                                let Member = message.guild.members.cache.get(Participante)
+
+                                return Member ? `${Member.user.tag} - \`${Member.id}\`` : (() => {
+                                    Giveaway.pull(`Giveaways.${message.guild.id}.${MessageId}.Participants`, Participante)
+                                    return `${e.Deny} Usuário deletado do sorteio por não estar no servidor`
+                                })()
+
+                            }).join("\n")
+
+                        if (current.length > 0) {
+
+                            embeds.push({
+                                color: client.blue,
+                                title: `${e.Tada} Informações do sorteio ${length > 0 ? `- ${Page}/${length}` : ''}`,
+                                description: `${description}`,
+                                fields: [
+                                    {
+                                        name: '👥 Participantes',
+                                        value: `${GiveawayMembersMapped || 'Nenhum membro entrou neste sorteio'}`
+                                    },
+                                    {
+                                        name: `${e.OwnerCrow} Vencedores do Sorteios${Vencedores.length > 0 ? `: ${WinnersAmount}/${Vencedores.length}` : ''}`,
+                                        value: `${VencedoresMapped}`
+                                    }
+                                ],
+                                footer: {
+                                    text: `${Participantes.length} participantes contabilizados`
+                                },
+                            })
+
+                            Page++
+                            amount += 10
+
+                        }
+
+                    }
+
+                    return embeds;
+                }
+
+            })()
+
+                : (() => {
+
+                    return message.reply({
+                        embeds: [
+                            embed
+                                .setTitle(`${e.Tada} ${client.user.username} Giveaway Manager | Info Class`)
+                                .setDescription(`Com este comando é possível fazer sorteios. E isso é bem legal.`)
+                                .addFields(
+                                    {
+                                        name: `:link: Atalhos`,
+                                        value: `\`${prefix}giveaway\`, ${Aliases.map(cmd => `\`${prefix}${cmd}\``).join(', ')}`
+                                    },
+                                    {
+                                        name: `${e.Star} Crie sorteios`,
+                                        value: `\`${prefix}giveaway new <QuantidadeDeVencedores> <TempoDoSorteio> <O Prêmio do Sorteio>\`\n${e.Info} Exemplo: \`${prefix}giveaway create 3 10h Cargo Mod\``
+                                    },
+                                    {
+                                        name: `${e.Deny} Delete sorteios`,
+                                        value: `\`${prefix}giveaway delete <IdDoSorteio>\` ou \`${prefix}giveaway delete all\``
+                                    },
+                                    {
+                                        name: `${e.Gear} Configure o canal ou delete tudo`,
+                                        value: `\`${prefix}giveaway config [#channel]\` ou \`${prefix}giveaway config <delete>\``
+                                    },
+                                    {
+                                        name: `🔄 Reroll`,
+                                        value: `\`${prefix}giveaway reroll <IdDoSorteio> [QuantidadeDeVencedores]\``
+                                    },
+                                    {
+                                        name: `🌀 Reset o tempo do sorteio`,
+                                        value: `\`${prefix}giveaway reset <IdDoSorteio>\``
+                                    },
+                                    {
+                                        name: `⏱️ Finalize um sorteio antes da hora`,
+                                        value: `\`${prefix}giveaway finish <IdDoSorteio>\``
+                                    },
+                                    {
+                                        name: `${e.Commands} Veja todos os sorteios e suas informações`,
+                                        value: `\`${prefix}giveaway list\``
+                                    }
+                                )
+                                .setFooter(`Este comando faz parte da: ${client.user.username} Hiper Commmands`)
+                        ]
+                    })
+                })()
         }
 
         async function ResetGiveawayTime() {

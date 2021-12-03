@@ -1,6 +1,6 @@
-const { lotery, DatabaseObj, Clan, Transactions, Reminders } = require('../../../Routes/functions/database')
-const { e, config } = DatabaseObj
-const Vip = require('../../../Routes/functions/vip')
+const { lotery, DatabaseObj: { e, config }, Clan, Transactions, Reminders } = require('../../../Routes/functions/database'),
+    DeleteUser = require('../../../Routes/functions/deleteUser'),
+    Vip = require('../../../Routes/functions/vip')
 
 module.exports = {
     name: 'delete',
@@ -44,18 +44,14 @@ module.exports = {
             })
         }
 
-
         if (['lotery', 'loteria'].includes(args[0]?.toLowerCase())) {
             lotery.clear()
             return message.reply(`${e.Check} | Feito!`)
         }
 
         let u = message.mentions.members.first() || message.mentions.repliedUser || await client.users.cache.get(args[1])
-        if (!u) {
-            return message.reply(`${e.Deny} | Não achei ninguém.`)
-        }
+        if (!u) return message.reply(`${e.Deny} | Não achei ninguém.`)
         let user = await client.users.cache.get(u.id)
-
 
         if (['cache'].includes(args[0]?.toLowerCase())) {
             sdb.delete(`Users.${user.id}.Cache`)
@@ -80,12 +76,8 @@ module.exports = {
             if (!sdb.get(`Users.${user.id}`))
                 return message.reply(`${e.Info} | Este usuário não existe na minha database.`)
 
-            sdb.delete(`Users.${user.id}`)
-            Transactions.delete(`Transactions.${user.id}`)
-            Reminders.delete(`Reminders.${user.id}`)
-            db.delete(`${user.id}`)
-            db.delete(`Bitcoin_${user.id}`)
-            return message.reply(`${e.Check} Todos os dados de ${user.tag} foram deletados.`)
+            DeleteUser(user.id)
+            return message.reply(`${e.Check} | Todos os dados de ${user?.tag || '**Usuário não encontrado**'} foram deletados.`)
         }
 
         if (['vip'].includes(args[0]?.toLowerCase())) {
