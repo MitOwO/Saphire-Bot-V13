@@ -351,13 +351,14 @@ module.exports = {
                     Actived = sorteio?.Actived,
                     Vencedores = sorteio?.WinnersGiveaway || [],
                     VencedoresMapped = Vencedores?.map(winner => {
+               
                         let member = message.guild.members.cache.get(winner)
 
                         return member
                             ? `> ${member.user.tag} - \`${member.id}\``
                             : '> Membro não encontrado'
 
-                    }).join('\n') || 'Ninguém',
+                    }).join('\n') || '> Ninguém',
                     description = `> :id: \`${MessageId}\`\n> 👐 Patrocinador*(a)*: ${message.guild.members.cache.get(Sponsor)?.user.tag || 'Não encontrado'}\n> ${e.Star} Prêmio: ${Prize}\n> 👥 Participantes: ${Participantes?.length || 0}\n> ${e.CoroaDourada} Vencedores: ${WinnersAmount}\n> ⏱️ Término: \`${sorteio?.TimeEnding || 'Indefinido'}\`\n> ${Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n> 🔗 [Sorteio Link](${MessageLink})`,
                     Emojis = ['⬅️', '➡️', '❌'],
                     Control = 0,
@@ -432,7 +433,7 @@ module.exports = {
                                 fields: [
                                     {
                                         name: '👥 Participantes',
-                                        value: `${GiveawayMembersMapped || 'Nenhum membro entrou neste sorteio'}`
+                                        value: `${GiveawayMembersMapped || '> Nenhum membro entrou neste sorteio'}`
                                     },
                                     {
                                         name: `${e.OwnerCrow} Vencedores do Sorteios${Vencedores.length > 0 ? `: ${Vencedores.length}/${WinnersAmount}` : ''}`,
