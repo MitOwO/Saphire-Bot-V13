@@ -55,7 +55,7 @@ function GiveawaySystem() {
                     continue
                 }
 
-                let vencedores = GetWinners(Participantes, WinnersAmount)
+                let vencedores = GetWinners(Participantes, WinnersAmount, guild, MessageId)
 
                 if (vencedores.length === 0) {
                     Channel.send(`${e.Deny} | Sorteio cancelado por falta de participantes.\n🔗 | Giveaway Reference: ${MessageLink || 'Link indisponível'}`)
@@ -113,7 +113,7 @@ function GiveawaySystem() {
     }
 }
 
-function GetWinners(WinnersArray, Amount) {
+function GetWinners(WinnersArray, Amount, guildId, MessageId) {
 
     let Winners = []
 
@@ -123,15 +123,19 @@ function GetWinners(WinnersArray, Amount) {
     WinnersArray.length >= Amount
         ? (() => {
 
-            let i = 0
+            for (let i = 0; i < Amount; i++) {
 
-            for (i; i < Amount; i++)
-                Winners.push(GetUserWinner())
+                let memberId = GetUserWinner()
+
+                Winners.push(memberId)
+                Giveaway.push(`Giveaways.${guildId}.${MessageId}.WinnersGiveaway`, memberId)
+            }
 
         })()
         : (() => {
 
             Winners.push(...WinnersArray)
+            Giveaway.push(`Giveaways.${guildId}.${MessageId}.WinnersGiveaway`, ...WinnersArray)
 
         })()
 
