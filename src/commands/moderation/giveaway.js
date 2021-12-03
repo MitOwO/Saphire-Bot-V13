@@ -259,8 +259,7 @@ module.exports = {
                 Emojis = ['◀️', '▶️', '❌'],
                 msg = await message.reply({ embeds: [Embeds[0]] })
 
-            if (Embeds.length < 2)
-                return
+            if (Embeds.length < 2) return
 
             for (const emoji of Emojis)
                 msg.react(emoji).catch(() => { })
@@ -304,13 +303,13 @@ module.exports = {
                 for (let i = 0; i < Sorteios.length; i += 5) {
 
                     let current = Sorteios.slice(i, amount),
-                        description = current.map(Gw => `> 🆔 \`${Gw}\`\n> ${e.Star} Prêmio: ${Sorteio[Gw]?.Prize}\n> 👥 Participantes: ${Sorteio[Gw]?.Participants.length}\n> ⏱️ Término: \`${Sorteio[Gw]?.TimeEnding}\`\n> ${Sorteio[Gw]?.Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n--------------------`).join("\n")
+                        description = current.map(Gw => `> 🆔 \`${Gw}\`\n> ⏱️ Término: \`${Sorteio[Gw]?.TimeEnding}\`\n> ${Sorteio[Gw]?.Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n${e.Info} \`${prefix}giveaway info ${Gw}\`\n--------------------`).join("\n")
 
                     if (current.length > 0) {
 
                         embeds.push({
                             color: 'GREEN',
-                            title: `${e.Tada} Sorteios ${message.guild.name} - ${Page}/${length}`,
+                            title: `${e.Tada} Sorteios ${message.guild.name} ${length > 1 ? `- ${Page}/${length}` : ''}`,
                             description: `${description || 'Nenhum sorteio encontrado'}`,
                             footer: {
                                 text: `${Sorteios.length} sorteios contabilizados`
@@ -351,7 +350,7 @@ module.exports = {
                     Actived = sorteio?.Actived,
                     Vencedores = sorteio?.WinnersGiveaway || [],
                     VencedoresMapped = Vencedores?.map(winner => {
-               
+
                         let member = message.guild.members.cache.get(winner)
 
                         return member
@@ -428,11 +427,11 @@ module.exports = {
 
                             embeds.push({
                                 color: client.blue,
-                                title: `${e.Tada} Informações do sorteio ${length > 0 ? `- ${Page}/${length}` : ''}`,
+                                title: `${e.Tada} Informações do sorteio`,
                                 description: `${description}`,
                                 fields: [
                                     {
-                                        name: '👥 Participantes',
+                                        name: `👥 Participantes ${length > 0 ? `- ${Page}/${length}` : ''}`,
                                         value: `${GiveawayMembersMapped || '> Nenhum membro entrou neste sorteio'}`
                                     },
                                     {
@@ -471,7 +470,7 @@ module.exports = {
                                     },
                                     {
                                         name: `${e.Star} Crie sorteios`,
-                                        value: `\`${prefix}giveaway new <QuantidadeDeVencedores> <TempoDoSorteio> <O Prêmio do Sorteio>\`\n${e.Info} Exemplo: \`${prefix}giveaway create 3 10h Cargo Mod\``
+                                        value: `\`${prefix}giveaway new <QuantidadeDeVencedores> <TempoDoSorteio> <O Prêmio do Sorteio>\`\n> ${e.Info} Exemplo: \`${prefix}giveaway create 3 10h Cargo Mod\``
                                     },
                                     {
                                         name: `${e.Deny} Delete sorteios`,
