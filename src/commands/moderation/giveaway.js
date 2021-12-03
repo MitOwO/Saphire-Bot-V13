@@ -148,7 +148,7 @@ module.exports = {
             if (['all', 'todos', 'tudo'].includes(args[1]?.toLowerCase())) return DeleteAllData()
 
             if (!GwId)
-                return message.reply(`${e.Info} | Forneça o ID do sorteio. Você pode ver em \`${prefix}giveaway list\` ou copiando o ID da mensagem do sorteio.`)
+                return message.reply(`${e.Info} | Forneça o ID do sorteio. Você pode ver todos os ids em \`${prefix}giveaway list\` ou copiando o ID da mensagem do sorteio. Você também pode usar o comando \`${prefix}giveaway para deletar todos os sorteios de uma vez.\``)
 
             if (!Giveaway.get(`Giveaways.${message.guild.id}.${GwId}`))
                 return message.reply(`${e.Deny} | Sorteio não encontrado para exclusão.`)
@@ -336,12 +336,12 @@ module.exports = {
             MessageId ? (async () => {
 
                 let GiveawayDatabase = Giveaway.get(`Giveaways.${message.guild.id}`),
-                    sorteio = GiveawayDatabase[MessageId]
+                    sorteio = Giveaway.get(`Giveaways.${message.guild.id}.${MessageId}`)
 
                 if (!GiveawayDatabase)
                     return message.reply(`${e.Info} | Este servidor não tem nenhum sorteio na lista.`)
 
-                if (!GiveawayDatabase[MessageId]) return message.reply(`${e.Deny} | Id inválido ou sorteio inexistente.`)
+                if (!sorteio) return message.reply(`${e.Deny} | Id inválido ou sorteio inexistente.`)
 
                 let WinnersAmount = sorteio?.Winners,
                     Participantes = sorteio?.Participants,
@@ -354,11 +354,11 @@ module.exports = {
                         let member = message.guild.members.cache.get(winner)
 
                         return member
-                            ? `${member.user.tag} - \`${member.id}\``
-                            : 'Membro não encontrado.'
+                            ? `> ${member.user.tag} - \`${member.id}\``
+                            : '> Membro não encontrado'
 
-                    })?.join('\n') || 'Ninguém',
-                    description = `> :id: \`${MessageId}\`\n> 👐 Patrocinador*(a)*: ${message.guild.members.cache.get(Sponsor) || 'Não encontrado'}\n> ${e.Star} Prêmio: ${Prize}\n> 👥 Participantes: ${Participantes?.length || 0}\n> ${e.CoroaDourada} Vencedores: ${WinnersAmount}\n> ⏱️ Término: \`${sorteio?.TimeEnding || 'Indefinido'}\`\n> ${Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n> 🔗 [Sorteio Link](${MessageLink})`,
+                    }).join('\n') || 'Ninguém',
+                    description = `> :id: \`${MessageId}\`\n> 👐 Patrocinador*(a)*: ${message.guild.members.cache.get(Sponsor)?.user.tag || 'Não encontrado'}\n> ${e.Star} Prêmio: ${Prize}\n> 👥 Participantes: ${Participantes?.length || 0}\n> ${e.CoroaDourada} Vencedores: ${WinnersAmount}\n> ⏱️ Término: \`${sorteio?.TimeEnding || 'Indefinido'}\`\n> ${Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n> 🔗 [Sorteio Link](${MessageLink})`,
                     Emojis = ['⬅️', '➡️', '❌'],
                     Control = 0,
                     Embeds = EmbedGenerator(),
@@ -407,8 +407,7 @@ module.exports = {
                     let amount = 10,
                         Page = 1,
                         embeds = [],
-                        length = Participantes.length / 10 <= 1 ? 1 : parseInt((Participantes.length / 10) + 1),
-                        Pages = length > 1 ? `- ${Page}/${length}` : ''
+                        length = Participantes.length / 10 <= 1 ? 1 : parseInt((Participantes.length / 10) + 1)
 
                     for (let i = 0; i < Participantes.length; i += 10) {
 
@@ -417,9 +416,9 @@ module.exports = {
 
                                 let Member = message.guild.members.cache.get(Participante)
 
-                                return Member ? `${Member.user.tag} - \`${Member.id}\`` : (() => {
+                                return Member ? `> ${Member.user.tag} - \`${Member.id}\`` : (() => {
                                     Giveaway.pull(`Giveaways.${message.guild.id}.${MessageId}.Participants`, Participante)
-                                    return `${e.Deny} Usuário deletado do sorteio por não estar no servidor`
+                                    return `> ${e.Deny} Usuário deletado`
                                 })()
 
                             }).join("\n")
@@ -436,7 +435,7 @@ module.exports = {
                                         value: `${GiveawayMembersMapped || 'Nenhum membro entrou neste sorteio'}`
                                     },
                                     {
-                                        name: `${e.OwnerCrow} Vencedores do Sorteios${Vencedores.length > 0 ? `: ${WinnersAmount}/${Vencedores.length}` : ''}`,
+                                        name: `${e.OwnerCrow} Vencedores do Sorteios${Vencedores.length > 0 ? `: ${Vencedores.length}/${WinnersAmount}` : ''}`,
                                         value: `${VencedoresMapped}`
                                     }
                                 ],
@@ -495,7 +494,7 @@ module.exports = {
                                     },
                                     {
                                         name: `${e.Commands} Veja todos os sorteios e suas informações`,
-                                        value: `\`${prefix}giveaway list\``
+                                        value: `\`${prefix}giveaway list\` ou \`${prefix}giveaway info <IdDoSorteio>\``
                                     }
                                 )
                                 .setFooter(`Este comando faz parte da: ${client.user.username} Hiper Commmands`)
