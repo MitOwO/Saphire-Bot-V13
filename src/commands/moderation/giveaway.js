@@ -303,7 +303,7 @@ module.exports = {
                 for (let i = 0; i < Sorteios.length; i += 5) {
 
                     let current = Sorteios.slice(i, amount),
-                        description = current.map(Gw => `> 🆔 \`${Gw}\`\n> ⏱️ Término: \`${Sorteio[Gw]?.TimeEnding}\`\n> ${Sorteio[Gw]?.Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n${e.Info} \`${prefix}giveaway info ${Gw}\`\n--------------------`).join("\n")
+                        description = current.map(Gw => `> 🆔 \`${Gw}\`\n> ⏱️ Término: \`${Sorteio[Gw]?.TimeEnding}\`\n> ${Sorteio[Gw]?.Actived ? `${e.Check} Ativado` : `${e.Deny} Desativado`}\n> ${e.Info} \`${prefix}giveaway info ${Gw}\`\n--------------------`).join("\n")
 
                     if (current.length > 0) {
 
@@ -470,7 +470,7 @@ module.exports = {
                                     },
                                     {
                                         name: `${e.Star} Crie sorteios`,
-                                        value: `\`${prefix}giveaway new <QuantidadeDeVencedores> <TempoDoSorteio> <O Prêmio do Sorteio>\`\n> ${e.Info} Exemplo: \`${prefix}giveaway create 3 10h Cargo Mod\``
+                                        value: `\`${prefix}giveaway new <QuantidadeDeVencedores> <TempoDoSorteio> <O Prêmio do Sorteio>\`\n${e.Info} Exemplo: \`${prefix}giveaway create 3 10h Cargo Mod\``
                                     },
                                     {
                                         name: `${e.Deny} Delete sorteios`,
