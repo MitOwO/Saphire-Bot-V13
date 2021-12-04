@@ -354,7 +354,7 @@ module.exports = {
                         let member = message.guild.members.cache.get(winner)
 
                         return member
-                            ? `> ${member.user.tag} - \`${member.id}\``
+                            ? `> ${member.user.tag.replace(/`/g, '')} - \`${member.id}\``
                             : '> Membro não encontrado'
 
                     }).join('\n') || '> Ninguém',
@@ -416,7 +416,7 @@ module.exports = {
 
                                 let Member = message.guild.members.cache.get(Participante)
 
-                                return Member ? `> ${Member.user.tag} - \`${Member.id}\`` : (() => {
+                                return Member ? `> ${Member.user.tag.replace(/`/g, '')} - \`${Member.id}\`` : (() => {
                                     Giveaway.pull(`Giveaways.${message.guild.id}.${MessageId}.Participants`, Participante)
                                     return `> ${e.Deny} Usuário deletado`
                                 })()
