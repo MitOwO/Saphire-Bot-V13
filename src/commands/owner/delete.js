@@ -60,6 +60,7 @@ module.exports = {
 
         if (['bl', 'blacklist'].includes(args[0]?.toLowerCase())) {
             db.delete(`Blacklist_${args[1]}`)
+            sdb.pull('Client.Blacklist.Users', args[1])
             sdb.delete(`Blacklist.${args[1]}`)
             db.delete(`BlacklistServers_${args[1]}`)
             sdb.delete(`BlacklistServers.${args[1]}`)

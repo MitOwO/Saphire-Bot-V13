@@ -57,11 +57,9 @@ module.exports = {
             }),
             control = 0
 
-        if (embed.length > 1) {
-            for (const emoji of ['⬅️', '➡️', '❌']) {
+        if (embed.length > 1)
+            for (const emoji of ['⬅️', '➡️', '❌'])
                 msg.react(emoji).catch(() => { })
-            }
-        }
 
         collector.on('collect', (reaction) => {
 

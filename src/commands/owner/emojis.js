@@ -19,7 +19,7 @@ module.exports = {
         if (!owner) return message.reply(`${e.OwnerCrow} | Acesso privado ao meu criador.`)
         if (['get', 'tem'].includes(args[0]?.toLowerCase())) return GetEmoji(args[1])
         if (['set', 'new', 'novo', 'add'].includes(args[0]?.toLowerCase())) return SetNewEmoji()
-        if (['delete', 'del', 'remove', 'tirar', 'excluir'].includes(args[0]?.toLowerCase())) return DeleteEmoji(Name)
+        if (['delete', 'del', 'remove', 'tirar', 'excluir'].includes(args[0]?.toLowerCase())) return DeleteEmoji(args[1])
 
         return message.reply(`${e.Info} | Argumentos: \`get, new, delete, all\``)
 

@@ -1,6 +1,7 @@
 const { e } = require('../../../database/emojis.json')
 const { lotery, ServerDb, Transactions, Reminders } = require('../../../Routes/functions/database')
 const glob = require("glob")
+const DeleteUser = require('../../../Routes/functions/deleteUser')
 
 module.exports = {
     name: 'reboot',
@@ -69,34 +70,40 @@ module.exports = {
 
             let keys = Object.keys(sdb.get('Users') || {}),
                 i = 0,
+                UsersDeleted = 0,
+                control = 0,
                 array = ["Timeouts", "Cache", "Color", "Perfil.Family", "Perfil.Marry", "Perfil.Estrela", "Perfil", "Slot.Medalha", "Slot.Machado", "Slot.Picareta", "Slot"]
 
             if (keys.length === 0)
                 return message.reply(`${e.Info} | Nenhum usuário na database.`)
 
-            const msg = await message.channel.send(`${e.Loading} | Atualizando os usuários no banco de dados...`),
-                Interval = setInterval(() => msg.edit(`${e.Loading} | Atualizando os usuários no banco de dados... ${i}/${keys.length}`).catch(() => { }), 4000)
+            const msg = await message.channel.send(`${e.Loading} | Atualizando os usuários no banco de dados...`)
 
             for (const id of keys) {
 
                 const user = client.users.cache.get(`${id}`)
+                i++
+                control++
+
+                if (control > 50) {
+                    msg.edit(`${e.Loading} | Atualizando os usuários no banco de dados... ${i}/${keys.length}`).catch(() => { })
+                    control = 0
+                }
 
                 if (!user) {
 
-                    i++
-                    sdb.delete(`Users.${id}`)
-                    Transactions.delete(`Transactions.${id}`)
-                    Reminders.delete(`Reminders.${id}`)
-
-                    if (sdb.get(`Titulos.Halloween`).includes(id))
-                        sdb.pull(`Titulos.Halloween`, id)
+                    UsersDeleted++
+                    DeleteUser(id)
+                    continue
 
                 } else {
 
                     for (const item of array) {
 
-                        if (!sdb.get(`Users.${id}.${item}`))
+                        if (!sdb.get(`Users.${id}.${item}`)) {
                             sdb.delete(`Users.${id}.${item}`)
+                            continue
+                        }
 
                         const keys = Object.keys(sdb.get(`Users.${id}.${item}`) || {})
 
@@ -108,22 +115,17 @@ module.exports = {
 
             }
 
-            clearInterval(Interval)
-            return msg.edit(`${e.Check} | Todos os usuários foram atualizados na database.\n${e.Info} | ${i} usuários foram deletados da minha database`).catch(() => { })
+            return msg.edit(`${e.Check} | Todos os usuários foram atualizados na database.\n${e.Info} | ${UsersDeleted} usuários foram deletados da database`).catch(() => { })
 
         }
 
         async function RebootGuild() {
 
-            let keys, i = 0
+            let
+                keys = Object.keys(ServerDb.get('Servers') || {}),
+                i = 0,
+                msg = await message.channel.send(`${e.Loading} | Atualizando os servidores no banco de dados...`)
 
-            try {
-                keys = Object.keys(ServerDb.get('Servers') || {})
-            } catch (err) {
-                return message.reply(`${e.Deny} | Não há servidores na database.`)
-            }
-
-            const msg = await message.channel.send(`${e.Loading} | Atualizando os servidores no banco de dados...`)
             sdb.set('Client.Rebooting', { ON: true, Features: 'Relogando servidores no banco de dados...' })
             lotery.set('Loteria.Close', true)
 

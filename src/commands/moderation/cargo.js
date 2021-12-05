@@ -301,6 +301,7 @@ module.exports = {
         }
 
         function RoleInfo() {
+            
             if (!Role) return message.channel.send(`${e.Info} | @Marque, diga o ID ou o nome do cargo para que eu possa pegar as informações.`)
 
             let permissions = Role.permissions.toArray() || [],
@@ -312,45 +313,45 @@ module.exports = {
                 RoleMention = Role.mentionable ? `${e.Check} Sim` : `${e.Deny} Não`,
                 RoleName = Role.name || 'Indefinido',
                 data = Role.createdAt,
-                RoleData = (data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear() + " ás " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's') || 'Indefinido'
+                RoleData = (data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear() + " ás " + data.getHours() + "h " + data.getMinutes() + 'm e ' + data.getSeconds() + 's') || 'Indefinido',
+                RoleEmbed = new MessageEmbed()
+                    .setColor(RoleHex)
+                    .setTitle(`${e.Info} Informações do Cargo: ${RoleName}`)
+                    .addFields(
+                        {
+                            name: '📄 Nome',
+                            value: `${RoleName}`
+                        },
+                        {
+                            name: '🫂 Contagem',
+                            value: `${RoleSize} membros possuem este cargo`
+                        },
+                        {
+                            name: '🆔 ID do Cargo',
+                            value: `\`${RoleId}\``
+                        },
+                        {
+                            name: '⬅️ Cor #HEX',
+                            value: `\`${RoleHex.toUpperCase()}\``
+                        },
+                        {
+                            name: '👀 Exibir aos membros',
+                            value: `${RoleHoist}`
+                        },
+                        {
+                            name: '🔔 Mencionável',
+                            value: `${RoleMention}`
+                        },
+                        {
+                            name: '📆 Cargo criado em',
+                            value: `\`${RoleData}\``
+                        },
+                        {
+                            name: `${e.ModShield} Permissões`,
+                            value: PermissionsFormated?.join(' | ') || 'Nenhuma'
+                        }
+                    )
 
-            const RoleEmbed = new MessageEmbed()
-                .setColor(RoleHex)
-                .setTitle(`${e.Info} Informações do Cargo: ${RoleName}`)
-                .addFields(
-                    {
-                        name: '📄 Nome',
-                        value: `${RoleName}`
-                    },
-                    {
-                        name: '🫂 Contagem',
-                        value: `${RoleSize} membros possuem este cargo`
-                    },
-                    {
-                        name: '🆔 ID do Cargo',
-                        value: `\`${RoleId}\``
-                    },
-                    {
-                        name: '⬅️ Cor #HEX',
-                        value: `\`${RoleHex.toUpperCase()}\``
-                    },
-                    {
-                        name: '👀 Exibir aos membros',
-                        value: `${RoleHoist}`
-                    },
-                    {
-                        name: '🔔 Mencionável',
-                        value: `${RoleMention}`
-                    },
-                    {
-                        name: '📆 Cargo criado em',
-                        value: `\`${RoleData}\``
-                    },
-                    {
-                        name: `${e.ModShield} Permissões`,
-                        value: PermissionsFormated?.join(' | ') || 'Nenhuma'
-                    }
-                )
             return message.channel.send({ embeds: [RoleEmbed] })
         }
 

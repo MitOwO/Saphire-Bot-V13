@@ -14,20 +14,22 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let channel = message.mentions.channels.first() || message.channel
-        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0])
-        let Role = channel.guild.roles.cache.get(message.mentions.roles.first()?.id)
+        let channel = message.mentions.channels.first() || message.channel,
+            user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]),
+            Role = channel.guild.roles.cache.get(message.mentions.roles.first()?.id)
+
+        if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return LockInfo()
 
         if (args[1]) { return message.reply(`${e.Deny} | Por favor, mencione apenas o canal/user que deseja bloquear.`) }
 
         if (channel && !user && !Role)
-            channel.permissionsFor(channel.guild.roles.everyone).has(Permissions.FLAGS.SEND_MESSAGES) ? LockChannel() : AnswerChannel()
+            return channel.permissionsFor(channel.guild.roles.everyone).has(Permissions.FLAGS.SEND_MESSAGES) ? LockChannel() : AnswerChannel()
 
         if (user && !message.mentions.channels.first() && !Role)
-            channel.permissionsFor(user).has(Permissions.FLAGS.SEND_MESSAGES) ? LockUser() : AnswerUser()
+            return channel.permissionsFor(user).has(Permissions.FLAGS.SEND_MESSAGES) ? LockUser() : AnswerUser()
 
         if (Role && !message.mentions.members.first() && !message.mentions.channels.first())
-            channel.permissionsFor(Role).has(Permissions.FLAGS.SEND_MESSAGES) ? LockRole() : AnswerRole()
+            return channel.permissionsFor(Role).has(Permissions.FLAGS.SEND_MESSAGES) ? LockRole() : AnswerRole()
 
         function LockUser() {
             if (user.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.SaphireQ} | Por qual motivo você bloquearia esse canal de um Administrador?`)
@@ -46,15 +48,41 @@ module.exports = {
         }
 
         function AnswerChannel() {
-            message.reply(`${e.Check} | Este canal já está trancado para everyone.`)
+            return message.reply(`${e.Check} | Este canal já está trancado para everyone.`)
         }
 
         function AnswerUser() {
-            message.reply(`${e.Check} | Este usuário já está bloqueado.`)
+            return message.reply(`${e.Check} | Este usuário já está bloqueado.`)
         }
 
         function AnswerRole() {
-            message.reply(`${e.Check} | Este canal já está trancado para este cargo.`)
+            return message.reply(`${e.Check} | Este canal já está trancado para este cargo.`)
         }
+
+        function LockInfo() {
+            return message.reply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor(client.blue)
+                        .setTitle('🔓 Un/Lock Info')
+                        .setDescription(`Trave e destrave os canais/cargos/usuários.`)
+                        .addFields(
+                            {
+                                name: '🔓 Des/trave canais',
+                                value: `\`${prefix}un/lock [#channel]\` - Des/Trave um canal para ninguém mandar mensagem`
+                            },
+                            {
+                                name: '🔓 Des/trave cargos',
+                                value: `\`${prefix}un/lock <@role>\` - Des/Trave um cargo e todos os membros que possuem o cargo não poderam mandar mensagem no canal em que o comando foi dado`
+                            },
+                            {
+                                name: '🔓 Des/trave membros',
+                                value: `\`${prefix}un/lock <@membro/id/replyMessage>\` - Des/Trave um membros para bloquea-lo de mandar mensagem no canal.`
+                            }
+                        )
+                ]
+            })
+        }
+
     }
 }
