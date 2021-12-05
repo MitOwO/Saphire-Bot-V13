@@ -834,18 +834,15 @@ module.exports = {
 
             const ClansArray = []
 
-            for (const key of keys) {
-                if (Donation > 0) {
+            for (const key of keys)
+                if (Clan.get(`Clans.${key}.Donation`) > 0)
                     ClansArray.push({ key: key, name: Clan.get(`Clans.${key}.Name`) || 'Indefinido', donation: Clan.get(`Clans.${key}.Donation`) || 0 })
-                }
-            }
 
             if (ClansArray.length < 1) return message.reply(`${e.Info} | Não há ranking por enquanto.`)
 
-            const Medals = { 1: '🥇', 2: '🥈', 3: '🥉' }
-
-            const rank = ClansArray.slice(0, 10).sort((a, b) => b.donation - a.donation).map((clan, i) => ` \n> ${Medals[i + 1] || `${i + 1}.`} **${clan.name}** - \`${clan.key}\`\n> ${clan.donation} ${Moeda(message)}\n`).join('\n')
-            let MyClanRank = ClansArray.findIndex(clans => clans.name === AtualClan) + 1 || 'N/A'
+            let Medals = { 1: '🥇', 2: '🥈', 3: '🥉' },
+                rank = ClansArray.slice(0, 10).sort((a, b) => b.donation - a.donation).map((clan, i) => ` \n> ${Medals[i + 1] || `${i + 1}.`} **${clan.name}** - \`${clan.key}\`\n> ${clan.donation} ${Moeda(message)}\n`).join('\n'),
+                MyClanRank = ClansArray.findIndex(clans => clans.name === AtualClan) + 1 || 'N/A'
 
             return message.reply(
                 {

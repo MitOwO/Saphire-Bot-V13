@@ -119,18 +119,20 @@ module.exports = {
 
         async function SendLevel() {
             try {
-                message.reply(`${e.Loading} | Carregando...`).then(async msg => {
-                    sdb.set(`Users.${message.author.id}.Timeouts.LevelImage`, Date.now())
+                const msg = await message.reply(`${e.Loading} | Carregando...`)
+                sdb.set(`Users.${message.author.id}.Timeouts.LevelImage`, Date.now())
 
-                    await simplydjs.rankCard(client, message, {
-                        member: user,
-                        level: level,
-                        currentXP: exp,
-                        neededXP: xpNeeded,
-                        rank: rank,
-                        background: sdb.get(`Users.${user.id}.Slot.Walls.Set`) || LevelWallpapers.bg0.Image || null
-                    }).then(() => { msg.delete().catch(() => { }) })
-                })
+                await simplydjs.rankCard(client, message, {
+                    member: user,
+                    level: level,
+                    currentXP: exp,
+                    neededXP: xpNeeded,
+                    rank: rank,
+                    background: sdb.get(`Users.${user.id}.Slot.Walls.Set`) || LevelWallpapers.bg0.Image || null
+                }).then(() => msg.delete(() => { })).catch(() => { })
+
+                return
+
             } catch (err) { return Error(message, err) }
         }
 
