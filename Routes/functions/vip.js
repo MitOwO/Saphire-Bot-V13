@@ -9,15 +9,16 @@ function Vip(userId) {
 
     if (Permanent) return true
 
-    return (DateNow !== null && TimeRemaing - (Date.now() - DateNow) > 0) ? true : False()
+    return (DateNow !== null && TimeRemaing - (Date.now() - DateNow) > 0)
+        ? true :
+        (() => {
 
-    function False() {
+            if (DateNow || TimeRemaing)
+                sdb.delete(`Users.${userId}.Timeouts.Vip`)
 
-        if (DateNow)
-            sdb.delete(`Users.${userId}.Timeouts.Vip`)
+            return false
 
-        return false
-    }
+        })()
 
 }
 

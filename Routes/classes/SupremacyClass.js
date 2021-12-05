@@ -92,13 +92,15 @@ RodyBrozy.prototype.ms = (time) => {
     return ms(time)
 }
 
+RodyBrozy.prototype.ms = (time) => {
+    return ms(time)
+}
+
 RodyBrozy.prototype.RegisterServer = (guild) => {
     return RegisterServer(guild)
 }
 
-RodyBrozy.prototype.Error = (message, err) => {
-    return Error(message, err)
-}
+RodyBrozy.prototype.Error = (message, err) => Error(message, err)
 
 RodyBrozy.prototype.DatabaseObj = {
     LevelWallpapers: BgLevel.get('LevelWallpapers'),
