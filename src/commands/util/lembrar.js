@@ -1,6 +1,6 @@
 const
     { e } = require('../../../database/emojis.json'),
-    Data = require('../../../Routes/functions/data'),
+    GetDate = require('../../../Routes/functions/data'),
     { Reminders } = require('../../../Routes/functions/database'),
     ms = require('ms'),
     parsems = require('parse-ms'),
@@ -419,10 +419,6 @@ module.exports = {
 
             }
 
-        }
-
-        function GetDate(data) {
-            return new Date(data + Date.now()).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
         }
 
     }
