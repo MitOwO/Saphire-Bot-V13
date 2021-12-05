@@ -16,7 +16,6 @@ module.exports = {
         const minutes = (d.minutes() == 1) ? `${d.minutes()}` : `${d.minutes()}`
         const seconds = (d.seconds() == 1) ? `${d.seconds()}` : `${d.seconds()}`
 
-        let Online = `${days} dias, ${hours} horas e ${minutes} minutos e ${seconds} segundos`
-        message.reply(`⏱️ | Eu estou acordada a ${Online}`)
+        return message.reply(`⏱️ | Eu estou acordada a ${days} dias, ${hours} horas e ${minutes} minutos e ${seconds} segundos`)
     }
 }

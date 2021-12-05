@@ -18,6 +18,8 @@ module.exports = {
             image = await yuricanvas.delete(avatar),
             msg = await message.channel.send(`${e.Loading} | Carregando imagem...`)
 
+        if (user.id === client.user.id) user = message.author
+
         message.channel.send({ files: [new MessageAttachment(image, "deleted.png")] })
         return msg.delete(() => { })
 
