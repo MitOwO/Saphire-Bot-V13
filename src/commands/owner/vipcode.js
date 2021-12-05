@@ -43,7 +43,7 @@ module.exports = {
 
             if (['all', 'tudo', 'todos'].includes(args[1]?.toLowerCase())) {
 
-                if (!sdb.get(Client.VipCodes))
+                if (!sdb.get('Client.VipCodes'))
                     return message.reply(`${e.Info} | Nenhum código ativo.`)
 
                 sdb.delete('Client.VipCode')

@@ -4,7 +4,7 @@ const { lotery, DatabaseObj: { e, config }, Clan, Transactions, Reminders } = re
 
 module.exports = {
     name: 'delete',
-    aliases: ['del', 'deletar'],
+    aliases: ['del'],
     usage: '<item/class/Cache> [@user]',
     ClientPermissions: ['ADD_REACTIONS'],
     emoji: `${e.OwnerCrow}`,
