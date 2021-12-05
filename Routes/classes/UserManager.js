@@ -22,7 +22,7 @@ class UserManager {
         this.permissions = () => message.member.permissions.toArray() || []
         this.request = sdb.get(`Request.${this.id}`)
         this.baka = sdb.get(`Users.${this.id}.Baka`)
-        this.blacklist = db.get(`Blacklist_${this.id}`)
+        this.blacklist = sdb.get(`Client.Blacklist.Users`)?.includes(this.id)
         this.balance = {
             bal: sdb.get(`Users.${this.id}.Balance`) || 0,
             bank: sdb.get(`Users.${this.id}.Bank`) || 0,

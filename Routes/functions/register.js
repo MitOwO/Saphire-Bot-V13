@@ -11,7 +11,7 @@ const client = require('../../index')
 
 async function RegisterUser(message) {
 
-    if (message.author.bot || db.get(`Blacklist_${message.author.id}`)) return
+    if (message.author.bot || sdb.get('Client.Blacklist.Users')?.some(Obj => Obj?.id === message.author.id)) return
 
     message.channel.send(`${e.Loading} | Saphire's Database...`).then(async msg => {
 
@@ -275,7 +275,7 @@ async function RegisterServer(guild) {
 
 async function UpdateUserName(message) {
 
-    if (db.get(`Blacklist_${message.author.id}`))
+    if (sdb.get('Client.Blacklist.Users')?.some(Obj => Obj?.id === message.author.id))
         return
 
     if (sdb.get(`Users.${message.author.id}.Name`) !== message.author.tag) {

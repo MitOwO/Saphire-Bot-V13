@@ -33,8 +33,6 @@ class RodyBrozy {
     ms = require('ms')
     parsems = require('parse-ms')
     RequestAutoDelete = require('../functions/Request')
-    Blacklisted = require('../functions/blacklist')
-    ServerBlocked = require('../functions/blacklistserver')
 
     SaphireClientConfiguration = {
         intents: 1815,
