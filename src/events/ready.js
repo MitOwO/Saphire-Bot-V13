@@ -1,6 +1,5 @@
 const
-    { db, DatabaseObj, sdb, CommandsLog, lotery } = require('../../Routes/functions/database'),
-    { e, config } = DatabaseObj,
+    { db, DatabaseObj: { e, config }, sdb, CommandsLog, lotery } = require('../../Routes/functions/database'),
     client = require('../../index'),
     Data = require('../../Routes/functions/data'),
     MuteSystem = require('../../Routes/functions/mutesystem'),
@@ -13,7 +12,7 @@ client.on("ready", async () => {
     sdb.delete('Request')
     sdb.delete('BetRequest')
     db.delete('Aposta')
-    lotery.set('Loteria.Close', false)
+    lotery.delete('Loteria.Close')
     lotery.delete('Buying')
 
     CommandsLog.clear()

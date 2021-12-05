@@ -1,13 +1,13 @@
 const client = require('../../index'),
-    { Giveaway } = require('../../Routes/functions/database')
+    { Giveaway } = require('../../Routes/functions/database'),
+    Notify = require('../../Routes/functions/notify')
 
 client.on('messageDelete', async message => {
 
-    if (Giveaway.get(`Giveaways.${message.guild.id}.${message.id}`))
-        return Giveaway.delete(`Giveaways.${message.guild.id}.${message.id}`)
+    if (!Giveaway.get(`Giveaways.${message.guild.id}.${message.id}`))
+        return
 
-    // ToDo: Adicionar função Notify pra avisar que o sorteio foi deletado
-
-    return
+    Giveaway.delete(`Giveaways.${message.guild.id}.${message.id}`)
+    return Notify(message.guild.id, 'Sorteio cancelado', `A mensagem do sorteio \`${message.id}\` foi deleta. Todas as informações deste sorteio foram deletadas.`)
 
 })

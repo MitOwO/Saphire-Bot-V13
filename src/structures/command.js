@@ -13,6 +13,6 @@ module.exports = (client) => {
             } if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(alias => client.aliases.set(alias, pull.name))
         }
     })
-    console.log('Command Handler | ON')
+    console.log('Command Handler | OK!')
     
 }

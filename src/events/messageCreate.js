@@ -13,11 +13,8 @@ const
     xp = Super.xp,
     AfkSystem = require('../../Routes/functions/AfkSystem'),
     RequestAutoDelete = require('../../Routes/functions/Request'),
-    Blacklisted = require('../../Routes/functions/blacklist'),
-    ServerBlocked = require('../../Routes/functions/blacklistserver'),
     Error = require('../../Routes/functions/errors'),
-    parsems = require('parse-ms'),
-    LogCmd = require('../../database/logcommands.json')
+    parsems = require('parse-ms')
 
 client.on('messageCreate', async message => {
 
@@ -28,11 +25,24 @@ client.on('messageCreate', async message => {
         prefix = ServerDb.get(`Servers.${message.guild.id}.Prefix`) || config.prefix,
         request = false, // sdb.get(`Request.${message.author.id}`),
         baka = sdb.get(`Users.${message.author.id}.Baka`),
-        blacklist = db.get(`Blacklist_${message.author.id}`),
+        blacklist = sdb.get('Client.Blacklist.Users')?.some(blocked => blocked?.id === message.author.id),
         blacklistServers = db.get(`BlacklistServers_${message.guild.id}`),
         Tsundere = ServerDb.get(`Servers.${message.guild.id}.Tsundere`),
-        AuthorId = message.author.id,
-        BasePerms = ['READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS', 'EMBED_LINKS', 'ADD_REACTIONS']
+        AuthorId = message.author.id
+
+    if (AuthorId !== config.ownerId && !sdb.get(`Client.Moderadores.${AuthorId}`)) {
+
+        if (blacklist) {
+            const msg = await message.channel.send(`${e.Deny} | ${message.author}, você está na blacklist e não tem acesso a nenhum dos meus comandos.`)
+            return setTimeout(() => { msg.delete().catch(() => { }) }, 4000)
+        }
+
+        if (blacklistServers) {
+            const msg = await message.channel.send(`${e.Deny} | Este servidor está na blacklist.`)
+            return setTimeout(() => { msg.delete().catch(() => { }) }, 4000)
+        }
+
+    }
 
     if (!sdb.get(`Users.${AuthorId}.Name`)) RegisterUser(message)
     if (!ServerDb.has(`Servers.${message.guild.id}`)) RegisterServer(message.guild)
@@ -44,24 +54,12 @@ client.on('messageCreate', async message => {
         UpdateUserName(message)
         // React(message) // React System
         xp(message) // XP System
-        RequestAutoDelete(message) // Auto delete requests
         AfkSystem(message)
     }
 
-    const Perms = {
-        READ_MESSAGE_HISTORY: 'Ler histórico de mensagens',
-        USE_EXTERNAL_EMOJIS: 'Usar emojis externos',
-        EMBED_LINKS: 'Enviar links',
-        ADD_REACTIONS: 'Adicionar reações'
-    }
-
-    for (const perm of BasePerms)
+    for (const perm of ['READ_MESSAGE_HISTORY', 'USE_EXTERNAL_EMOJIS', 'EMBED_LINKS', 'ADD_REACTIONS'])
         if (!message.guild.me.permissions.has(Permissions.FLAGS[perm]))
-            return message.author.bot ? null : message.channel.send(`| \`${Perms[perm] || 'Mas o que é isso?'}\` | Eu não tenho permissão suficiente para executar este comando.\nPode conferir se eu tenho as 4 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo), Adicionar reações\`**`).catch(() => { })
-
-    // if (!message.guild.me.permissions.has(Permissions.FLAGS.READ_MESSAGE_HISTORY) || !message.guild.me.permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS) || !message.guild.me.permissions.has(Permissions.FLAGS.EMBED_LINKS) || !message.guild.me.permissions.has(Permissions.FLAGS.ADD_REACTIONS))
-    //     return message.author.bot ? null : message.channel.send(`Eu não tenho permissão suficiente para executar este comando. Pode conferir se eu tenho as 3 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo.)\`**`).catch(() => { })
-    // return message.channel.send(`Hey, ${message.author}! Eu preciso das permissões "\`Ver histórico de mensagens\`, \`Usar emojis externos\` \`Adicionar Reações\` e \`Enviar links\`" para que eu possa usar meu sistema de interação, respostas, emojis e informações.`)
+            return message.author.bot ? null : message.channel.send(`| \`${config.Perms[perm] || 'Mas o que é isso?'}\` | Eu não tenho permissão suficiente para executar este comando.\nPode conferir se eu tenho as 4 permissões básicas? **\`Ler histórico de mensagens, Usar emojis externos, Enviar links (Necessário para enviar gifs e coisas do tipo), Adicionar reações\`**`).catch(() => { })
 
     if (message.content.startsWith(`<@`) && message.content.endsWith('>') && message.mentions.has(client.user.id))
         message.channel.send(`${e.SaphireHi} | \`${prefix}help\``)
@@ -84,27 +82,23 @@ client.on('messageCreate', async message => {
 
     if (baka) return message.reply(`${e.SaphireRaivaFogo} | Saaai, você me chamou de BAAAKA`)
 
-    if (limited) return message.react('⏱️').catch(() => { message.reply('⏱️ | Calminha!') })
+    if (limited) return message.react('⏱️').catch(() => { return message.reply('⏱️ | Calminha!') })
 
     try {
 
         if (!message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) && ServerDb.get(`Servers.${message.guild.id}.Blockchannels.${message.channel.id}`))
             return message.reply(`${e.Deny} | Meus comandos foram bloqueados neste canal.`).then(msg => setTimeout(() => { msg.delete().catch(() => { }) }, 4500)).catch(() => { })
 
-        if (AuthorId !== config.ownerId && !sdb.get(`Client.Moderadores.${AuthorId}`)) {
-            if (blacklist) return Blacklisted(message)
-            if (blacklistServers) return ServerBlocked(message)
-        }
-
         const reg = /^[A-Za-z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/i
         if (!reg.test(cmd))
             return message.reply(`${e.Deny} | Este comando contém caracteres bloqueados pelo meu sistema.`)
 
         let command = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd))
+
         if (command) {
 
             const ComandosUsados = sdb.add('Client.ComandosUsados', 1)
-            if (LogCmd.length > 15) CommandsLog.clear()
+
             CommandsLog.set(`${ComandosUsados}`, {
                 Author: `${message.author.tag} - ${message.author.id}` || 'Indefinido',
                 Server: `${message.guild.name} - ${message.guild.id}` || 'Indefinido',
@@ -116,7 +110,7 @@ client.on('messageCreate', async message => {
                 timeImage = parsems(10000 - (Date.now() - sdb.get(`Users.${AuthorId}.Timeouts.ImagesCooldown`))),
                 ClientPermisitonsRequired = command.ClientPermissions || [],
                 UserPermitionsRequired = command.UserPermissions || [],
-                ClientPermissionsMapped = ClientPermisitonsRequired.map(perm => config.Perms[perm]).join(', ')
+                ClientPermissionsMapped = ClientPermisitonsRequired.map(perm => config.Perms[perm]).join(', '),
                 UserPermissionsMapped = UserPermitionsRequired.map(perm => config.Perms[perm]).join(', ')
 
             if (!message.member.permissions.has(UserPermitionsRequired)) return message.reply(`${e.Hmmm} | Você não tem permissão para usar este comando.\n${e.Info} | Permissão*(ões)* necessária*(s)*: **\`${UserPermissionsMapped}\`**`)
@@ -130,27 +124,20 @@ client.on('messageCreate', async message => {
                 sdb.set(`Users.${AuthorId}.Timeouts.ImagesCooldown`, Date.now())
             }
 
+            return Tsundere
+                ? (() => {
+                    return Math.floor(Math.random() * 12) === 1
+                        ? message.reply(f.Tsundere[Math.floor(Math.random() * f.Tsundere.length)])
+                        : command.run(client, message, args, prefix, db, MessageEmbed, request, sdb).catch(err => Error(message, err))
+                })()
+                : (() => command.run(client, message, args, prefix, db, MessageEmbed, request, sdb).catch(err => Error(message, err)))()
+
         } else {
-            let frases = [`Eu não tenho esse comando não... Que tal usar o \`${prefix}help\` ?`, `Olha... Eu não tenho esse comando não, sabe? Tenta usar o \`${prefix}help\`, lá tem todos os meus comandos.`, `Viiiish, comando desconhecido, foi mal.`, `Conheço esse comando aí não... Verifica a ortografia e tenta novamente`, `Huuum, quer usar o \`${prefix}help\` não?`]
-            let resposta = frases[Math.floor(Math.random() * frases.length)]
+            let frases = [`Eu não tenho esse comando não... Que tal usar o \`${prefix}help\` ?`, `Olha... Eu não tenho esse comando não, sabe? Tenta usar o \`${prefix}help\`, lá tem todos os meus comandos.`, `Viiiish, comando desconhecido, foi mal.`, `Conheço esse comando aí não... Verifica a ortografia e tenta novamente`, `Huuum, quer usar o \`${prefix}help\` não?`],
+                resposta = frases[Math.floor(Math.random() * frases.length)]
             return message.reply(`${e.Deny} | ${resposta}`)
         }
 
-        try {
-
-            if (Tsundere) {
-
-                Math.floor(Math.random() * 12) === 1
-                    ? message.reply(f.Tsundere[Math.floor(Math.random() * f.Tsundere.length)])
-                    : command.run(client, message, args, prefix, db, MessageEmbed, request, sdb).catch(err => { Error(message, err) })
-
-            } else {
-                command.run(client, message, args, prefix, db, MessageEmbed, request, sdb).catch(err => { Error(message, err) })
-            }
-
-        } catch (err) {
-            Error(message, err)
-        }
 
     } catch (err) {
         Error(message, err)
