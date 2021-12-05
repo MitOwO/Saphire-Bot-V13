@@ -25,12 +25,11 @@ module.exports = {
         async function RebootLock(x) {
 
             const msg = await message.reply(`${e.QuestionMark} | Iniciar o reboot?`)
-            for (const emoji of ['✅', '❌']) {
+            for (const emoji of ['✅', '❌'])
                 msg.react(emoji).catch(() => { })
-            }
 
             const collector = msg.createReactionCollector({
-                filter: (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id },
+                filter: (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id,
                 time: 30000,
                 errors: ['time']
             });
@@ -75,7 +74,8 @@ module.exports = {
             if (keys.length === 0)
                 return message.reply(`${e.Info} | Nenhum usuário na database.`)
 
-            const msg = await message.channel.send(`${e.Loading} | Atualizando os usuários no banco de dados...`)
+            const msg = await message.channel.send(`${e.Loading} | Atualizando os usuários no banco de dados...`),
+                Interval = setInterval(() => msg.edit(`${e.Loading} | Atualizando os usuários no banco de dados... ${i}/${keys.length}`).catch(() => { }), 4000)
 
             for (const id of keys) {
 
@@ -108,6 +108,7 @@ module.exports = {
 
             }
 
+            clearInterval(Interval)
             return msg.edit(`${e.Check} | Todos os usuários foram atualizados na database.\n${e.Info} | ${i} usuários foram deletados da minha database`).catch(() => { })
 
         }

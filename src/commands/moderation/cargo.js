@@ -21,10 +21,10 @@ module.exports = {
         if (['info', 'help', 'ajuda', 'informações'].includes(args[0]?.toLowerCase()))
             return Role ? RoleInfo() : RoleInfoEmbed()
 
-        if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
-
         if (!message.guild.me.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
             return message.reply(`${e.Info} | Eu preciso da permissão \`**ADMINISTRADOR**\` ativada para gerenciar e buscar informações dos cargos mencionados.`)
+
+        if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
         let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[2]) || message.guild.members.cache.get(args[1]) || message.member
 

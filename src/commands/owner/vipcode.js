@@ -31,8 +31,8 @@ module.exports = {
             if (!['s', 'm', 'h', 'd', 'y'].includes(args[1].slice(-1)))
                 return message.reply(`${e.Deny} | Tempo inválido!`)
 
-            let Time = ms(args[1])
-            let parse = parsems(Time)
+            let Time = ms(args[1]),
+                parse = parsems(Time)
             sdb.set(`Client.VipCodes.${Code}`, Time)
 
             return message.reply(`⏱${e.Check} | Código VIP criado com sucesso!\nCódigo de Resgate: \`${Code}\`\nTempo do Vip: \`${parse.days} Dias, ${parse.hours} Horas, ${parse.minutes} Minutos, ${parse.seconds} Segundos e ${parse.milliseconds} Milisegundos.\`\nComando de Resgate: \`${prefix}resgatar ${Code}\``)
@@ -46,7 +46,7 @@ module.exports = {
                 if (!sdb.get('Client.VipCodes'))
                     return message.reply(`${e.Info} | Nenhum código ativo.`)
 
-                sdb.delete('Client.VipCode')
+                sdb.delete('Client.VipCodes')
                 return message.reply(`${e.Check} | Feito.`)
 
             }
