@@ -1,12 +1,10 @@
-
-const { DatabaseObj } = require('../../../Routes/functions/database')
-const { e } = DatabaseObj
-const Moeda = require('../../../Routes/functions/moeda')
-const Vip = require('../../../Routes/functions/vip')
-const parsems = require('parse-ms')
-const ms = require('ms')
-const Error = require('../../../Routes/functions/errors')
-const { PushTransaction } = require('../../../Routes/functions/transctionspush')
+const { DatabaseObj: { e } } = require('../../../Routes/functions/database'),
+    Moeda = require('../../../Routes/functions/moeda'),
+    Vip = require('../../../Routes/functions/vip'),
+    parsems = require('parse-ms'),
+    Error = require('../../../Routes/functions/errors'),
+    { PushTransaction } = require('../../../Routes/functions/transctionspush'),
+    Data = require('../../../Routes/functions/data')
 
 module.exports = {
     name: 'resgatar',
@@ -28,30 +26,29 @@ module.exports = {
             message.author.id,
             `${e.BagMoney} Resgatou ${cache} Moedas`
         )
+
         sdb.delete(`Users.${message.author.id}.Cache.Resgate`)
         return message.channel.send(`${e.PandaProfit} | ${message.author} resgatou ${cache.toFixed(0)} ${Moeda(message)}`)
 
         function GiftCode() {
 
-            if (Vip(message.author.id))
-                return message.reply(`${e.Deny} | Vips não podem resgatar códigos de ativação Vip.`)
+            let Code = args[0],
+                TimeRemaing = sdb.get(`Users.${message.author.id}.Timeouts.Vip.TimeRemaing`) || 0,
+                DateNow = sdb.get(`Users.${message.author.id}.Timeouts.Vip.DateNow`) || Date.now(),
+                ClientCodeVip = sdb.get(`Client.VipCodes.${Code}`) || 0,
+                Time = Data(ClientCodeVip += TimeRemaing),
+                Permanent = sdb.get(`Users.${message.author.id}.Timeouts.Vip.Permanent`)
 
-            let Code = args[0]
+            if (Permanent)
+                return message.reply(`${e.Info} | O seu vip é permanente.`)
 
-            if (!sdb.get(`Client.VipCodes.${Code}`))
+            if (!ClientCodeVip)
                 return message.reply(`${e.Deny} | Código inválido.`)
 
-            let time = parsems(sdb.get(`Client.VipCodes.${Code}`))
-            sdb.set(`Users.${message.author.id}.Timeouts.Vip`, { DateNow: Date.now(), TimeRemaing: sdb.get(`Client.VipCodes.${Code}`) })
+            sdb.set(`Users.${message.author.id}.Timeouts.Vip`, { DateNow: DateNow, TimeRemaing: TimeRemaing += sdb.get(`Client.VipCodes.${Code}`) })
 
-            message.channel.send(`${e.Check} | ${message.author} ativou o vip por **${time.days} dias, ${time.hours} horas, ${time.minutes} minutos e ${time.seconds} segundos.**`)
-            message.author.send(`${e.VipStar} | Você agora é **VIP** por **${time.days} dias, ${time.hours} horas, ${time.minutes} minutos e ${time.seconds} segundos**! Quer ver as vantagens dos membros vips? Use \`${prefix}vip vantagens\` e veja tudo o que você liberou!`).catch(err => {
-                sdb.delete(`Client.VipCodes.${Code}`)
-                if (err.code === 50007)
-                    return
+            message.channel.send(`${e.Check} | ${message.author}, o código foi resgatado com sucesso! Seu vip acaba em \`${Time}\``)
 
-                Error(message, err)
-            })
             return sdb.delete(`Client.VipCodes.${Code}`)
         }
 
