@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || await client.users.cache.get(args[1]) || message.mentions.repliedUser || message.author,
+        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || await client.users.cache.get(args[1]) || message.mentions.repliedUser || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase()) || message.author,
             user = await client.users.cache.get(u.id),
             avatar = user?.displayAvatarURL({ dynamic: true }),
             color = Colors(user),

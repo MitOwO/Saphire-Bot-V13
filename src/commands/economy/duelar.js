@@ -18,7 +18,7 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || message.guild.members.cache.get(args[1])
+        let user = message.mentions.members.first() || message.mentions.repliedUser || message.guild.members.cache.get(args[0]) || message.guild.members.cache.get(args[1]) || message.guild.members.cache.find(user => user.displayName?.toLowerCase() == args[0]?.toLowerCase() || user.user.username?.toLowerCase() == args[0]?.toLowerCase())
 
         if (sdb.get(`Users.${message.author.id}.Duelo`))
             return message.reply(`${e.Deny} | Você está com um duelo aberto. Espere o duelo atual fechar.`)
@@ -146,7 +146,7 @@ module.exports = {
                 )
             }
             sdb.delete(`Users.${message.author.id}.Cache.Duelo`)
-            msg.edit(`${e.OwnerCrow} | ${Winner} ganhou o duelo contra ${Loser}\n${e.PandaProfit} | ${Winner.user.username} teve o retorno de **${Prize} ${Moeda(message)}** com um lucro de **${Prize / 2} ${Moeda(message)}**\n*${Loser.user.username} perdeu o dinheiro no duelo.*`).catch(() => { })
+            return msg.edit(`${e.OwnerCrow} | ${Winner} ganhou o duelo contra ${Loser}\n${e.PandaProfit} | ${Winner.user.username} teve o retorno de **${Prize} ${Moeda(message)}** com um lucro de **${Prize / 2} ${Moeda(message)}**\n*${Loser.user.username} perdeu o dinheiro no duelo.*`).catch(() => { })
         }
 
         function Withdraw(msg) {

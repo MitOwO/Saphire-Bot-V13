@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let target = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member
+        let target = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(user => user.displayName?.toLowerCase() == args[0]?.toLowerCase() || user.user.username?.toLowerCase() == args[0]?.toLowerCase()) || message.member
         let TargetMoney = sdb.get(`Users.${target.id}.Balance`) || 0
         let Amount = Math.floor(Math.random() * (TargetMoney / 4)) + 1
 

@@ -13,8 +13,9 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let money = parseInt(sdb.get(`Users.${message.author.id}.Balance`))
-        let ChannelActived = db.get(`BingoOn${message.author.id}`)
+        let money = parseInt(sdb.get(`Users.${message.author.id}.Balance`)),
+            ChannelActived = db.get(`BingoOn${message.author.id}`)
+
         if (ChannelActived) return message.reply(`${e.Nagatoro} | Opa opa coisinha fofa! Já tem um bingo rolando nesse chat.\n${ChannelActived}`)
 
         const BingoEmbed = new MessageEmbed()

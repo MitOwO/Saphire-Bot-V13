@@ -14,7 +14,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let user = message.mentions.users.first() || message.mentions.repliedUser || await client.users.cache.get(args[0]) || message.author,
+        let user = message.mentions.users.first() || message.mentions.repliedUser || await client.users.cache.get(args[0]) || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase()) || message.author,
             transactions = Transactions.get(`Transactions.${user.id}`) || []
 
         if (user.bot || transactions.length < 1)

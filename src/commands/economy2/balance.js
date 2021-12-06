@@ -16,11 +16,11 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return BalInfo()
-        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || await message.mentions.repliedUser || message.author
+        let u = message.mentions.users.first() || await client.users.cache.get(args[0]) || await message.mentions.repliedUser || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase()) || message.guild.members.cache.find(user => user.displayName?.toLowerCase() == args[0]?.toLowerCase() || user.user.username?.toLowerCase() == args[0]?.toLowerCase()) || message.author
         if (!u.id) return message.reply(`${e.Deny} | Eu não achei ninguém ${e.SaphireCry}`)
-        let user = await client.users.cache.get(u.id)
 
-        let TimeBolsa = ms(172800000 - (Date.now() - (sdb.get(`Users.${user.id}.Timeouts.Bolsa`)))),
+        let user = await client.users.cache.get(u.id),
+            TimeBolsa = ms(172800000 - (Date.now() - (sdb.get(`Users.${user.id}.Timeouts.Bolsa`)))),
             Bolsa = `${parseInt(sdb.get(`Users.${user.id}.Cache.BolsaLucro`)) || 0} ${Moeda(message)}`,
             bal = parseInt(sdb.get(`Users.${user.id}.Balance`)) || 0,
             bank = parseInt(sdb.get(`Users.${user.id}.Bank`)) || 0,
