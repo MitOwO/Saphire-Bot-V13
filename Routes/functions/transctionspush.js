@@ -1,16 +1,19 @@
-const data = require('./data')
-const { Transactions } = require('./database')
+let Data = require('./data'),
+    { Transactions } = require('./database'),
+    UserData,
+    AuthorData,
+    DataToPush,
+    data = Data(0, true)
 
 function TransactionsPush(UserOrMemberId, MessageAuthorId, FraseUser, FraseAuthor) {
 
-    let UserData, AuthorData
     Transactions.get(`Transactions.${UserOrMemberId}`)?.length > 0
-        ? UserData = [{ time: data(), data: `${FraseUser}` }, ...Transactions.get(`Transactions.${UserOrMemberId}`)]
-        : UserData = [{ time: data(), data: `${FraseUser}` }]
+        ? UserData = [{ time: data, data: `${FraseUser}` }, ...Transactions.get(`Transactions.${UserOrMemberId}`)]
+        : UserData = [{ time: data, data: `${FraseUser}` }]
 
     Transactions.get(`Transactions.${MessageAuthorId}`)?.length > 0
-        ? AuthorData = [{ time: data(), data: `${FraseAuthor}` }, ...Transactions.get(`Transactions.${MessageAuthorId}`)]
-        : AuthorData = [{ time: data(), data: `${FraseAuthor}` }]
+        ? AuthorData = [{ time: data, data: `${FraseAuthor}` }, ...Transactions.get(`Transactions.${MessageAuthorId}`)]
+        : AuthorData = [{ time: data, data: `${FraseAuthor}` }]
 
     Transactions.set(`Transactions.${UserOrMemberId}`, UserData)
     Transactions.set(`Transactions.${MessageAuthorId}`, AuthorData)
@@ -19,12 +22,11 @@ function TransactionsPush(UserOrMemberId, MessageAuthorId, FraseUser, FraseAutho
 
 function PushTransaction(UserId, Frase) {
 
-    let Data
     Transactions.get(`Transactions.${UserId}`)?.length > 0
-        ? Data = [{ time: data(), data: `${Frase}` }, ...Transactions.get(`Transactions.${UserId}`)]
-        : Data = [{ time: data(), data: `${Frase}` }]
+        ? DataToPush = [{ time: data, data: `${Frase}` }, ...Transactions.get(`Transactions.${UserId}`)]
+        : DataToPush = [{ time: data, data: `${Frase}` }]
 
-    Transactions.set(`Transactions.${UserId}`, Data)
+    Transactions.set(`Transactions.${UserId}`, DataToPush)
 }
 
 module.exports = { TransactionsPush, PushTransaction }

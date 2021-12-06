@@ -1,6 +1,9 @@
-function Data(DateInMs = 0) {
+function Data(DateInMs = 0, Shorted = false) {
 
-    const date = new Date(DateInMs += Date.now())
+    if (Shorted)
+        return new Date(DateInMs + Date.now()).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+
+    const date = new Date(DateInMs + Date.now())
     date.setHours(date.getHours() - 3)
 
     let Mes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"][date.getDate()],
