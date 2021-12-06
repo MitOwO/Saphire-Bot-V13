@@ -1,6 +1,7 @@
 const Colors = require('../../../Routes/functions/colors'),
     ms = require('parse-ms'),
-    { DatabaseObj: { e } } = require('../../../Routes/functions/database')
+    { DatabaseObj: { e } } = require('../../../Routes/functions/database'),
+    Timeout = require('../../../Routes/functions/Timeout')
 
 // #246FE0 - Azul Saphire
 module.exports = {
@@ -46,7 +47,7 @@ module.exports = {
         Dpn = `${e.Check} \`Disponível\``
         // Timeout Preso
         let TempoPreso = ms(1500000 - (Date.now() - Preso))
-        if (Preso !== null && 1500000 - (Date.now() - Preso) > 0) {
+        if (Timeout(1500000, Preso)) {
             TPreso = `${e.Loading} \`${TempoPreso.minutes}m e ${TempoPreso.seconds}s\``
         } else { sdb.delete(`Users.${user.id}.Timeouts.Preso`); TPreso = `${e.Check} Livre` }
 

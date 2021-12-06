@@ -56,8 +56,10 @@ module.exports = {
                     Minutes = Args[2],
                     Seconds = Args[3]
 
-                if (!Days.slice(-1).includes('d') || !Hour.slice(-1).includes('h') || !Minutes.slice(-1).includes('m') || !Seconds.slice(-1).includes('s'))
-                    return message.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m 3s\``)
+                if (!Days.slice(-1).includes('d') || !Hour.slice(-1).includes('h') || !Minutes.slice(-1).includes('m') || !Seconds.slice(-1).includes('s')) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m 3s\``)
+                }
 
                 let Dias = Days.replace(/d/g, ''),
                     Hora = Hour.replace(/h/g, ''),
@@ -68,12 +70,17 @@ module.exports = {
                 if (isNaN(Dias) || isNaN(Hora) || isNaN(Minutos) || isNaN(Segundos))
                     return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m 3s\``)
 
-                if (Dias < 1 ||Hora < 1 || Minutos < 1, Segundos < 1)
-                    return message.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
+                if (Dias < 1 || Hora < 1 || Minutos < 1, Segundos < 1) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
+                }
 
                 try {
                     DefinedTime = ms(Days) + ms(Hour) + ms(Minutes) + ms(Seconds)
-                } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
+                } catch (err) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`)
+                }
 
                 CollectControl = true
 
@@ -86,9 +93,8 @@ module.exports = {
 
                 let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
-                    return Error(message, err)
-                })
+                msg.delete().catch(() => { })
+                return m.reply(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch(() => { })
 
             }
 
@@ -98,23 +104,32 @@ module.exports = {
                     Minutes = Args[1],
                     Seconds = Args[2]
 
-                if (!Hour.slice(-1).includes('h') || !Minutes.slice(-1).includes('m') || !Seconds.slice(-1).includes('s'))
-                    return message.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m 3s\``)
+                if (!Hour.slice(-1).includes('h') || !Minutes.slice(-1).includes('m') || !Seconds.slice(-1).includes('s')) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m 3s\``)
+                }
 
                 let Hora = Hour.replace(/h/g, ''),
                     Minutos = Minutes.replace(/m/g, ''),
                     Segundos = Seconds.replace(/s/g, ''),
                     DefinedTime
 
-                if (isNaN(Hora) || isNaN(Minutos) || isNaN(Segundos))
-                    return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m 3s\``)
+                if (isNaN(Hora) || isNaN(Minutos) || isNaN(Segundos)) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m 3s\``)
+                }
 
-                if (Hora < 1 || Minutos < 1, Segundos < 1)
-                    return message.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
+                if (Hora < 1 || Minutos < 1, Segundos < 1) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
+                }
 
                 try {
                     DefinedTime = ms(Hour) + ms(Minutes) + ms(Seconds)
-                } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
+                } catch (err) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`)
+                }
 
                 CollectControl = true
 
@@ -127,9 +142,8 @@ module.exports = {
 
                 let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
-                    return Error(message, err)
-                })
+                msg.delete().catch(() => { })
+                return msg.reply(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch(() => { })
 
             }
 
@@ -142,8 +156,10 @@ module.exports = {
                     Control1 = false,
                     Control2 = false
 
-                if (LastLetterFirstTime === LastLetterSecondTime)
-                    return message.reply(`${e.Deny} | Os tempos não devem ser do mesmo tipo.`)
+                if (LastLetterFirstTime === LastLetterSecondTime) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Os tempos não devem ser do mesmo tipo.`)
+                }
 
                 for (const i of ['d', 'h', 'm']) {
 
@@ -165,22 +181,31 @@ module.exports = {
 
                 }
 
-                if (Control1 || Control2)
-                    return message.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m\` ou \`10m 40s\``)
+                if (Control1 || Control2) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h 2m\` ou \`10m 40s\``)
+                }
 
                 let First = FirstTime.replace(/d|h|m/g, ''),
                     Second = SecondTime.replace(/m|s/g, ''),
                     DefinedTime
 
-                if (isNaN(First) || isNaN(Second))
-                    return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m\``)
+                if (isNaN(First) || isNaN(Second)) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m\``)
+                }
 
-                if (First < 1 || Second < 1)
-                    return message.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
+                if (First < 1 || Second < 1) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
+                }
 
                 try {
                     DefinedTime = ms(FirstTime) + ms(SecondTime)
-                } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
+                } catch (err) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`)
+                }
 
                 CollectControl = true
 
@@ -193,9 +218,8 @@ module.exports = {
 
                 let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
-                    return Error(message, err)
-                })
+                msg.delete().catch(() => { })
+                return m.reply(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch(() => { })
 
             }
 
@@ -211,25 +235,35 @@ module.exports = {
                     if (LastCaracter === letra) {
                         Invalid = false
                         break
-                    } else { Invalid = true }
+                    }
+                    Invalid = true
 
                 }
 
-                if (Invalid)
-                    return message.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h\``)
+                if (Invalid) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Tempo inválido! Verifique se o tempo dito segue esse formato: \`1h\``)
+                }
 
                 let Timer = Time.replace(/h|m|s|d/g, ''),
                     DefinedTime
 
-                if (Timer < 1)
-                    return message.reply(`${e.Deny} | O tempo não pode ser igual ou menor 0`)
+                if (Timer < 1) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | O tempo não pode ser igual ou menor 0`)
+                }
 
-                if (isNaN(Timer))
-                    return message.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h\``)
+                if (isNaN(Timer)) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h\``)
+                }
 
                 try {
                     DefinedTime = ms(Time)
-                } catch (err) { return message.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`) }
+                } catch (err) {
+                    msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+                    return m.reply(`${e.Deny} | Definição inválida. Tenta escrever igual nos exemplos do comando, ok?`)
+                }
 
                 CollectControl = true
 
@@ -242,7 +276,8 @@ module.exports = {
 
                 let Data = GetDate(DefinedTime)
 
-                return msg.edit(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
+                msg.delete().catch(() => { })
+                return m.reply(`${e.ReminderBook} | Tudo bem! Eu vou te lembrar de "**${ReminderMessage}**" em **${Data}**`).catch((err) => {
                     return Error(message, err)
                 })
 
@@ -251,7 +286,8 @@ module.exports = {
         })
 
         collector.on('end', () => {
-            return CollectControl ? null : msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+            if (!CollectControl) return msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
+            return
         })
 
         function ReminderInfo() {

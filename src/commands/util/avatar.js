@@ -15,7 +15,7 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-        let user = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.mentions.repliedUser || message.author,
+        let user = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.mentions.repliedUser || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase())  || message.author,
             linkavatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 }),
             avatar = await message.guild.members.cache.get(user.id) ? await message.guild.members.cache.get(user.id)?.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }) : client.users.cache.get(user.id)?.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }),
             Emojis = ['❌', '📨', '💙'],
