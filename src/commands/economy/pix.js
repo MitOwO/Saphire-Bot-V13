@@ -17,7 +17,7 @@ module.exports = {
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
         if (['info', 'help', 'ajuda'].includes(args[0]?.toLowerCase())) return InfoPix()
 
-        let user = message.mentions.users.first() || await client.users.cache.get(args[0]) || await client.users.cache.get(args[1]) || message.mentions.repliedUser
+        let user = message.mentions.users.first() || client.users.cache.get(args[0]) || client.users.cache.get(args[1]) || client.users.cache.find(user => user.username == args[0] || user.tag == args[0]) || message.mentions.repliedUser
         if (!isNaN(args[0]) && !user) return message.reply(`${e.Deny} | Eu não encontrei ninguém com esse ID...`)
         if (!user) return message.reply(`${e.Pix} | Transfira dinheiro de banco para banco, evitando roubos e assaltos. É assim olha: \`${prefix}pix <@user/id> <quantia>\``)
         if (user.id === client.user.id) return message.reply(`${e.HiNagatoro} | Preciso não coisa fofa, eu já sou rica.`)
@@ -57,7 +57,7 @@ module.exports = {
                 sdb.delete(`Request.${message.author.id}`)
                 PixTimeout(msg)
             })
-            
+
         })
 
         function NewPix(msg) {
