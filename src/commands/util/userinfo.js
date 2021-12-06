@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
-        let user = message.mentions.members.first() || message.member,
+        let user = message.mentions.members.first() || message.guild.members.cache.filter(user => user.user.username === args[0] || user.displayName === args[0]) || message.member,
             flags = { DISCORD_EMPLOYEE: 'Discord Employee', DISCORD_PARTNER: 'Discord Partner', BUGHUNTER_LEVEL_1: 'Bug Hunter (Level 1)', BUGHUNTER_LEVEL_2: 'Bug Hunter (Level 2)', HYPESQUAD_EVENTS: 'HypeSquad Events', HOUSE_BRAVERY: 'House of Bravery', HOUSE_BRILLIANCE: 'House of Brilliance', HOUSE_BALANCE: 'House of Balance', EARLY_SUPPORTER: 'Early Supporter', TEAM_USER: 'Team User', SYSTEM: 'System', VERIFIED_BOT: 'Verified Bot', VERIFIED_DEVELOPER: 'Verified Bot Developer' },
             userFlags = user.user.flags.toArray(),
             Bandeiras = `${userFlags.length ? userFlags.map(flag => flags[flag]).join(', ') : 'Nenhuma'}`,
@@ -50,7 +50,10 @@ module.exports = {
                 .setTitle(`${e.Info} ${message.author.id === id ? 'Suas permissões' : `Permissões de ${tag} no servidor`}`)
                 .setDescription(`${MemberPermissions?.map(perm => `\`${config.Perms[perm]}\``)?.join(', ') || '`Nenhuma`'}`)
                 .addField(`${e.SaphireObs} Observações`, `As permissões acima se referem as permissões de todos os cargos que ${message.author.id === id ? 'você' : username} tem no servidor.`),
-            msg = await message.reply({ embeds: [UserEmbed] })
+            msg = await message.reply({ embeds: [UserEmbed] }),
+            embed = UserEmbed
+
+        // TODO: Fazer um userinfo por ID
 
         for (const Emoji of Emojis)
             msg.react(Emoji).catch(() => { })
@@ -65,12 +68,14 @@ module.exports = {
             if (reaction.emoji.name === Emojis[0]) {
                 if (Control === 0) return
                 Control = 0
+                embed = UserEmbed
                 return msg.edit({ embeds: [UserEmbed] }).catch(() => { })
             }
 
             if (reaction.emoji.name === Emojis[1]) {
                 if (Control === 1) return
                 Control = 1
+                embed = MemberPermissionsEmbed
                 return msg.edit({ embeds: [MemberPermissionsEmbed] }).catch(() => { })
             }
 
@@ -78,8 +83,7 @@ module.exports = {
 
         collector.on('end', () => {
 
-            msg.edit({ embeds: [UserEmbed.setColor('RED')] }).catch(() => { })
-            return msg.edit({ embeds: [MemberPermissionsEmbed.setColor('RED')] }).catch(() => { })
+            return msg.edit({ embeds: [embed.setColor('RED').setFooter('Sessão encerrada')] }).catch(() => { })
 
         })
 

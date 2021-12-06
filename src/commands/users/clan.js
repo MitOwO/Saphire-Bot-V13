@@ -48,7 +48,7 @@ module.exports = {
 
             let ClanLogs = Clan.get(`Clans.${key}.LogRegister`) || []
 
-            const Array = [{ Data: Data(), Message: MessageData }, ...ClanLogs]
+            const Array = [{ Data: Data(0, true), Message: MessageData }, ...ClanLogs]
             Clan.set(`Clans.${key}.LogRegister`, Array)
 
         }
