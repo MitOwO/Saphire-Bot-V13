@@ -6,7 +6,7 @@ function Data(DateInMs = 0, Shorted = false) {
     const date = new Date(DateInMs + Date.now())
     date.setHours(date.getHours() - 3)
 
-    let Mes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"][date.getDate()],
+    let Mes = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"][date.getMonth()],
         DiaDaSemana = ['Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado'][date.getDay()],
         Dia = FormatNumber(date.getDate()),
         Hora = FormatNumber(date.getHours()),
@@ -18,7 +18,7 @@ function Data(DateInMs = 0, Shorted = false) {
 }
 
 function FormatNumber(data) {
-    return data.toString().length === 1 ? `0${data}` : data
+    return data < 9 ? `0${data}` : data
 }
 
 module.exports = Data
