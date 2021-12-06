@@ -1,8 +1,8 @@
-const { DatabaseObj, ServerDb, db } = require('../../Routes/functions/database')
-const { e, config } = DatabaseObj
-const { MessageEmbed, Permissions } = require('discord.js')
-const { RegisterServer } = require('../../Routes/functions/register')
-const client = require('../../index')
+const { DatabaseObj, ServerDb, db } = require('../../Routes/functions/database'),
+    { e, config } = DatabaseObj,
+    { MessageEmbed, Permissions } = require('discord.js'),
+    { RegisterServer } = require('../../Routes/functions/register'),
+    client = require('../../index')
 
 client.on("guildCreate", async (guild) => {
 
