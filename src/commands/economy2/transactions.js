@@ -1,7 +1,7 @@
 const { f } = require('../../../database/frases.json'),
     { e } = require('../../../database/emojis.json'),
-    { Transactions } = require('../../../Routes/functions/database')
-const Colors = require('../../../Routes/functions/colors')
+    { Transactions } = require('../../../Routes/functions/database'),
+    Colors = require('../../../Routes/functions/colors')
 
 module.exports = {
     name: 'transactions',
