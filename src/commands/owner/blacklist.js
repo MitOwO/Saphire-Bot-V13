@@ -1,3 +1,4 @@
+const { hasMagic } = require('glob');
 const { DatabaseObj: { e, config } } = require('../../../Routes/functions/database'),
     DeleteUser = require('../../../Routes/functions/deleteUser')
 
@@ -103,27 +104,54 @@ module.exports = {
             if (Users.length < 1)
                 return message.reply(`${e.Info} | Não há ninguém na blacklist`)
 
-            let UsersMapped = Users.map(BlockObj => {
+            let Embeds = EmbedGenerator(Users),
+                Control = 0,
+                Emojis = ['⬅️', '➡️'],
+                msg = await message.reply({ embeds: [Embeds[0]] }),
+                AtualEmbed = Embeds[0]
 
-                let u = client.users.cache.get(BlockObj.id)
+            if (Embeds.length > 1)
+                for (const Emoji of Emojis)
+                    msg.react(Emoji).catch(() => { })
+            else return
 
-                if (!u)
-                    return `Não Encontrado \`${BlockObj.id}\`\n`
+            const collector = msg.createReactionCollector({
+                filter: (reaction, user) => Emojis.includes(reaction.emoji.name) && user.id === message.author.id,
+                idle: 30000
+            })
 
-                return `:id: ${u.tag} \`${BlockObj.id}\`\n${e.BookPages} \`${BlockObj.reason}\`\n`
+            collector.on('collect', (reaction) => {
+
+                return reaction.emoji.name === Emojis[0]
+                    ? (() => {
+
+                        Control++
+                        return Embeds[Control] ? (() => {
+                            msg.edit({ embeds: [Embeds[Control]] }).catch(() => { return collector.stop() })
+                            AtualEmbed = Embeds[Control]
+                        })() : Control--
+
+                    })()
+                    : (() => {
+
+                        Control--
+                        return Embeds[Control] ? (() => {
+                            msg.edit({ embeds: [Embeds[Control]] }).catch(() => { return collector.stop() })
+                            AtualEmbed = Embeds[Control]
+                        })() : Control++
+
+                    })()
 
             })
 
-            // TODO: Adicionar o embed generator aqui
+            collector.on('end', () => {
 
-            return message.reply({
-                embeds: [
-                    new MessageEmbed()
-                        .setColor("#8B0000")
-                        .setTitle("🚫 Blacklist System")
-                        .setDescription(`${UsersMapped?.join('\n') || 'Ninguém'}`)
-                ]
+                AtualEmbed.color = 'RED'
+                AtualEmbed.footer.text = 'Sessão expirada'
+
+                return msg.edit({ embeds: [AtualEmbed] }).catch(() => { })
             })
+
         }
 
         async function BlacklistRankingServer() {
@@ -150,6 +178,48 @@ module.exports = {
             message.reply({ embeds: [embed] })
         }
 
+        function EmbedGenerator(array) {
+
+            let amount = 7,
+                Page = 1,
+                embeds = [],
+                length = array.length / 7 <= 1 ? 1 : parseInt((array.length / 7) + 1)
+
+            for (let i = 0; i < array.length; i += 7) {
+
+                let current = array.slice(i, amount),
+                    description = current.map(BlockObj => {
+
+                        let u = client.users.cache.get(BlockObj.id)
+
+                        if (!u)
+                            return `Não Encontrado \`${BlockObj.id}\`\n`
+
+                        return `:id: ${u.tag} \`${BlockObj.id}\`\n${e.BookPages} \`${BlockObj.reason}\`\n`
+
+                    }).join('\n'),
+                    PageCount = `${length > 1 ? `${Page}/${length}` : ''}`
+
+                if (current.length > 0) {
+
+                    embeds.push({
+                        color: "#8B0000",
+                        title: `🚫 Blacklist System ${PageCount}`,
+                        description: `${description || 'Nenhum usuário bloqueado'}`,
+                        footer: {
+                            text: `${array.length} usuário bloqueados`
+                        },
+                    })
+
+                    Page++
+                    amount += 7
+
+                }
+
+            }
+
+            return embeds;
+        }
+
     }
 }
-

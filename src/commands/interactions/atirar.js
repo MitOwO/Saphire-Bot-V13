@@ -1,13 +1,13 @@
-const { g } = require('../../../Routes/Images/gifs.json')
-const { e } = require('../../../database/emojis.json')
-const { f } = require('../../../database/frases.json')
-const  Moeda = require('../../../Routes/functions/moeda')
+const { g } = require('../../../Routes/Images/gifs.json'),
+  { e } = require('../../../database/emojis.json'),
+  { f } = require('../../../database/frases.json'),
+  Moeda = require('../../../Routes/functions/moeda')
 
 module.exports = {
   name: 'atirar',
   aliases: ['shoot', 'tiro'],
   category: 'interactions',
-  
+
   ClientPermissions: ['EMBED_LINKS', 'ADD_REACTIONS'],
   emoji: '🔫',
   usage: '<atirar> <@user>',
@@ -24,7 +24,7 @@ module.exports = {
     let user = message.mentions.users.first() || message.member
 
     if (user.id === client.user.id) {
-      sdb.subtract(`Users.${message.author.id}.Balance`, 100); 
+      sdb.subtract(`Users.${message.author.id}.Balance`, 100);
       return message.reply(`${e.Deny} | **NÃO** é pra atirar em mim, que isso? Só pela ousadia, eu peguei 100 ${Moeda(message)} emprestadas, ||pra sempre||.`)
     }
 

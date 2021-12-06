@@ -16,7 +16,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         let
-            u = message.mentions.members.first() || message.mentions.repliedUser || client.users.cache.get(args[0]) || client.users.cache.find(user => user.username == args[0] || user.tag == args[0]) || message.author,
+            u = message.mentions.members.first() || message.mentions.repliedUser || client.users.cache.get(args[0]) || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase()) || message.author,
             user = await client.users.cache.get(u?.id)
                 ? await client.users.cache.get(u?.id)
                 : (() => {
