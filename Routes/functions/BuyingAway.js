@@ -162,7 +162,7 @@ function BuyingAway(message, prefix, args, args1) {
 
             TicketsArray.push(message.author.id)
 
-            if (lotery.get('Loteria.Users')?.length + i >= 150) {
+            if (lotery.get('Loteria.Users')?.length + i >= 15000) {
 
                 sdb.subtract(`Users.${message.author.id}.Balance`, i * 10)
                 lotery.add('Loteria.Prize', i * 10)
