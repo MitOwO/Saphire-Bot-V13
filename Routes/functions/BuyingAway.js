@@ -129,7 +129,7 @@ function BuyingAway(message, prefix, args, args1) {
             TicketsArray = []
 
         if (sdb.get(`Users.${message.author.id}.Timeouts.Loteria`) !== null && 300000 - (Date.now() - sdb.get(`Users.${message.author.id}.Timeouts.Loteria`)) > 0)
-            return message.reply(`${e.Loading} Volte em: \`${time.minutes}m e ${time.seconds}s\``)
+            return message.reply(`${e.Loading} | Volte em: \`${time.minutes}m e ${time.seconds}s\``)
 
         if (!lotery.get('Loteria.Users'))
             lotery.set('Loteria.Users', [])
@@ -158,12 +158,23 @@ function BuyingAway(message, prefix, args, args1) {
 
         const msg = await message.reply(`${e.Loading} | Alocando tickets`)
 
-        sdb.subtract(`Users.${message.author.id}.Balance`, amount * 10)
+        for (i; i < amount; i++) {
 
-        for (i; i < amount; i++)
             TicketsArray.push(message.author.id)
 
+            if (lotery.get('Loteria.Users')?.length + i >= 150) {
+
+                sdb.subtract(`Users.${message.author.id}.Balance`, i * 10)
+                lotery.add('Loteria.Prize', i * 10)
+                lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
+                msg.edit(`${e.Check} | Você comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio da loteria para **${lotery.get('Loteria.Prize') || 0} ${Moeda(message)}**.`).catch(() => { })
+                return NewLoteryGiveaway(lotery.get('Loteria.Users'), message)
+
+            }
+        }
+
         sdb.set(`Users.${message.author.id}.Timeouts.Loteria`, Date.now())
+        sdb.subtract(`Users.${message.author.id}.Balance`, i * 10)
         lotery.add('Loteria.Prize', i * 10)
         lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
         msg.edit(`${e.Check} | Você comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio da loteria para **${lotery.get('Loteria.Prize') || 0} ${Moeda(message)}**.`).catch(() => { })

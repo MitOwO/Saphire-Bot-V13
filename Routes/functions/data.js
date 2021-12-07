@@ -18,7 +18,7 @@ function Data(DateInMs = 0, Shorted = false) {
 }
 
 function FormatNumber(data) {
-    return data < 9 ? `0${data}` : data
+    return data < 10 ? `0${data}` : data
 }
 
 module.exports = Data
