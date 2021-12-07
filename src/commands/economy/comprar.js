@@ -428,8 +428,20 @@ module.exports = {
                 TicketsArray = [],
                 i = 0
 
-            for (i; i < 100; i++)
+            for (i; i < 100; i++) {
+
                 TicketsArray.push(message.author.id)
+
+                if (lotery.get('Loteria.Users')?.length + i >= 150) {
+
+                    sdb.subtract(`Users.${message.author.id}.Balance`, i * 10)
+                    lotery.add('Loteria.Prize', i * 10)
+                    lotery.set('Loteria.Users', [...lotery.get('Loteria.Users'), ...TicketsArray])
+                    msg.edit(`${e.Check} | Você comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio da loteria para **${lotery.get('Loteria.Prize') || 0} ${Moeda(message)}**.`).catch(() => { })
+                    return NewLoteryGiveaway(lotery.get('Loteria.Users'), message)
+
+                }
+            }
 
             if (lotery.get('Loteria.Users')?.length <= 0)
                 sdb.set('Loteria.Users', [])
@@ -439,9 +451,9 @@ module.exports = {
             msg.edit(`${e.Check} | ${message.author} comprou +${i} 🎫 \`Tickets da Loteria\` aumentando o prêmio para ${lotery.get('Loteria.Prize')?.toFixed(0)} ${Moeda(message)}.\n${e.PandaProfit} | -1000 ${Moeda(message)}`).catch(() => { })
             setTimeout(() => { lotery.delete(`Buying.${message.author.id}`) }, 1500)
 
-            if (lotery.get('Loteria.Users').length >= 15000) {
+            if (lotery.get('Loteria.Users').length >= 15000)
                 return NewLoteryGiveaway(lotery.get('Loteria.Users'), message)
-            }
+
             return
         }
 
