@@ -14,6 +14,7 @@ module.exports = {
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 
         return message.reply(`${e.Info} | Comando indisponível.`)
+        // TODO: Ver se este comando a não dar erro
 
         // let user = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.mentions.repliedUser
         // if (!user) return message.reply(`${e.Deny} | Você precisa @marcar, dizer o ID ou mencionar a mensagem da pessoa que você quer jogar o jogo da velha`)
