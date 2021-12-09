@@ -179,12 +179,8 @@ module.exports = {
                 const SugestEmbed = new MessageEmbed()
                     .setColor('#246FE0')
                     .setTitle(`${e.CoolDoge} Teve uma ideia daora?`)
-                    .setDescription('Com este comando, você manda sua ideia direto para o meu criador.')
-                    .addField('Requisitos', `**NADA** pornográfico ou de cunho criminoso.\n\`${prefix}gif\` Para mandar um gif\nFale bem a sua ideia para não ser recusada/mal compreendida.\nSua ideia contém imagem? Mande com um link.`)
-                    .addField('Comando exemplo', `\`${prefix}sugerir Que tal colocar um comando em que todos podem dar suas ideias pra ${client.user.username}?\``)
-                    .addField('Comando exemplo com imagem', `\`${prefix}sugerir Que tal colocar um comando em que todos podem dar suas ideias pra ${client.user.username}? https://linkdaimagem.com\``)
-                    .addField('Não está afim de usar o comando?', `Entre no [meu servidor](${config.ServerLink}) e fale com a minha equipe.`)
-                    .setFooter(`Sugestão grande demais? Use o ${prefix}bin`)
+                    .setDescription('Você pode mandar na minha central de suporte')
+                    .addField(':link: Olha o link:', `${e.SaphireFeliz} | Você pode mandar suas ideias no meu formulário! [Só clicar aqui](${config.GoogleForm})`)
 
                 return msg.edit({ embeds: [SugestEmbed] }).catch(() => { })
             }
@@ -228,7 +224,7 @@ module.exports = {
                     .setTitle('📋 Itens e suas funções')
                     .setDescription('Todos os dados de todos os itens aqui em baixo')
                     .addField('Itens Únicos', `Itens únicos são aqueles que você consegue comprar apenas um.\n \n🎣 \`Vara de Pesca\` Use para pescar \`${prefix}pescar\`\n🔫 \`Arma\` Use para assaltar e se proteger \`${prefix}assaltar @user\`\n${e.Balaclava} \`Balaclava\` Use no comando \`${prefix}crime\`\n${e.Helpier} \`Ajudante\` Te dá +5% de chance de sucesso no \`${prefix}crime\` por 7 dias.`)
-                    .addField('Itens Consumiveis', 'Itens consumiveis são aqueles que são gastos a cada vez que é usado\n \n⛏️ `Picareta` Use para minerar `' + prefix + 'cavar`\n🪓 \`Machado\` Use na floresta \`${prefix}floresta\`\n🎫 `Ticket` Aposte na loteria `' + prefix + 'buy ticket`\n🎟️ `Fichas` Use na roleta `' + prefix + 'roleta`\n💌 `Cartas` Use para conquistar alguém `' + prefix + 'carta`\n🥘 `Comida` Use na floresta`' + prefix + 'buscar`\n🪱 `Iscas` Use para pescar `' + prefix + 'pescar`\n🥤 `Água` Use para minerar `' + prefix + 'minerar`')
+                    .addField('Itens Consumiveis', `Itens consumiveis são aqueles que são gastos a cada vez que é usado\n \n⛏️ \`Picareta\` Use para minerar \`${prefix}cavar\`\n🪓 \`Machado\` Use na floresta \`${prefix}floresta\`\n🎫 \`Ticket\` Aposte na loteria \`${prefix}buy ticket\`\n🎟️ \`Fichas\` Use na roleta \`${prefix}roleta\`\n💌 \`Cartas\` Use para conquistar alguém \`${prefix}carta\`\n🥘 \`Comida\` Use na floresta\` ${prefix}buscar\`\n🪱 \`Iscas\` Use para pescar \`${prefix}pescar\`\n🥤 \`Água\` Use para minerar \`${prefix}minerar\``)
                     .addField('Itens Especiais', `Itens especiais são aqueles que são pegos na sorte nos mini-games\n \n${e.Star} \`Vip\` Mais informações no comando \`${prefix}vip\`\n${e.Loli} \`Loli\` Adquira na pesca \`${prefix}pescar\`\n🔪 \`Faca\` Adquira na pesca \`${prefix}pescar\`\n${e.Fossil} \`Fossil\` Adquira na mineração \`${prefix}minerar\`\n🦣 \`Mamute\` Adquira na mineração \`${prefix}minerar\`\n🐶 \`Brown\` Adquira na Floresta Cammum \`${prefix}floresta\`\n🥎 \`Bola do Brown\` Adquira na Floresta Cammum \`${prefix}floresta\`\n💊 \`Remédio do Velho Welter\` Adquira na Floresta Cammum \`${prefix}floresta\`\n${e.Doguinho} \`Cachorrinho/a\` Adquira no Castelo Heslow \`${prefix}medalha\`\n🏅 \`Medalha\` Adquira no Castelo Heslow \`${prefix}medalha\``)
                     .addField('Perfil', 'Itens de perfil são aqueles que melhora seu perfil\n \n⭐ `Estrela` Estrelas no perfil')
                     .addField('Itens Coletaveis', 'Itens coletaveis são aqueles que você consegue nos mini-games, você pode vende-los para conseguir mais dinheiro.\n \n🍤 `Camarões` - Baú do Tesouro `' + prefix + 'pescar`\n🐟 `Peixes` - Baú do Tesouro `' + prefix + 'pescar`\n🌹 `Rosas` - Floresta Cammum `' + prefix + 'floresta`\n🍎 `Maças` - Floresta Cammum `' + prefix + 'floresta`\n🦴 `Ossos` - Mineração `' + prefix + 'minerar`\n🪨 `Minérios` - Mineração `' + prefix + 'minerar`\n💎 `Diamantes` - Mineração `' + prefix + 'minerar`')

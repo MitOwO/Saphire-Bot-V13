@@ -558,7 +558,7 @@ module.exports = {
                 msg.react('✅').catch(() => { }) // Check
                 msg.react('❌').catch(() => { }) // X
 
-                const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
+                const filter = (reaction, user) => ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id
 
                 msg.awaitReactions({ filter, max: 1, time: 15000, errors: ['time'] }).then(collected => {
                     const reaction = collected.first()

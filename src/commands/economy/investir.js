@@ -81,7 +81,9 @@ module.exports = {
             if (Money < Invest)
                 return message.reply(`${e.Deny} | Para investir na empresa **${Empresa}**, você precisa de **${Invest} ${Moeda(message)}** na carteira.`)
 
-            Valor ? Invest = Valor : Invest = Invest
+            Invest = Valor ? Valor : Invest
+
+            if (Invest > Money) return message.reply(`${e.Deny} | Você não possui todo esse dinheiro.`)
 
             sdb.subtract(`Users.${message.author.id}.Balance`, parseInt(Invest))
             sdb.add(`Users.${message.author.id}.Cache.Bolsa`, parseInt(Invest))
