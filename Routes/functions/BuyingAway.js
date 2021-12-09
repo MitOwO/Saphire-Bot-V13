@@ -253,7 +253,7 @@ function BuyingAway(message, prefix, args, args1) {
                 message.author.id,
                 `${e.MoneyWithWings} Gastou ${quantia * Price} Moedas na loja.`
             )
-            message.channel.send(`${e.Check} | ${message.author} comprou ${quantia} ${NomeUser} ficando com um total de ${sdb.get(`Users.${message.author.id}.Slot.${NomeTec}`)} ${NomeUser}.\n${e.PandaProfit} | -${q} ${Moeda(message)}`)
+        message.channel.send(`${e.Check} | ${message.author} comprou ${quantia} ${NomeUser} ficando com um total de ${sdb.get(`Users.${message.author.id}.Slot.${NomeTec}`)} ${NomeUser}.\n${e.PandaProfit} | -${q} ${Moeda(message)}`)
         }
 
         function Complete() {
