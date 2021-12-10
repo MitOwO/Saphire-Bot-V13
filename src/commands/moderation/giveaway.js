@@ -669,9 +669,7 @@ module.exports = {
                 WinnersArray.length >= Amount
                     ? (() => {
 
-                        let i = 0
-
-                        for (i; i < Amount; i++)
+                        for (let i = 0; i < Amount; i++)
                             Winners.push(GetUserWinner())
 
                     })()

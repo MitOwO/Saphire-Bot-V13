@@ -18,7 +18,7 @@ module.exports = {
 
         if (sdb.get(`Users.${message.author.id}.NoReact`)) return message.reply(`${e.Deny} | Você está com o \`${prefix}noreact\` ativado.`)
 
-        let rand = g.Atirar[Math.floor(Math.random() * g.Atirar.length)]
+        let rand = g.Chutar[Math.floor(Math.random() * g.Chutar.length)]
         let user = message.mentions.users.first() || message.member
 
         if (user.id === client.user.id)
@@ -45,7 +45,7 @@ module.exports = {
 
                 if (reaction.emoji.name === '🔁') {
                     sdb.delete(`Request.${message.author.id}`)
-                    const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`🦶 ${message.author} e ${user} estão trocando chutes! 🦶`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Atirar[Math.floor(Math.random() * g.Atirar.length)])
+                    const TradeEmbed = new MessageEmbed().setColor('RED').setDescription(`🦶 ${message.author} e ${user} estão trocando chutes! 🦶`).setFooter(`${message.author.id}/${user.id}`).setImage(g.Chutar[Math.floor(Math.random() * g.Chutar.length)])
                     msg.edit({ embeds: [TradeEmbed] }).catch(() => { })
                 }
 

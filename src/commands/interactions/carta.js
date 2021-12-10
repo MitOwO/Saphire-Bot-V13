@@ -15,7 +15,7 @@ module.exports = {
 
         let
             cartas = sdb.get(`Users.${message.author.id}.Slot.Cartas`) || 0,
-            user = message.mentions.members.first() || message.guild.members.cache.get(args[0]),
+            user = message.mentions.users.first() || client.users.cache.get(args[0]) || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase()),
             Mensagem = args.slice(1).join(' ') || 'Nope!',
             Server = message.guild.name || "Nome indefinido",
             Timer = sdb.get(`Users.${message.author.id}.Timeouts.Letter`) || 0,
@@ -52,7 +52,7 @@ module.exports = {
         if (Mensagem.length < 10 || Mensagem.length > 1024)
             return message.reply(`${e.Deny} | A mensagem deve estar entre **10~1500 caracteres**`)
 
-        if (user.user.bot || user.id === message.author.id)
+        if (user.bot || user.id === message.author.id)
             return message.reply(`${e.Deny} | Você não pode mandar cartas para você mesmo ou bots.`)
 
         sdb.subtract(`Users.${message.author.id}.Slot.Cartas`, 1)

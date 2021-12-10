@@ -18,7 +18,7 @@ module.exports = {
             return message.reply(`${e.Deny} | Este é um comando da classe Moderador.`)
 
         let u = message.mentions.members.first() || message.mentions.repliedUser || await client.users.cache.get(args[1]) || await client.guilds.cache.get(args[1]),
-            target = await client.users.cache.get(u.id) || await client.guilds.cache.get(u.id)
+            target = await client.users.cache.get(u?.id) || await client.guilds.cache.get(u?.id)
 
         if (['remover', 'remove', 're', 'tirar', 'delete', 'deletar', 'del'].includes(args[0]?.toLowerCase())) return BlacklistRemove()
 
