@@ -119,7 +119,7 @@ module.exports = {
                     return m.reply(`${e.Deny} | O tempo informado não é um número.\nEx: \`1h 2m 3s\``)
                 }
 
-                if (Hora < 1 || Minutos < 1, Segundos < 1) {
+                if (Hora < 1 || Minutos < 1 || Segundos < 1) {
                     msg.edit(`${e.Deny} | Comando cancelado.`).catch(() => { })
                     return m.reply(`${e.Deny} | Os tempos não podem ser menores que 1.`)
                 }

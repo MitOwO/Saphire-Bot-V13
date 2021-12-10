@@ -65,7 +65,7 @@ module.exports = {
             function InServerLocalRanking() {
 
                 let Rank = RankingSorted.filter(user => message.guild.members.cache.has(user.id)),
-                    RankMapped = Rank.slice(0, 10).map((user, i) => `**${Medals(i)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.RedStar} ${user.level} *(${user.xp}/${user.XpNeeded})*\n`).join('\n'),
+                    RankMapped = Rank.slice(0, 10).map((user, i) => `**${Medals(i)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.RedStar} ${user.level || 0} *(${user.xp}/${user.XpNeeded})*\n`).join('\n'),
                     myrank = Rank.findIndex(author => author.id === message.author.id) + 1 || "N/A"
 
                 embed
@@ -91,7 +91,7 @@ module.exports = {
 
                 let InLocaleRanking = UsersArray.splice(Num - 1, 1)
 
-                return message.reply(InLocaleRanking.map(user => `**${Medals(Num - 1)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.RedStar} ${user.level} *(${user.xp}/${user.XpNeeded})*`).join('\n'))
+                return message.reply(InLocaleRanking.map(user => `**${Medals(Num - 1)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.RedStar} ${user.level || 0} *(${user.xp}/${user.XpNeeded})*`).join('\n'))
 
             }
 
@@ -144,7 +144,7 @@ module.exports = {
             function InServerLocalRanking() {
 
                 let Rank = Sorted.filter(user => message.guild.members.cache.has(user.id)),
-                    RankMapped = Rank.slice(0, 10).map((a, i) => `**${Medals(i)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal} ${Moeda(message)}\n`).join('\n'),
+                    RankMapped = Rank.slice(0, 10).map((a, i) => `**${Medals(i)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal || 0} ${Moeda(message)}\n`).join('\n'),
                     myrank = Rank.findIndex(author => author.id === message.author.id) + 1 || "N/A"
 
                 embed
@@ -170,7 +170,7 @@ module.exports = {
 
                 let InLocaleRanking = UsersMoney.splice(Num - 1, 1)
 
-                return message.reply(InLocaleRanking.map(a => `**${Medals(Num - 1)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${Ocult(a.id) ? '||Oculto||' : a.bal} ${Moeda(message)}`).join('\n'))
+                return message.reply(InLocaleRanking.map(a => `**${Medals(Num - 1)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${Ocult(a.id) ? '||Oculto||' : a.bal || 0} ${Moeda(message)}`).join('\n'))
 
             }
 
@@ -215,7 +215,7 @@ module.exports = {
             function InServerLocalRanking() {
 
                 let Rank = RankingSorted.filter(user => message.guild.members.cache.has(user.id)),
-                    RankMapped = Rank.slice(0, 10).map((user, i) => `**${Medals(i)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Bells} ${user.money} ${Moeda(message)}\n`).join('\n'),
+                    RankMapped = Rank.slice(0, 10).map((user, i) => `**${Medals(i)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Bells} ${user.money || 0} ${Moeda(message)}\n`).join('\n'),
                     myrank = Rank.findIndex(author => author.id === message.author.id) + 1 || "N/A"
 
                 embed
@@ -241,7 +241,7 @@ module.exports = {
 
                 let InLocaleRanking = UsersArray.splice(Num - 1, 1)
 
-                return message.reply(InLocaleRanking.map(user => `**${Medals(Num - 1)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Bells} ${Ocult(user.id) ? '||Oculto||' : user.bal} ${Moeda(message)}\n`).join('\n'))
+                return message.reply(InLocaleRanking.map(user => `**${Medals(Num - 1)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Bells} ${Ocult(user.id) ? '||Oculto||' : sdb.get(`Users.${user.id}.Balance`) || 0} ${Moeda(message)}\n`).join('\n'))
 
             }
 
@@ -280,7 +280,7 @@ module.exports = {
             function InServerLocalRanking() {
 
                 let Rank = RankingSorted.filter(user => message.guild.members.cache.has(user.id)),
-                    RankMapped = Rank.slice(0, 10).map((user, i) => `**${Medals(i)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Like} ${user.like}\n`).join('\n'),
+                    RankMapped = Rank.slice(0, 10).map((user, i) => `**${Medals(i)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Like} ${user.like || 0}\n`).join('\n'),
                     myrank = Rank.findIndex(author => author.id === message.author.id) + 1 || "N/A"
 
                 embed
@@ -306,7 +306,7 @@ module.exports = {
 
                 let InLocaleRanking = UsersArray.splice(Num - 1, 1)
 
-                return message.reply(InLocaleRanking.map(user => `**${Medals(Num - 1)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Like} ${user.like}\n`).join('\n'))
+                return message.reply(InLocaleRanking.map(user => `**${Medals(Num - 1)} ${GetUser(user.id)}**\n🆔 \`${user.id}\`\n${e.Like} ${user.like || 0}\n`).join('\n'))
 
             }
 
@@ -356,7 +356,7 @@ module.exports = {
             function InServerLocalRanking() {
 
                 let Rank = Sorted.filter(user => message.guild.members.cache.has(user.id)),
-                    RankMapped = Rank.slice(0, 10).map((a, i) => `**${Medals(i)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal} ${Moeda(message)}\n`).join('\n'),
+                    RankMapped = Rank.slice(0, 10).map((a, i) => `**${Medals(i)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal || 0} ${Moeda(message)}\n`).join('\n'),
                     myrank = Rank.findIndex(author => author.id === message.author.id) + 1 || "N/A"
 
                 if (!Rank)
@@ -385,7 +385,7 @@ module.exports = {
 
                 let InLocaleRanking = UsersMoney.splice(Num - 1, 1)
 
-                return message.reply(InLocaleRanking.map(a => `**${Medals(Num - 1)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal} ${Moeda(message)}`).join('\n'))
+                return message.reply(InLocaleRanking.map(a => `**${Medals(Num - 1)} ${GetUser(a.id)}**\n🆔*\`${a.id}\`*\n${e.Bells} ${a.bal || 0} ${Moeda(message)}`).join('\n'))
 
             }
 
