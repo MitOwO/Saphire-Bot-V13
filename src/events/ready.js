@@ -64,9 +64,9 @@ client.on("ready", async () => {
             RankingLikes = likesarray.sort((a, b) => b.amount - a.amount),
             RankingMoney = dbarray.sort((a, b) => b.amount - a.amount)
 
-        sdb.set('Client.TopGlobalLevel', RankingLevel[0].id)
-        sdb.set('Client.TopGlobalLikes', RankingLikes[0].id)
-        sdb.set('Client.TopGlobalMoney', RankingMoney[0].id)
+        sdb.set('Client.TopGlobalLevel', RankingLevel[0]?.id || undefined)
+        sdb.set('Client.TopGlobalLikes', RankingLikes[0]?.id || undefined)
+        sdb.set('Client.TopGlobalMoney', RankingMoney[0]?.id || undefined)
 
     }, 300000)
 
