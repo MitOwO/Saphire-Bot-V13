@@ -199,7 +199,6 @@ module.exports = {
                                 .addField(`${e.On} Comando`, `\`${prefix}afk Estou ocupado...\` Frase de sua escolha`)
                                 .addField(`${e.Info} | Emojis de Ativação`, `✅ | Ative o AFK somente no servidor\n🌎 | Ative o AFK em todos os servidores\n❓ | Esta paginazinha de Ajuda\n❌ | Cancele o comando`)
                                 .addField(`${e.Warn} | Atenção!`, `1. \`Modo Global\` Será desativado quando você mandar mensagem em qualquer servidor que eu esteja.\n2. \`Ativação sem mensagem\` Eu direi que você está offline, porém, sem recado algum.`)
-
                         ],
                         components: [painel]
                     }).catch(() => { })
@@ -219,8 +218,8 @@ module.exports = {
                             if (!file.name) return "Sem nome do comando."
 
                             let name = file.name.replace(".js", ""),
-                                des = `${client.commands.get(name).description}`,
-                                emo = `${client.commands.get(name).emoji}`
+                                des = `${client.commands.get(name).description || "Sem descrição"}`,
+                                emo = `${client.commands.get(name).emoji}` || 'X'
 
                             if (emo === undefined) emo = ''
 
@@ -231,8 +230,8 @@ module.exports = {
 
                         let dota = new Object()
 
-                        cmds.map((co) => {
-                            dota = { name: `${cmds.length === 0 ? "Em andamento." : co.cname}`, value: co.des ? co.des : "Sem descrição", }
+                        cmds.map(co => {
+                            dota = { name: `${cmds.length === 0 ? "Em andamento." : co.cname}`, value: co.des }
                             catts.push(dota)
                         })
 
@@ -263,32 +262,34 @@ module.exports = {
             const command = client.commands.get(x.toLowerCase()) || client.commands.find((c) => c.aliases && c.aliases.includes(x.toLowerCase()))
             if (!command) { return message.reply(`${e.Deny} | Comando inválido! Use \`${prefix}help\` para todos os comandos.`) }
 
-            return message.reply({ embeds: [
-                new MessageEmbed()
-                    .setColor('#246FE0')
-                    .setTitle(`Detalhes do Comando: ${command.name ? `${command.name}` : "Sem nome definido."}`)
-                    .addFields(
-                        {
-                            name: 'Comando:',
-                            value: command.name ? `\`${prefix}${command.name}\`` : "Sem nome definido.",
-                            inline: true
-                        },
-                        {
-                            name: 'Atalhos',
-                            value: command.aliases ? `\`${prefix}${command.aliases?.join(`\` \`${prefix}`)}\`` : "Sem atalhos definido.",
-                            inline: true
-                        },
-                        {
-                            name: 'Uso',
-                            value: command.usage ? `\`${command.usage}\`` : 'Nenhum dado definido'
-                        },
-                        {
-                            name: 'Descrição',
-                            value: command.description ? command.description : "Sem descrição definida."
-                        }
+            return message.reply({
+                embeds: [
+                    new MessageEmbed()
+                        .setColor('#246FE0')
+                        .setTitle(`Detalhes do Comando: ${command.name ? `${command.name}` : "Sem nome definido."}`)
+                        .addFields(
+                            {
+                                name: 'Comando:',
+                                value: command.name ? `\`${prefix}${command.name}\`` : "Sem nome definido.",
+                                inline: true
+                            },
+                            {
+                                name: 'Atalhos',
+                                value: command.aliases ? `\`${prefix}${command.aliases?.join(`\` \`${prefix}`)}\`` : "Sem atalhos definido.",
+                                inline: true
+                            },
+                            {
+                                name: 'Uso',
+                                value: command.usage ? `\`${command.usage}\`` : 'Nenhum dado definido'
+                            },
+                            {
+                                name: 'Descrição',
+                                value: command.description ? command.description : "Sem descrição definida"
+                            }
 
-                    )
-            ] })
+                        )
+                ]
+            })
         }
     }
 }
