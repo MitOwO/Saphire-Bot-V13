@@ -15,7 +15,7 @@ module.exports = {
 
         if (request) return message.reply(`${e.Deny} | ${f.Request}${sdb.get(`Request.${message.author.id}`)}`)
 
-        let user = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.mentions.repliedUser || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase())  || message.author,
+        let user = message.mentions.users.first() || await client.users.cache.get(args[0]) || message.mentions.repliedUser || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase()) || message.author,
             linkavatar = user.avatarURL({ dynamic: true, format: "png", size: 1024 }),
             avatar = await message.guild.members.cache.get(user.id) ? await message.guild.members.cache.get(user.id)?.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }) : client.users.cache.get(user.id)?.displayAvatarURL({ dynamic: true, format: "png", size: 1024 }),
             Emojis = ['❌', '📨', '💙'],
@@ -48,13 +48,11 @@ module.exports = {
 
                     if (DmUser.includes(u.id)) return
 
-                    try {
-                        u.send({ embeds: [embed.setFooter(`Foto enviada de: ${message.guild.name}`)] })
-                        DmUser.push(u.id)
-                        return message.channel.send(`${e.Check} | ${u} solicitou a foto de ${user.username} para sua DM.`)
-                    } catch (err) {
+                    u.send({ embeds: [embed.setFooter(`Foto enviada de: ${message.guild.name}`)] }).catch(() => {
                         return message.channel.send(`${e.Deny} | ${u}, sua DM está fechada. Verifique suas configurações e tente novamente.`)
-                    }
+                    })
+                    DmUser.push(u.id)
+                    return message.channel.send(`${e.Check} | ${u} solicitou a foto de ${user.username} para sua DM.`)
 
                 }
 

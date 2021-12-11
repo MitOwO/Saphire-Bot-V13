@@ -15,6 +15,6 @@ module.exports = {
 
         if (user.id === client.user.id) { return message.reply(`${e.SaphireTimida} | Eu não sou gada, sai pra lá.`) }
 
-        return message.reply(`😏 | Passo falar com certeza, que ${user} é ${num}% safado*(a)*.`)
+        return message.reply(`😏 | Posso falar com certeza, que ${user} é ${num}% safado*(a)*.`)
     }
 }
