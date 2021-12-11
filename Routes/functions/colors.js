@@ -1,5 +1,5 @@
-const { Message } = require('discord.js')
-const { sdb } = require('./database')
+const { Message } = require('discord.js'),
+    { sdb } = require('./database')
 
 /**
  * @param { Message } message
