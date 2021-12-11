@@ -4,6 +4,7 @@ module.exports = {
     name: 'trade',
     category: 'owner',
     emoji: 'T',
+    description: 'Transferir databases',
 
     run: async (client, message, args, prefix, db, MessageEmbed, request, sdb) => {
 

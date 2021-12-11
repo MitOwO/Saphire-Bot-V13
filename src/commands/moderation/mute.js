@@ -265,7 +265,7 @@ module.exports = {
 
         if (member.id === message.guild.ownerId) return message.reply(`${e.Deny} | Mutar o dono do servidor não é uma opção.`)
         if (member.id === client.user.id) return message.reply(`${e.Drinking} | Ai ai... Vê se pode...`)
-        if (member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Deny} | Nada de mudar administradores(as).`)
+        if (member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return message.reply(`${e.Deny} | Nada de mutar administradores(as).`)
 
         if (message.author.id !== message.guild.ownerId) {
             if (member.roles.highest.comparePositionTo(message.member.roles.highest) > -1) {
