@@ -25,10 +25,10 @@ module.exports = {
             animes = Object.keys(Wallpapers).sort().map(anime => `${prefix}w ${anime}`)
         } catch (err) { return Error(message, err) }
 
-        const WallPapersIndents = stripIndent`${animes.slice(0, 30).join('\n') || 'Em breve'}`
-        const WallPapersIndents2 = stripIndent`${animes.slice(30, 60).join('\n') || 'Em breve'}`
-        const WallPapersIndents3 = stripIndent`${animes.slice(60, 90).join('\n') || 'Em breve'}`
-        const WallPapersIndents4 = stripIndent`${animes.slice(90, 120).join('\n') || 'Em breve'}`
+        const WallPapersIndents = stripIndent`${animes.slice(0, 30).join('\n') || 'Em breve'}`,
+            WallPapersIndents2 = stripIndent`${animes.slice(30, 60).join('\n') || 'Em breve'}`,
+            WallPapersIndents3 = stripIndent`${animes.slice(60, 90).join('\n') || 'Em breve'}`,
+            WallPapersIndents4 = stripIndent`${animes.slice(90, 120).join('\n') || 'Em breve'}`
 
         function SendEmbed() {
 
@@ -43,19 +43,18 @@ module.exports = {
                     message.reply(`${e.Warn} | Ocorreu um erro ao contabilizar a quantidade de animes presente na minha database.\n\`${err}\``)
                 }
 
-                let AnimeList1 = WallPapersIndents
-                let AnimeList2 = WallPapersIndents2
+                let AnimeList1 = WallPapersIndents,
+                    AnimeList2 = WallPapersIndents2
                 msg.react('🔄').catch(() => { })
                 msg.react('❌').catch(() => { })
                 sdb.set(`Request.${message.author.id}`, `${msg.url}`)
 
                 TradingEmbed(WallPapersIndents, WallPapersIndents2)
 
-                const filter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id; };
-                const collector = msg.createReactionCollector({ filter: filter, max: 5, idle: 30000, errors: ['max', 'idle'] });
-
-                const filtercancel = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id; };
-                const collectorcancel = msg.createReactionCollector({ filter: filtercancel, max: 1, idle: 30000, errors: ['max', 'idle'] });
+                const filter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id; },
+                    collector = msg.createReactionCollector({ filter: filter, max: 5, idle: 30000, errors: ['max', 'idle'] }),
+                    filtercancel = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id; },
+                    collectorcancel = msg.createReactionCollector({ filter: filtercancel, max: 1, idle: 30000, errors: ['max', 'idle'] })
 
                 collector.on('collect', () => {
                     TradingEmbed(AnimeList1 === WallPapersIndents ? AnimeList1 = WallPapersIndents3 : AnimeList1 = WallPapersIndents, AnimeList2 === WallPapersIndents2 ? AnimeList2 = WallPapersIndents4 : AnimeList2 = WallPapersIndents2)
@@ -108,7 +107,7 @@ module.exports = {
                 msg.react('🔄').catch(() => { }) // 1º Embed
                 msg.react('❌').catch(() => { })
 
-                let TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }; let TradeWallpaper = msg.createReactionCollector({ filter: TradeFilter, time: 30000, errors: ['time'] })
+                let TradeFilter = (reaction, user) => { return reaction.emoji.name === '🔄' && user.id === message.author.id }; let TradeWallpaper = msg.createReactionCollector({ filter: TradeFilter, idle: 30000 })
 
                 TradeWallpaper.on('collect', (reaction, user) => {
 
@@ -120,7 +119,7 @@ module.exports = {
                 })
                 TradeWallpaper.on('end', (reaction, user) => { sdb.delete(`Request.${message.author.id}`); msg.reactions.removeAll().catch(() => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(() => { }) })
 
-                let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }; let CancelSession = msg.createReactionCollector({ filter: CancelFilter, max: 1, time: 30000, errors: ['time', 'max'] })
+                let CancelFilter = (reaction, user) => { return reaction.emoji.name === '❌' && user.id === message.author.id }; let CancelSession = msg.createReactionCollector({ filter: CancelFilter, max: 1, idle: 30000 })
                 CancelSession.on('collect', (reaction, user) => { msg.reactions.removeAll().catch(() => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(() => { }) })
                 CancelSession.on('end', (reaction, user) => { sdb.delete(`Request.${message.author.id}`); msg.reactions.removeAll().catch(() => { }); WallPaperEmbed.setColor('RED').setFooter(`Sessão expirada | Wallpapers por: ${N.Gowther}`); msg.edit({ embeds: [WallPaperEmbed] }).catch(() => { }) })
 
@@ -298,7 +297,7 @@ module.exports = {
 
                 const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === message.author.id }
 
-                msg.awaitReactions({ filter, max: 1, time: 15000, errors: ['time'] }).then(collected => {
+                msg.awaitReactions({ filter, max: 1, idle: 15000 }).then(collected => {
                     const reaction = collected.first()
 
                     if (reaction.emoji.name === '✅') {
