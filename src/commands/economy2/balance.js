@@ -1,4 +1,4 @@
-const { DatabaseObj: { e } } = require('../../../Routes/functions/database'),
+const { DatabaseObj: { e, config } } = require('../../../Routes/functions/database'),
     Moeda = require('../../../Routes/functions/moeda'),
     Colors = require('../../../Routes/functions/colors'),
     ms = require('parse-ms'),
@@ -60,7 +60,7 @@ module.exports = {
             if (reaction.emoji.name === '❌' && u.id === message.author.id)
                 return msg.delete().catch(() => { })
 
-            if (reaction.emoji.name === '👁️' && u.id === message.author.id || u.id === user.id) {
+            if (reaction.emoji.name === '👁️' && u.id === config.ownerId || u.id === user.id) {
 
                 return control
                     ? (() => {

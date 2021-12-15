@@ -102,10 +102,13 @@ module.exports = {
         })
 
         function NewPaymentStart(msg) {
+
+            let amount = sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0
+
             msg.reactions.removeAll().catch(() => { })
             msg.edit(`${e.Check} | Transferência realizada com sucesso!\n${(sdb.get(`Users.${message.author.id}.EmojiAuthor`) ? sdb.get(`Users.${message.author.id}.EmojiAuthor`) : e.Check)} | \`${message.author.tag}\` **-${quantia} ${Moeda(message)}**\n${(sdb.get(`Users.${message.author.id}.EmojiUser`) ? sdb.get(`Users.${message.author.id}.EmojiUser`) : e.Check)} | \`${user.user.tag}\` **+${quantia} ${Moeda(message)}**\n⏱️ | \`${Data()}\``).catch(() => { })
             sdb.delete(`Request.${message.author.id}`)
-            sdb.add(`Users.${user.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0))
+            if (amount > 0) sdb.add(`Users.${user.id}.Balance`, amount)
             TransactionsPush(
                 user.id,
                 message.author.id,
@@ -119,9 +122,12 @@ module.exports = {
         }
 
         function CancelPayment(msg) {
+            
+            let amount = sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0
+
             msg.reactions.removeAll().catch(() => { })
             msg.edit(`${e.Deny} | Transferência cancelada!\n${(sdb.get(`Users.${message.author.id}.EmojiAuthor`) ? sdb.get(`Users.${message.author.id}.EmojiAuthor`) : '❔')} | \`${message.author.tag}\` **+0 ${Moeda(message)}**\n${(sdb.get(`Users.${message.author.id}.EmojiUser`) ? sdb.get(`Users.${message.author.id}.EmojiUser`) : '❔')} | \`${user.user.tag}\` **+0 ${Moeda(message)}**`).catch(() => { })
-            sdb.add(`Users.${message.author.id}.Balance`, (sdb.get(`Users.${message.author.id}.Cache.Pay`) || 0))
+            if (amount > 0) sdb.add(`Users.${message.author.id}.Balance`, amount)
             sdb.delete(`Request.${message.author.id}`)
             sdb.delete(`Users.${message.author.id}.Allowed`)
             sdb.delete(`Users.${message.author.id}.Cache.Pay`)

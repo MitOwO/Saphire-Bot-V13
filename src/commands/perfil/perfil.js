@@ -17,10 +17,10 @@ module.exports = {
 
         let
             u = message.mentions.members.first() || message.mentions.repliedUser || client.users.cache.get(args[0]) || client.users.cache.find(user => user.username?.toLowerCase() == args[0]?.toLowerCase() || user.tag?.toLowerCase() == args[0]?.toLowerCase()) || message.author,
-            user = await client.users.cache.get(u?.id)
+            user = u?.id
                 ? await client.users.cache.get(u?.id)
                 : (() => {
-                    return msg.edit(`${e.Deny} | Usuário não encontrado.`)
+                    return message.reply(`${e.Deny} | Usuário não encontrado.`)
                 })(),
             color = Colors(user),
             Embed = new MessageEmbed()

@@ -80,7 +80,8 @@ module.exports = {
         }
 
         function PixTimeout(msg) {
-            sdb.add(`Users.${message.author.id}.Bank`, (sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0))
+            let value = sdb.get(`Users.${message.author.id}.Cache.Pix`) || 0
+            if (value > 0) sdb.add(`Users.${message.author.id}.Bank`, value)
             sdb.delete(`Users.${message.author.id}.Cache.Pix`)
 
             return msg.edit(`${e.Deny} | Transação PIX cancelada por tempo expirado.`)
